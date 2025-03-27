@@ -4,6 +4,7 @@ import {
   FormControlLabel,
   Switch,
   Toolbar,
+  Typography,
   useTheme,
 } from '@mui/material';
 
@@ -52,6 +53,10 @@ export const NavBar = () => {
               label=""
               aria-label="toggle-dark-mode"
             />
+            {/* Testing Theme font. */}
+            <Typography variant='h1' boxShadow={theme.shadows[2]}>
+                Illusia Ry Storage Solutions(Font Test)
+            </Typography>
           </Box>
         </Toolbar>
       </AppBar>
