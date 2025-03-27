@@ -28,7 +28,7 @@ jobs:
       - name: Build Application
         run: npm run build
 
-  # Uncomment and configure this job if you want to add a deployment step.
+  # Uncomment and configure this job if you want to add a deployment step.test
   # deploy:
   #   needs: build-and-test
   #   runs-on: ubuntu-latest
