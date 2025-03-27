@@ -1,11 +1,14 @@
+import { Box } from '@mui/material';
 import { RouterProvider } from 'react-router-dom';
 import './App.css';
-import { router } from './router/router';
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <Box>
+      <NavBar />
+      <RouterProvider router={router} />
+    </Box>
   );
 }
 
-export default App;
+export default App
