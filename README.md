@@ -12,6 +12,3 @@
 [Jonathan](https://github.com/jonathangian)  
 [Nikita](https://github.com/nikiluzianin)  
 [Athina](https://github.com/athinakantis/)
-
-Test
-Test 2
