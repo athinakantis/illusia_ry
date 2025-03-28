@@ -48,10 +48,26 @@ $ npm run test:cov
 
 Check these endpoints after starting the server to make sure everything is working OK.
 
+You can access these easily by __copying the urls into your browser__.
+
+### Using the Anon key
+
+These endpoints are using the __Anon__ key and I think you need to __authenticate__ with Supabase before you would be able to see any of the tables. We probably need to set that up.
+
 ```html
 http://localhost:5001
 
 http://localhost:5001/test/supabase
+```
+
+### Using the Service Role key
+
+These endpoints are using the __Servic Role__ key and basically have access to __perform CRUD__ if needed.
+
+```html
+http://localhost:5001/test-role/admins
+
+http://localhost:5001/test-role/users
 ```
 
 ## Deployment
