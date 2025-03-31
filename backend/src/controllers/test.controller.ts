@@ -36,7 +36,7 @@ export class TestController {
 
     // Now use the updated client to query the 'test' table.
     const supabaseClient = this.supabaseService.supabase;
-
+console.log('Supabase client:', supabaseClient);
     // Now query the 'test' table. With RLS enabled, Supabase will check the token.
     const { data, error } = await supabaseClient
       .from('test')

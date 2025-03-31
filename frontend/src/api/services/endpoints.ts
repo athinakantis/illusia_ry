@@ -6,12 +6,13 @@ export const ENDPOINTS = {
   testToken: `${API_BASE_URL}/test/token`,
     testSupabase: `${API_BASE_URL}/test/supabase`,
     testUsers: `${API_BASE_URL}/users`,
+    testGetter: `${API_BASE_URL}/test/test-getter`,
   // Add other endpoints here...
 };
 
 // Alternatively, you can define helper functions:
 export async function fetchProtectedData(token: string) {
-  const response = await fetch(ENDPOINTS.testToken, { // Change to your endpoint for testing
+  const response = await fetch(ENDPOINTS.testGetter, { // Change to your endpoint for testing
     headers: {
       'Authorization': `Bearer ${token}`,
     },
