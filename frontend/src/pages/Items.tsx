@@ -4,7 +4,6 @@ import AdminItems from '../components/Admin/Items';
 function Items() {
   return (
     <>
-      <AdminItems />
       <UserItems />
     </>
   )
