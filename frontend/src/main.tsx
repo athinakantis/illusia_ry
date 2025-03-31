@@ -8,12 +8,16 @@ import '@fontsource/roboto/700.css';
 import App from './App.tsx'
 import { ThemeProvider } from './context/ThemeProvider.tsx';
 import { CssBaseline } from '@mui/material';
+import { Provider } from 'react-redux';
+import { store } from './store';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ThemeProvider>
-      <CssBaseline />
-    <App />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </Provider>
   </StrictMode>,
 )
