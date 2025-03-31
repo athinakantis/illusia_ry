@@ -26,15 +26,17 @@ export const itemsSlice = createSlice({
     builder.addCase(fetchAllItems.pending, (state) => {
       state.loading = true
     })
-    builder.addCase(fetchAllItems.fulfilled, (state) => {
-      state.loading = true
+    builder.addCase(fetchAllItems.fulfilled, (state, action) => {
+      state.loading = false
+      state.items = action.payload;
     })
     builder.addCase(fetchAllItems.rejected, (state) => {
-      state.loading = true
+      state.loading = false
+      state.error = 'Could not fetch items'
     })
   }
 })
 
 export const selectAllItems = (state: RootState) =>
-  state.items;
+  state.items.items;
 export default itemsSlice.reducer;
