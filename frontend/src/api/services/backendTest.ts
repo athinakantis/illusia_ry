@@ -1,10 +1,7 @@
 import axios from 'axios';
 
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+export const testConnection = async () => {
 
-
-const testConnection = async () => {
-    const supabase = useSupabaseClient();
     const { data: { session } } = await supabase.auth.getSession();
     const access_token = session?.access_token;
 
