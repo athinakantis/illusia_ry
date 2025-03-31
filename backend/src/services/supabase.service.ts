@@ -1,10 +1,13 @@
+// In /backend/src/services/supabase.service.ts
+
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable()
 export class SupabaseService {
-  private readonly _supabase: SupabaseClient;
+  private _supabase: SupabaseClient;
+  private currentToken: string | null = null; // For testing purposes
 
   constructor(private configService: ConfigService) {
     const url = this.configService.get<string>('SUPABASE_URL');
@@ -29,5 +32,25 @@ export class SupabaseService {
     const { data, error } = await this.supabase.from('users').insert(user);
     if (error) throw error;
     return data;
+  }
+
+  // New method: sets the token and stores it in a property for testing
+  setAuthToken(token: string) {
+    this.currentToken = token;
+    const url = this.configService.get<string>('SUPABASE_URL');
+    const key = this.configService.get<string>('SUPABASE_ANON_KEY');
+    if (!url || !key) {
+      throw new Error('Supabase URL or Key is not defined in the environment variables');
+    }
+    this._supabase = createClient(url, key, {
+      global: {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    });
+  }
+
+  // For testing: getter to retrieve the current token
+  getCurrentToken(): string | null {
+    return this.currentToken;
   }
 }

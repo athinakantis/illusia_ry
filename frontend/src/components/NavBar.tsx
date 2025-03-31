@@ -6,60 +6,62 @@ import {
   Toolbar,
   Typography,
   useTheme,
+  Link as MUILink,
 } from '@mui/material';
-
-import { useContext} from 'react';
+import { useContext } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
-import { lightPalette, darkPalette } from '../theme/theme';
+import { lightPalette, darkPalette } from "../theme/theme";
 import { FiMoon, FiSun } from 'react-icons/fi';
+import Logout from './Login/outBtn';
+import { Link as RouterLink } from 'react-router-dom';
 
 export const NavBar = () => {
   const { toggleColorMode } = useContext(ThemeContext);
-
   const theme = useTheme();
-
   const mode = theme.palette.mode;
 
   return (
-    <>
-      <AppBar
-        role="banner"
-        aria-label="navigation"
-        position="absolute"
-        sx={{
-          background:
-            mode === 'dark'
-              ? darkPalette.custom.darkGradient
-              : lightPalette.custom.lightGradient,
-          color: '#000',
-          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-          top: 0,
-            left: 0,
-          zIndex: (theme) => theme.zIndex.drawer + 10,
-        }}
-      >
-        <Toolbar aria-label="navigation" role="navigation">
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {/* Light/Dark mode */}
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={mode === 'dark'}
-                  onChange={toggleColorMode}
-                  icon={<FiSun />}
-                  checkedIcon={<FiMoon />}
-                />
-              }
-              label=""
-              aria-label="toggle-dark-mode"
-            />
-            {/* Testing Theme font. */}
-            <Typography variant='h1' boxShadow={theme.shadows[2]}>
-                Illusia Ry Storage Solutions(Font Test)
-            </Typography>
-          </Box>
-        </Toolbar>
-      </AppBar>
-    </>
+    <AppBar
+      position="fixed"
+      sx={{
+        background: mode === 'dark' ? darkPalette.custom.darkGradient : lightPalette.custom.lightGradient,
+        color: '#000',
+        boxShadow: 3,
+        px: 2,
+      }}
+    >
+      <Toolbar sx={{ justifyContent: 'space-between' }}>
+        {/* Left side: Theme toggle and branding */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={mode === 'dark'}
+                onChange={toggleColorMode}
+                icon={<FiSun />}
+                checkedIcon={<FiMoon />}
+              />
+            }
+            label=""
+          />
+          <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
+            Illusia Ry Storage Solutions
+          </Typography>
+        </Box>
+        {/* Right side: Navigation links */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+          <MUILink
+            component={RouterLink}
+            to="/protected"
+            color="inherit"
+            underline="none"
+            sx={{ fontSize: '1rem', fontWeight: 500 }}
+          >
+            Protected
+          </MUILink>
+          <Logout />
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };

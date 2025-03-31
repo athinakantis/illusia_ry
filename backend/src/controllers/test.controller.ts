@@ -7,33 +7,55 @@ import { Request } from 'express';
 export class TestController {
   constructor(private readonly supabaseService: SupabaseService) {}
 
-  // This endpoint is protected. The JWT guard will ensure a valid token is present.
-  @Get("supabase")
+  // Protected route to test that the interceptor is setting the token
+  @Get('token')
   @UseGuards(AuthGuard('jwt'))
-  async testConnection(@Req() req: Request & { user: any }) {
-    try {
-      const { data, error } = await this.supabaseService.supabase
-        .from('test')
-        .select('*')
-        .limit(50);
+  getToken(@Req() req: Request) {
+    // The interceptor takes care of setting the token in the request headers.
+    const currentToken = this.supabaseService.getCurrentToken();
+   
+    return {
+      message: 'Token was set via the interceptor',
+      token: currentToken,
+      user: req.user,
+    };
+  }
 
-      if (error) {
-        console.error('Supabase error:', error);
-        throw error;
-      }
-      return {
-        status: 'Connected to Supabase!',
-        data,
-        user: req.user,
-        timestamp: new Date().toISOString(),
-      };
-    } catch (error) {
-      console.error('Error in testConnection:', error);
+  @Get('supabase')
+  @UseGuards(AuthGuard('jwt'))
+  async testConnection(@Req() req: Request) {
+    // Extract the token from the Authorization header.
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return { status: 'Access denied: Missing token' };
+    }
+    const token = authHeader.split(' ')[1];
+
+    // Set the token in the Supabase client using the new method.
+    this.supabaseService.setAuthToken(token);
+
+    // Now use the updated client to query the 'test' table.
+    const supabaseClient = this.supabaseService.supabase;
+
+    // Now query the 'test' table. With RLS enabled, Supabase will check the token.
+    const { data, error } = await supabaseClient
+      .from('test')
+      .select('*')
+      .limit(50);
+
+    if (error) {
+      console.error('Supabase error:', error);
       return {
         status: 'Connection failed',
         error: error.message,
         timestamp: new Date().toISOString(),
       };
     }
+    return {
+      status: 'Connected to Supabase!',
+      data,
+      user: req.user,
+      timestamp: new Date().toISOString(),
+    };
   }
 }
