@@ -2,18 +2,14 @@ import { Controller, Get } from '@nestjs/common';
 import { ItemService } from '../services/items.service';
 
 @Controller('items')
-export class TestItemController {
+export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
   @Get()
-  async testItems() {
+  async getAllItems() {
     try {
       const data = await this.itemService.getItems();
-      return {
-        status: 'Successfully fetched items!',
-        data,
-        timestamp: new Date().toISOString(),
-      };
+      return data
     } catch (error) {
       console.error('Error in testItems', error);
       return {
