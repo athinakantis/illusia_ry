@@ -4,12 +4,14 @@ import { AppController } from './controllers/app.controller';
 import { AppService } from './services/app.service';
 import { TestController } from './controllers/test.controller';
 import { SupabaseService } from './services/supabase.service';
+import { ItemController } from './controllers/item.controller';
+import { ItemService } from './services/items.service';
 
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true })],
   
-  controllers: [AppController, TestController],// Controller imports go here
-  providers: [AppService, SupabaseService],// Services are used to handle business logic and data access
+  controllers: [AppController, TestController, ItemController],// Controller imports go here
+  providers: [AppService, SupabaseService, ItemService],// Services are used to handle business logic and data access
 })
 export class AppModule {}

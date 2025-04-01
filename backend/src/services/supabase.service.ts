@@ -30,4 +30,22 @@ export class SupabaseService {
     if (error) throw error;
     return data;
   }
+
+     // New method to query the public.admins table
+  async getPublicAdmins() {
+    const { data, error } = await this.supabase
+      .from('admins')
+      .select('*');
+    if (error) throw error;
+    return data;
+  }
+
+  // New method to query the public.users table
+  async getPublicUsers() {
+    const { data, error } = await this.supabase
+      .from('users')
+      .select('*');
+    if (error) throw error;
+    return data;
+  }
 }
