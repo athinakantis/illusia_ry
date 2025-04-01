@@ -24,7 +24,7 @@ export class TestController {
 
     if (error) {
       return {
-        status: 'Connection failed',
+        status: 'Failed to fetch public.users',
         error: error.message,
         timestamp: new Date().toISOString(),
       };
@@ -37,5 +37,32 @@ export class TestController {
       user: req.user,
       timestamp: new Date().toISOString(),
     };
+  }
+
+  @Get('supabase')
+  async testConnection() {
+    try {
+      const { data, error } = await this.supabaseService.supabase
+        .from('test')
+        .select('*')
+        .limit(50);
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+      return {
+        status: 'Connected to Supabase!',
+        data,
+        timestamp: new Date().toISOString(),
+      };
+    } catch (error) {
+      console.error('Error in testConnection:', error);
+      return {
+        status: 'Connection failed',
+        error: error.message,
+        timestamp: new Date().toISOString(),
+      };
+    }
   }
 }

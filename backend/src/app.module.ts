@@ -8,7 +8,9 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import * as Joi from 'joi'; // https://docs.nestjs.com/techniques/configuration#schema-validation
 import { UsersController } from './controllers/users.controller';
-import { ItemsController } from './controllers/items.controller';
+import { ItemsController } from './controllers/items.controller';import { ItemController } from './controllers/item.controller';
+import { ItemService } from './services/items.service';
+
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -25,7 +27,7 @@ import { ItemsController } from './controllers/items.controller';
   PassportModule,
   // ...other modules (like AuthModule, UsersModule, etc.)
 ],
-  controllers: [AppController, TestController,UsersController,ItemsController], // Controller imports go here
-  providers: [AppService, SupabaseService, JwtStrategy], // Services are used to handle business logic and data access
+  controllers: [AppController, TestController,UsersController,ItemsController,ItemController], // Controller imports go here
+  providers: [AppService, SupabaseService, JwtStrategy,ItemService], // Services are used to handle business logic and data access
 })
 export class AppModule {}
