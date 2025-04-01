@@ -16,7 +16,6 @@
     "@fontsource/roboto": "^5.2.5",
     "@mui/icons-material": "^7.0.0",
     "@mui/material": "^7.0.0",
-<<<<<<< HEAD
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.4",
@@ -25,16 +24,9 @@
     "react-dom": "^18.3.1",
     "react-icons": "^5.5.0",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^7.1.1"
-=======
-    "@reduxjs/toolkit": "^2.6.1",
-    "axios": "^1.8.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-icons": "^5.5.0",
-    "react-redux": "^9.2.0",
-    "react-router-dom": "^7.4.0"
->>>>>>> DEV
+    "react-router-dom": "^7.1.1",
+    "@reduxjs/toolkit": "^2.6.1"
+    
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
