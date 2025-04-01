@@ -34,6 +34,12 @@ export class SupabaseService {
     return data;
   }
 
+  async getItems() {
+    const { data, error } = await this.supabase.from('items').select('*');
+    if (error) throw error;
+    return data;
+  }
+
   // New method: sets the token and stores it in a property for testing
   setAuthToken(token: string) {
     this.currentToken = token;

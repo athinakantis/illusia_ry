@@ -3,16 +3,15 @@ export const API_BASE_URL = 'http://localhost:5001';
 
 
 export const ENDPOINTS = {
-  testToken: `${API_BASE_URL}/test/token`,
-    testSupabase: `${API_BASE_URL}/test/supabase`,
+  testTable: `${API_BASE_URL}/test/`,
+    testItems: `${API_BASE_URL}/items`,
     testUsers: `${API_BASE_URL}/users`,
-    testGetter: `${API_BASE_URL}/test/test-getter`,
+
   // Add other endpoints here...
 };
 
-// Alternatively, you can define helper functions:
 export async function fetchProtectedData(token: string) {
-  const response = await fetch(ENDPOINTS.testGetter, { // Change to your endpoint for testing
+  const response = await fetch(ENDPOINTS.testItems, { // Change to your endpoint for testing
     headers: {
       'Authorization': `Bearer ${token}`,
     },
