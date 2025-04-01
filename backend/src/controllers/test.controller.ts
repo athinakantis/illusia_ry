@@ -1,11 +1,44 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards, Req } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { SupabaseService } from '../services/supabase.service';
+import { Request } from 'express';
 
-@Controller('test')
+@Controller('test') // URL http://localhost:5001/test
 export class TestController {
   constructor(private readonly supabaseService: SupabaseService) {}
 
-  // Example: http://localhost:5001/test/supabase
+  // Combined endpoint to test that the interceptor is setting the token
+  // and to query the 'test' table.
+  @Get()
+  @UseGuards(AuthGuard('jwt'))
+  async testEndpoint(@Req() req: Request) {
+    // The interceptor should have set the token on the Supabase client,
+    // so we can retrieve it here for debugging purposes.
+    const currentToken = this.supabaseService.getCurrentToken();
+
+    // Query the 'test' table.
+    const { data, error } = await this.supabaseService.supabase
+      .from('test')
+      .select('*')
+      .limit(50);
+
+    if (error) {
+      return {
+        status: 'Failed to fetch public.users',
+        error: error.message,
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    return {
+      status: 'Connected to Supabase!',
+      token: currentToken,
+      data,
+      user: req.user,
+      timestamp: new Date().toISOString(),
+    };
+  }
+
   @Get('supabase')
   async testConnection() {
     try {
@@ -27,47 +60,6 @@ export class TestController {
       console.error('Error in testConnection:', error);
       return {
         status: 'Connection failed',
-        error: error.message,
-        timestamp: new Date().toISOString(),
-      };
-    }
-  }
-
-  // New endpoint to test querying the public.admins table
-  @Get('public-admins')
-  async testPublicAdmins() {
-    try {
-      const data = await this.supabaseService.getPublicAdmins();
-      console.log("DATA:",data);
-      return {
-        status: 'Successfully fetched public.admins!',
-        data,
-        timestamp: new Date().toISOString(),
-      };
-    } catch (error) {
-      console.error('Error in testPublicAdmins:', error);
-      return {
-        status: 'Failed to fetch public.admins',
-        error: error.message,
-        timestamp: new Date().toISOString(),
-      };
-    }
-  }
-
-  // New endpoint to test querying the public.users table
-  @Get('public-users')
-  async testPublicUsers() {
-    try {
-      const data = await this.supabaseService.getPublicUsers();
-      return {
-        status: 'Successfully fetched public.users!',
-        data,
-        timestamp: new Date().toISOString(),
-      };
-    } catch (error) {
-      console.error('Error in testPublicUsers:', error);
-      return {
-        status: 'Failed to fetch public.users',
         error: error.message,
         timestamp: new Date().toISOString(),
       };

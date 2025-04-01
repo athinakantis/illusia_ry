@@ -9,9 +9,11 @@ import { store } from './store/store';
 function App() {
   return (
     <Box>
-      <NavBar />
       <Provider store={store}>
-        <RouterProvider router={router} />
+        <RouterProvider router={router} >
+
+      <NavBar />
+        </RouterProvider>
       </Provider>
     </Box>
   );
