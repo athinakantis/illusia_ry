@@ -1,6 +1,7 @@
 # Jons files
 /src/controllers/test.controller.ts
 test.controller.ts
+/supabase
 # compiled output
 dist
 node_modules
