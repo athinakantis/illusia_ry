@@ -1,34 +1,56 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+
+import { SupabaseService } from './supabase.service';
+import { Item } from 'src/types/item.type';
 
 @Injectable()
 export class ItemService {
-  private readonly _supabase: SupabaseClient;
-
-  constructor(private configService: ConfigService) {
-    const url = this.configService.get<string>('SUPABASE_URL');
-    const anonKey = this.configService.get<string>(
-      'SUPABASE_ANON_KEY',
-    );
-    if (!url || !anonKey) {
-      throw new Error(
-        'Supabase URL or Anon key is not defined in environment variables',
-      );
-    }
-    this._supabase = createClient(url, anonKey);
-  }
-
-  get supabase() {
-    return this._supabase;
-  }
+  constructor(private supabaseService: SupabaseService) {}
 
   async getItems() {
-    const { data, error } = await this._supabase.from('items').select('*');
+    const { data, error } = await this.supabaseService.supabase.from('items').select('*');
     if (error) {
       console.error('Error fetching items: ', error)
       throw error;
     }
     return data
+  }
+
+  async addItem(/* userId: string, */ item: Item) {
+    const { item_name, description, image_path, location, quantity } = item;
+    const { data, error } = await this.supabaseService.supabase
+    .from('items')
+    .insert({
+      // user_id: userId, // Maybe add a user_id field to the items table for tracking
+      item_name,
+      description,
+      image_path,
+      location,
+      quantity,
+      category_id: 'd1a0db85-8e03-4ba1-9ba8-5780d76e8c6d', // Default category ID, you might want to change this
+    });
+    console.log('item', item)
+
+    if (error) {
+      console.error('Error adding item: ', error);
+      throw error;
+    }
+
+    return data;
+  }
+
+  async removeItem(/* userId: string, */ itemId: string) {
+    const { data, error } = await this.supabaseService.supabase
+      .from('items')
+      .delete()
+      .eq('id', itemId)
+      // .eq('user_id', userId);
+
+    if (error) {
+      console.error('Error deleting item: ', error);
+      throw error;
+    }
+
+    return data;
   }
 }

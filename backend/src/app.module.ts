@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './controllers/app.controller';
 import { AppService } from './services/app.service';
 import { SupabaseService } from './services/supabase.service';
-import { UsersController } from './controllers/users.controller';
 import { ItemController } from './controllers/item.controller';
 import { ItemService } from './services/items.service';
 import { AuthMiddleware } from './middlewares/auth.middleware';
@@ -17,7 +16,6 @@ import { ProtectedDataController } from './controllers/protected-data.controller
   ],
   controllers: [
     AppController,
-    UsersController,
     ProtectedDataController,
     ItemController,
   ], // Controller imports go here

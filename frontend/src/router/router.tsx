@@ -5,6 +5,8 @@ import LoginPage from '../pages/LoginPage';
 import { NavBar } from '../components/NavBar';
 
 import ItemsPage from '../pages/Items';
+import { TableViewer } from '../components/Test/TableViewer';
+import { ItemManager } from '../components/Test/ItemManager';
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +35,19 @@ export const router = createBrowserRouter([
       <NavBar/>
       <ItemsPage />
       </>
+    )
+   },
+   {
+    path: "/test",
+    element: (
+      <TableViewer endpoint='/protected-data' title="Protected Test Data" />
+    )
+   }
+   ,
+   {
+    path: "/item-manager",
+    element: (
+      <ItemManager/>
     )
    }
 ])

@@ -43,28 +43,7 @@ export class SupabaseService {
     if (error) throw error;
     return data;
   }
-  async getProtectedData(userId: string) {
-    console.log(
-      `[${new Date().toISOString()}] Fetching protected data for user: ${userId}`,
-    );
-
-    const { data, error } = await this.supabase
-      .from('items')
-      .select('*')
-
-    if (error) {
-      console.error(
-        `[${new Date().toISOString()}] Error fetching data:`,
-        error.message,
-      );
-      throw error;
-    }
-
-    console.log(
-      `[${new Date().toISOString()}] Successfully retrieved ${data.length} records for user: ${userId}`,
-    );
-    return data;
-  }
+  
 }
 
   
