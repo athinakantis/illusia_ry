@@ -7,6 +7,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { Item } from "../types/types";
 
 
 interface DynamicTableProps {

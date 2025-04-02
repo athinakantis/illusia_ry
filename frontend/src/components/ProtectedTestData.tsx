@@ -1,12 +1,11 @@
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { supabase } from "../config/supabase";
-import { TestData } from "../types/test";
-import { CreateEntryForm } from "./CreateEntryForm";
 import { DynamicTable } from "./DynamicTable";
+import { Item } from "../types/types";
 
 const ProtectedTestData = () => {
-  const [data, setData] = useState<TestData[]>([]);
+  const [data, setData] = useState<Item[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -59,7 +58,6 @@ const ProtectedTestData = () => {
         Protected Test Data - This data is only accessible to Authenticated
         Users
       </Typography>
-      <CreateEntryForm onSuccess={fetchProtectedData} />
       {data.length > 0 ? (
         <DynamicTable data={data} />
       ) : (
