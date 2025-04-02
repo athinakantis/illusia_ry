@@ -1,33 +1,31 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './controllers/app.controller';
 import { AppService } from './services/app.service';
 import { TestController } from './controllers/test.controller';
 import { SupabaseService } from './services/supabase.service';
-import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import * as Joi from 'joi'; // https://docs.nestjs.com/techniques/configuration#schema-validation
 import { UsersController } from './controllers/users.controller';
-import { ItemsController } from './controllers/items.controller';import { ItemController } from './controllers/item.controller';
+import { ItemController } from './controllers/item.controller';
 import { ItemService } from './services/items.service';
-
+import { AuthMiddleware } from './middlewares/auth.middleware';
 
 @Module({
-  imports: [ConfigModule.forRoot({
-    isGlobal: true,
-    // Validate that all necessary env variables are present.
-    validationSchema: Joi.object({
-      PORT: Joi.number().default(3001),
-      SUPABASE_URL: Joi.string().required(),
-      SUPABASE_ANON_KEY: Joi.string().required(),
-      SUPABASE_JWT_SECRET: Joi.string().required(),
-      // Add any other required variables.
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
-  }),
-  PassportModule,
-  // ...other modules (like AuthModule, UsersModule, etc.)
-],
-  controllers: [AppController, TestController,UsersController,ItemsController,ItemController], // Controller imports go here
-  providers: [AppService, SupabaseService, JwtStrategy,ItemService], // Services are used to handle business logic and data access
+  ],
+  controllers: [
+    AppController,
+    TestController,
+    UsersController,
+    ItemController,
+  ], // Controller imports go here
+  providers: [AppService, SupabaseService, JwtStrategy, ItemService], // Services are used to handle business logic and data access
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).forRoutes(ProtectedDataController);
+  }
+}
