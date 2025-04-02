@@ -1,4 +1,5 @@
 # Jons files
+/src/controllers/test.controller.ts
 test.controller.ts
 # compiled output
 dist

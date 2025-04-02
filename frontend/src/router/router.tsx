@@ -3,7 +3,6 @@ import Home from '../pages/Home';
 import { AuthRedirect } from '../components/auth/AuthRedirect';
 import LoginPage from '../pages/LoginPage';
 import { NavBar } from '../components/NavBar';
-import TestProtected from '../components/TestProtected';
 
 import ItemsPage from '../pages/Items';
 
@@ -17,12 +16,7 @@ export const router = createBrowserRouter([
        </>
     )
   },
-  {
-    path: "/protected",
-    element: (
-      <TestProtected />
-    )
-  },
+
   {
     path: '/login',
     element:(
