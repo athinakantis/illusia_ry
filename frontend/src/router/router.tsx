@@ -2,8 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import Home from '../pages/Home';
 import { AuthRedirect } from '../components/auth/AuthRedirect';
 import LoginPage from '../pages/LoginPage';
-import ItemsPage from '../pages/Items';
-import { ItemManager } from '../components/ItemManager';
+import ItemsPage from '../pages/Items'
 import { ItemTester } from '../components/ItemCRUD';
 import { MainLayout } from '../layout/MainLayout';
 
@@ -14,8 +13,8 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: <Home /> },
       { path: '/items', element: <ItemsPage /> },
-      { path: '/protected', element: <ItemManager /> },
       { path: '/crud', element: <ItemTester /> },
+      { path: '/custom-crud', element: <ItemTester /> },
     ],
   },
   {

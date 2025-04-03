@@ -8,7 +8,7 @@ import {
   Stack,
   Divider,
 } from '@mui/material';
-import { DynamicTable } from './DynamicTable';
+import { CustomItemDataGrid } from './ItemGrid/CustomItemDataGrid';
 import { ItemDataGrid } from './ItemGrid/ItemDataGrid';
 
 export const ItemTester = () => {
@@ -22,7 +22,7 @@ export const ItemTester = () => {
     image_path: '',
     location: '',
     quantity: 0,
-    category_id: '11111111-1111-1111-1111-111111111111',
+    category_id: '843a38fc-e8e4-4796-80ed-2b40567a67ea',
   });
   const [itemIdToUpdate, setItemIdToUpdate] = useState('');
   const [itemIdToDelete, setItemIdToDelete] = useState('');
@@ -38,7 +38,7 @@ export const ItemTester = () => {
     }));
   };
 
-  const logResult = (msg) => setLog(JSON.stringify(msg, null, 2));
+  const logResult = (msg:string) => setLog(JSON.stringify(msg, null, 2));
 
   const getItems = async () => {
     const res = await fetch(apiUrl, {
@@ -84,7 +84,7 @@ export const ItemTester = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("itemIdToDelete", itemIdToDelete)
+    console.log('itemIdToDelete', itemIdToDelete);
     const result = await res.json();
     logResult(result);
     getItems();
@@ -92,6 +92,7 @@ export const ItemTester = () => {
 
   useEffect(() => {
     if (token) getItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   return (
@@ -99,28 +100,92 @@ export const ItemTester = () => {
       <Typography variant="h4">/items CRUD Tester</Typography>
 
       <Stack spacing={2} mt={3}>
-        <TextField label="Item Name" name="item_name" value={form.item_name} onChange={handleChange} />
-        <TextField label="Description" name="description" value={form.description} onChange={handleChange} />
-        <TextField label="Image Path" name="image_path" value={form.image_path} onChange={handleChange} />
-        <TextField label="Location" name="location" value={form.location} onChange={handleChange} />
-        <TextField label="Quantity" type="number" name="quantity" value={form.quantity} onChange={handleChange} />
-        <TextField label="Category ID" name="category_id" value={form.category_id} onChange={handleChange} />
+        <TextField
+          label="Item Name"
+          name="item_name"
+          value={form.item_name}
+          onChange={handleChange}
+        />
+        <TextField
+          label="Description"
+          name="description"
+          value={form.description}
+          onChange={handleChange}
+        />
+        <TextField
+          label="Image Path"
+          name="image_path"
+          value={form.image_path}
+          onChange={handleChange}
+        />
+        <TextField
+          label="Location"
+          name="location"
+          value={form.location}
+          onChange={handleChange}
+        />
+        <TextField
+          label="Quantity"
+          type="number"
+          name="quantity"
+          value={form.quantity}
+          onChange={handleChange}
+        />
+        <TextField
+          label="Category ID"
+          name="category_id"
+          value={form.category_id}
+          onChange={handleChange}
+        />
 
-        <Button variant="contained" onClick={addItem}>Create Item</Button>
+        <Button variant="contained" onClick={addItem}>
+          Create Item
+        </Button>
 
         <Divider />
-        <TextField label="Item ID to Update" value={itemIdToUpdate} onChange={(e) => setItemIdToUpdate(e.target.value)} />
-        <Button variant="outlined" onClick={updateItem}>Update Item</Button>
+        <TextField
+          label="Item ID to Update"
+          value={itemIdToUpdate}
+          onChange={(e) => setItemIdToUpdate(e.target.value)}
+        />
+        <Button variant="outlined" onClick={updateItem}>
+          Update Item
+        </Button>
 
         <Divider />
-        <TextField label="Item ID to Delete" value={itemIdToDelete} onChange={(e) => setItemIdToDelete(e.target.value)} />
-        <Button variant="outlined" color="error" onClick={deleteItem}>Delete Item</Button>
+        <TextField
+          label="Item ID to Delete"
+          value={itemIdToDelete}
+          onChange={(e) => setItemIdToDelete(e.target.value)}
+        />
+        <Button variant="outlined" color="error" onClick={deleteItem}>
+          Delete Item
+        </Button>
 
         <Divider />
-        <Button variant="text" onClick={getItems}>Get Items</Button>
+        <Button variant="text" onClick={getItems}>
+          Get Items
+        </Button>
+        <Typography variant="h1" color="textSecondary">
+          Custom Item DataGrid(Only works in Lightmode)
+        </Typography>
+        <CustomItemDataGrid data={items} />
+        <Divider />
+        <Typography variant="h1">Normal DataGrid</Typography>
         <ItemDataGrid data={items} />
-      
       </Stack>
+      <Typography variant="h4" mt={3}>
+        Log
+      </Typography>
+      <Typography
+        variant="body1"
+        sx={{
+          whiteSpace: 'pre-wrap',
+          backgroundColor: '#f5f5f5',
+          padding: 2,
+          borderRadius: 1,
+        }}
+        >{log}</Typography> 
     </Box>
   );
 };
