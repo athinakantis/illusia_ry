@@ -9,6 +9,7 @@ import {
   Divider,
 } from '@mui/material';
 import { DynamicTable } from './DynamicTable';
+import { ItemDataGrid } from './ItemGrid/ItemDataGrid';
 
 export const ItemTester = () => {
   const { session } = useAuth();
@@ -117,7 +118,7 @@ export const ItemTester = () => {
 
         <Divider />
         <Button variant="text" onClick={getItems}>Get Items</Button>
-        <DynamicTable data={items} />
+        <ItemDataGrid data={items} />
       
       </Stack>
     </Box>

@@ -1,5 +1,22 @@
 import { createTheme, PaletteMode } from '@mui/material';
+// Needed to allow MUI X DataGrid theming
 
+import type {} from '@mui/x-data-grid/themeAugmentation';
+import type {} from '@mui/x-data-grid-pro/themeAugmentation';
+import type {} from '@mui/x-data-grid-premium/themeAugmentation';
+
+const theme = createTheme({
+  components: {
+    // Use `MuiDataGrid` on DataGrid, DataGridPro and DataGridPremium
+    MuiDataGrid: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+      },
+    },
+  },
+});
 const lightGradient =
   'linear-gradient(295deg, #85FFBD 0%, #FFFB7D 62%, #04ffe8 100%)';
 
