@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { Database } from 'src/types/supabase';
 
 @Injectable()
 export class SupabaseService {
@@ -15,56 +16,14 @@ export class SupabaseService {
       throw new Error('Supabase URL and key must be provided');
     }
     // Create a client with the anonymous key for public operations
-    this._supabase = createClient(url, key);
+    this._supabase = createClient<Database>(url, key);// Added the Database type
 
-    // Create a second client with the service role key for admin operations
-   
   }
 
   get supabase() {
     return this._supabase;
   }
 
-
-
-  async getUsers() {
-    const { data, error } = await this.supabase.from('users').select('*');
-    if (error) throw error;
-    return data;
-  }
-
-  async addUser(user: { name: string; email: string }) {
-    const { data, error } = await this.supabase.from('users').insert(user);
-    if (error) throw error;
-    return data;
-  }
-  async getItems() {
-    const { data, error } = await this.supabase.from('items').select('*');
-    if (error) throw error;
-    return data;
-  }
-  async getProtectedData(userId: string) {
-    console.log(
-      `[${new Date().toISOString()}] Fetching protected data for user: ${userId}`,
-    );
-
-    const { data, error } = await this.supabase
-      .from('items')
-      .select('*')
-
-    if (error) {
-      console.error(
-        `[${new Date().toISOString()}] Error fetching data:`,
-        error.message,
-      );
-      throw error;
-    }
-
-    console.log(
-      `[${new Date().toISOString()}] Successfully retrieved ${data.length} records for user: ${userId}`,
-    );
-    return data;
-  }
 }
 
   
