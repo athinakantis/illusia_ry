@@ -1,18 +1,16 @@
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchAllItems, selectAllItems } from '../slices/itemsSlice';
-import { Item } from '../types/types';
 
 
 function Items() {
-  const items: Item[] = useAppSelector(selectAllItems)
+  const items = useAppSelector(selectAllItems)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (items.length < 1) {
       dispatch(fetchAllItems())
     }
-    console.log('items: ', items)
   }, [dispatch, items])
 
   return (
