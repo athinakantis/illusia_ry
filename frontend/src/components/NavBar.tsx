@@ -52,13 +52,14 @@ export const NavBar = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
           <MUILink
             component={RouterLink}
-            to="/protected"
+            to="/crud"
             color="inherit"
             underline="none"
             sx={{ fontSize: '1rem', fontWeight: 500 }}
           >
-            Protected
+            Crud DataGrid
           </MUILink>
+          
           <Logout />
         </Box>
       </Toolbar>

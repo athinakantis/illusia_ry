@@ -30,7 +30,9 @@ export const ItemTester = () => {
 
   const apiUrl = 'http://localhost:5001/items';
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
@@ -38,7 +40,7 @@ export const ItemTester = () => {
     }));
   };
 
-  const logResult = (msg:string) => setLog(JSON.stringify(msg, null, 2));
+  const logResult = (msg: string) => setLog(JSON.stringify(msg, null, 2));
 
   const getItems = async () => {
     const res = await fetch(apiUrl, {
@@ -96,10 +98,21 @@ export const ItemTester = () => {
   }, [token]);
 
   return (
-    <Box p={3}>
-      <Typography variant="h4">/items CRUD Tester</Typography>
-
-      <Stack spacing={2} mt={3}>
+    <Box
+    p={3}
+    mt={3}
+  >
+    <Typography variant="h1" mb={2}>
+      Item CRUD
+    </Typography>
+    <Stack
+      direction="column"
+      divider={<Divider orientation="horizontal" flexItem />}
+      spacing={2}
+      width="100%"
+      maxWidth="500px"
+        mx="auto"
+    >
         <TextField
           label="Item Name"
           name="item_name"
@@ -142,7 +155,7 @@ export const ItemTester = () => {
           Create Item
         </Button>
 
-        <Divider />
+        
         <TextField
           label="Item ID to Update"
           value={itemIdToUpdate}
@@ -152,7 +165,7 @@ export const ItemTester = () => {
           Update Item
         </Button>
 
-        <Divider />
+        
         <TextField
           label="Item ID to Delete"
           value={itemIdToDelete}
@@ -162,18 +175,26 @@ export const ItemTester = () => {
           Delete Item
         </Button>
 
-        <Divider />
+        
         <Button variant="text" onClick={getItems}>
           Get Items
         </Button>
-        <Typography variant="h1" color="textSecondary">
-          Custom Item DataGrid(Only works in Lightmode)
-        </Typography>
-        <CustomItemDataGrid data={items} />
-        <Divider />
-        <Typography variant="h1">Normal DataGrid</Typography>
-        <ItemDataGrid data={items} />
       </Stack>
+
+      <Divider sx={{ my: 2 }} />
+      
+      <Typography variant="h1" color="textSecondary">
+        Custom Item DataGrid(Only works in Lightmode)
+      </Typography>
+      
+      <CustomItemDataGrid data={items} />
+      <Divider sx={{ my: 5 }} />
+
+      <Typography variant="h1">Normal DataGrid</Typography>
+      <ItemDataGrid data={items} />
+      
+      <Divider sx={{ my: 5 }} />
+      
       <Typography variant="h4" mt={3}>
         Log
       </Typography>
@@ -185,7 +206,9 @@ export const ItemTester = () => {
           padding: 2,
           borderRadius: 1,
         }}
-        >{log}</Typography> 
+      >
+        {log}
+      </Typography>
     </Box>
   );
 };
