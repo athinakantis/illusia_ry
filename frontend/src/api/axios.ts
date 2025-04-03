@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { supabase } from '../config/supabase';
 
 export const api = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL,
@@ -8,15 +9,16 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use(
-    (config) => config,
-    (error) => Promise.reject(error)
-);
-
-// Key change: Return response.data directly
-api.interceptors.response.use(
-    (response) => response.data,
+    async (config) => {
+      const { data: sessionData } = await supabase.auth.getSession();
+  
+      if (sessionData?.session?.access_token) {
+        config.headers.Authorization = `Bearer ${sessionData.session.access_token}`;
+      }
+  
+      return config;
+    },
     (error) => {
-        console.error('API Error:', error.response?.data || error.message);
-        return Promise.reject(error);
+      return Promise.reject(error);
     }
-);
+  );

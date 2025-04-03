@@ -13,7 +13,7 @@ export const fetchAllItems = createAsyncThunk(
   'items/fetchAllItems',
   async () => {
     const response = await itemsApi.getAllItems();
-    return response;
+    return response.data;
   }
 );
 
