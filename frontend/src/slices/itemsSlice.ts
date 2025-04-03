@@ -13,7 +13,7 @@ export const fetchAllItems = createAsyncThunk(
   'items/fetchAllItems',
   async () => {
     const response = await itemsApi.getAllItems();
-    return response.data;
+    return response;
   }
 );
 
@@ -28,7 +28,7 @@ export const itemsSlice = createSlice({
     })
     builder.addCase(fetchAllItems.fulfilled, (state, action) => {
       state.loading = false
-      state.items = action.payload;
+      state.items = action.payload.data
     })
     builder.addCase(fetchAllItems.rejected, (state) => {
       state.loading = false
