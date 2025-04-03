@@ -20,9 +20,9 @@ export const ItemManager = () => {
 
   const handleAddItem = async () => {
     if (!session?.access_token) return;
-
+console.log('session', session)
     try {
-      const res = await fetch('http://localhost:5001/items', {
+      const res = await fetch('http://localhost:5001/items/add', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${session.access_token}`,

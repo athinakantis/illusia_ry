@@ -4,14 +4,16 @@ import {
     UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { NextFunction, Request, Response } from 'express';
-
+interface AuthenticatedRequest extends Request {
+  supabase: SupabaseClient;
+}
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
   constructor(private configService: ConfigService) {}
 
-  async use(req: Request, res: Response, next: NextFunction) {
+  async use(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     console.log(
       `[${new Date().toISOString()}] Authenticating request to: ${req.method} ${req.path}`,
     );
@@ -37,7 +39,13 @@ export class AuthMiddleware implements NestMiddleware {
       if (!supabaseUrl || !supabaseAnonKey) {
         throw new Error('Supabase URL or Anon key not found in environment variables');
       }
-      const supabase = createClient(supabaseUrl, supabaseAnonKey);
+      const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+        global: {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      });
 
       // Verify the user's JWT token
       const {
@@ -58,6 +66,7 @@ export class AuthMiddleware implements NestMiddleware {
 
       // Attach the user to the request
       req['user'] = user;
+      req['supabase'] = supabase;
 
       next();
     } catch (error) {

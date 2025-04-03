@@ -3,6 +3,8 @@ import { Request } from 'express';
 import { ItemService } from '../services/items.service';
 import { User } from '@supabase/supabase-js';
 import { Item } from 'src/types/item.type';
+import { AuthenticatedRequest } from 'src/types/customRequest.type';
+
 
 @Controller('items')
 export class ItemController {
@@ -22,45 +24,38 @@ export class ItemController {
       };
     }
   }
-  
-// Add this endpoint to create a new item
+
   @Post()
-  async addItem(@Req() req: Request, @Body() body: Item) {
-    try {
-      if (!req['user']) {
-        return {
-          status: 'error',
-          message: 'Unauthorized access',
-        };
-      }
+  async addItem(@Req() req: AuthenticatedRequest, @Body() item: Item) {
+    const supabase = req.supabase;
+
+    const { item_name, description, image_path, location, quantity } = item;
+    const { data, error } = await supabase
+      .from('items')
+      .insert({
+        item_name,
+        description,
+        image_path,
+        location,
+        quantity,
+        category_id: 'd1a0db85-8e03-4ba1-9ba8-5780d76e8c6d', // Default category ID
+      });
+
+    console.log('item', item);
+
+    if (error) {
+      console.error('Error adding item: ', error);
+      throw error;
+    }
+
+    return {
+      status: 'success',
+      message: 'Item added successfully',
+      data: data,
       
-      const user: Partial<User> = req['user'];
-
-      if (!user.id) {
-        throw new Error('User ID is missing');
-      }
-
-      const newItem = await this.itemService.addItem(body);
-
-      return {
-        status: 'success',
-        item: newItem,
-        user: {
-          id: user.id,
-          email: user.email,
-        },
-        message: 'Item added successfully',
-      };
-    } catch (error) {
-      console.error(`[${new Date().toISOString()}] Error in addItem:`, error.message);
-      return {
-        status: 'error',
-        message: error.message,
-      };
     }
   }
 
-  // Add this endpoint to delete an item by ID
   @Delete('/:id')
   async deleteItem(@Req() req: Request, @Param('id') item_id: string) {
     try {

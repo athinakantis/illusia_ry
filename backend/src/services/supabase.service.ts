@@ -27,23 +27,5 @@ export class SupabaseService {
 
 
 
-  async getUsers() {
-    const { data, error } = await this.supabase.from('users').select('*');
-    if (error) throw error;
-    return data;
-  }
 
-  async addUser(user: { name: string; email: string }) {
-    const { data, error } = await this.supabase.from('users').insert(user);
-    if (error) throw error;
-    return data;
-  }
-  async getItems() {
-    const { data, error } = await this.supabase.from('items').select('*');
-    if (error) throw error;
-    return data;
-  }
-  
 }
-
-  

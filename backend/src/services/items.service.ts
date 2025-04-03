@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 import { SupabaseService } from './supabase.service';
 import { Item } from 'src/types/item.type';
+import { AuthenticatedRequest } from 'src/types/customRequest.type';
+
 
 @Injectable()
 export class ItemService {
@@ -15,10 +17,11 @@ export class ItemService {
     }
     return data
   }
-
-  async addItem(/* userId: string, */ item: Item) {
-    const { item_name, description, image_path, location, quantity } = item;
-    const { data, error } = await this.supabaseService.supabase
+async addItem(req: AuthenticatedRequest, item: Item) {
+  const supabase = req['supabase'];
+console.log("supabase",supabase)
+    const { item_name, description, image_path, location, quantity} = item;
+    const { data, error } = await supabase
     .from('items')
     .insert({
       // user_id: userId, // Maybe add a user_id field to the items table for tracking
@@ -35,8 +38,11 @@ export class ItemService {
       console.error('Error adding item: ', error);
       throw error;
     }
-
-    return data;
+  return {
+    message: 'Item added successfully',
+    data: data
+    
+  }
   }
 
   async removeItem(/* userId: string, */ itemId: string) {
