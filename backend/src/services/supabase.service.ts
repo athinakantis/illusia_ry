@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { Database } from 'src/types/supabase';
 
 @Injectable()
 export class SupabaseService {
@@ -15,17 +16,12 @@ export class SupabaseService {
       throw new Error('Supabase URL and key must be provided');
     }
     // Create a client with the anonymous key for public operations
-    this._supabase = createClient(url, key);
+    this._supabase = createClient<Database>(url, key);// Added the Database type
 
-    // Create a second client with the service role key for admin operations
-   
   }
 
   get supabase() {
     return this._supabase;
   }
-
-
-
-
 }
+

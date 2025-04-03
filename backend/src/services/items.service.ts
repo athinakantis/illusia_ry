@@ -1,62 +1,121 @@
 import { Injectable } from '@nestjs/common';
-
+import { ConfigService } from '@nestjs/config';
 import { SupabaseService } from './supabase.service';
-import { Item } from 'src/types/item.type';
-import { AuthenticatedRequest } from 'src/types/customRequest.type';
-
-
+import { Tables } from 'src/types/supabase';
+import { CustomRequest } from 'src/types/customReq.type';
 @Injectable()
 export class ItemService {
-  constructor(private supabaseService: SupabaseService) {}
+  private readonly _supabase: SupabaseService; // This was set to SupabaseClient before
+  constructor(private configService: ConfigService) {}
 
-  async getItems() {
-    const { data, error } = await this.supabaseService.supabase.from('items').select('*');
-    if (error) {
-      console.error('Error fetching items: ', error)
-      throw error;
+  async getItems(req: CustomRequest) {
+    const supabase = req['supabase'];
+    try {
+      const { data, error } = await supabase.from('items').select('*');
+
+      if (error) {
+        console.error('Error retrieving items: ', error);
+        throw error;
+      }
+
+      return {
+        message: 'Items retrieved successfully',
+        data,
+      };
+    } catch (err) {
+      console.error('Unexpected error in getItems:', err);
+      throw err;
     }
-    return data
   }
-async addItem(req: AuthenticatedRequest, item: Item) {
-  const supabase = req['supabase'];
-console.log("supabase",supabase)
-    const { item_name, description, image_path, location, quantity} = item;
-    const { data, error } = await supabase
-    .from('items')
-    .insert({
-      // user_id: userId, // Maybe add a user_id field to the items table for tracking
+
+  // Below is an example of how to type an item from the items table: item: Tables<"items">
+  async addItem(req: CustomRequest, item: Tables<'items'>) {
+
+const supabase = req['supabase'];
+    const user = req['user'];
+    const {
       item_name,
       description,
       image_path,
       location,
       quantity,
-      category_id: 'd1a0db85-8e03-4ba1-9ba8-5780d76e8c6d', // Default category ID, you might want to change this
-    });
-    console.log('item', item)
+      category_id,
+    } = item;
+    const { data, error } = await supabase.from('items').insert({
+      item_name,
+      description,
+      image_path,
+      location,
+      quantity,
+      category_id,
+    })
+    .select();
+  
 
     if (error) {
       console.error('Error adding item: ', error);
       throw error;
     }
-  return {
-    message: 'Item added successfully',
-    data: data
-    
-  }
+    return {
+      message: 'Item added successfully',
+      data: data,
+      user: {
+        id: user?.id,
+        email: user?.email,
+      },
+    };
   }
 
-  async removeItem(/* userId: string, */ itemId: string) {
-    const { data, error } = await this.supabaseService.supabase
+  async updateItem(req: CustomRequest, itemId: string, item: Partial<Tables<'items'>>) {
+    const supabase = req['supabase'];
+    const user = req['user'];
+    const { item_name, description, image_path, location, quantity, category_id } = item;
+    const { data, error } = await supabase
+      .from('items')
+      .update({
+        item_name,
+        description,
+        image_path,
+        location,
+        quantity,
+        category_id,
+      })
+      .eq('item_id', itemId)
+     
+    if (error) {
+      console.error('Error updating item: ', error);
+      throw error;
+    }
+    return {
+      message: `Item: ${itemId} updated successfully`,
+      data: data,
+      user: {
+        id: user?.id,
+        email: user?.email,
+      },
+    };
+  }
+
+  async deleteItem(req: CustomRequest, itemId: string) {
+    const supabase = req['supabase'];
+    const user = req['user'];
+    const { data, error } = await supabase
       .from('items')
       .delete()
-      .eq('id', itemId)
-      // .eq('user_id', userId);
+      .eq('item_id', itemId);
 
     if (error) {
       console.error('Error deleting item: ', error);
       throw error;
     }
 
-    return data;
+    return {
+      message: `Item: ${itemId} removed successfully`,
+      data: data,
+      user: {
+        id: user?.id,
+        email: user?.email,
+      },
+    };
   }
 }

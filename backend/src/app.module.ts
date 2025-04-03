@@ -6,7 +6,6 @@ import { SupabaseService } from './services/supabase.service';
 import { ItemController } from './controllers/item.controller';
 import { ItemService } from './services/items.service';
 import { AuthMiddleware } from './middlewares/auth.middleware';
-import { ProtectedDataController } from './controllers/protected-data.controller';
 
 @Module({
   imports: [
@@ -16,13 +15,12 @@ import { ProtectedDataController } from './controllers/protected-data.controller
   ],
   controllers: [
     AppController,
-    ProtectedDataController,
     ItemController,
   ], // Controller imports go here
   providers: [AppService, SupabaseService, ItemService], // Services are used to handle business logic and data access
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(ProtectedDataController,ItemController);
+    consumer.apply(AuthMiddleware).forRoutes(ItemController);
   }
 }
