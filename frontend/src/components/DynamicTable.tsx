@@ -7,12 +7,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-<<<<<<< Updated upstream
-import { Item } from "../types/types";
-
-=======
 import { Tables } from "../types/supabase";
->>>>>>> Stashed changes
 
 interface DynamicTableProps {
   data: Array<Record<string, unknown>>| Tables<"items">[];
