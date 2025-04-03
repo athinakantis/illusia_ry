@@ -9,13 +9,5 @@ export const itemsApi = {
 
     createItem: (item: Partial<Item>) => {
         api.post(`items`, item)
-    },
-    
-    updateItem: (id: string, updatedItem: Partial<Item>) => {
-        api.patch(`/items/${id}`, updatedItem)
-    },
-
-    deleteItem: (id: string) => {
-        api.delete(`/items/${id}`)
     }
 };
