@@ -28,7 +28,7 @@ export const itemsSlice = createSlice({
     })
     builder.addCase(fetchAllItems.fulfilled, (state, action) => {
       state.loading = false
-      state.items = action.payload;
+      state.items = action.payload.data
     })
     builder.addCase(fetchAllItems.rejected, (state) => {
       state.loading = false

@@ -16,7 +16,7 @@ function Items() {
   return (
     <>
       {items.map(item => (
-        <p>{item.item_name}</p>
+        <p key={item.item_id}>{item.item_name}</p>
       )
       )}
     </>
