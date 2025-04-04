@@ -72,7 +72,7 @@ export const CustomItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
         initialState={{
           pagination: { paginationModel: { pageSize: 10, page: 0 } },
         }}
-        pageSizeOptions={[10, 25, 50]}
+        pageSizeOptions={[10, 25, 50,100]}
         // getRowHeight={()=> "auto"}
         rowHeight={80}
         sx={{

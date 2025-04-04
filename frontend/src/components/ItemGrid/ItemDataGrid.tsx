@@ -60,7 +60,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
         rows={data}
         getRowId={(row) => row.item_id}
         columns={columns}
-        pageSizeOptions={[10, 25, 50]}
+        pageSizeOptions={[10, 25, 50,100]}
         // getRowHeight={()=> "auto"}
         rowHeight={80}
         />
