@@ -9,6 +9,7 @@
     "test:all": "concurrently \"cd backend && npm run test:e2e\" \"cd frontend && npm run test\""
   },
   "dependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.1.2",
+    "nodemailer": "^6.10.0"
   }
 }

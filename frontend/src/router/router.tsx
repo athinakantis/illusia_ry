@@ -5,34 +5,44 @@ import LoginPage from '../pages/LoginPage';
 import { NavBar } from '../components/NavBar';
 
 import ItemsPage from '../pages/Items';
+import ClickyButton from '../pages/ClickyButton';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element:(
+    element: (
       <>
-      <NavBar/>
-       <Home />
-       </>
+        <NavBar />
+        <Home />
+      </>
     )
   },
 
   {
     path: '/login',
-    element:(
+    element: (
       <>
-      <AuthRedirect />
-     <LoginPage />
+        <AuthRedirect />
+        <LoginPage />
       </>
     )
   },
-   {
+  {
     path: '/items',
     element: (
       <>
-      <NavBar/>
-      <ItemsPage />
+        <NavBar />
+        <ItemsPage />
       </>
     )
-   }
+  },
+  {
+    path: '/button',
+    element: (
+      <>
+        <NavBar />
+        <ClickyButton />
+      </>
+    )
+  }
 ])

@@ -6,6 +6,8 @@ import { SupabaseService } from './services/supabase.service';
 import { ItemController } from './controllers/item.controller';
 import { ItemService } from './services/items.service';
 import { AuthMiddleware } from './middlewares/auth.middleware';
+import { MailerService } from './services/mailer.service';
+import { MailerController } from './controllers/mailer.controller';
 
 @Module({
   imports: [
@@ -16,8 +18,9 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
   controllers: [
     AppController,
     ItemController,
+    MailerController,
   ], // Controller imports go here
-  providers: [AppService, SupabaseService, ItemService], // Services are used to handle business logic and data access
+  providers: [AppService, SupabaseService, ItemService, MailerService], // Services are used to handle business logic and data access
 })
 
 export class AppModule implements NestModule {
