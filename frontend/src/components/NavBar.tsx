@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { useContext } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
-import { lightPalette, darkPalette } from "../theme/theme";
+import { lightPalette, darkPalette } from "../Theme/theme";
 import { FiMoon, FiSun } from 'react-icons/fi';
 import Logout from './Login/LoginOutBtn';
 import { Link as RouterLink } from 'react-router-dom';

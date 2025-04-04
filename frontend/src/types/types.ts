@@ -14,3 +14,9 @@ export interface ItemState {
   error: null | string,
   loading: boolean
 }
+
+export interface ApiResponse<T> {
+  data: T;
+  error?: string | Error;
+  message: string;
+}

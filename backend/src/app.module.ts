@@ -19,6 +19,7 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
   ], // Controller imports go here
   providers: [AppService, SupabaseService, ItemService], // Services are used to handle business logic and data access
 })
+
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes(ItemController);
