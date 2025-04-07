@@ -7,10 +7,10 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-
+import { Tables } from "../types/supabase";
 
 interface DynamicTableProps {
-  data: Array<Record<string, unknown>>| Item[];// need to change this to our actual data type
+  data: Array<Record<string, unknown>>| Tables<"items">[];
 }
 
 export const DynamicTable = ({ data }: DynamicTableProps) => {

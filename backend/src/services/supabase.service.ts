@@ -23,7 +23,5 @@ export class SupabaseService {
   get supabase() {
     return this._supabase;
   }
-
 }
 
-  

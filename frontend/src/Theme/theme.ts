@@ -1,4 +1,7 @@
 import { createTheme, PaletteMode } from '@mui/material';
+// Needed to allow MUI X DataGrid theming
+
+import type {} from '@mui/x-data-grid/themeAugmentation';
 
 const lightGradient =
   'linear-gradient(295deg, #85FFBD 0%, #FFFB7D 62%, #04ffe8 100%)';
@@ -47,6 +50,7 @@ export const darkPalette = {
     primary: '#ffffff',
     secondary: '#b3b3b3',
   },
+
   custom: {
     darkGradient,
   },
@@ -58,6 +62,7 @@ export const createAppTheme = (mode: PaletteMode) =>
       mode,
       ...(mode === 'light' ? lightPalette : darkPalette),
     },
+
     typography: {
       fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
       h1: { fontSize: '2rem', fontWeight: 500 },

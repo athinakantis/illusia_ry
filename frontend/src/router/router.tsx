@@ -2,37 +2,27 @@ import { createBrowserRouter } from 'react-router-dom';
 import Home from '../pages/Home';
 import { AuthRedirect } from '../components/auth/AuthRedirect';
 import LoginPage from '../pages/LoginPage';
-import { NavBar } from '../components/NavBar';
-
-import ItemsPage from '../pages/Items';
+import ItemsPage from '../pages/Items'
+import { ItemTester } from '../components/ItemCRUD';
+import { MainLayout } from '../layout/MainLayout';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element:(
-      <>
-      <NavBar/>
-       <Home />
-       </>
-    )
+    element: <MainLayout />,
+    children: [
+      { path: '/', element: <Home /> },
+      { path: '/items', element: <ItemsPage /> },
+      { path: '/crud', element: <ItemTester /> },
+    ],
   },
-
   {
     path: '/login',
-    element:(
-      <>
-      <AuthRedirect />
-     <LoginPage />
-      </>
-    )
-  },
-   {
-    path: '/items',
     element: (
       <>
-      <NavBar/>
-      <ItemsPage />
+        <AuthRedirect />
+        <LoginPage />
       </>
-    )
-   }
-])
+    ),
+  },
+]);
