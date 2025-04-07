@@ -55,4 +55,34 @@ describe('itemsSlice deleteItem thunk', () => {
     expect(state.items.length).toBe(1);
     expect(state.items[0].item_id).toBe('2');
   });
+
+  it('should set loading to true on pending', () => {
+    const action = { type: deleteItem.pending.type };
+    const state = itemsReducer(
+      {
+        items: mockItems,
+        loading: false,
+        error: null,
+      },
+      action
+    );
+    expect(state.loading).toBe(true);
+  });
+
+  it('should set error on rejected', () => {
+    const action = {
+      type: deleteItem.rejected.type,
+      error: { message: 'Failed to delete' },
+    };
+    const state = itemsReducer(
+      {
+        items: mockItems,
+        loading: true,
+        error: null,
+      },
+      action
+    );
+    expect(state.loading).toBe(false);
+    expect(state.error).toBe('Failed to delete');
+  });
 });
