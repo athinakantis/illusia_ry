@@ -17,6 +17,7 @@
     "@fontsource/roboto": "^5.2.5",
     "@mui/icons-material": "^7.0.0",
     "@mui/material": "^7.0.0",
+    "@mui/x-data-grid": "^7.28.3",
     "@reduxjs/toolkit": "^2.6.1",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/ssr": "^0.6.1",
