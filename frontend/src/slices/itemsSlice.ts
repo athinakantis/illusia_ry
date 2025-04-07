@@ -17,6 +17,14 @@ export const fetchAllItems = createAsyncThunk(
   }
 );
 
+export const deleteItem = createAsyncThunk(
+  'items/deleteItem',
+  async (id: string) => {
+    const response = await itemsApi.deleteItem(id);
+    return response;
+  }
+);
+
 
 export const itemsSlice = createSlice({
   name: 'items',
@@ -33,6 +41,12 @@ export const itemsSlice = createSlice({
     builder.addCase(fetchAllItems.rejected, (state) => {
       state.loading = false
       state.error = 'Could not fetch items'
+    })
+    builder.addCase(deleteItem.fulfilled, (state, action) => {
+      const deletedId = action.payload?.data?.item_id;
+      if (deletedId) {
+        state.items = state.items.filter(item => item.item_id !== deletedId);
+      }
     })
   }
 })
