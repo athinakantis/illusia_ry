@@ -2,19 +2,17 @@ import { createBrowserRouter } from 'react-router-dom';
 import Home from '../pages/Home';
 import { AuthRedirect } from '../components/auth/AuthRedirect';
 import LoginPage from '../pages/LoginPage';
-import { NavBar } from '../components/NavBar';
-
 import ItemsPage from '../pages/Items';
+import { Layout } from '../pages/Layout';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element:(
-      <>
-      <NavBar/>
-       <Home />
-       </>
-    )
+    element:<Layout />,
+    children: [
+     {index: true, element : <Home />},
+     { path: '/items', element: <ItemsPage /> },
+    ]
   },
 
   {
@@ -26,13 +24,5 @@ export const router = createBrowserRouter([
       </>
     )
   },
-   {
-    path: '/items',
-    element: (
-      <>
-      <NavBar/>
-      <ItemsPage />
-      </>
-    )
-   }
+  
 ])
