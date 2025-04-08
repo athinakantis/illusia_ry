@@ -4,6 +4,7 @@ import { AuthRedirect } from '../components/auth/AuthRedirect';
 import LoginPage from '../pages/LoginPage';
 import ItemsPage from '../pages/Items';
 import { Layout } from '../pages/Layout';
+import AdminItems from '../pages/Admin/Items';
 
 export const router = createBrowserRouter([
   {
@@ -12,6 +13,7 @@ export const router = createBrowserRouter([
     children: [
      {index: true, element : <Home />},
      { path: '/items', element: <ItemsPage /> },
+     { path: '/admin/items', element: <AdminItems /> },
     ]
   },
 

@@ -1,10 +1,10 @@
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
-import { Tables } from '../../types/supabase.types';
 import { renderCellExpand } from './RenderCellExpand';
+import { Item } from '../../types/types';
 
 interface ItemDataGridProps {
-  data: Tables<'items'>[];
+  data: Item[];
 }
 
 const uuidLength = 285;
@@ -64,7 +64,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
     },
   ];
   return (
-    <Box sx={{ height: 600, width: '100%', mt: 2 }}>
+    <Box sx={{ height: "1000px", width: "100%", mt: 2 }}>
       <DataGrid
         rows={data}
         getRowId={(row) => row.item_id}
