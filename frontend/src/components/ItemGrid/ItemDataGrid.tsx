@@ -1,4 +1,4 @@
-import { DataGrid, GridColDef, GridDeleteIcon } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box, IconButton, Typography } from '@mui/material';
 import { renderCellExpand } from './RenderCellExpand';
 import { Item } from '../../types/types';
@@ -25,15 +25,17 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
 
   const columns: GridColDef[] = [
     {
-      field: 'item_id',
-      headerClassName: 'super-app-theme--header',
+      field: 'item_id',// ID of the item
+      headerClassName: 'super-app-theme--header',// Class to edit the Header CSS
+      headerAlign: 'left',
       headerName: 'ID',
-      width: uuidLength,
-      renderCell: renderCellExpand,
+      width: uuidLength, // Adjust width as needed
+      renderCell: renderCellExpand,// Function to render the cell content with word wrapping
     },
     {
       field: 'item_name',
       headerClassName: 'super-app-theme--header',
+      headerAlign: 'left',
       headerName: 'Name',
       minWidth: 150,
       renderCell: renderCellExpand,
@@ -42,6 +44,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       field: 'description',
       headerClassName: 'super-app-theme--header',
       headerName: 'Description',
+      headerAlign: 'left',
       minWidth: 240,
       flex: 1,
       renderCell: renderCellExpand,
@@ -50,6 +53,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       field: 'image_path',
       headerClassName: 'super-app-theme--header',
       headerName: 'Image Path',
+      headerAlign: 'left',
       minWidth: 240,
       renderCell: renderCellExpand,
     },
@@ -57,6 +61,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       field: 'location',
       headerClassName: 'super-app-theme--header',
       headerName: 'Location',
+      headerAlign: 'left',
       minWidth: 120,
       renderCell: renderCellExpand,
     },
@@ -64,6 +69,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       field: 'quantity',
       headerClassName: 'super-app-theme--header',
       headerName: 'Pcs',
+      headerAlign: 'left',
       type: 'number',
       width: 50,
       renderCell: renderCellExpand,
@@ -72,6 +78,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       field: 'category_id',
       headerClassName: 'super-app-theme--header',
       headerName: 'Category',
+      headerAlign: 'left',
       minWidth: uuidLength,
       renderCell: renderCellExpand,
     },
@@ -79,6 +86,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       field: 'created_at',
       headerClassName: 'super-app-theme--header',
       headerName: 'Created At',
+      headerAlign: 'left',
       minWidth: timeStampLength,
       renderCell: (params) => (
         <Typography variant="body2"
