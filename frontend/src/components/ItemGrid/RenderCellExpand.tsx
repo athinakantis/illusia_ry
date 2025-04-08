@@ -9,20 +9,18 @@ export function renderCellExpand(params: GridRenderCellParams) {
   if (!value) return '';
 
   return (
-    
+    // Render the cell content with a Typography component
+     // This allows for word wrapping and ensures the text is displayed correctly
       <Typography
         variant="body2"
         sx={{
-          fontSize: '1rem',
           display: 'flex',
-          justifyContent: 'flex-start',
           alignItems: 'center',
           width: '100%',
           height: '100%',
-          whiteSpace: 'normal',
+          whiteSpace: 'normal',// lets text wrap
 
         }}
-        noWrap
       >
         {value}
       </Typography>

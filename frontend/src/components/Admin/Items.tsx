@@ -10,10 +10,7 @@ function Items() {
   const items = useAppSelector(selectAllItems);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    if (role !== 'Head Admin') {
-      console.error('User is not Head Admin');
-    }
-    return;
+    if (role !== 'Head Admin') return;
   }, [role]);
   
   useEffect(() => {
