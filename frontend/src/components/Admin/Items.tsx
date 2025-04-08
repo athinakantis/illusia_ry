@@ -1,9 +1,9 @@
 import { ItemDataGrid } from '../ItemGrid/ItemDataGrid';
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { useEffect } from 'react';
 import { fetchAllItems, selectAllItems } from '../../slices/itemsSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useAuth } from '../../hooks/useAuth';
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 
 
 function Items() {
@@ -11,9 +11,8 @@ function Items() {
   const items = useAppSelector(selectAllItems);
   const dispatch = useAppDispatch();
 
-  console.log('role in items: ', role)
-
-  if (role === 'User' || role === 'Unapproved') return
+  // Check if user is authorized
+  if (!role?.includes('Admin') || !role) return
 
   useEffect(() => {
     if (items.length < 1) {
