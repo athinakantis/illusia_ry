@@ -7,14 +7,15 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { Item } from '../types/types';
 
 
 interface DynamicTableProps {
-  data: Array<Record<string, unknown>>| Item[];// need to change this to our actual data type
+  data: Array<Record<string, unknown>> | Item[];// need to change this to our actual data type
 }
 
 export const DynamicTable = ({ data }: DynamicTableProps) => {
-  if(!data) return null;
+  if (!data) return null;
   if (!data.length) return null;
 
   // Get headers from the first data item
