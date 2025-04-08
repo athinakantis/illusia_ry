@@ -6,12 +6,12 @@ import { GuestService } from '../services/guest.service';
 
 @Controller('items')
 export class GuestController {
-  constructor(private readonly itemService: GuestService) {
+  constructor(private readonly guestService: GuestService) {
   }
 
   @Get()
   async getItems() {
     console.log('received request to backend')
-    return this.itemService.getItems();
+    return this.guestService.getItems();
   }
 }

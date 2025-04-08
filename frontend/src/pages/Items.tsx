@@ -4,12 +4,12 @@ import AdminItems from './Admin/Items';
 
 function Items() {
   const { role } = useAuth();
-  if (role === 'User') {
+  if (role === 'User' || role === 'Unapproved' || !role) {
     return (
-     <>
-       <UserItems />
-     </>
-   )
+      <>
+        <UserItems />
+      </>
+    )
   } else {
     return (
       <>
