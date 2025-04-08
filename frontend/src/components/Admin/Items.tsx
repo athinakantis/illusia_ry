@@ -1,6 +1,6 @@
 import { ItemDataGrid } from '../ItemGrid/ItemDataGrid';
 import { useEffect } from 'react';
-import { deleteItem, fetchAllItems, selectAllItems } from '../../slices/itemsSlice';
+import { fetchAllItems, selectAllItems } from '../../slices/itemsSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useAuth } from '../../hooks/useAuth';
 import { Box } from '@mui/material';
