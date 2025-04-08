@@ -1,20 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseService } from './supabase.service';
 import { Tables } from 'src/types/supabase';
-import {CustomRequest } from 'src/types/request.type';
+import { CustomRequest } from 'src/types/request.type';
 import { ApiResponse } from 'src/types/response';
 import { ConfigService } from '@nestjs/config';
+
 @Injectable()
 export class ItemService {
-  private readonly _supabase: SupabaseService; 
-  constructor(private configService: ConfigService) {}
+  constructor(
+    private configService: ConfigService,
+    private readonly supabaseService: SupabaseService
+  ) {}
 
   async getItems(req: CustomRequest): Promise<ApiResponse<Tables<'items'>[]>> {
     const supabase = req['supabase'];
     try {
       const { data, error } = await supabase
-      .from('items')
-      .select('*');
+        .from('items')
+        .select('*');
 
       if (error) {
         console.error('Error retrieving items: ', error);
@@ -23,7 +26,7 @@ export class ItemService {
 
       return {
         message: 'Items retrieved successfully',
-        data : data || [],
+        data: data || [],
       };
     } catch (err) {
       console.error('Unexpected error in getItems:', err);
@@ -32,12 +35,6 @@ export class ItemService {
   }
 
   async addItem(req: CustomRequest, item: Tables<'items'>): Promise<ApiResponse<Tables<'items'>>> {
-
-const supabase = req['supabase'];
-// Log user for records will link to System_Logs later
-//const user = req['user'];    
-  // Below is an example of how to type an item from the items table: item: Tables<"items">
-  async addItem(req: CustomRequest, item: Tables<'items'>) {
     const supabase = req['supabase'];
 
     const {
@@ -48,6 +45,7 @@ const supabase = req['supabase'];
       quantity,
       category_id,
     } = item;
+
     const { data, error } = await supabase.from('items').insert({
       item_name,
       description,
@@ -56,37 +54,25 @@ const supabase = req['supabase'];
       quantity,
       category_id,
     })
-
     .select()
     .single();
-    const { data, error } = await supabase
-      .from('items')
-      .insert({
-        item_name,
-        description,
-        image_path,
-        location,
-        quantity,
-        category_id,
-      })
-      .select()
-      .single();
 
     if (error) {
       console.error('Error adding item: ', error);
       throw error;
     }
+
     // Using the SupabaseService to log the action(Service Role Key)
-    await this.SupabaseService.logAction({
+    await this.supabaseService.logAction({
       user_id: req.user.id,
       action_type: 'ADD_ITEM',
       target_id: data.item_id,
       metadata: { item_name: data.item_name },
     });
+
     return {
       message: 'Item added successfully',
       data: data,
-    
     };
   }
 
@@ -95,26 +81,10 @@ const supabase = req['supabase'];
     itemId: string,
     item: Partial<Tables<'items'>>
   ): Promise<ApiResponse<Tables<'items'>>> {
-  async updateItem(
-    req: CustomRequest,
-    itemId: string,
-    item: Partial<Tables<'items'>>,
-  ) {
     const supabase = req['supabase'];
-    // Log user for records will link to System_Logs later
-    // const user = req['user'];
-    
 
     const { item_name, description, image_path, location, quantity, category_id } = item;
-    const user = req['user'];
-    const {
-      item_name,
-      description,
-      image_path,
-      location,
-      quantity,
-      category_id,
-    } = item;
+
     const { data, error } = await supabase
       .from('items')
       .update({
@@ -126,11 +96,11 @@ const supabase = req['supabase'];
         category_id,
       })
       .eq('item_id', itemId)
-      .single();
       .select()
       .single();
+
     // Using the SupabaseService to log the action(Service Role Key)
-    await this.SupabaseService.logAction({
+    await this.supabaseService.logAction({
       user_id: req.user.id,
       action_type: 'UPDATE_ITEM',
       target_id: itemId,
@@ -141,6 +111,7 @@ const supabase = req['supabase'];
       console.error('Error updating item: ', error);
       throw error;
     }
+
     return {
       message: `Item: ${itemId} updated successfully`,
       data: data,
@@ -149,26 +120,22 @@ const supabase = req['supabase'];
 
   async deleteItem(req: CustomRequest, itemId: string): Promise<ApiResponse<Tables<'items'>>> {
     const supabase = req['supabase'];
-    // Log user for records will link to System_Logs later
-    // const user = req['user'];
-    
+
     const { data, error } = await supabase
       .from('items')
       .delete()
-      .eq('item_id', itemId)
-      .single();
-
       .eq('item_id', itemId)
       .select()
       .single();
 
     // Using the SupabaseService to log the action(Service Role Key)
-    await this.SupabaseService.logAction({
+    await this.supabaseService.logAction({
       user_id: req.user.id,
       action_type: 'DELETE_ITEM',
       target_id: itemId,
       metadata: { item_name: data.item_name },
     });
+
     if (error) {
       console.error('Error deleting item: ', error);
       throw error;
