@@ -2,6 +2,8 @@ import { useEffect, useState, ReactNode } from "react";
 import { AuthContext, AuthContextType } from "./AuthContext";
 import { supabase } from "../config/supabase";
 
+export type Role = 'Unapproved' | 'User' | 'Admin' | 'Head Admin'
+
 function extractRoleFromSession(session: AuthContextType["session"]): string | null {
   try {
     const token = session?.access_token;
@@ -16,14 +18,14 @@ function extractRoleFromSession(session: AuthContextType["session"]): string | n
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<AuthContextType["session"]>(null);
   const [user, setUser] = useState<AuthContextType["user"]>(null);
-  const [role, setRole] = useState<string | null>(null);
+  const [role, setRole] = useState<Role | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setRole(extractRoleFromSession(session));
+      setRole(extractRoleFromSession(session) as Role);
       setLoading(false);
     });
 
@@ -32,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setRole(extractRoleFromSession(session));
+      setRole(extractRoleFromSession(session) as Role);
       setLoading(false);
     });
 

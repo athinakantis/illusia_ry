@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchAllItems, selectAllItems } from '../slices/itemsSlice';
 import {
@@ -12,9 +12,14 @@ import {
   Typography,
 } from '@mui/material';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import { useAuth } from '../hooks/useAuth';
+
+
+
 function Items() {
   const items = useAppSelector(selectAllItems);
   const dispatch = useAppDispatch();
+  const { role } = useAuth()
 
   useEffect(() => {
     if (items.length < 1) {
