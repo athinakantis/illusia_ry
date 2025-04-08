@@ -9,7 +9,16 @@ function Items() {
 
   return (
     <Box sx={{ padding: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}>
+      {/* Button Container */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          paddingBottom: '32px',
+          maxWidth: '95%', // Match the Stack's width
+          margin: '0 auto', // Center the container horizontally
+        }}
+      >
         <Button
           variant="contained"
           color="primary"
@@ -18,9 +27,11 @@ function Items() {
           Add New Item
         </Button>
       </Box>
+
+      {/* Items Component */}
       <UserItems />
     </Box>
-  )
+  );
 }
 
 export default Items;
