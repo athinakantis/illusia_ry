@@ -3,6 +3,8 @@ import { createTheme } from '@mui/material';
 export const theme = {
   primary: {
     main: '#44195B',
+    light: '#9339C9',
+    dark: '#1F0A29',
     neutral: '#2c2c2c'
   },
   secondary: {
@@ -12,12 +14,18 @@ export const theme = {
   },
   background: {
     default: '#FFFFFF',
-    paper: '#ffffff',
+    lightgrey: 'lightgrey'
   },
   text: {
     primary: '#1F0A29',
     secondary: '#666666',
+    light: '#FAFAFA'
   },
+  accent: {
+    main: '#3CC5BC',
+    light: '#C1FDF9',
+    dark: '#27847E',
+  }
 };
 
 export const createAppTheme = () =>
