@@ -1,32 +1,42 @@
 import { ItemDataGrid } from '../ItemGrid/ItemDataGrid';
 import { useEffect } from 'react';
-import { fetchAllItems, selectAllItems } from '../../slices/itemsSlice';
+import { deleteItem, fetchAllItems, selectAllItems } from '../../slices/itemsSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useAuth } from '../../hooks/useAuth';
-import { supabase } from '../../config/supabase';
+import { Box } from '@mui/material';
 
 function Items() {
-  
+  const { role } = useAuth();
   const items = useAppSelector(selectAllItems);
   const dispatch = useAppDispatch();
-    // Implement hook call to ensure User is Admin. If not, return.
-    useEffect(() => {
-      if (items.length < 1) {
-        dispatch(fetchAllItems())
-      }
-    }, [dispatch, items])
-async function checkUser() {
-    const session = await supabase.auth.getSession();
-    console.log(session.data.session?.access_token);
+  useEffect(() => {
+    if (role !== 'Head Admin') {
+      console.error('User is not Head Admin');
+    }
+    return;
+  }, [role]);
+  
+  useEffect(() => {
+    if (items.length < 1) {
+      dispatch(fetchAllItems());
+    }
+  }, [dispatch, items]);
 
-  console.log(session);
-}
-checkUser();
-  //  if (!session) {
-  //   return <div>Loading...</div>;
-  // }
+
   return (
-      <ItemDataGrid data={items} />
+    <Box
+      sx={{
+        mt: 5,
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        padding: 4,
+        boxSizing: 'border-box',
+      }}
+    >
+    
+        <ItemDataGrid data={items} />
+    </Box>
   );
 }
 
