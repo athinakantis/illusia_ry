@@ -71,6 +71,13 @@ export type Database = {
             foreignKeyName: "booked_item_item_id_fkey"
             columns: ["item_id"]
             isOneToOne: false
+            referencedRelation: "frontend_item_view"
+            referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "booked_item_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
             referencedRelation: "items"
             referencedColumns: ["item_id"]
           },
@@ -159,6 +166,13 @@ export type Database = {
           tag_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "item_tags_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: true
+            referencedRelation: "frontend_item_view"
+            referencedColumns: ["item_id"]
+          },
           {
             foreignKeyName: "item_tags_item_id_fkey"
             columns: ["item_id"]
@@ -379,7 +393,18 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      frontend_item_view: {
+        Row: {
+          category_name: string | null
+          description: string | null
+          image_path: string | null
+          item_id: string | null
+          item_name: string | null
+          quantity: number | null
+          tags: string[] | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_user_role: {

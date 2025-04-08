@@ -14,7 +14,7 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider>
       <CssBaseline />
       <AuthProvider>
-      <App />
+        <App />
       </AuthProvider>
     </ThemeProvider>
   </StrictMode>,

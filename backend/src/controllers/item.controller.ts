@@ -9,7 +9,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { ItemService } from '../services/items.service';
-import { CustomRequest } from 'src/types/customReq.type';
+import { CustomRequest } from 'src/types/request.type';
 import { Tables } from 'src/types/supabase';
 
 @Controller('items')

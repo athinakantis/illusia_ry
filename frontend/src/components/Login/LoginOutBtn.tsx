@@ -9,15 +9,15 @@ const Logout = () => {
   };
   if (!user) {
     return (
-        <Link to="/login">
-        <Button  variant="contained" color="error">
+      <Link to="/login">
+        <Button variant="text" color="secondary">
           Login
         </Button>
-        </Link>
-        );
+      </Link>
+    );
   }
   return (
-    <Button variant="contained" color="error" onClick={handleLogout}>
+    <Button variant="text" color="secondary" onClick={handleLogout}>
       Logout
     </Button>
   );

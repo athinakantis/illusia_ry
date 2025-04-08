@@ -44,15 +44,15 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## __Endpoints__
+## **Endpoints**
 
 Check these endpoints after starting the server to make sure everything is working OK.
 
-You can access these easily by __copying the urls into your browser__.
+You can access these easily by **copying the urls into your browser**.
 
 ### Using the Anon key
 
-These endpoints are using the __Anon__ key and I think you need to __authenticate__ with Supabase before you would be able to see any of the tables. We probably need to set that up.
+These endpoints are using the **Anon** key and I think you need to **authenticate** with Supabase before you would be able to see any of the tables. We probably need to set that up.
 
 ```html
 http://localhost:5001
@@ -62,13 +62,53 @@ http://localhost:5001/test/supabase
 
 ### Using the Service Role key
 
-These endpoints are using the __Servic Role__ key and basically have access to __perform CRUD__ if needed.
+These endpoints are using the **Servic Role** key and basically have access to **perform CRUD** if needed.
 
 ```html
 http://localhost:5001/test-role/admins
 
 http://localhost:5001/test-role/users
 ```
+
+---
+
+### `/items` API
+
+These endpoints are protected and require a valid Bearer token. All responses follow the `APIResponse<T>` format.
+
+#### `GET /items`
+
+- **Returns**: `APIResponse<Tables<'items'>[]>`
+- **Description**: Fetch all items.
+- **Data**: Array of item objects.
+
+#### `POST /items`
+
+- **Returns**: `APIResponse<Tables<'items'>>`
+- **Description**: Add a new item.
+- **Data**: The inserted item object.
+
+#### `PATCH /items/:id`
+
+- **Returns**: `APIResponse<Tables<'items'>>`
+- **Description**: Update an existing item.
+- **Data**: The updated item object.
+
+#### `DELETE /items/:id`
+
+- **Returns**: `APIResponse<Tables<'items'>>`
+- **Description**: Delete an existing item.
+- **Data**: The deleted item object.
+
+### `/views` API
+
+These endpoints are protected and require a valid Bearer token. All responses follow the `APIResponse<T>` format.
+
+#### `GET /frontend-items`
+
+- **Returns**: `APIResponse<Tables<'items'>[]>`
+- **Description**: Fetch all items.
+- **Data**: Array of items with tags and categories
 
 ## Deployment
 

@@ -57,14 +57,15 @@ if (!process.env.TEST_USER_EMAIL || !process.env.TEST_USER_PASSWORD) {
       .set('Authorization', `Bearer ${token}`)
       .send(itemPayload)
       .expect(201);
-      if (!Array.isArray(res.body.data) || !res.body.data[0]?.item_id) {
+      if (!res.body.data?.item_id) {
         throw new Error(`Unexpected response body from POST /items: ${JSON.stringify(res.body)}`);
       }
-      
-      createdItemId = res.body.data[0].item_id;
+      createdItemId = res.body.data.item_id;
     expect(res.body).toHaveProperty('message', 'Item added successfully');
     expect(res.body.data).toBeDefined();
-    expect(Array.isArray(res.body.data)).toBe(true);
+    expect(Array.isArray(res.body.data)).toBe(false); // data is now a single object, not an array
+    expect(typeof res.body.data).toBe('object');
+    expect(res.body.data).toHaveProperty('item_id');
   
 
     expect(createdItemId).toBeDefined(); // ✅ ensure this fails early if undefined
