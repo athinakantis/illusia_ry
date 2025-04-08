@@ -3,11 +3,13 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './controllers/app.controller';
 import { AppService } from './services/app.service';
 import { SupabaseService } from './services/supabase.service';
-import { ItemController } from './controllers/item.controller';
-import { ItemService } from './services/items.service';
+import { UserController } from './controllers/user.controller';
+import { UserService } from './services/user.service';
 import { AuthMiddleware } from './middlewares/auth.middleware';
-import { ViewsController } from './controllers/views.controller';
-import { ViewsService } from './services/view.service';
+import { AdminController } from './controllers/admin.controller';
+import { AdminService } from './services/admin.service';
+import { GuestService } from './services/guest.service';
+import { GuestController } from './controllers/guest.controller';
 
 @Module({
   imports: [
@@ -17,20 +19,21 @@ import { ViewsService } from './services/view.service';
   ],
   controllers: [
     AppController,
-    ItemController,
-    ViewsController,
-
+    GuestController,
+    UserController,
+    AdminController,
   ], // Controller imports go here
   providers: [
     AppService,
     SupabaseService,
-    ItemService,
-    ViewsService,
+    UserService,
+    AdminService,
+    GuestService
   ], // Services are used to handle business logic and data access
 })
 
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(ItemController, ViewsController);
+    consumer.apply(AuthMiddleware).forRoutes(UserController, AdminController);
   }
 }

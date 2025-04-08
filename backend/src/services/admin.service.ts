@@ -5,7 +5,7 @@ import { CustomRequest } from '../types/request.type';
 import { ApiResponse } from '../types/response';
 
 @Injectable()
-export class ViewsService {
+export class AdminService {
   async getFrontendItemView(req: CustomRequest): Promise<ApiResponse<Tables<'frontend_item_view'>[]>> {
     const supabase: SupabaseClient = req['supabase'];
 

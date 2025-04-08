@@ -8,22 +8,17 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import { ItemService } from '../services/items.service';
+import { UserService } from '../services/user.service';
 import { CustomRequest } from 'src/types/request.type';
 import { Tables } from 'src/types/supabase';
 
 @Controller('items')
-export class ItemController {
-  constructor(private readonly itemService: ItemService) {}
-
-  @Get()
-  async getItems(@Req() req: CustomRequest) {
-    return this.itemService.getItems(req);
-  }
+export class UserController {
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   async addItem(@Req() req: CustomRequest, @Body() item: Tables<'items'>) {
-    return this.itemService.addItem(req, item);
+    return this.userService.addItem(req, item);
   }
 
   @Patch(':id')
@@ -32,11 +27,11 @@ export class ItemController {
     @Param('id') id: string,
     @Body() item: Partial<Tables<'items'>>,
   ) {
-    return this.itemService.updateItem(req, id, item);
+    return this.userService.updateItem(req, id, item);
   }
 
   @Delete(':id')
   async deleteItem(@Req() req: CustomRequest, @Param('id') id: string) {
-    return this.itemService.deleteItem(req, id);
+    return this.userService.deleteItem(req, id);
   }
 }
