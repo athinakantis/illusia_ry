@@ -134,6 +134,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
     <Box sx={{ height: '700px', width: '100%', mt: 2 }}>
       <DataGrid
         rows={data}
+        loading={data.length === 0}
         getRowId={(row) => row.item_id}
         columns={columns}
         pageSizeOptions={[10, 25, 50, 100]}

@@ -1,8 +1,6 @@
 import { GridRenderCellParams } from '@mui/x-data-grid';
 import {  Typography } from '@mui/material';
 
-// Helper function for DataGrid cell rendering
-// This function is used to render the cell content in a way that allows for word wrapping
 export function renderCellExpand(params: GridRenderCellParams) {
   const value = params.value;
 
