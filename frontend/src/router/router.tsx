@@ -1,38 +1,34 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Home from '../pages/Home';
 import { AuthRedirect } from '../components/auth/AuthRedirect';
 import LoginPage from '../pages/LoginPage';
-import { NavBar } from '../components/NavBar';
-
 import ItemsPage from '../pages/Items';
+import Root from '../components/Root';
+import Home from '../pages/Home';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element:(
-      <>
-      <NavBar/>
-       <Home />
-       </>
-    )
+    element: <Root />,
+    children: [
+      {
+        path: '/',
+        element: <Home />
+      },
+      {
+        path: '/login',
+        element: (
+          <>
+            <AuthRedirect />
+            <LoginPage />
+          </>
+        )
+      },
+      {
+        path: '/items',
+        element: <ItemsPage />
+      }
+    ]
   },
 
-  {
-    path: '/login',
-    element:(
-      <>
-      <AuthRedirect />
-     <LoginPage />
-      </>
-    )
-  },
-   {
-    path: '/items',
-    element: (
-      <>
-      <NavBar/>
-      <ItemsPage />
-      </>
-    )
-   }
+
 ])

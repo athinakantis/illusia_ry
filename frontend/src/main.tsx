@@ -1,6 +1,5 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './index.css';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -15,7 +14,7 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider>
       <CssBaseline />
       <AuthProvider>
-      <App />
+        <App />
       </AuthProvider>
     </ThemeProvider>
   </StrictMode>,

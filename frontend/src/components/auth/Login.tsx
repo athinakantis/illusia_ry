@@ -10,8 +10,9 @@ export const Login = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100vh",
+        minHeight: "calc(100vh - 3rem - 64px)",
         p: 3,
+        pb: 12
       }}
     >
       <Paper elevation={3} sx={{ p: 4, maxWidth: 400, width: "100%" }}>
