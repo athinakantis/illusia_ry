@@ -13,7 +13,7 @@ import { CustomRequest } from 'src/types/request.type';
 import { Tables } from 'src/types/supabase';
 
 @Controller('items')
-export class UserController {
+export class ItemController {
   constructor(private readonly userService: UserService) {}
 
   @Post()

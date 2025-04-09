@@ -3,10 +3,10 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './controllers/app.controller';
 import { AppService } from './services/app.service';
 import { SupabaseService } from './services/supabase.service';
-import { UserController } from './controllers/user.controller';
+import { ItemController } from './controllers/item.controller';
 import { UserService } from './services/user.service';
 import { AuthMiddleware } from './middlewares/auth.middleware';
-import { AdminController } from './controllers/admin.controller';
+import { ViewController } from './controllers/views.controller';
 import { AdminService } from './services/admin.service';
 import { GuestService } from './services/guest.service';
 import { GuestController } from './controllers/guest.controller';
@@ -20,8 +20,8 @@ import { GuestController } from './controllers/guest.controller';
   controllers: [
     AppController,
     GuestController,
-    UserController,
-    AdminController,
+    ItemController,
+    ViewController,
   ], // Controller imports go here
   providers: [
     AppService,
@@ -34,6 +34,6 @@ import { GuestController } from './controllers/guest.controller';
 
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(UserController, AdminController);
+    consumer.apply(AuthMiddleware).forRoutes(ItemController, ViewController);
   }
 }

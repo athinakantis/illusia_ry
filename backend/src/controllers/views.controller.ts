@@ -3,7 +3,7 @@ import { AdminService } from '../services/admin.service';
 import { CustomRequest } from '../types/request.type';
 
 @Controller('views')
-export class AdminController {
+export class ViewController {
   constructor(private readonly viewsService: AdminService) {}
 
   @Get('frontend-items')
