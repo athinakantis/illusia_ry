@@ -20,3 +20,7 @@ export interface ApiResponse<T> {
   error?: string | Error;
   message: string;
 }
+
+export interface BookingState {
+  booking: Item[];
+}

@@ -53,4 +53,9 @@ export const itemsSlice = createSlice({
 
 export const selectAllItems = (state: RootState) =>
   state.items.items;
+
+// export const selectItemById = (id: string, state: RootState) =>
+export const selectItemById = (id: string) => (state: RootState) =>
+  state.items.items.find((item) => item.item_id === id);
+
 export default itemsSlice.reducer;

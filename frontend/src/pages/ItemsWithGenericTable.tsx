@@ -7,6 +7,7 @@ import { DataGridGeneric } from "../components/UIComponents/Grid/DataGridGeneric
 import { useNavigate } from "react-router-dom";
 import { GiMagnifyingGlass } from "react-icons/gi";
 import { AiTwotoneDelete } from "react-icons/ai";
+import { addItemToBooking } from "../slices/bookingSlice";
 
 function ItemsWithGenericTable() {
 
@@ -38,7 +39,7 @@ function ItemsWithGenericTable() {
             }}
         >
 
-            <DataGridGeneric data={items} functions={[
+            <DataGridGeneric data={items} idColumn={"item_id"} functions={[
                 { functionName: "go to", functionBody: (id: string) => navigate(`/items/${id}`), functionIcon: <GiMagnifyingGlass /> },
                 {
                     functionName: "delete", functionBody: (id: string) => {
@@ -48,9 +49,15 @@ function ItemsWithGenericTable() {
                     }, functionIcon: <AiTwotoneDelete />
                 },
                 { functionName: "log", functionBody: (id: string) => console.log(`/items/${id}`) },
+                {
+                    functionName: "a", functionBody: (id: string) => {
+                        dispatch(addItemToBooking(items.find((item) => item.item_id === id)));
+                    }
+                },
             ]} />
         </Box>
     );
 }
+
 
 export default ItemsWithGenericTable;

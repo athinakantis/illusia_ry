@@ -13,10 +13,11 @@ interface BasicFunction {
 interface DataGridGeneric {
     data: Object[],
     functions: BasicFunction[];
+    idColumn: string,
 }
 
 
-export const DataGridGeneric: React.FC<DataGridGeneric> = ({ data, functions }) => {
+export const DataGridGeneric: React.FC<DataGridGeneric> = ({ data, idColumn, functions }) => {
 
     const columns: GridColDef[] = [];
     if (data[0]) {
@@ -69,7 +70,7 @@ export const DataGridGeneric: React.FC<DataGridGeneric> = ({ data, functions }) 
             <DataGrid
                 rows={data}
                 loading={data.length === 0}
-                getRowId={(row) => row.item_id}
+                getRowId={(row) => row[idColumn]}
                 columns={columns}
                 pageSizeOptions={[10, 25, 50, 100]}
                 // getRowHeight={()=> "auto"}

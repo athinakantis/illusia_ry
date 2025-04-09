@@ -1,48 +1,34 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { ItemState } from '../types/types';
-import { itemsApi } from '../api/items';
+import { createSlice } from '@reduxjs/toolkit';
+import { BookingState } from '../types/types';
 import { RootState } from '../store/store';
 
-const initialState: ItemState = {
-  items: [],
-}
 
-export const addItemToBooking = 
-
-export const deleteItem = createAsyncThunk(
-  'items/deleteItem',
-  async (id: string) => {
-    const response = await itemsApi.deleteItem(id);
-    return response;
-  }
-);
+const initialState: BookingState = {
+    booking: []
+};
 
 
-export const itemsSlice = createSlice({
-  name: 'items',
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(fetchAllItems.pending, (state) => {
-      state.loading = true
-    })
-    builder.addCase(fetchAllItems.fulfilled, (state, action) => {
-      state.loading = false
-      state.items = action.payload.data
-    })
-    builder.addCase(fetchAllItems.rejected, (state) => {
-      state.loading = false
-      state.error = 'Could not fetch items'
-    })
-    builder.addCase(deleteItem.fulfilled, (state, action) => {
-      const deletedId = action.payload?.data?.item_id;
-      if (deletedId) {
-        state.items = state.items.filter(item => item.item_id !== deletedId);
-      }
-    })
-  }
+
+export const bookingSlice = createSlice({
+    name: 'booking',
+    initialState,
+    reducers: {
+        addItemToBooking: (state, action) => {
+            state.booking.push(action.payload);  // Mutating the state directly, allowed by Redux Toolkit
+        },
+        removeItemFromBooking: (state, action) => {
+            console.log("removing item");
+            state.booking = state.booking.filter(item => item.item_id !== action.payload);
+            // state.booking.push(action.payload);  // not yet working
+        },
+    }
 })
 
-export const selectAllItems = (state: RootState) =>
-  state.items.items;
-export default itemsSlice.reducer;
+export const selectBooking = (state: RootState) =>
+    state.booking.booking;
+
+export const { addItemToBooking } = bookingSlice.actions;
+export const { removeItemFromBooking } = bookingSlice.actions;
+
+
+export default bookingSlice.reducer;
