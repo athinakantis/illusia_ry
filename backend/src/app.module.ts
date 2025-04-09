@@ -8,6 +8,8 @@ import { ItemService } from './services/items.service';
 import { AuthMiddleware } from './middlewares/auth.middleware';
 import { ViewsController } from './controllers/views.controller';
 import { ViewsService } from './services/view.service';
+import { GuestService } from './services/guest.service';
+import { GuestController } from './controllers/guest.controller';
 
 @Module({
   imports: [
@@ -17,15 +19,16 @@ import { ViewsService } from './services/view.service';
   ],
   controllers: [
     AppController,
+    GuestController,
     ItemController,
     ViewsController,
-
   ], // Controller imports go here
   providers: [
     AppService,
     SupabaseService,
     ItemService,
     ViewsService,
+    GuestService
   ], // Services are used to handle business logic and data access
 })
 

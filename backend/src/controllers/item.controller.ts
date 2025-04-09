@@ -15,6 +15,7 @@ import { Tables } from 'src/types/supabase';
 @Controller('items')
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
+<<<<<<< HEAD
   @Get(':id')
   async getItemById(@Req() req: CustomRequest, @Param('id') id: string) {
     console.log("Fetching item with ID:", id);
@@ -25,6 +26,8 @@ export class ItemController {
     return this.itemService.getItems(req);
   }
 
+=======
+>>>>>>> DEV
 
   @Post()
   async addItem(@Req() req: CustomRequest, @Body() item: Tables<'items'>) {
