@@ -6,13 +6,17 @@ export const itemsApi = {
         api.get('items',
             {headers: {'Access-Control-Allow-Origin': '*'}}
         ),
-
+        
+    getItembyId: (id: string): Promise<ApiResponse<Item>> =>{
+        return api.get(`/items/${id}`)
+    },
+    
     createItem: (item: Partial<Item>) => {
         api.post(`items`, item)
     },
     
     updateItem: (id: string, updatedItem: Partial<Item>) => {
-        api.patch(`/items/${id}`, updatedItem)
+       return api.patch(`/items/${id}`, updatedItem)
     },
 
     deleteItem: (id: string) => {

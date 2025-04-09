@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { supabase } from '../config/supabase';
-import { ApiResponse } from '../types/types';
+// import { ApiResponse } from '../types/types';
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
@@ -18,7 +18,7 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${sessionData.session.access_token}`;
     }
 
-    (response: ApiResponse<any>) => response.data;
+    // (response: ApiResponse<unknown>) => response.data;
 
     return config;
   },

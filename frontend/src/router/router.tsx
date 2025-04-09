@@ -4,6 +4,7 @@ import LoginPage from '../pages/LoginPage';
 import ItemsPage from '../pages/Items';
 import Root from '../components/Root';
 import Home from '../pages/Home';
+import { SingleItem } from '../components/Admin/ItemView';
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
       {
         path: '/items',
         element: <ItemsPage />
+      },
+      {
+        path: '/items/:itemId',
+        element: <SingleItem />
       }
     ]
   },

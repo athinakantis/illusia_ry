@@ -11,6 +11,7 @@ export interface Item {
 
 export interface ItemState {
   items: Item[],
+  item: Item | null,
   error: null | string,
   loading: boolean
 }
