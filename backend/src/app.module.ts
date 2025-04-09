@@ -4,10 +4,10 @@ import { AppController } from './controllers/app.controller';
 import { AppService } from './services/app.service';
 import { SupabaseService } from './services/supabase.service';
 import { ItemController } from './controllers/item.controller';
-import { UserService } from './services/user.service';
+import { ItemService } from './services/items.service';
 import { AuthMiddleware } from './middlewares/auth.middleware';
 import { ViewController } from './controllers/views.controller';
-import { AdminService } from './services/admin.service';
+import { ViewsService } from './services/view.service';
 import { GuestService } from './services/guest.service';
 import { GuestController } from './controllers/guest.controller';
 
@@ -26,8 +26,8 @@ import { GuestController } from './controllers/guest.controller';
   providers: [
     AppService,
     SupabaseService,
-    UserService,
-    AdminService,
+    ItemService,
+    ViewsService,
     GuestService
   ], // Services are used to handle business logic and data access
 })

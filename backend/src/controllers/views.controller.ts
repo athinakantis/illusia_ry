@@ -1,10 +1,10 @@
 import { Controller, Get, Req } from '@nestjs/common';
-import { AdminService } from '../services/admin.service';
+import { ViewsService } from '../services/view.service';
 import { CustomRequest } from '../types/request.type';
 
 @Controller('views')
 export class ViewController {
-  constructor(private readonly viewsService: AdminService) {}
+  constructor(private readonly viewsService: ViewsService) {}
 
   @Get('frontend-items')
   async getFrontendItems(@Req() req: CustomRequest) {

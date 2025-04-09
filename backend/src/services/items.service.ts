@@ -6,7 +6,7 @@ import { ApiResponse } from 'src/types/response';
 
 
 @Injectable()
-export class UserService {
+export class ItemService {
   constructor(
     private readonly supabaseService: SupabaseService
   ) {}
