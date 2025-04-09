@@ -16,6 +16,6 @@ export const itemsApi = {
     },
 
     deleteItem: (id: string) => {
-        api.delete(`/items/${id}`)
+        return api.delete(`/items/${id}`)
     }
 };
