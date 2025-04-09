@@ -14,7 +14,7 @@ function Items() {
   }, [role]);
   
   useEffect(() => {
-    if (items.length < 1) {
+    if (!items ||items.length<=1 ) {
       dispatch(fetchAllItems());
     }
   }, [dispatch, items]);

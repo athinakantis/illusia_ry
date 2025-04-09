@@ -10,6 +10,28 @@ export class ItemService {
   constructor(
     private readonly supabaseService: SupabaseService
   ) {}
+  
+  async getItemById(req: CustomRequest, itemId: string): Promise<ApiResponse<Tables<'items'>>> {
+    const supabase = req['supabase'];
+    try {
+      const { data, error } = await supabase
+        .from('items')
+        .select('*')
+        .eq('item_id', itemId)
+        .single();
+      if (error) {
+        console.error('Error retrieving item: ', error);
+        throw error;
+      }
+      return {
+        message: `Item ${itemId} retrieved successfully`,
+        data: data || null,
+      };
+    } catch (err) {
+      console.error('Unexpected error in getItemById:', err);
+      throw err;
+    }
+  }
 
   async getItems(req: CustomRequest): Promise<ApiResponse<Tables<'items'>[]>> {
     const supabase = req['supabase'];
