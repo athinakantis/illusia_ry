@@ -21,3 +21,12 @@ export interface ApiResponse<T> {
   error?: string | Error;
   message: string;
 }
+
+export interface FormData {
+  item_name: string;
+  description: string;
+  category_id: string; // Assuming this holds the ID, maybe from a select input
+  location: string;
+  quantity: number;
+  // Add other relevant fields from your 'items' table if needed
+}
