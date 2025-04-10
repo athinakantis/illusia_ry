@@ -11,14 +11,14 @@ function Items() {
   const items = useAppSelector(selectAllItems);
   const dispatch = useAppDispatch();
 
-  // Check if user is authorized
-  if (!role?.includes('Admin') || !role) return
-
   useEffect(() => {
-    if (!items ||items.length<=1 ) {
+    if (!items || items.length <= 1) {
       dispatch(fetchAllItems());
     }
   }, [dispatch, items]);
+
+  // Check if user is authorized
+  if (!role?.includes('Admin') || !role) return
 
   return (
     <>
