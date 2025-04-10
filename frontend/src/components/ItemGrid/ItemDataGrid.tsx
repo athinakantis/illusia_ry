@@ -4,9 +4,9 @@ import { renderCellExpand } from './RenderCellExpand';
 import { Item } from '../../types/types';
 import { useAppDispatch } from '../../store/hooks';
 import { deleteItem, fetchAllItems } from '../../slices/itemsSlice';
-import { GiMagnifyingGlass } from 'react-icons/gi';
-import { AiTwotoneDelete } from 'react-icons/ai';
 import { formatDate } from '../../utility/formatDate';
+import SearchIcon from '@mui/icons-material/Search';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ItemDataGridProps {
   data: Item[];
@@ -116,7 +116,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
             color="primary"
             size="medium"
           >
-            <GiMagnifyingGlass />
+            <SearchIcon />
           </IconButton>
           <IconButton
             onClick={() => handleDelete(params.row.item_id)}
@@ -124,7 +124,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
             color="error"
             size="medium"
           >
-            <AiTwotoneDelete />
+            <DeleteIcon />
           </IconButton>
         </>
       ),
@@ -139,8 +139,11 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
         columns={columns}
         pageSizeOptions={[10, 25, 50, 100]}
         // getRowHeight={()=> "auto"}
-        rowHeight={110}
+        rowHeight={70}
         sx={{
+          '& .MuiDataGrid-row:first-of-type': {
+            mt: 1
+          },
           // Header CSS
           '& .super-app-theme--header': {
             backgroundColor: 'primary.main',
@@ -155,7 +158,12 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
           // Footer CSS
           '& .MuiDataGrid-footerContainer': {
             backgroundColor: 'primary.main',
-
+          },
+          '& .MuiDataGrid-footerContainer :is(p, span, .MuiDataGrid-selectedRowCount)': {
+            color: 'background.default'
+          },
+          '& .MuiDataGrid-footerContainer :is(svg)': {
+            fill: 'white'
           },
           // Hover CSS
           '& .MuiDataGrid-row:hover': {
