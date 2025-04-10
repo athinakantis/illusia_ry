@@ -6,6 +6,7 @@ import Root from '../components/Root';
 import Home from '../pages/Home';
 import { SingleItem } from '../components/Admin/ItemView';
 import AdminAddProduct from '../components/Admin/AdminAddProduct';
+import AddItemForm from '../components/Admin/TestAddItem';
 
 
 export const router = createBrowserRouter([
@@ -37,6 +38,10 @@ export const router = createBrowserRouter([
       {
         path: '/items/new',
         element: <AdminAddProduct />
+      },
+      {
+        path: '/test',
+        element: <AddItemForm />
       },
     ]
   },
