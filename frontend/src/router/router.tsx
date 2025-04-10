@@ -8,7 +8,6 @@ import { SingleItem } from '../components/Admin/ItemView';
 import AdminAddProduct from '../components/Admin/AdminAddProduct';
 
 import Cart from '../pages/Cart';
-import ItemsWithGenericTable from '../pages/ItemsWithGenericTable';
 
 export const router = createBrowserRouter([
   {
