@@ -12,7 +12,7 @@ export const itemsApi = {
     },
     
     createItem: (item: Partial<Item>) => {
-        api.post(`items`, item)
+       return api.post(`items`, item)
     },
     
     updateItem: (id: string, updatedItem: Partial<Item>) => {
