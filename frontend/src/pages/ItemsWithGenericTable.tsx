@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { GiMagnifyingGlass } from "react-icons/gi";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { addItemToBooking } from "../slices/bookingSlice";
+import { Item } from "../types/types";
 
 function ItemsWithGenericTable() {
 
@@ -50,8 +51,10 @@ function ItemsWithGenericTable() {
                 },
                 { functionName: "log", functionBody: (id: string) => console.log(`/items/${id}`) },
                 {
-                    functionName: "a", functionBody: (id: string) => {
-                        dispatch(addItemToBooking(items.find((item) => item.item_id === id)));
+                    functionName: "a", functionBody: (id: string, quantityToBook: number = 1) => {
+                        const itemToBook: Item | undefined = items.find((item) => item.item_id === id);
+                        // some checks of qty and if item exists should be implemented
+                        dispatch(addItemToBooking({ itemToBook, quantityToBook }));
                     }
                 },
             ]} />

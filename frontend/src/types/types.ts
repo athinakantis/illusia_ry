@@ -21,6 +21,11 @@ export interface ApiResponse<T> {
   message: string;
 }
 
+export interface ItemAndQuantity {
+  itemToBook: Item,
+  quantityToBook: number,
+}
+
 export interface BookingState {
-  booking: Item[];
+  booking: ItemAndQuantity[];
 }

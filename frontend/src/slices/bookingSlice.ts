@@ -7,19 +7,31 @@ const initialState: BookingState = {
     booking: []
 };
 
-
-
 export const bookingSlice = createSlice({
     name: 'booking',
     initialState,
     reducers: {
         addItemToBooking: (state, action) => {
-            state.booking.push(action.payload);  // Mutating the state directly, allowed by Redux Toolkit
+
+            const bookingForItemExists = state.booking.find(item => item.itemToBook.item_id == action.payload.itemToBook.item_id);
+            if (bookingForItemExists) {
+                bookingForItemExists.quantityToBook += action.payload.quantityToBook;
+            } else {
+                state.booking.push(action.payload);
+            }
+
         },
         removeItemFromBooking: (state, action) => {
-            console.log("removing item");
-            state.booking = state.booking.filter(item => item.item_id !== action.payload);
-            // state.booking.push(action.payload);  // not yet working
+            /*
+            const bookingForItemExists = state.booking.find(item => item.itemToBook.item_id == action.payload);
+            if (bookingForItemExists) {
+                bookingForItemExists.quantityToBook -= 1;
+            } else {
+                state.booking = state.booking.filter(item => item.itemToBook.item_id !== action.payload);
+            }*/
+
+            state.booking = state.booking.filter(item => item.itemToBook.item_id !== action.payload);
+            // removes the whole entry
         },
     }
 })

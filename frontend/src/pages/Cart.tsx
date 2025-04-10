@@ -7,7 +7,17 @@ function Cart() {
 
     const bookedItems = useAppSelector(selectBooking);
 
+    const bookingItemsInfo = bookedItems.map(({ itemToBook, quantityToBook }) => ({
+        ...itemToBook,
+        quantityToBook,
+    }));
+
     const dispatch = useAppDispatch();
+
+    /*const bookedItems2 = [{
+        item_id: "1",
+        text: "asd"
+    }]*/
 
     return (
         <Box
@@ -21,11 +31,11 @@ function Cart() {
             }}
         >
             {bookedItems.length > 0 ? (
-                <DataGridGeneric data={bookedItems} idColumn={"item_id"} functions={[
+                <DataGridGeneric data={bookingItemsInfo} idColumn={"item_id"} functions={[
                     { functionName: "log", functionBody: (id: string) => console.log(`/items/${id}`) },
                     {
-                        functionName: "remove", functionBody: (id: string) => {
-                            dispatch(removeItemFromBooking(id));
+                        functionName: "remove", functionBody: (id: string, quantityToRemove: number = 1) => {
+                            dispatch(removeItemFromBooking({ id, quantityToRemove }));
                         }
                     },
                 ]} />

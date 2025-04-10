@@ -21,8 +21,6 @@ export const DataGridGeneric: React.FC<DataGridGeneric> = ({ data, idColumn, fun
 
     const columns: GridColDef[] = [];
     if (data[0]) {
-        console.log(data);
-
 
         Object.keys(data[0]).forEach(column => columns.push({
             field: column,// ID of the item
