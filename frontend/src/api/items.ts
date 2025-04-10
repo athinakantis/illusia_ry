@@ -6,8 +6,6 @@ export const itemsApi = {
     api.get('items', { headers: { 'Access-Control-Allow-Origin': '*' } }),
 
   createItem: (item: Partial<Item>) => {
-    // api.post(`items`, item);
-    // Return the promise from the api.post call
     return api.post(`items`, item);
   },
 
