@@ -1,6 +1,6 @@
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box, IconButton } from '@mui/material';
-import { renderCellExpand } from './RenderCellExpand';
+import { renderCellExpand } from '../../ItemGrid/RenderCellExpand';
 
 import { ReactElement } from 'react';
 

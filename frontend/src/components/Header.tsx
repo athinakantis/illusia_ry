@@ -42,7 +42,7 @@ const Header = () => {
             <Link to='/items' style={{ textDecoration: 'none' }}>Items</Link>
           </Typography>
           <Typography variant='link'>
-            <Link to='/itemsWithGenericTable' style={{ textDecoration: 'none' }}>Contact</Link>
+            <Link to='/items' style={{ textDecoration: 'none' }}>Contact</Link>
           </Typography>
         </Box>
 

@@ -37,10 +37,6 @@ export const router = createBrowserRouter([
         element: <Cart />
       },
       {
-        path: '/itemsWithGenericTable',
-        element: <ItemsWithGenericTable />
-      },
-      {
         path: '/items/:itemId',
         element: <SingleItem />
       },
