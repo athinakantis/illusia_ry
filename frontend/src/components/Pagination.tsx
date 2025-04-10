@@ -1,9 +1,10 @@
 import { Pagination as MUIPagination, Stack } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { Item } from '../types/types';
 
 
 function Pagination({ items, setOffset, pageItems = 8 }: {
-  items: any[],
+  items: Item[],
   pageItems?: number,
   setOffset: Dispatch<SetStateAction<number>>
 }) {
