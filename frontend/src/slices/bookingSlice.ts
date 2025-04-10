@@ -22,16 +22,18 @@ export const bookingSlice = createSlice({
 
         },
         removeItemFromBooking: (state, action) => {
-            /*
-            const bookingForItemExists = state.booking.find(item => item.itemToBook.item_id == action.payload);
-            if (bookingForItemExists) {
-                bookingForItemExists.quantityToBook -= 1;
-            } else {
-                state.booking = state.booking.filter(item => item.itemToBook.item_id !== action.payload);
-            }*/
 
-            state.booking = state.booking.filter(item => item.itemToBook.item_id !== action.payload);
-            // removes the whole entry
+            const bookingForItemExists = state.booking.find(item => item.itemToBook.item_id == action.payload.id);
+            if (bookingForItemExists) {
+                if (bookingForItemExists.quantityToBook > action.payload.quantityToRemove) {
+                    bookingForItemExists.quantityToBook -= action.payload.quantityToRemove;
+                } else {
+                    state.booking = state.booking.filter(item => item.itemToBook.item_id !== action.payload.id);
+                }
+
+            } else {
+                state.booking = state.booking.filter(item => item.itemToBook.item_id !== action.payload.id);
+            }
         },
     }
 })
