@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Item, ItemState } from '../types/types';
-import { itemsApi } from '../api/items';
+import { CreateItemPayload, itemsApi } from '../api/items';
 import { RootState } from '../store/store';
+
 
 const initialState: ItemState = {
   items: [],
@@ -24,10 +25,11 @@ export const fetchItemById = createAsyncThunk(
     return response;
   }
 );
+// Async thunk for creating a new item
 export const createItem = createAsyncThunk(
   'items/createItem',
-  async (item: Partial<Item>) => {
-    const response = await itemsApi.createItem(item);
+  async (newItemData: CreateItemPayload) => { 
+    const response = await itemsApi.createItem(newItemData);
     return response;
   }
 );
@@ -74,6 +76,10 @@ export const itemsSlice = createSlice({
       if (!exists) {
         state.items.push(fetchedItem);
       }
+    })
+    .addCase(createItem.fulfilled, (state, action) => {
+
+      state.items.push(action.payload.data);
     })
     builder.addCase(deleteItem.fulfilled, (state, action) => {
       const deletedId = action.payload?.data?.item_id;
