@@ -11,6 +11,7 @@ export class GuestService {
   constructor(private configService: ConfigService) {
     const url = this.configService.get<string>('SUPABASE_URL');
     const key = this.configService.get<string>('SUPABASE_ANON_KEY');
+
     if (!url || !key) {
       throw new Error('Supabase URL and key must be provided');
     }
@@ -21,8 +22,7 @@ export class GuestService {
 
   async getItems(): Promise<ApiResponse<Tables<'items'>[]>> {
     try {
-      const supabase = this._supabase
-      const { data, error } = await supabase.from('items').select('*');
+      const { data, error } = await this._supabase.from('items').select('*');
 
       if (error) {
         console.error('Error retrieving items: ', error);
