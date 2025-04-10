@@ -1,7 +1,6 @@
 import {
   AppBar,
   Box,
-  Button,
   Toolbar,
   Typography,
 } from '@mui/material';
@@ -46,11 +45,17 @@ const Header = () => {
           </Typography>
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Button sx={{ minWidth: 'fit-content', color: '#2c2c2c' }}>
+        <Box sx={{
+          display: 'flex', alignItems: 'center', gap: 2,
+          '& a': { p: 0.5, borderRadius: '3px', transition: 'background-color 200ms', display: 'inline-flex', minWidth: 'fit-content', color: '#2c2c2c' },
+          '& a:hover': { bgcolor: 'background.verylightgrey' },
+          '& .logInOut': { textTransform: 'uppercase', fontSize: '0.875rem', fontWeight: 500, fontFamily: 'Roboto, sans-serif', textDecoration: 'none', color: 'primary.light', p: '6px 8px' }
+          ,
+        }}>
+          <Link to='/' aria-label="View profile">
             <PersonIcon />
-          </Button>
-          <Link to='/cart' style={{ textDecoration: 'none' }}>
+          </Link>
+          <Link to='/cart' aria-label="Go to cart">
             <ShoppingBagIcon />
           </Link>
           <Logout />

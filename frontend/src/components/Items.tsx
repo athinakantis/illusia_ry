@@ -28,11 +28,11 @@ function Items() {
     }
   }, [dispatch, items]);
 
-  const handleAddItemToBooking = (id: string, quantityToBook: number = 1) => {
+  const addToCart = (id: string, quantity: number = 1) => {
 
-    const itemToBook: Item | undefined = items.find((item) => item.item_id === id);
+    const itemToBook: Item | undefined = items.find((item: Item) => item.item_id === id);
     // some checks of qty and if item exists should be implemented
-    dispatch(addItemToBooking({ itemToBook, quantityToBook }));
+    dispatch(addItemToBooking({ itemToBook, quantity }));
   }
 
   return (
@@ -97,7 +97,7 @@ function Items() {
               <CardActions
                 sx={{ padding: 0, justifySelf: 'end', width: 'fit-content' }}
               >
-                <Button sx={{ padding: '3px', minWidth: 'fit-content' }} onClick={() => handleAddItemToBooking(item.item_id)}>
+                <Button sx={{ padding: '3px', minWidth: 'fit-content' }} onClick={() => addToCart(item.item_id)}>
                   <AddCircleOutlineOutlinedIcon />
                 </Button>
               </CardActions>
