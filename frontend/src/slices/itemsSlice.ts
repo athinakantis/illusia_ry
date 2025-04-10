@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { ItemState } from '../types/types';
+import { Item, ItemState } from '../types/types';
 import { itemsApi } from '../api/items';
 import { RootState } from '../store/store';
 
@@ -16,7 +16,13 @@ export const fetchAllItems = createAsyncThunk(
     return response;
   }
 );
-
+export const createItem = createAsyncThunk(
+  'items/createItem',
+  async (item: Partial<Item>) => {
+    const response = await itemsApi.createItem(item);
+    return response;
+  }
+);
 
 export const itemsSlice = createSlice({
   name: 'items',

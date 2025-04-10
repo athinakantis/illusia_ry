@@ -2,9 +2,12 @@ import { useNavigate } from 'react-router-dom';
 import { Button, TextField, Box, Typography } from '@mui/material';
 import { useState } from 'react';
 import { itemsApi } from '../api/items';
+import { useDispatch } from 'react-redux';
+import { createItem } from '../slices/itemsSlice';
 
 const AdminAddProduct = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         item_name: '',
         description: '',
@@ -25,7 +28,7 @@ const AdminAddProduct = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await itemsApi.createItem(formData);
+           dispatch(createItem(formData));  
             alert('Product added successfully!');
             navigate('/items'); // Redirect back to the items page
         } catch (error) {
