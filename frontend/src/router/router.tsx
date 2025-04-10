@@ -39,7 +39,15 @@ export const router = createBrowserRouter([
       {
         path: '/itemsWithGenericTable',
         element: <ItemsWithGenericTable />
-      }
+      },
+      {
+        path: '/items/:itemId',
+        element: <SingleItem />
+      },
+      {
+        path: '/items/new',
+        element: <AdminAddProduct />
+      },
 
     ]
   },
