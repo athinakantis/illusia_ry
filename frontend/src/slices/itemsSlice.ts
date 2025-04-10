@@ -24,7 +24,13 @@ export const fetchItemById = createAsyncThunk(
     return response;
   }
 );
-
+export const createItem = createAsyncThunk(
+  'items/createItem',
+  async (item: Partial<Item>) => {
+    const response = await itemsApi.createItem(item);
+    return response;
+  }
+);
 export const deleteItem = createAsyncThunk(
   'items/deleteItem',
   async (id: string) => {

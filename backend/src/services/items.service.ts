@@ -46,36 +46,52 @@ const supabase = req['supabase'];
       category_id,
     } = item;
 
-    const { data, error } = await supabase.from('items').insert({
-      item_name,
-      description,
-      image_path,
-      location,
-      quantity,
-      category_id,
-    })
-    .select()
-    .single();
+    try {
+      // Insert the new item into the database
+      const { data, error } = await supabase
+        .from('items')
+        .insert({
+          item_name,
+          description,
+          image_path,
+          location,
+          quantity,
+          category_id,
+          // Assuming created_at and item_id are handled by the database
+        })
+        .select() // Select the newly created item to return it
+        .single(); // Expecting a single row back
 
-    if (error) {
-      console.error('Error adding item: ', error);
-      throw error;
+      if (error) {
+        console.error('Error adding item: ', error);
+        throw error;
+      }
+
+      // Log the action using the SupabaseService
+      // Make sure req.user.id is available from your AuthMiddleware
+      if (req.user?.id) {
+        await this.supabaseService.logAction({
+          user_id: req.user.id,
+          action_type: 'CREATE_ITEM',
+          target_id: data.item_id, // Use the ID of the newly created item
+          metadata: { item_name: data.item_name },
+        });
+      } else {
+        console.warn('User ID not found in request for logging action.');
+      }
+
+      return {
+        message: 'Item added successfully',
+        data: data,
+      };
+    } catch (err) {
+      console.error('Failed to add item:', err);
+      // Consider throwing a more specific HTTP exception if needed
+      throw new Error('Failed to add item');
     }
-
-    // Using the SupabaseService to log the action(Service Role Key)
-    await this.supabaseService.logAction({
-      user_id: req.user.id,
-      action_type: 'ADD_ITEM',
-      target_id: data.item_id,
-      metadata: { item_name: data.item_name },
-    });
-
-    return {
-      message: 'Item added successfully',
-      data: data,
-    
-    };
   }
+
+
 
   async updateItem(
     req: CustomRequest,
@@ -119,7 +135,10 @@ const supabase = req['supabase'];
     };
   }
 
-  async deleteItem(req: CustomRequest, itemId: string): Promise<ApiResponse<Tables<'items'>>> {
+  async deleteItem(
+    req: CustomRequest,
+    itemId: string,
+  ): Promise<ApiResponse<Tables<'items'>>> {
     const supabase = req['supabase'];
     const { data, error } = await supabase
       .from('items')
@@ -143,7 +162,7 @@ const supabase = req['supabase'];
 
     return {
       message: `Item: ${itemId} removed successfully`,
-      data: data
+      data: data,
     };
   }
 }
