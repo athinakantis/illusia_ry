@@ -71,15 +71,13 @@ function Items() {
               sx={{ width: 280, minHeight: 300, boxShadow: 'none' }}
             >
               <CardMedia
+                component='img'
+                image={item.image_path ?? ''}
                 sx={{
                   bgcolor: 'background.lightgrey',
                   height: '300px',
                   borderRadius: '14px',
                 }}
-                src={
-                  item.image_path ||
-                  'https://placehold.co/200x200?text=hello+world'
-                }
               />
               <CardContent
                 sx={{
