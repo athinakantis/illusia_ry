@@ -27,6 +27,12 @@ function ItemsWithGenericTable() {
         }
     }, [dispatch, items]);
 
+    const usedColumns = [
+        { columnName: "Item ID", columnField: "item_id" },
+        { columnName: "Name", columnField: "item_name" },
+        { columnName: "Pcs available", columnField: "quantity" },
+        { columnName: "Created at", columnField: "created_at" },
+    ];
 
     return (
         <Box
@@ -40,7 +46,7 @@ function ItemsWithGenericTable() {
             }}
         >
 
-            <DataGridGeneric data={items} idColumn={"item_id"} functions={[
+            <DataGridGeneric data={items} idColumn={"item_id"} usedColumns={usedColumns} functions={[
                 { functionName: "go to", functionBody: (id: string) => navigate(`/items/${id}`), functionIcon: <GiMagnifyingGlass /> },
                 {
                     functionName: "delete", functionBody: (id: string) => {

@@ -10,23 +10,30 @@ interface BasicFunction {
     functionName: string;
 }
 
+interface ColumnsInfo {
+    columnField: string,
+    columnName: string,
+}
+
 interface DataGridGeneric {
     data: Object[],
     functions: BasicFunction[];
     idColumn: string,
+    usedColumns: ColumnsInfo[],
 }
 
 
-export const DataGridGeneric: React.FC<DataGridGeneric> = ({ data, idColumn, functions }) => {
+export const DataGridGeneric: React.FC<DataGridGeneric> = ({ data, idColumn, usedColumns, functions }) => {
+
 
     const columns: GridColDef[] = [];
     if (data[0]) {
 
-        Object.keys(data[0]).forEach(column => columns.push({
-            field: column,// ID of the item
+        usedColumns.forEach(usedColumn => columns.push({
+            field: usedColumn.columnField,// ID of the item
             headerClassName: 'super-app-theme--header',// Class to edit the Header CSS
             headerAlign: 'left',
-            headerName: column,
+            headerName: usedColumn.columnName,
             width: 200, // Adjust width as needed
             renderCell: renderCellExpand,// Function to render the cell content with word wrapping
         }));
