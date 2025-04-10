@@ -45,7 +45,7 @@ export const createAppTheme = () =>
       body1: { fontSize: '1rem', fontWeight: 400, fontFamily: 'Oxygen, sans-serif'},
       body2: { fontSize: '0.875rem', fontWeight: 400, fontFamily: 'Oxygen, sans-serif' },
       link: { fontSize: '0.8rem', fontWeight: 500, fontFamily: 'Roboto, sans-serif', textTransform: 'uppercase' }
-    },/* I tried to put less shadows but it makes you put a minimum of 25 because MUI has them that way */
+    },
     shadows: [
       'none',
       '0px 1px 3px rgba(0,0,0,0.2)',

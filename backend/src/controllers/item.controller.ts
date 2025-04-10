@@ -21,6 +21,7 @@ export class ItemController {
     return this.itemService.getItems(req);
   }
 
+
   @Post()
   async addItem(@Req() req: CustomRequest, @Body() item: Tables<'items'>) {
     return this.itemService.addItem(req, item);

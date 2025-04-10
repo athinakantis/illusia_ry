@@ -1,37 +1,22 @@
 import UserItems from '../components/Items';
-import { Button, Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-
-
+import { useAuth } from '../hooks/useAuth';
+import AdminItems from './Admin/Items';
 
 function Items() {
-  const navigate = useNavigate();
-
-  return (
-    <Box sx={{ padding: 2 }}>
-      {/* Button Container */}
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          paddingBottom: '32px',
-          maxWidth: '95%', // Match the Stack's width
-          margin: '0 auto', // Center the container horizontally
-        }}
-      >
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => navigate('/items/new')}
-        >
-          Add New Item
-        </Button>
-      </Box>
-
-      {/* Items Component */}
-      <UserItems />
-    </Box>
-  );
+  const { role } = useAuth();
+  if (role === 'User' || role === 'Unapproved' || !role) {
+    return (
+      <>
+        <UserItems />
+      </>
+    )
+  } else {
+    return (
+      <>
+        <AdminItems />
+      </>
+    )
+  }
 }
 
 export default Items;

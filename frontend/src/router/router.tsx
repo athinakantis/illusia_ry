@@ -4,6 +4,7 @@ import LoginPage from '../pages/LoginPage';
 import ItemsPage from '../pages/Items';
 import Root from '../components/Root';
 import Home from '../pages/Home';
+import { SingleItem } from '../components/Admin/ItemView';
 import AdminAddProduct from '../components/AdminAddProduct';
 
 export const router = createBrowserRouter([
@@ -29,8 +30,12 @@ export const router = createBrowserRouter([
         element: <ItemsPage />
       },
       {
-        path: '/items/new', // Route for adding a new item
-        element: <AdminAddProduct />,
+        path: '/items/:itemId',
+        element: <SingleItem />
+      },
+      {
+        path: '/items/new',
+        element: <AdminAddProduct />
       },
     ]
   },

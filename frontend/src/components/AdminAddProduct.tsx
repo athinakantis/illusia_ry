@@ -1,19 +1,18 @@
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField, Box, Typography } from '@mui/material';
 import { useState } from 'react';
-import { itemsApi } from '../api/items';
-import { useDispatch } from 'react-redux';
 import { createItem } from '../slices/itemsSlice';
+import { useAppDispatch } from '../store/hooks';
 
 const AdminAddProduct = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [formData, setFormData] = useState({
         item_name: '',
         description: '',
         image_path: '',
         location: '',
-        quantity: 0,
+        quantity: 1,
         category_id: '',
     });
 
@@ -30,7 +29,7 @@ const AdminAddProduct = () => {
         try {
            dispatch(createItem(formData));  
             alert('Product added successfully!');
-            navigate('/items'); // Redirect back to the items page
+            navigate('/items'); 
         } catch (error) {
             console.error('Error adding product:', error);
             alert('Failed to add product.');

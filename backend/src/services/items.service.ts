@@ -4,14 +4,19 @@ import { Tables } from 'src/types/supabase';
 import { CustomRequest } from 'src/types/request.type';
 import { ApiResponse } from 'src/types/response';
 
+
 @Injectable()
 export class ItemService {
-  constructor(private readonly supabaseService: SupabaseService) {}
+  constructor(
+    private readonly supabaseService: SupabaseService
+  ) {}
 
   async getItems(req: CustomRequest): Promise<ApiResponse<Tables<'items'>[]>> {
     const supabase = req['supabase'];
     try {
-      const { data, error } = await supabase.from('items').select('*');
+      const { data, error } = await supabase
+      .from('items')
+      .select('*');
 
       if (error) {
         console.error('Error retrieving items: ', error);
@@ -20,7 +25,7 @@ export class ItemService {
 
       return {
         message: 'Items retrieved successfully',
-        data: data || [],
+        data : data || [],
       };
     } catch (err) {
       console.error('Unexpected error in getItems:', err);
@@ -28,11 +33,10 @@ export class ItemService {
     }
   }
 
-  async addItem(
-    req: CustomRequest,
-    item: Tables<'items'>,
-  ): Promise<ApiResponse<Tables<'items'>>> {
-    const supabase = req['supabase'];
+  async addItem(req: CustomRequest, item: Tables<'items'>): Promise<ApiResponse<Tables<'items'>>> {
+
+const supabase = req['supabase'];
+
     const {
       item_name,
       description,
@@ -87,21 +91,16 @@ export class ItemService {
     }
   }
 
+
+
   async updateItem(
     req: CustomRequest,
     itemId: string,
-    item: Partial<Tables<'items'>>,
+    item: Partial<Tables<'items'>>
   ): Promise<ApiResponse<Tables<'items'>>> {
     const supabase = req['supabase'];
 
-    const {
-      item_name,
-      description,
-      image_path,
-      location,
-      quantity,
-      category_id,
-    } = item;
+    const { item_name, description, image_path, location, quantity, category_id } = item;
 
     const { data, error } = await supabase
       .from('items')
