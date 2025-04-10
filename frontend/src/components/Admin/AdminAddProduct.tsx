@@ -1,20 +1,26 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, TextField, Box, Typography } from '@mui/material';
-import { useState } from 'react';
-import { createItem } from '../slices/itemsSlice';
-import { useAppDispatch } from '../store/hooks';
+import { useEffect, useState } from 'react';
+import { itemsApi } from '../../api/items';
+import { useAuth } from '../../hooks/useAuth';
 
 const AdminAddProduct = () => {
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
+    const { role } = useAuth()
     const [formData, setFormData] = useState({
         item_name: '',
         description: '',
         image_path: '',
         location: '',
-        quantity: 1,
+        quantity: 0,
         category_id: '',
     });
+
+    // If user is not admin, navigate elsewhere (/items for now)
+    if (!role?.includes('Admin') || !role) {
+        navigate('/items')
+        return null
+    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -27,9 +33,9 @@ const AdminAddProduct = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-           dispatch(createItem(formData));  
+            await itemsApi.createItem(formData);
             alert('Product added successfully!');
-            navigate('/items'); 
+            navigate('/items'); // Redirect back to the items page
         } catch (error) {
             console.error('Error adding product:', error);
             alert('Failed to add product.');
