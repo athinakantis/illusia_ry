@@ -5,7 +5,8 @@ import ItemsPage from '../pages/Items';
 import Root from '../components/Root';
 import Home from '../pages/Home';
 import { SingleItem } from '../components/Admin/ItemView';
-import AdminAddProduct from '../components/AdminAddProduct';
+import AdminAddProduct from '../components/Admin/AdminAddProduct';
+
 
 export const router = createBrowserRouter([
   {
