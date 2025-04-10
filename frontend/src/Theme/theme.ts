@@ -14,7 +14,8 @@ export const theme = {
   },
   background: {
     default: '#FFFFFF',
-    lightgrey: 'lightgrey'
+    lightgrey: 'lightgrey',
+    verylightgrey: '#ededed'
   },
   text: {
     primary: '#1F0A29',

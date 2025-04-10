@@ -4,9 +4,9 @@ import { renderCellExpand } from './RenderCellExpand';
 import { Item } from '../../types/types';
 import { useAppDispatch } from '../../store/hooks';
 import { deleteItem, fetchAllItems } from '../../slices/itemsSlice';
-import { GiMagnifyingGlass } from 'react-icons/gi';
-import { AiTwotoneDelete } from 'react-icons/ai';
 import { formatDate } from '../../utility/formatDate';
+import SearchIcon from '@mui/icons-material/Search';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ItemDataGridProps {
   data: Item[];
@@ -90,12 +90,12 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       minWidth: timeStampLength,
       renderCell: (params) => (
         <Typography variant="body2"
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          width: '100%',
-          height: '100%',
-        }}>
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            width: '100%',
+            height: '100%',
+          }}>
           {formatDate(params.value)}
         </Typography>
       ),
@@ -116,7 +116,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
             color="primary"
             size="medium"
           >
-            <GiMagnifyingGlass />
+            <SearchIcon />
           </IconButton>
           <IconButton
             onClick={() => handleDelete(params.row.item_id)}
@@ -124,7 +124,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
             color="error"
             size="medium"
           >
-            <AiTwotoneDelete />
+            <DeleteIcon />
           </IconButton>
         </>
       ),
@@ -139,27 +139,35 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
         columns={columns}
         pageSizeOptions={[10, 25, 50, 100]}
         // getRowHeight={()=> "auto"}
-        rowHeight={110}
+        rowHeight={70}
         sx={{
+          '& .MuiDataGrid-row:first-of-type': {
+            mt: 1
+          },
           // Header CSS
           '& .super-app-theme--header': {
-          backgroundColor: 'secondary.light',
-          color: 'text.light',
-          fontSize: '1.1rem',
-        },
-        // Individual Cell CSS
+            backgroundColor: 'primary.main',
+            color: 'text.light',
+            fontSize: '1.1rem',
+          },
+          // Individual Cell CSS
           '& .MuiDataGrid-cell': {
             pl: 2,// padding left
-            
+
           },
           // Footer CSS
           '& .MuiDataGrid-footerContainer': {
-            backgroundColor: 'secondary.light',
-            
+            backgroundColor: 'primary.main',
+          },
+          '& .MuiDataGrid-footerContainer :is(p, span, .MuiDataGrid-selectedRowCount)': {
+            color: 'background.default'
+          },
+          '& .MuiDataGrid-footerContainer :is(svg)': {
+            fill: 'white'
           },
           // Hover CSS
           '& .MuiDataGrid-row:hover': {
-            backgroundColor: 'background.lightgrey',
+            backgroundColor: 'background.verylightgrey',
             transition: 'background-color 0.3s ease',
           },
           // Focus CSS
@@ -168,17 +176,18 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
           },
           // Selected Row CSS
           '& .MuiDataGrid-row.Mui-selected': {
-            outline: '2px solid #7b1fa2', 
+            outline: '2px solid #44195B',
             outlineOffset: '-2px',
           },
           // Even Row CSS
           '& .MuiDataGrid-row:nth-of-type(even)': {
-            backgroundColor: 'background.lightgrey',
+            backgroundColor: 'background.verylightgrey',
           },
           // Odd Row CSS
           '& .MuiDataGrid-row:nth-of-type(odd)': {
             backgroundColor: 'background.default',
-            border: '1px solid',
+            // borderTop: '1px solid #7b1fa2',
+            // borderBottom: '1px solid #7b1fa2',
             borderColor: 'secondary.main',
           },
         }}

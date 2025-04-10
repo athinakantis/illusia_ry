@@ -10,8 +10,12 @@ import {
   Box,
   Stack,
   Typography,
+  TextField,
 } from '@mui/material';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+
+
+
 function Items() {
   const items = useAppSelector(selectAllItems);
   const dispatch = useAppDispatch();
@@ -23,7 +27,24 @@ function Items() {
   }, [dispatch, items]);
 
   return (
-    <>
+    <Box
+      sx={{
+        width: '95%',
+        margin: 'auto',
+        display: 'flex'
+      }}>
+      <Box
+        sx={{
+          minWidth: 300
+        }}>
+        <TextField
+          id="filled-search"
+          label="Search our items"
+          type="search"
+          variant="standard"
+          sx={{ width: '80%', mt: 1 }}
+        />
+      </Box>
       <Stack
         direction={'row'}
         flexWrap={'wrap'}
@@ -37,7 +58,7 @@ function Items() {
         {items.map((item) => (
           <Card
             key={item.item_id}
-            sx={{ width: 300, minHeight: 300, boxShadow: 'none' }}
+            sx={{ width: 280, minHeight: 300, boxShadow: 'none' }}
           >
             <CardMedia
               sx={{
@@ -75,7 +96,7 @@ function Items() {
           </Card>
         ))}
       </Stack>
-    </>
+    </Box>
   );
 }
 

@@ -31,7 +31,10 @@ const Header = () => {
           >STORE</Typography>
         </Box>
         {/* Right side: Navigation links */}
-        <Box sx={{ display: 'flex', gap: '2rem' }}>
+        <Box sx={{
+          display: 'flex', gap: '2rem',
+          '& a:active': { color: 'primary.light' }
+        }}>
           <Typography variant='link'>
             <Link to='/' style={{ textDecoration: 'none' }}>Home</Link>
           </Typography>
