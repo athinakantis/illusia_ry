@@ -36,7 +36,7 @@ export class GuestService {
 
     async getItemById( itemId: string): Promise<ApiResponse<Tables<'items'>>> {
       try {
-        const { data, error } = await this.supabaseService.supabase
+        const { data, error } = await this._supabase
           .from('items')
           .select('*')
           .eq('item_id', itemId)
