@@ -33,4 +33,25 @@ export class GuestService {
       throw err;
     }
   }
+
+    async getItemById( itemId: string): Promise<ApiResponse<Tables<'items'>>> {
+      try {
+        const { data, error } = await this.supabaseService.supabase
+          .from('items')
+          .select('*')
+          .eq('item_id', itemId)
+          .single();
+        if (error) {
+          console.error('Error retrieving item: ', error);
+          throw error;
+        }
+        return {
+          message: `Item ${itemId} retrieved successfully`,
+          data: data || null,
+        };
+      } catch (err) {
+        console.error('Unexpected error in getItemById:', err);
+        throw err;
+      }
+    }
 }

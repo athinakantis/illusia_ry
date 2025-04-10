@@ -16,6 +16,12 @@ import { Tables } from 'src/types/supabase';
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
+  @Get()
+  async getItems(@Req() req: CustomRequest) {
+    return this.itemService.getItems(req);
+  }
+
+
   @Post()
   async addItem(@Req() req: CustomRequest, @Body() item: Tables<'items'>) {
     return this.itemService.addItem(req, item);

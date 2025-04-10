@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Param,
 } from '@nestjs/common';
 import { GuestService } from '../services/guest.service';
 
@@ -10,10 +11,17 @@ import { GuestService } from '../services/guest.service';
 export class GuestController {
   constructor(private readonly guestService: GuestService) {
   }
+  @Get(':id')
+  async getItemById(@Param('id') id: string) {
+    console.log("Fetching item with ID:", id);
+    return this.guestService.getItemById(id);
+  }
 
   @Get()
   async getItems() {
     console.log('received request to backend')
     return this.guestService.getItems();
   }
+
+
 }

@@ -15,7 +15,7 @@ function Items() {
   if (!role?.includes('Admin') || !role) return
 
   useEffect(() => {
-    if (items.length < 1) {
+    if (!items ||items.length<=1 ) {
       dispatch(fetchAllItems());
     }
   }, [dispatch, items]);
