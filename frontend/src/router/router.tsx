@@ -7,6 +7,8 @@ import Home from '../pages/Home';
 import { SingleItem } from '../components/Admin/ItemView';
 import AdminAddProduct from '../components/Admin/AdminAddProduct';
 
+import Cart from '../pages/Cart';
+import ItemsWithGenericTable from '../pages/ItemsWithGenericTable';
 
 export const router = createBrowserRouter([
   {
@@ -31,13 +33,14 @@ export const router = createBrowserRouter([
         element: <ItemsPage />
       },
       {
-        path: '/items/:itemId',
-        element: <SingleItem />
+        path: '/cart',
+        element: <Cart />
       },
       {
-        path: '/items/new',
-        element: <AdminAddProduct />
-      },
+        path: '/itemsWithGenericTable',
+        element: <ItemsWithGenericTable />
+      }
+
     ]
   },
 

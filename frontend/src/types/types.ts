@@ -21,3 +21,12 @@ export interface ApiResponse<T> {
   error?: string | Error;
   message: string;
 }
+
+export interface ItemAndQuantity {
+  itemToBook: Item,
+  quantityToBook: number,
+}
+
+export interface BookingState {
+  booking: ItemAndQuantity[];
+}

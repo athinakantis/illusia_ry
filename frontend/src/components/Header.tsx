@@ -42,7 +42,7 @@ const Header = () => {
             <Link to='/items' style={{ textDecoration: 'none' }}>Items</Link>
           </Typography>
           <Typography variant='link'>
-            <Link to='/items' style={{ textDecoration: 'none' }}>Contact</Link>
+            <Link to='/itemsWithGenericTable' style={{ textDecoration: 'none' }}>Contact</Link>
           </Typography>
         </Box>
 
@@ -50,9 +50,9 @@ const Header = () => {
           <Button sx={{ minWidth: 'fit-content', color: '#2c2c2c' }}>
             <PersonIcon />
           </Button>
-          <Button sx={{ minWidth: 'fit-content', color: '#2c2c2c' }}>
+          <Link to='/cart' style={{ textDecoration: 'none' }}>
             <ShoppingBagIcon />
-          </Button>
+          </Link>
           <Logout />
         </Box>
       </Toolbar>
