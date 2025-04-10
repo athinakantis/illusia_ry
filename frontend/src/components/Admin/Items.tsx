@@ -30,6 +30,13 @@ function Items() {
           justifyContent: 'center',
           padding: 4,
           boxSizing: 'border-box',
+          '& .super-app-theme--header': {
+            fontFamily: 'Roboto Slab, sans-serif',
+            fontSize: '1rem'
+          },
+          '& .super-app-theme--header svg': {
+            fill: 'white'
+          }
         }}
       >
         <ItemDataGrid data={items} />

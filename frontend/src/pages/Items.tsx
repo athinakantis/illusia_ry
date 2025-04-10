@@ -10,17 +10,22 @@ function Items() {
 
 
   // If user is Admin or Head Admin, return AdminItems / UserItems
-  if (role?.includes('Admin')) return (
+  if (role && role?.includes('Admin')) return (
     <>
-      <FormControlLabel
-        sx={{ color: 'primary.main', '& span': { fontFamily: 'Roboto Slab, sans-serif' } }} // Add custom Typography type?
+      <FormControlLabel // This switch can be removed later if we decide to make managing/viewing separate pages
+        sx={{
+          marginLeft: '20px',
+          color: 'primary.main',
+          '& label, span': { fontFamily: 'Roboto Slab, sans-serif' }
+        }} // Add custom Typography type?
         control={<Switch onChange={() => setView(prev => !prev)} />}
         label={`View as ${view ? 'User' : 'Admin'}`} />
       {view ? <UserItems /> : <AdminItems />}
     </>
-  ); else (
-    <UserItems />
-  )
+  );
+
+  return <UserItems /> // If user is not admin, show User UI
+
 }
 
 export default Items;
