@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { AuthRedirect } from '../components/auth/AuthRedirect';
+import { AuthRedirect } from '../components/Auth/AuthRedirect';
 import LoginPage from '../pages/LoginPage';
 import ItemsPage from '../pages/Items';
 import Root from '../components/Root';
