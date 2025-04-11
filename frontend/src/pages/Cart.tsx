@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import { DataGridGeneric } from "../components/UIComponents/Grid/DataGridGeneric";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { removeItemFromBooking, selectBooking } from "../slices/bookingSlice";
+import { DataGridGeneric } from '../components/CustomComponents/DataGridGeneric';
 
 function Cart() {
 
