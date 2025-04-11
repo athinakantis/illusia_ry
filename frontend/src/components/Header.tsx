@@ -1,14 +1,13 @@
 import {
   AppBar,
   Box,
-  Button,
   Toolbar,
   Typography,
 } from '@mui/material';
-import Logout from './Login/LoginOutBtn';
-import { Link } from 'react-router-dom';
+import Logout from './Auth/LoginOutBtn'
 import PersonIcon from '@mui/icons-material/Person';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import { Link } from 'react-router-dom';
 const Header = () => {
 
   return (
@@ -46,13 +45,19 @@ const Header = () => {
           </Typography>
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Button sx={{ minWidth: 'fit-content', color: '#2c2c2c' }}>
+        <Box sx={{
+          display: 'flex', alignItems: 'center', gap: 2,
+          '& a': { p: 0.5, borderRadius: '3px', transition: 'background-color 200ms', display: 'inline-flex', minWidth: 'fit-content', color: '#2c2c2c' },
+          '& a:hover': { bgcolor: 'background.verylightgrey' },
+          '& .logInOut': { textTransform: 'uppercase', fontSize: '0.875rem', fontWeight: 500, fontFamily: 'Roboto, sans-serif', textDecoration: 'none', color: 'primary.light', p: '6px 8px' }
+          ,
+        }}>
+          <Link to='/' aria-label="View profile">
             <PersonIcon />
-          </Button>
-          <Button sx={{ minWidth: 'fit-content', color: '#2c2c2c' }}>
+          </Link>
+          <Link to='/cart' aria-label="Go to cart">
             <ShoppingBagIcon />
-          </Button>
+          </Link>
           <Logout />
         </Box>
       </Toolbar>

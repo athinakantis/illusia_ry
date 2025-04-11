@@ -10,6 +10,8 @@ import { ViewsController } from './controllers/views.controller';
 import { ViewsService } from './services/view.service';
 import { GuestService } from './services/guest.service';
 import { GuestController } from './controllers/guest.controller';
+import { MailerService } from './services/mailer.service';
+import { MailerController } from './controllers/mailer.controller';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { GuestController } from './controllers/guest.controller';
     AppController,
     GuestController,
     ItemController,
+    MailerController,
     ViewsController,
   ], // Controller imports go here
   providers: [
@@ -28,7 +31,8 @@ import { GuestController } from './controllers/guest.controller';
     SupabaseService,
     ItemService,
     ViewsService,
-    GuestService
+    GuestService,
+    MailerService
   ], // Services are used to handle business logic and data access
 })
 

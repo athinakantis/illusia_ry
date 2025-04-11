@@ -9,15 +9,13 @@ const Logout = () => {
   };
   if (!user) {
     return (
-      <Link to="/login">
-        <Button variant="text" color="secondary">
-          Login
-        </Button>
-      </Link>
+      <Link to="/login" className='logInOut'>
+        Login
+      </Link >
     );
   }
   return (
-    <Button variant="text" color="secondary" onClick={handleLogout}>
+    <Button className='logInOut' variant="text" color="secondary" onClick={handleLogout}>
       Logout
     </Button>
   );

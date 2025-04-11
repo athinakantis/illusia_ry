@@ -22,6 +22,15 @@ export interface ApiResponse<T> {
   message: string;
 }
 
+export interface ItemAndQuantity {
+  itemToBook: Item,
+  quantityToBook: number,
+}
+
+export interface BookingState {
+  booking: ItemAndQuantity[];
+}
+  
 export interface FormData {
   item_name: string;
   description: string;
