@@ -50,8 +50,8 @@ const AdminAddProduct = () => {
     });
     // If user is not admin, navigate elsewhere (/items for now)
     useEffect(() => {
-
-        if (!role || !role.includes('Admin')) {
+        if(!role) return
+        if (!role.includes('Admin')) {
             console.log('Unauthorized access, redirecting...');
             navigate('/items');
         }
