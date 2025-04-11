@@ -29,7 +29,7 @@ export interface ItemAndQuantity {
 
 export interface BookingState {
   booking: ItemAndQuantity[];
-
+}
   
 export interface FormData {
   item_name: string;
