@@ -15,7 +15,7 @@ interface ColumnsInfo {
 }
 
 interface DataGridGeneric {
-    data: Object[],
+    data: object[],
     functions: BasicFunction[];
     idColumn: string,
     usedColumns: ColumnsInfo[],
