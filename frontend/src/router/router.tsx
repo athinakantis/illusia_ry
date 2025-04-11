@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { AuthRedirect } from '../components/auth/AuthRedirect';
+import { AuthRedirect } from '../components/Auth/AuthRedirect';
 import LoginPage from '../pages/LoginPage';
 import ItemsPage from '../pages/Items';
 import Root from '../components/Root';
@@ -7,6 +7,7 @@ import Home from '../pages/Home';
 import { SingleItem } from '../components/Admin/ItemView';
 import AdminAddProduct from '../components/Admin/AdminAddProduct';
 
+import Cart from '../pages/Cart';
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
         element: <ItemsPage />
       },
       {
+        path: '/cart',
+        element: <Cart />
+      },
+      {
         path: '/items/:itemId',
         element: <SingleItem />
       },
@@ -38,6 +43,7 @@ export const router = createBrowserRouter([
         path: '/items/new',
         element: <AdminAddProduct />
       },
+
     ]
   },
 

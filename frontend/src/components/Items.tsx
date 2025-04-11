@@ -13,6 +13,8 @@ import {
   TextField,
 } from '@mui/material';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import { Item } from '../types/types';
+import { addItemToBooking } from '../slices/bookingSlice'
 
 
 
@@ -25,6 +27,13 @@ function Items() {
       dispatch(fetchAllItems());
     }
   }, [dispatch, items]);
+
+  const addToCart = (id: string, quantity: number = 1) => {
+
+    const itemToBook: Item | undefined = items.find((item: Item) => item.item_id === id);
+    // some checks of qty and if item exists should be implemented
+    dispatch(addItemToBooking({ itemToBook, quantity }));
+  }
 
   return (
     <Box
@@ -88,7 +97,7 @@ function Items() {
               <CardActions
                 sx={{ padding: 0, justifySelf: 'end', width: 'fit-content' }}
               >
-                <Button sx={{ padding: '3px', minWidth: 'fit-content' }}>
+                <Button sx={{ padding: '3px', minWidth: 'fit-content' }} onClick={() => addToCart(item.item_id)}>
                   <AddCircleOutlineOutlinedIcon />
                 </Button>
               </CardActions>
