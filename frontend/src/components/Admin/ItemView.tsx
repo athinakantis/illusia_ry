@@ -18,9 +18,9 @@ import {
   Typography,
   TextField,
 } from '@mui/material';
-import './pyramid-loader.css';
 import { ImPencil2 } from 'react-icons/im';
 import { CiTrash } from 'react-icons/ci';
+import Spinner from '../Spinner';
 
 export const SingleItem = () => {
   const { itemId } = useParams<{ itemId: string }>();
@@ -63,29 +63,12 @@ export const SingleItem = () => {
   const handleDelete = () => {
     if (confirm('Are you sure you want to delete this item?')) {
       dispatch(deleteItem(itemId ?? ''))
-      .then(() => navigate('/items'));
+        .then(() => navigate('/items'));
     }
   };
 
   if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="80vh"
-      >
-        <div className="pyramid-loader">
-          <div className="wrapper">
-            <span className="side side1"></span>
-            <span className="side side2"></span>
-            <span className="side side3"></span>
-            <span className="side side4"></span>
-            <span className="shadow"></span>
-          </div>
-        </div>
-      </Box>
-    );
+    return <Spinner />
   }
 
   return (

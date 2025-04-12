@@ -50,12 +50,10 @@ const AdminAddProduct = () => {
     });
     // If user is not admin, navigate elsewhere (/items for now)
     useEffect(() => {
-        if (role === null) return;
-
+        if(!role) return
         if (!role.includes('Admin')) {
             console.log('Unauthorized access, redirecting...');
             navigate('/items');
-
         }
     }, [role, navigate]);
 
@@ -86,7 +84,7 @@ const AdminAddProduct = () => {
         event.preventDefault();
         setIsLoading(true);
         showSnackbar('Uploading item...', 'info');
-    
+
         let imageUrl: string | null = null;
 
         if (!user) {
@@ -173,7 +171,7 @@ const AdminAddProduct = () => {
                 onChange={handleInputChange}
                 required
                 disabled={isLoading}
-               
+
             />
             <TextField
                 label="Description"
@@ -211,42 +209,42 @@ const AdminAddProduct = () => {
                 disabled={isLoading}
             />
             {/* Upload Button */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-evenly'}}>
-            <Button
-                component="label"
-                role={'button'}
-                variant="contained"
-                color='secondary'
-                tabIndex={-1}
-                startIcon={<ImCloudUpload />}
-                disabled={isLoading}
-                sx={{flexGrow:1, mr:0.5}}
-            >
-                Upload files
-                <VisuallyHiddenInput
-                    type="file"
-                    id="item_image"
-                    name="item_image"
-                    accept="image/*"
-                    onChange={(event) => {
-                        handleFileChange(event);
-                        setSelectedFile(
-                            event.target.files ? event.target.files[0] : null,
-                        );
-                    }}
-                    disabled={false}
-                    multiple
-                />
-            </Button>
-            <Button
-            type="submit"
-            variant="contained"
-            color="secondary"
-            disabled={isLoading}
-            sx={{flexGrow:100, marginLeft: 1}}
-            >
-                {isLoading ? 'Adding Item...' : 'Add Item'}
-            </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                <Button
+                    component="label"
+                    role={'button'}
+                    variant="contained"
+                    color='secondary'
+                    tabIndex={-1}
+                    startIcon={<ImCloudUpload />}
+                    disabled={isLoading}
+                    sx={{ flexGrow: 1, mr: 0.5 }}
+                >
+                    Upload files
+                    <VisuallyHiddenInput
+                        type="file"
+                        id="item_image"
+                        name="item_image"
+                        accept="image/*"
+                        onChange={(event) => {
+                            handleFileChange(event);
+                            setSelectedFile(
+                                event.target.files ? event.target.files[0] : null,
+                            );
+                        }}
+                        disabled={false}
+                        multiple
+                    />
+                </Button>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="secondary"
+                    disabled={isLoading}
+                    sx={{ flexGrow: 100, marginLeft: 1 }}
+                >
+                    {isLoading ? 'Adding Item...' : 'Add Item'}
+                </Button>
             </Box>
             <Snackbar
                 open={snackbarOpen}
