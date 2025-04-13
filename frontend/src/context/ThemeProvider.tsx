@@ -1,7 +1,5 @@
-import { PaletteMode } from "@mui/material";
 import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
-import { ReactNode, useMemo, useState } from "react";
-import { ThemeContext } from "./ThemeContext";
+import { ReactNode } from "react";
 import { createAppTheme } from "../theme/theme";
 
 interface Props {
@@ -9,23 +7,9 @@ interface Props {
 }
 
 export const ThemeProvider = ({ children }: Props) => {
-  const [mode, setMode] = useState<PaletteMode>("light");
-
-  const themeContext = useMemo(
-    () => ({
-      mode,
-      toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
-      },
-    }),
-    [mode]
-  );
-
-  const theme = useMemo(() => createAppTheme(mode), [mode]);
+  const theme = createAppTheme()
 
   return (
-    <ThemeContext.Provider value={themeContext}>
-      <MUIThemeProvider theme={theme}>{children}</MUIThemeProvider>
-    </ThemeContext.Provider>
+    <MUIThemeProvider theme={theme}>{children}</MUIThemeProvider>
   );
 };

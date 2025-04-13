@@ -1,74 +1,52 @@
-import { createTheme, PaletteMode } from '@mui/material';
+import { createTheme } from '@mui/material';
 
-const lightGradient =
-  'linear-gradient(295deg, #85FFBD 0%, #FFFB7D 62%, #04ffe8 100%)';
-
-const darkGradient = 'linear-gradient(to top, #f857a6, #ff5858)';
-export const lightPalette = {
+export const theme = {
   primary: {
-    main: '#1976d2',
+    main: '#44195B',
+    light: '#9339C9',
+    dark: '#1F0A29',
+    neutral: '#2c2c2c'
   },
   secondary: {
-    main: '#9c27b0',
+    main: '#9537C7',
     light: '#ba68c8',
     dark: '#7b1fa2',
   },
   background: {
-    default: '#f5f5f5',
-    paper: '#ffffff',
+    default: '#FFFFFF',
+    lightgrey: 'lightgrey',
+    verylightgrey: '#ededed'
   },
   text: {
-    primary: '#1c1c1c',
+    primary: '#1F0A29',
     secondary: '#666666',
+    light: '#FAFAFA'
   },
-  typography: {},
-  custom: {
-    lightGradient,
-    fallback: '#85FFBD',
-  },
+  accent: {
+    main: '#3CC5BC',
+    light: '#C1FDF9',
+    dark: '#27847E',
+  }
 };
 
-export const darkPalette = {
-  primary: {
-    main: '#9c27b0',
-    light: '#e3f2fd',
-    dark: '#42a5f5',
-  },
-  secondary: {
-    main: '#ce93d8',
-    light: '#f3e5f5',
-    dark: '#ab47bc',
-  },
-  background: {
-    default: '#121212',
-    paper: '#1e1e1e',
-  },
-  text: {
-    primary: '#ffffff',
-    secondary: '#b3b3b3',
-  },
-  custom: {
-    darkGradient,
-  },
-};
-
-export const createAppTheme = (mode: PaletteMode) =>
+export const createAppTheme = () =>
   createTheme({
     palette: {
-      mode,
-      ...(mode === 'light' ? lightPalette : darkPalette),
+      ...theme,
+      contrastThreshold: 4.5
     },
     typography: {
       fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-      h1: { fontSize: '2rem', fontWeight: 500 },
-      h2: { fontSize: '1.75rem', fontWeight: 500 },
-      h3: { fontSize: '1.5rem', fontWeight: 500 },
-      h4: { fontSize: '1.25rem', fontWeight: 500 },
-      h5: { fontSize: '1rem', fontWeight: 500 },
-      h6: { fontSize: '0.875rem', fontWeight: 500 },
-      body1: { fontSize: '1rem', fontWeight: 400 },
-      body2: { fontSize: '0.875rem', fontWeight: 400 },
-    },/* I tried to put less shadows but it makes you put a minimum of 25 because MUI has them that way */
+      h1: { fontSize: '2rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
+      h2: { fontSize: '1.75rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
+      h3: { fontSize: '1.5rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
+      h4: { fontSize: '1.25rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
+      h5: { fontSize: '1rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
+      h6: { fontSize: '0.875rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
+      body1: { fontSize: '1rem', fontWeight: 400, fontFamily: 'Oxygen, sans-serif'},
+      body2: { fontSize: '0.875rem', fontWeight: 400, fontFamily: 'Oxygen, sans-serif' },
+      link: { fontSize: '0.8rem', fontWeight: 500, fontFamily: 'Roboto, sans-serif', textTransform: 'uppercase' }
+    },
     shadows: [
       'none',
       '0px 1px 3px rgba(0,0,0,0.2)',
