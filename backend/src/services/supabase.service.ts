@@ -7,7 +7,7 @@ import { Database } from 'src/types/supabase'
 export class SupabaseService {
   private readonly _supabase: SupabaseClient;
  
-  constructor(private configService: ConfigService) {
+  constructor(private readonly configService: ConfigService) {
     const url = this.configService.get<string>('SUPABASE_URL');
     const key = this.configService.get<string>('SUPABASE_SERVICE_ROLE_KEY');
     

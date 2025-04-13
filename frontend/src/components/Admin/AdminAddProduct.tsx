@@ -24,7 +24,7 @@ type CreateItemPayload = Omit<
 const AdminAddProduct = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { role, user } = useAuth()
+    const { role, user, loading } = useAuth()
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState<FormData>({
@@ -48,10 +48,11 @@ const AdminAddProduct = () => {
         whiteSpace: 'nowrap',
         width: 1,
     });
+
     // If user is not admin, navigate elsewhere (/items for now)
     useEffect(() => {
-        if(!role) return
-        if (!role.includes('Admin')) {
+        if (role === undefined) return
+        else if (!role || !role.includes('Admin')) {
             console.log('Unauthorized access, redirecting...');
             navigate('/items');
         }

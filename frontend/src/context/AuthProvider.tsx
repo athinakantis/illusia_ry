@@ -18,7 +18,7 @@ function extractRoleFromSession(session: AuthContextType["session"]): string | n
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<AuthContextType["session"]>(null);
   const [user, setUser] = useState<AuthContextType["user"]>(null);
-  const [role, setRole] = useState<Role | null>(null);
+  const [role, setRole] = useState<AuthContextType['role']>(undefined);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

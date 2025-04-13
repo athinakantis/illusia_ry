@@ -5,7 +5,7 @@ import { Role } from './AuthProvider';
 export interface AuthContextType {
   session: Session | null;
   user: User | null;
-  role: Role | null;
+  role: Role | null | undefined;
   loading: boolean;
   signOut: () => Promise<void>;
 }
