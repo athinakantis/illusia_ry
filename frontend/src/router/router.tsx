@@ -6,7 +6,6 @@ import Root from '../components/Root';
 import Home from '../pages/Home';
 import { SingleItem } from '../components/Admin/ItemView';
 import AdminAddProduct from '../components/Admin/AdminAddProduct';
-
 import Cart from '../pages/Cart';
 
 export const router = createBrowserRouter([
