@@ -4,7 +4,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import Logout from './Auth/LoginOutBtn'
+import Logout from './auth/LoginOutBtn'
 import PersonIcon from '@mui/icons-material/Person';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Link } from 'react-router-dom';
@@ -26,7 +26,7 @@ const Header = () => {
             ILLUSIA
           </Typography>
           <Typography
-            sx={{ fontWeight: 400, fontFamily: 'Lato, sans-serif', height: '33px', fontSize: '1.2rem' }}
+            sx={{ fontWeight: 400, fontFamily: 'Lato, sans-serif', fontSize: '1.7rem' }}
           >STORE</Typography>
         </Box>
         {/* Right side: Navigation links */}

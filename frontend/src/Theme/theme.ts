@@ -43,9 +43,9 @@ export const createAppTheme = () =>
       h4: { fontSize: '1.25rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
       h5: { fontSize: '1rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
       h6: { fontSize: '0.875rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
-      body1: { fontSize: '1rem', fontWeight: 400, fontFamily: 'Oxygen, sans-serif'},
+      body1: { fontSize: '1rem', fontWeight: 400, fontFamily: 'Oxygen, sans-serif' },
       body2: { fontSize: '0.875rem', fontWeight: 400, fontFamily: 'Oxygen, sans-serif' },
-      link: { fontSize: '0.8rem', fontWeight: 500, fontFamily: 'Roboto, sans-serif', textTransform: 'uppercase' }
+      link: { fontSize: '1 rem', fontWeight: 500, fontFamily: 'Roboto, sans-serif', textTransform: 'uppercase' }
     },
     shadows: [
       'none',
