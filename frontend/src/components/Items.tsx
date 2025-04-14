@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { Item } from '../types/types';
-import { addItemToBooking } from '../slices/bookingSlice'
+import { addItemToCart } from '../slices/cartSlice'
 import Pagination from './Pagination';
 
 function Items() {
@@ -29,11 +29,11 @@ function Items() {
     }
   }, [dispatch, items]);
 
-  const addToCart = (id: string, quantity: number = 1) => {
+  const addToCart = (id: string, quantityOfItem: number = 1) => {
 
-    const itemToBook: Item | undefined = items.find((item: Item) => item.item_id === id);
+    const itemToAdd: Item | undefined = items.find((item: Item) => item.item_id === id);
     // some checks of qty and if item exists should be implemented
-    dispatch(addItemToBooking({ itemToBook, quantity }));
+    dispatch(addItemToCart({ itemToAdd, quantityOfItem }));
   }
 
   return (

@@ -1,23 +1,23 @@
 import { Box } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { removeItemFromBooking, selectBooking } from "../slices/bookingSlice";
+import { removeItemFromCart, selectCart } from "../slices/cartSlice";
 import { DataGridGeneric } from '../components/CustomComponents/DataGridGeneric';
 
 function Cart() {
 
     const dispatch = useAppDispatch();
-    const bookedItems = useAppSelector(selectBooking);
+    const itemsInCart = useAppSelector(selectCart);
 
-    const bookingItemsInfo = bookedItems.map(({ itemToBook, quantityToBook }) => ({
-        ...itemToBook,
-        quantityToBook,
+    const itemsInCartInfo = itemsInCart.map(({ itemInCart, quantityOfItem }) => ({
+        ...itemInCart,
+        quantityOfItem,
     }));
 
     const usedColumns = [
         { columnName: "Item ID", columnField: "item_id" },
         { columnName: "Name", columnField: "item_name" },
         { columnName: "Pcs total", columnField: "quantity" },
-        { columnName: "Pcs ordered", columnField: "quantityToBook" },
+        { columnName: "Pcs ordered", columnField: "quantityOfItem" },
     ];
 
     return (
@@ -31,12 +31,12 @@ function Cart() {
                 boxSizing: 'border-box',
             }}
         >
-            {bookedItems.length > 0 ? (
-                <DataGridGeneric data={bookingItemsInfo} idColumn={"item_id"} usedColumns={usedColumns} functions={[
+            {itemsInCart.length > 0 ? (
+                <DataGridGeneric data={itemsInCartInfo} idColumn={"item_id"} usedColumns={usedColumns} functions={[
                     { functionName: "log", functionBody: (id: string) => console.log(`/items/${id}`) },
                     {
                         functionName: "remove", functionBody: (id: string, quantityToRemove: number = 1) => {
-                            dispatch(removeItemFromBooking({ id, quantityToRemove }));
+                            dispatch(removeItemFromCart({ id, quantityToRemove }));
                         }
                     },
                 ]} />
