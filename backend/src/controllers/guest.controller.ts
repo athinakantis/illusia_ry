@@ -11,6 +11,11 @@ import { GuestService } from '../services/guest.service';
 export class GuestController {
   constructor(private readonly guestService: GuestService) {
   }
+  @Get('categories')
+  async getAllCategories() {
+    return this.guestService.getCategories();
+  }
+
   @Get(':id')
   async getItemById(@Param('id') id: string) {
     console.log("Fetching item with ID:", id);
@@ -19,9 +24,7 @@ export class GuestController {
 
   @Get()
   async getItems() {
-    console.log('received request to backend')
     return this.guestService.getItems();
   }
-
 
 }
