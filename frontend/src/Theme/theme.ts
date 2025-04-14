@@ -37,8 +37,8 @@ export const createAppTheme = () =>
     },
     typography: {
       fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-      h1: { fontSize: '2rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
-      h2: { fontSize: '1.75rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
+      h1: { fontSize: 45, fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
+      h2: { fontSize: 36, fontWeight: 500, fontFamily: 'Oxygen, sans-serif' },
       h3: { fontSize: '1.5rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
       h4: { fontSize: '1.25rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
       h5: { fontSize: '1rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
