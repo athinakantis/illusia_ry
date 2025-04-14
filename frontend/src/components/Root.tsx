@@ -6,7 +6,7 @@ function Root() {
     <>
       <Header />
       <main
-        style={{ minHeight: 'calc(100vh - 70px)', paddingTop: '3rem' }}>
+        style={{ minHeight: 'calc(100vh - 70px)' }}>
         <Outlet />
       </main>
     </>
