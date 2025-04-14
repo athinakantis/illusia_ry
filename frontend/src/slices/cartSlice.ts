@@ -13,9 +13,9 @@ export const cartSlice = createSlice({
     reducers: {
         addItemToCart: (state, action) => {
 
-            const bookingForItemExists = state.cart.find(item => item.itemInCart.item_id == action.payload.itemToAdd.item_id);
-            if (bookingForItemExists) {
-                bookingForItemExists.quantityOfItem += action.payload.quantityOfItem;
+            const itemAlreadyInCart = state.cart.find(item => item.itemInCart.item_id == action.payload.itemToAdd.item_id);
+            if (itemAlreadyInCart) {
+                itemAlreadyInCart.quantityOfItem += action.payload.quantityOfItem;
             } else {
                 state.cart.push({ itemInCart: action.payload.itemToAdd, quantityOfItem: action.payload.quantityOfItem });
             }
@@ -23,10 +23,10 @@ export const cartSlice = createSlice({
         },
         removeItemFromCart: (state, action) => {
 
-            const bookingForItemExists = state.cart.find(item => item.itemInCart.item_id == action.payload.id);
-            if (bookingForItemExists) {
-                if (bookingForItemExists.quantityOfItem > action.payload.quantityToRemove) {
-                    bookingForItemExists.quantityOfItem -= action.payload.quantityToRemove;
+            const itemAlreadyInCart = state.cart.find(item => item.itemInCart.item_id == action.payload.id);
+            if (itemAlreadyInCart) {
+                if (itemAlreadyInCart.quantityOfItem > action.payload.quantityToRemove) {
+                    itemAlreadyInCart.quantityOfItem -= action.payload.quantityToRemove;
                 } else {
                     state.cart = state.cart.filter(item => item.itemInCart.item_id !== action.payload.id);
                 }
