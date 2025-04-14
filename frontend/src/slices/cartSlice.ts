@@ -13,11 +13,11 @@ export const cartSlice = createSlice({
     reducers: {
         addItemToCart: (state, action) => {
 
-            const bookingForItemExists = state.cart.find(item => item.itemInCart.item_id == action.payload.itemInCart.item_id);
+            const bookingForItemExists = state.cart.find(item => item.itemInCart.item_id == action.payload.itemToAdd.item_id);
             if (bookingForItemExists) {
-                bookingForItemExists.quantityOfItem += action.payload.quantityToBook;
+                bookingForItemExists.quantityOfItem += action.payload.quantityOfItem;
             } else {
-                state.cart.push(action.payload);
+                state.cart.push({ itemInCart: action.payload.itemToAdd, quantityOfItem: action.payload.quantityOfItem });
             }
 
         },

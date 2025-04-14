@@ -32,6 +32,7 @@ function Items() {
   const addToCart = (id: string, quantityOfItem: number = 1) => {
 
     const itemToAdd: Item | undefined = items.find((item: Item) => item.item_id === id);
+
     // some checks of qty and if item exists should be implemented
     dispatch(addItemToCart({ itemToAdd, quantityOfItem }));
   }
