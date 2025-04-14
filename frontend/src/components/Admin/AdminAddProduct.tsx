@@ -24,7 +24,7 @@ type CreateItemPayload = Omit<
 const AdminAddProduct = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { role, user, loading } = useAuth()
+    const { role, user } = useAuth()
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState<FormData>({
