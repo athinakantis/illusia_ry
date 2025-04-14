@@ -110,6 +110,56 @@ These endpoints are protected and require a valid Bearer token. All responses fo
 - **Description**: Fetch all items.
 - **Data**: Array of items with tags and categories
 
+## **Bookings API**
+
+### `/bookings` API
+
+These routes are public and accessible **without authentication** for now so we can easily get to testing.
+
+This is easy to switch to the authenticated version by just uncommenting certain code.
+
+#### `GET /bookings`
+
+- **Description**: Retrieve **all bookings** in the system.
+- **Data**: Array of booking objects.
+
+---
+
+#### `GET /bookings/:id`
+
+- **Description**: Retrieve a **specific booking** by its `booking_id`.
+- **Params**:
+  - `id` — UUID of the booking.
+- **Data**: Single booking object.
+
+---
+
+#### `GET /bookings/user/:userId`
+
+- **Description**: Retrieve all bookings created by a **specific user**.
+- **Params**:
+  - `userId` — UUID of the user.
+- **Data**: Array of bookings made by the user.
+
+---
+
+#### `GET /bookings/item/:itemId`
+
+- **Description**: Retrieve all bookings for a **specific item**.
+- **Params**:
+  - `itemId` — UUID of the item.
+- **Data**: Array of bookings tied to the item.
+
+---
+
+#### `GET /bookings/date/:date`
+
+- **Description**: Retrieve bookings that are **active on a specific date** (where `start_date <= date <= end_date`).
+- **Params**:
+  - `date` — ISO date string (`YYYY-MM-DD`)
+- **Data**: Array of active bookings on that date.
+
+
 ## Deployment
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
