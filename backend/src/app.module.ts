@@ -12,6 +12,10 @@ import { GuestService } from './services/guest.service';
 import { GuestController } from './controllers/guest.controller';
 import { MailerService } from './services/mailer.service';
 import { MailerController } from './controllers/mailer.controller';
+import { BookingService } from './services/bookings.service';
+import { BookingController } from './controllers/bookings.controller';
+import { ItemReservationsController } from './controllers/reservations.controller';
+import { ItemReservationService } from './services/reservations.service';
 
 @Module({
   imports: [
@@ -25,6 +29,9 @@ import { MailerController } from './controllers/mailer.controller';
     ItemController,
     MailerController,
     ViewsController,
+    BookingController,
+    ItemReservationsController
+    
   ], // Controller imports go here
   providers: [
     AppService,
@@ -32,7 +39,9 @@ import { MailerController } from './controllers/mailer.controller';
     ItemService,
     ViewsService,
     GuestService,
-    MailerService
+    MailerService,
+    BookingService,
+    ItemReservationService
   ], // Services are used to handle business logic and data access
 })
 

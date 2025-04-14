@@ -19,10 +19,11 @@ export class SupabaseService {
     this._supabase = createClient<Database>(url, key);// Added the Database type
 
   }
-
-  get supabase() {
+  // Switched to this cleaer method of getting the client
+  getClient(): SupabaseClient {
     return this._supabase;
   }
+
 
   async logAction<T>(log: {
     user_id: string;
