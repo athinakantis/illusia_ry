@@ -4,7 +4,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import Logout from './auth/LoginOutBtn'
+import Logout from './Auth/LoginOutBtn'
 import PersonIcon from '@mui/icons-material/Person';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Link } from 'react-router-dom';
