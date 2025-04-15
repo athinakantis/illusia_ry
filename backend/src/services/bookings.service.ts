@@ -20,7 +20,9 @@ export class BookingService {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
 
     return {
       message: 'Bookings retrieved successfully',
@@ -37,7 +39,9 @@ export class BookingService {
       .eq('booking_id', id)
       .single();
 
-    if (error) throw error;
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
 
     return {
       message: `Booking ${id} retrieved successfully`,
@@ -64,7 +68,9 @@ export class BookingService {
       .select()
       .single();
   
-    if (bookingError) throw bookingError;
+    if (bookingError) {
+      throw new BadRequestException(bookingError.message);
+    }
   
     const booking_id = bookingData.booking_id;
   
@@ -81,7 +87,9 @@ export class BookingService {
       .from('item_reservations')
       .insert(reservationRows);
   
-    if (reservationError) throw reservationError;
+    if (reservationError) {
+      throw new BadRequestException(reservationError.message);
+    }
   
     return {
       message: 'Booking created successfully',
@@ -124,7 +132,9 @@ export class BookingService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
 
     return {
       message: 'Empty booking created successfully',
@@ -141,7 +151,9 @@ export class BookingService {
       .select('id, item_id, start_date, end_date, quantity')
       .eq('booking_id', bookingId);
 
-    if (error) throw error;
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
     if (!reservations || reservations.length === 0) {
       return { message: 'No reservations found for booking', data: { booking_id: bookingId, status: 'fail', issues: ['No reservations found.'] } };
     }
