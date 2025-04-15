@@ -31,6 +31,7 @@ export const SingleItem = () => {
   const loading = useAppSelector((state) => state.items.loading);
   const navigate = useNavigate();
 
+
   useEffect(() => {
     if (!item) {
       dispatch(fetchItemById(itemId ?? ''));

@@ -22,7 +22,6 @@ function Items() {
   const dispatch = useAppDispatch();
   const [offset, setOffset] = useState(0)
 
-
   useEffect(() => {
     if (items.length < 1) {
       dispatch(fetchAllItems())
