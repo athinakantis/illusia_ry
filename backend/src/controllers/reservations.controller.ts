@@ -12,6 +12,7 @@ export class ItemReservationsController {
   }
 
   // POST /reservations
+  // This endpoint is used to add items to a booking.
   @Post()
   async createReservation(@Body() dto: {
     booking_id: string;

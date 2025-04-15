@@ -44,7 +44,8 @@ export class BookingService {
       data,
     };
   }
-
+// Create booking with attached reservations(items). Does not check for availability.
+  // This is a simple insert into the bookings table and then an insert into the item_reservations table.
   async createBooking(payload: {
     user_id: string;
     items: {
@@ -131,7 +132,7 @@ export class BookingService {
     };
   }
 
-   // New method to review booking availability
+   // New method to review booking availability. Checks all items in the booking to see if they are available.
    async reviewBookingAvailability(bookingId: string): Promise<ApiResponse<{ booking_id: string; status: string; issues: string[] }>> {
     const supabase = this.supabaseService.getClient();
 

@@ -1,5 +1,4 @@
-// item-reservations.service.ts
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { SupabaseService } from './supabase.service';
 import { Tables } from 'src/types/supabase';
 import { ApiResponse } from 'src/types/response';
@@ -24,7 +23,9 @@ export class ItemReservationService {
       .select('*')
       .order('start_date', { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
 
     return {
       message: 'All reservations retrieved successfully',
@@ -52,7 +53,9 @@ export class ItemReservationService {
       .eq('item_id', itemId)
       .order('start_date', { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
 
     return {
       message: `Reservations for item ${itemId} retrieved successfully`,
@@ -79,7 +82,9 @@ export class ItemReservationService {
       .select('*')
       .eq('booking_id', bookingId);
 
-    if (error) throw error;
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
 
     return {
       message: `Reservations for booking ${bookingId} retrieved successfully`,
@@ -132,7 +137,9 @@ export class ItemReservationService {
       },
     );
 
-    if (error) throw error;
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
     return {
       message: `Reservations for user ${userId} retrieved successfully`,
       data: data || [],
@@ -159,7 +166,9 @@ export class ItemReservationService {
       .gte('end_date', from) // end after or on "from"
       .order('start_date', { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
 
     return {
       message: `Reservations between ${from} and ${to} retrieved successfully`,
@@ -189,7 +198,9 @@ export class ItemReservationService {
       .gte('end_date', from)
       .order('start_date', { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
 
     return {
       message: `Reservations for item ${itemId} between ${from} and ${to} retrieved successfully`,
@@ -208,7 +219,9 @@ export class ItemReservationService {
       .select('*')
       .eq('start_date', startDate);
 
-    if (error) throw error;
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
 
     return {
       message: `Reservations starting on ${startDate} retrieved successfully`,
@@ -227,7 +240,9 @@ export class ItemReservationService {
       .select('*')
       .eq('end_date', endDate);
 
-    if (error) throw error;
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
 
     return {
       message: `Reservations ending on ${endDate} retrieved successfully`,
@@ -235,7 +250,9 @@ export class ItemReservationService {
     };
   }
 
-
+  // This method creates a new reservation in the item_reservations table.
+  // In english: It adds an item to a booking.
+  // It does not check for availability.
   async createReservation(payload: {
     booking_id: string;
     item_id: string;
@@ -251,7 +268,9 @@ export class ItemReservationService {
       .select()
       .single();
 
-    if (error) throw error;
+      if (error) {
+        throw new BadRequestException(error.message); // Controlled response
+      }
 
     return {
       message: 'Reservation created successfully',
