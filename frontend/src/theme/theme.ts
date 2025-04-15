@@ -5,7 +5,7 @@ export const theme = {
     main: '#44195B',
     light: '#9339C9',
     dark: '#1F0A29',
-    neutral: '#2c2c2c'
+    neutral: '#2c2c2c',
   },
   secondary: {
     main: '#9537C7',
@@ -15,37 +15,99 @@ export const theme = {
   background: {
     default: '#FFFFFF',
     lightgrey: 'lightgrey',
-    verylightgrey: '#ededed'
+    verylightgrey: '#ededed',
   },
   text: {
     primary: '#1F0A29',
     secondary: '#666666',
-    light: '#FAFAFA'
+    light: '#FAFAFA',
   },
   accent: {
     main: '#3CC5BC',
     light: '#C1FDF9',
     dark: '#27847E',
-  }
+  },
 };
+
+declare module '@mui/material/styles' {
+  interface BreakpointOverrides {
+    xs: true;
+    sm: true;
+    md: true;
+    lg: true;
+    xl: true;
+    // You can add custom breakpoints if needed
+    // tablet: true;
+    // laptop: true;
+  }
+}
 
 export const createAppTheme = () =>
   createTheme({
+    breakpoints: {
+      values: {
+        xs: 0, // Mobile phones (portrait)
+        sm: 600, // Tablets (portrait)
+        md: 900, // Tablets (landscape), small laptops
+        lg: 1200, // Desktop
+        xl: 1536, // Large desktop
+        // Custom breakpoints if needed:
+        // tablet: 640,
+        // laptop: 1024,
+      },
+    },
     palette: {
       ...theme,
-      contrastThreshold: 4.5
+      contrastThreshold: 4.5,
     },
     typography: {
       fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-      h1: { fontSize: 45, fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
-      h2: { fontSize: 36, fontWeight: 500, fontFamily: 'Oxygen, sans-serif' },
-      h3: { fontSize: '1.5rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
-      h4: { fontSize: '1.25rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
-      h5: { fontSize: '1rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
-      h6: { fontSize: '0.875rem', fontWeight: 500, fontFamily: 'Roboto Slab, sans-serif' },
-      body1: { fontSize: '1rem', fontWeight: 400, fontFamily: 'Oxygen, sans-serif'},
-      body2: { fontSize: '0.875rem', fontWeight: 400, fontFamily: 'Oxygen, sans-serif' },
-      link: { fontSize: '0.8rem', fontWeight: 500, fontFamily: 'Roboto, sans-serif', textTransform: 'uppercase' }
+      h1: {
+        fontSize: '2rem',
+        fontWeight: 500,
+        fontFamily: 'Roboto Slab, sans-serif',
+      },
+      h2: {
+        fontSize: '1.75rem',
+        fontWeight: 500,
+        fontFamily: 'Roboto Slab, sans-serif',
+      },
+      h3: {
+        fontSize: '1.5rem',
+        fontWeight: 500,
+        fontFamily: 'Roboto Slab, sans-serif',
+      },
+      h4: {
+        fontSize: '1.25rem',
+        fontWeight: 500,
+        fontFamily: 'Roboto Slab, sans-serif',
+      },
+      h5: {
+        fontSize: '1rem',
+        fontWeight: 500,
+        fontFamily: 'Roboto Slab, sans-serif',
+      },
+      h6: {
+        fontSize: '0.875rem',
+        fontWeight: 500,
+        fontFamily: 'Roboto Slab, sans-serif',
+      },
+      body1: {
+        fontSize: '1rem',
+        fontWeight: 400,
+        fontFamily: 'Oxygen, sans-serif',
+      },
+      body2: {
+        fontSize: '0.875rem',
+        fontWeight: 400,
+        fontFamily: 'Oxygen, sans-serif',
+      },
+      link: {
+        fontSize: '1 rem',
+        fontWeight: 500,
+        fontFamily: 'Roboto, sans-serif',
+        textTransform: 'uppercase',
+      },
     },
     shadows: [
       'none',
