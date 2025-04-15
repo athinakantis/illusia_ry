@@ -50,4 +50,8 @@ export const bookingsSlice = createSlice({
 export const selectAllBookings = (state: RootState) =>
     state.bookings.bookings;
 
+export const selectBookingById = (id: string) => (state: RootState) => {
+    return state.bookings.bookings.find((booking) => booking.booking_id === id);
+}
+
 export default bookingsSlice.reducer;

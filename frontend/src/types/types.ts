@@ -22,14 +22,7 @@ export interface ApiResponse<T> {
   message: string;
 }
 
-export interface ItemAndQuantity {
-  itemInCart: Item,
-  quantityOfItem: number,
-}
 
-export interface CartState {
-  cart: ItemAndQuantity[];
-}
 
 export interface FormData {
   item_name: string;
@@ -53,13 +46,16 @@ export interface BookingsState {
   loading: boolean
 }
 
-export interface Reservation {
-  id: string,
-  booking_id: string,
+export interface LocalReservation {
   item_id: string,
   start_date: string,
   end_date: string,
   quantity: number,
+}
+
+export interface Reservation extends LocalReservation {
+  id: string,
+  booking_id: string,
   created_at: string,
 }
 
@@ -67,4 +63,9 @@ export interface ReservationsState {
   reservations: Reservation[],
   error: null | string,
   loading: boolean
+}
+
+
+export interface CartState {
+  cart: LocalReservation[];
 }

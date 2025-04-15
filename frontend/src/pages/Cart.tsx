@@ -2,22 +2,28 @@ import { Box } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { removeItemFromCart, selectCart } from "../slices/cartSlice";
 import { DataGridGeneric } from '../components/CustomComponents/DataGridGeneric';
+import { selectAllItems } from "../slices/itemsSlice";
+import ClearIcon from '@mui/icons-material/Clear';
+
 
 function Cart() {
 
     const dispatch = useAppDispatch();
     const itemsInCart = useAppSelector(selectCart);
+    const items = useAppSelector(selectAllItems);
 
-    const itemsInCartInfo = itemsInCart.map(({ itemInCart, quantityOfItem }) => ({
-        ...itemInCart,
-        quantityOfItem,
+
+    const itemsInCartInfo = itemsInCart.map(itemToShow => ({
+        ...items.find(item => item.item_id === itemToShow.item_id),
+        ...itemToShow,
     }));
 
     const usedColumns = [
         { columnName: "Item ID", columnField: "item_id" },
-        { columnName: "Name", columnField: "item_name" },
-        { columnName: "Pcs total", columnField: "quantity" },
-        { columnName: "Pcs ordered", columnField: "quantityOfItem" },
+        { columnName: "Item Name", columnField: "item_name" },
+        { columnName: "Start Date", columnField: "start_date" },
+        { columnName: "End Date", columnField: "end_date" },
+        { columnName: "Pcs ordered", columnField: "quantity" },
     ];
 
     return (
@@ -33,10 +39,9 @@ function Cart() {
         >
             {itemsInCart.length > 0 ? (
                 <DataGridGeneric data={itemsInCartInfo} idColumn={"item_id"} usedColumns={usedColumns} functions={[
-                    { functionName: "log", functionBody: (id: string) => console.log(`/items/${id}`) },
                     {
-                        functionName: "remove", functionBody: (id: string, quantityToRemove: number = 1) => {
-                            dispatch(removeItemFromCart({ id, quantityToRemove }));
+                        functionName: "remove", functionIcon: <ClearIcon />, functionBody: (item_id: string, quantityToRemove: number = 1) => {
+                            dispatch(removeItemFromCart({ item_id, quantityToRemove }));
                         }
                     },
                 ]} />

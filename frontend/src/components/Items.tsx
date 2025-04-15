@@ -13,7 +13,6 @@ import {
   TextField,
 } from '@mui/material';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import { Item } from '../types/types';
 import { addItemToCart } from '../slices/cartSlice'
 import Pagination from './Pagination';
 
@@ -28,12 +27,14 @@ function Items() {
     }
   }, [dispatch, items]);
 
-  const addToCart = (id: string, quantityOfItem: number = 1) => {
-
-    const itemToAdd: Item | undefined = items.find((item: Item) => item.item_id === id);
+  const addToCart = (item_id: string, quantityToAdd: number = 1) => {
 
     // some checks of qty and if item exists should be implemented
-    dispatch(addItemToCart({ itemToAdd, quantityOfItem }));
+    const start_date = "null";
+    const end_date = "null";
+
+
+    dispatch(addItemToCart({ item_id, quantityToAdd, start_date, end_date }));
   }
 
   return (
