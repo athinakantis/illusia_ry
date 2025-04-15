@@ -234,4 +234,28 @@ export class ItemReservationService {
       data: data || [],
     };
   }
+
+
+  async createReservation(payload: {
+    booking_id: string;
+    item_id: string;
+    start_date: string;
+    end_date: string;
+    quantity: number;
+  }): Promise<ApiResponse<Tables<'item_reservations'>>> {
+    const supabase = this.supabaseService.getClient();
+
+    const { data, error } = await supabase
+      .from('item_reservations')
+      .insert(payload)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return {
+      message: 'Reservation created successfully',
+      data,
+    };
+  }
 }

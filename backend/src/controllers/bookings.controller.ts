@@ -29,4 +29,15 @@ export class BookingController {
   async createViaRpc(@Body() dto: CreateBookingDto) {
     return this.bookingService.createBookingWithItemsViaRpc(dto);
   }
+  // POST /bookings/empty → create an empty booking
+  // This is used to create a booking without any items.
+  @Post('empty')
+  async createEmptyBooking(@Body() body: { user_id: string }) {
+    return this.bookingService.createEmptyBooking(body.user_id);
+  }
+  // POST /bookings/:id/review
+  @Post(':id/review')
+  async reviewBooking(@Param('id') bookingId: string) {
+    return this.bookingService.reviewBookingAvailability(bookingId);
+  }
 }

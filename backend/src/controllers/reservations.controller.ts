@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from "@nestjs/common";
+import { Controller, Get, Param, Query, Body, Post } from "@nestjs/common";
 import { ItemReservationService } from "src/services/reservations.service";
 
 @Controller('reservations')
@@ -9,6 +9,18 @@ export class ItemReservationsController {
   @Get()
   async getAllReservations() {
     return this.itemReservationService.getAllReservations();
+  }
+
+  // POST /reservations
+  @Post()
+  async createReservation(@Body() dto: {
+    booking_id: string;
+    item_id: string;
+    start_date: string;
+    end_date: string;
+    quantity: number;
+  }) {
+    return this.itemReservationService.createReservation(dto);
   }
 
   // GET /reservations/item/:itemId
@@ -62,4 +74,5 @@ export class ItemReservationsController {
   async getByEndDate(@Param('endDate') endDate: string) {
     return this.itemReservationService.getReservationsByEndDate(endDate);
   }
+  
 }

@@ -112,4 +112,86 @@ export class BookingService {
     }
     return data;
   }
+
+
+  async createEmptyBooking(user_id: string): Promise<ApiResponse<Tables<'bookings'>>> {
+    const supabase = this.supabaseService.getClient();
+
+    const { data, error } = await supabase
+      .from('bookings')
+      .insert({ user_id })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return {
+      message: 'Empty booking created successfully',
+      data,
+    };
+  }
+
+   // New method to review booking availability
+   async reviewBookingAvailability(bookingId: string): Promise<ApiResponse<{ booking_id: string; status: string; issues: string[] }>> {
+    const supabase = this.supabaseService.getClient();
+
+    const { data: reservations, error } = await supabase
+      .from('item_reservations')
+      .select('id, item_id, start_date, end_date, quantity')
+      .eq('booking_id', bookingId);
+
+    if (error) throw error;
+    if (!reservations || reservations.length === 0) {
+      return { message: 'No reservations found for booking', data: { booking_id: bookingId, status: 'fail', issues: ['No reservations found.'] } };
+    }
+
+    const issues: string[] = [];
+
+    for (const r of reservations) {
+      const { id, item_id, start_date, end_date, quantity } = r;
+
+      const { data: totalStockData, error: stockErr } = await supabase
+        .from('items')
+        .select('quantity')
+        .eq('item_id', item_id)
+        .single();
+
+      if (stockErr || !totalStockData) {
+        issues.push(`Reservation ${id}: Item ${item_id}: could not fetch stock info`);
+        continue;
+      }
+
+      const totalStock = totalStockData.quantity;
+
+      const { data: overlapping, error: overlapErr } = await supabase
+        .from('item_reservations')
+        .select('quantity')
+        .eq('item_id', item_id)
+        .lte('start_date', end_date)
+        .gte('end_date', start_date);
+
+      if (overlapErr) {
+        issues.push(`Reservation ${id}: Item ${item_id}: error checking overlapping reservations`);
+        continue;
+      }
+
+      const alreadyReserved = overlapping.reduce((sum, row) => sum + row.quantity, 0);
+      const available = totalStock - alreadyReserved;
+
+      if (available < quantity) {
+        issues.push(`Reservation ${id}: Item ${item_id} only has ${available} left during ${start_date} - ${end_date}`);
+      }
+    }
+
+    const uniqueIssues = [...new Set(issues)];
+
+    return {
+      message: 'Availability review completed',
+      data: {
+        booking_id: bookingId,
+        status: uniqueIssues.length === 0 ? 'ok' : 'fail',
+        issues: uniqueIssues,
+      },
+    };
+  }
 }
