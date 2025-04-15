@@ -20,17 +20,25 @@ const Footer = () => {
         >
             <Container maxWidth="lg">
                 {/* Logo */}
-                <Typography
+                {/* <Typography
                     variant="h1"
                     sx={{
                         textAlign: 'center',
                         color: 'white',
                         fontSize: '2rem',
-                        mb: 4
+                        mb: 4,
+                        mt: 2
                     }}
                 >
                     ILLUSIA
-                </Typography>
+                </Typography> */}
+                <Box sx={{ textAlign: 'center', mb: 2 }}>
+                    <img
+                        src={IllusiaLogo}
+                        alt="Illusia Logo"
+                        style={{ width: '200px', height: '200px' }}
+                    />
+                </Box>
 
                 {/* Newsletter Section */}
                 <Box
@@ -45,6 +53,7 @@ const Footer = () => {
                         variant="h2"
                         sx={{
                             fontSize: '1.5rem',
+                            mt: 4,
                             mb: 3,
                             fontWeight: 400
                         }}
@@ -99,7 +108,7 @@ const Footer = () => {
 
                 {/* Logo and Copyright */}
                 <Box sx={{ textAlign: 'center' }}>
-                    <IllusiaLogo sx={{ width: 48, height: 48, mb: 2 }} />
+                    {/* <IllusiaLogo sx={{ width: 48, height: 48, mb: 2 }} /> */}
                     <Typography
                         variant="body2"
                         sx={{
