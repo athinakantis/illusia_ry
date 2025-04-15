@@ -36,7 +36,7 @@ function Home() {
         <Typography variant='body1' sx={{ width: 609, margin: '12px auto 68px' }}>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.</Typography>
 
         <Stack direction='row' spacing={2} sx={{
-          width: '100%',
+          width: '100%', px: 2, flexWrap: 'wrap',
           '& .MuiCard-root:not(.css-2359du)': { borderRadius: '14px', backgroundSize: 'cover', position: 'relative' },
           '& p': { justifySelf: 'start', color: '#FFF', fontSize: 22, fontWeight: 300 },
           '& a': { textDecoration: 'none' },
@@ -46,18 +46,18 @@ function Home() {
         }}>
           <Link to='/'>
             <Card>
-              <CardMedia
-                sx={{ backgroundImage: `url(${categories?.[0]?.image_path})`, height: 513, width: 392 }}>
+              <CardMedia component='image' image={categories?.[0]?.image_path}
+                sx={{ backgroundImage: `url(${categories?.[0]?.image_path})`, height: 513, width: 392, flexShrink: 1 }}>
               </CardMedia>
               <CardContent>
                 <Typography variant='body1'>{categories?.[0]?.category_name}</Typography>
               </CardContent>
             </Card>
           </Link>
-          <Box sx={{ height: 513, width: 392, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <Box sx={{ height: 513, width: 392, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 300 }}>
             <Link to='/'>
               <Card>
-                <CardMedia sx={{ backgroundImage: `url(${categories?.[1]?.image_path})`, height: 240 }}>
+                <CardMedia component='image' image={categories?.[1]?.image_path} sx={{ height: 240 }}>
                 </CardMedia>
                 <CardContent>
                   <Typography variant='body1'>{categories?.[1]?.category_name}</Typography>
@@ -67,7 +67,7 @@ function Home() {
             <Link to='/'>
 
               <Card>
-                <CardMedia sx={{ backgroundImage: `url(${categories?.[2]?.image_path})`, height: 240 }}>
+                <CardMedia component='image' image={categories?.[2]?.image_path} sx={{ height: 240 }}>
                 </CardMedia>
                 <CardContent>
                   <Typography variant='body1'>{categories?.[2]?.category_name}</Typography>
@@ -77,7 +77,7 @@ function Home() {
           </Box>
           <Link to='/'>
             <Card>
-              <CardMedia sx={{ backgroundImage: `url(${categories?.[3]?.image_path})`, height: 513, width: 392 }}>
+              <CardMedia component='image' image={categories?.[3]?.image_path} sx={{ height: 513, width: 392, minWidth: 300, flexShrink: 1 }}>
               </CardMedia>
               <CardContent>
                 <Typography variant='body1'>{categories?.[3]?.category_name}</Typography>

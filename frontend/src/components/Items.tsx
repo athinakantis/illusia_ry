@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchAllItems, selectAllItems } from '../slices/itemsSlice';
+import { fetchAllCategories, fetchAllItems, selectAllCategories, selectAllItems } from '../slices/itemsSlice';
 import {
   Button,
   Card,
@@ -11,6 +11,7 @@ import {
   Stack,
   Typography,
   TextField,
+  Chip,
 } from '@mui/material';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { Item } from '../types/types';
@@ -19,23 +20,27 @@ import Pagination from './Pagination';
 
 function Items() {
   const items = useAppSelector(selectAllItems);
+  const categories = useAppSelector(selectAllCategories)
   const dispatch = useAppDispatch();
   const [offset, setOffset] = useState(0)
+
 
 
   useEffect(() => {
     if (items.length < 1) {
       dispatch(fetchAllItems())
     }
+    if (!categories || categories.length < 1) {
+      dispatch(fetchAllCategories())
+    }
   }, [dispatch, items]);
 
   const addToCart = (id: string, quantityOfItem: number = 1) => {
-
     const itemToAdd: Item | undefined = items.find((item: Item) => item.item_id === id);
-
     // some checks of qty and if item exists should be implemented
     dispatch(addItemToCart({ itemToAdd, quantityOfItem }));
   }
+
 
   return (
     <Box
@@ -49,6 +54,7 @@ function Items() {
       <Box
         sx={{
           minWidth: 300,
+          p: 2
         }}
       >
         <TextField
@@ -58,6 +64,15 @@ function Items() {
           variant="standard"
           sx={{ width: '80%', mt: 1 }}
         />
+        <Box sx={{ pt: 4, pr: 2, gap: 1, display: 'flex' }}>
+          {categories.map(category => (
+            <Chip variant='filled'
+              key={category.category_id}
+              label={category.category_name}
+              sx={{ height: 27 }}
+            />
+          ))}
+        </Box>
       </Box>
 
 
