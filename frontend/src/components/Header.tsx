@@ -41,7 +41,7 @@ const Header = () => {
             <Link to='/items' style={{ textDecoration: 'none' }}>Items</Link>
           </Typography>
           <Typography variant='link'>
-            <Link to='/items' style={{ textDecoration: 'none' }}>Contact</Link>
+            <Link to='/contacts' style={{ textDecoration: 'none' }}>Contact</Link>
           </Typography>
         </Box>
 

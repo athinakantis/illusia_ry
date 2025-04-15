@@ -39,3 +39,32 @@ export interface FormData {
   quantity: number;
   // Add other relevant fields from your 'items' table if needed
 }
+
+export interface Booking {
+  booking_id: string,
+  user_id: string,
+  status: string,
+  created_at: string,
+}
+
+export interface BookingsState {
+  bookings: Booking[],
+  error: null | string,
+  loading: boolean
+}
+
+export interface Reservation {
+  id: string,
+  booking_id: string,
+  item_id: string,
+  start_date: string,
+  end_date: string,
+  quantity: number,
+  created_at: string,
+}
+
+export interface ReservationsState {
+  reservations: Reservation[],
+  error: null | string,
+  loading: boolean
+}
