@@ -23,14 +23,14 @@ export interface ApiResponse<T> {
 }
 
 export interface ItemAndQuantity {
-  itemToBook: Item,
-  quantityToBook: number,
+  itemInCart: Item,
+  quantityOfItem: number,
 }
 
-export interface BookingState {
-  booking: ItemAndQuantity[];
+export interface CartState {
+  cart: ItemAndQuantity[];
 }
-  
+
 export interface FormData {
   item_name: string;
   description: string;
