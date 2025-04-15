@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Tables } from 'src/types/supabase';
 import { ApiResponse } from 'src/types/response';
 import { SupabaseService } from './supabase.service';
@@ -43,5 +43,73 @@ export class BookingService {
       message: `Booking ${id} retrieved successfully`,
       data,
     };
+  }
+
+  async createBooking(payload: {
+    user_id: string;
+    items: {
+      item_id: string;
+      start_date: string;
+      end_date: string;
+      quantity: number;
+    }[];
+  }): Promise<ApiResponse<{ booking_id: Tables<'bookings'>['booking_id']; reservations: Tables<'item_reservations'>[] }>> {
+    const supabase = this.supabaseService.getClient();
+  
+    // 1. Insert the booking
+    const { data: bookingData, error: bookingError } = await supabase
+      .from('bookings')
+      .insert({ user_id: payload.user_id })
+      .select()
+      .single();
+  
+    if (bookingError) throw bookingError;
+  
+    const booking_id = bookingData.booking_id;
+  
+    // 2. Insert item reservations
+    const reservationRows = payload.items.map((item) => ({
+      booking_id,
+      item_id: item.item_id,
+      start_date: item.start_date,
+      end_date: item.end_date,
+      quantity: item.quantity,
+    }));
+  
+    const { error: reservationError } = await supabase
+      .from('item_reservations')
+      .insert(reservationRows);
+  
+    if (reservationError) throw reservationError;
+  
+    return {
+      message: 'Booking created successfully',
+      data: {
+        booking_id,
+        reservations: reservationRows as Tables<'item_reservations'>[],
+      },
+    };
+  }
+
+  async createBookingWithItemsViaRpc(payload: {
+    user_id: string;
+    items: {
+      item_id: string;
+      start_date: string;
+      end_date: string;
+      quantity: number;
+    }[];
+  }): Promise<{ booking_id: string; status: string }> {
+    const supabase = this.supabaseService.getClient();
+  
+    const { data, error } = await supabase.rpc('create_booking_with_reservations', {
+      _user_id: payload.user_id,
+      _items: payload.items,
+    });
+  
+    if (error) {
+      throw new BadRequestException(error.message); // from @nestjs/common
+    }
+    return data;
   }
 }
