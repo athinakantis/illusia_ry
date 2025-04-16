@@ -22,6 +22,13 @@ const ItemDetail: React.FC = () => {
     const { itemId } = useParams<{ itemId: string }>();
     const items = useAppSelector((state) => state.items.items);
     const item = items.find((i) => i.item_id === itemId);
+    const categories = useAppSelector(
+        (state) => state.items.categories
+    );
+    const category = categories.find(
+        (cat) => cat.category_id === item?.category_id
+    );
+    console.log(category)
     console.log(item);
     useEffect(() => {
         if (!items.length) {
@@ -77,7 +84,7 @@ const ItemDetail: React.FC = () => {
                             color="text.secondary"
                             gutterBottom
                         >
-                            {item?.category || "Category"}
+                            {category?.category_name || "Category"}
                         </Typography>
                         <Typography
                             component={"p"}

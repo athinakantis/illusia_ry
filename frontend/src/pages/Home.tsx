@@ -51,13 +51,13 @@ function Home() {
             '& span': { left: 19, bottom: 25, position: 'absolute', fontSize: 22 }
           }}>
           <Link to='/'>
-            <Grid size={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <img src={categories?.[0]?.image_path} alt="" />
               <Typography variant='body3'>{categories?.[0]?.category_name}</Typography>
             </Grid>
           </Link>
 
-          <Grid size={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Stack sx={{ gap: '32px' }}>
               <Link to='/'>
                 <img src={categories?.[1]?.image_path} alt="" />
@@ -72,7 +72,7 @@ function Home() {
           </Grid>
 
           <Link to='/'>
-            <Grid size={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <img src={categories?.[3]?.image_path} alt="" />
               <Typography variant='body3'>{categories?.[3]?.category_name}</Typography>
             </Grid>
