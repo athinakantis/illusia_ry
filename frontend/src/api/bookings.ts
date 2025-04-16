@@ -10,4 +10,8 @@ export const bookingsApi = {
     /*getBookingbyId: (id: string): Promise<ApiResponse<Item>> => {
         return api.get(`/items/${id}`)
     },*/
+
+    createBooking: (newBooking: object) => {
+        return api.post('bookings/rpc', newBooking);
+    }
 };

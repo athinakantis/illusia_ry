@@ -4,6 +4,8 @@ import { removeItemFromCart, selectCart } from "../slices/cartSlice";
 import { DataGridGeneric } from '../components/CustomComponents/DataGridGeneric';
 import { selectAllItems } from "../slices/itemsSlice";
 import ClearIcon from '@mui/icons-material/Clear';
+import { addBooking } from "../slices/bookingsSlice";
+import { useAuth } from "../hooks/useAuth";
 
 
 function Cart() {
@@ -11,6 +13,10 @@ function Cart() {
     const dispatch = useAppDispatch();
     const itemsInCart = useAppSelector(selectCart);
     const items = useAppSelector(selectAllItems);
+    const { user } = useAuth();
+
+    console.log(itemsInCart);
+
 
 
     const itemsInCartInfo = itemsInCart.map(itemToShow => ({
@@ -26,8 +32,18 @@ function Cart() {
         { columnName: "Pcs ordered", columnField: "quantity" },
     ];
 
+    const createBookingFromCart = () => {
+        return { user_id: user?.id, items: itemsInCart };
+    }
+
+
     const handleAddBooking = () => {
         console.log("making booking");
+        const newBookingData: object = createBookingFromCart();
+        console.log(newBookingData);
+
+        const response = dispatch(addBooking(newBookingData));
+        console.log(response);
 
     }
 

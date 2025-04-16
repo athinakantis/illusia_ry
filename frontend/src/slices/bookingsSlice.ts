@@ -26,6 +26,15 @@ export const fetchBookingById = createAsyncThunk(
     }
 );*/
 
+export const addBooking = createAsyncThunk(
+    'bookings/rpc',
+    async (newBooking: object) => {
+        const response = await bookingsApi.createBooking(newBooking);
+        return response;
+    }
+
+);
+
 
 export const bookingsSlice = createSlice({
     name: 'bookings',
@@ -42,6 +51,10 @@ export const bookingsSlice = createSlice({
         builder.addCase(fetchAllBookings.rejected, (state) => {
             state.loading = false
             state.error = 'Could not fetch items'
+        })
+        builder.addCase(addBooking.fulfilled, (state, action) => {
+
+            state.bookings.push(action.payload.data);
         })
 
     }

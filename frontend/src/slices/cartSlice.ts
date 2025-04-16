@@ -33,6 +33,9 @@ export const cartSlice = createSlice({
                 state.cart = state.cart.filter(item => item.item_id !== action.payload.item_id);
             }
         },
+        emptyCart: (state) => {
+            state.cart = [];
+        }
     }
 })
 
@@ -43,6 +46,8 @@ export const selectCart = (state: RootState) => {
 
 export const { addItemToCart } = cartSlice.actions;
 export const { removeItemFromCart } = cartSlice.actions;
+export const { emptyCart } = cartSlice.actions;
+
 export const selectItemInCartById = (id: string) => (state: RootState) => {
     return state.cart.cart.find((item) => item.item_id === id);
 }
