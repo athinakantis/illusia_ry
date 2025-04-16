@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Param,
+  Query,
 } from '@nestjs/common';
 import { GuestService } from '../services/guest.service';
 
@@ -9,11 +10,20 @@ import { GuestService } from '../services/guest.service';
 // These routes are for users who are not logged in.
 @Controller('items')
 export class GuestController {
-  constructor(private readonly guestService: GuestService) {
-  }
+  constructor(private readonly guestService: GuestService) {}
+  
   @Get('categories')
   async getAllCategories() {
     return this.guestService.getCategories();
+  }
+
+  @Get(`filter`)
+  async getFilteredItems(@Query('category') categories: string) {
+    console.log(categories)
+    const formattedCategories = categories.split(' ')
+    formattedCategories.map(cat => cat.replace('-', ' '))
+    console.log(formattedCategories)
+    return this.guestService.getItemsByCategories(formattedCategories);
   }
 
   @Get(':id')

@@ -82,4 +82,27 @@ export class GuestService {
       throw err;
     }
   }
+
+  async getItemsByCategories(categories: string[]) {
+    try {
+      const { data, error } = await this._supabase
+      .from('items')
+      .select('*, categories!inner(category_name)')
+      .in('categories.category_name', categories);
+      console.log(data)
+
+    if (error) {
+      console.error('Error retrieving item: ', error);
+      throw error;
+    }
+
+    return {
+      message: `Categories retrieved successfully`,
+      data: data || null,
+    }; 
+    } catch (err) {
+      console.error('Unexpected error in getItemById:', err);
+      throw err;
+    }
+  }
 }

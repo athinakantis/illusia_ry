@@ -17,13 +17,16 @@ import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOu
 import { Item } from '../types/types';
 import { addItemToCart } from '../slices/cartSlice'
 import Pagination from './Pagination';
-
+import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 function Items() {
   const items = useAppSelector(selectAllItems);
   const categories = useAppSelector(selectAllCategories)
   const dispatch = useAppDispatch();
   const [offset, setOffset] = useState(0)
-
+  const { search } = useLocation()
+  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams();
 
 
   useEffect(() => {
@@ -39,6 +42,47 @@ function Items() {
     const itemToAdd: Item | undefined = items.find((item: Item) => item.item_id === id);
     // some checks of qty and if item exists should be implemented
     dispatch(addItemToCart({ itemToAdd, quantityOfItem }));
+  }
+
+  const updateSearch = (category: string) => {
+    const formattedCategory = category.replaceAll(' ', '-')
+    const currentCategories = searchParams.get('category')?.split('+') || []
+
+    if (currentCategories?.includes(formattedCategory)) return
+
+    // Add new category to current
+    currentCategories?.push(formattedCategory)
+
+    // Create new search parameters
+    const params = new URLSearchParams();
+    params.set("category", currentCategories!.join(','));
+
+    navigate({
+      pathname: '/items',
+      search: `?${createSearchParams(params)}`
+    });
+  }
+
+  const removeFromSearch = (category: string) => {
+    const formattedCategory = category.replaceAll(' ', '-')
+
+    let filteredCategories;
+    const params = new URLSearchParams(location.search)
+    const currentCategories = params.get('category')!.split(',')
+    filteredCategories = currentCategories.filter(cat => cat !== formattedCategory)
+
+    // If no more category filters, clear category query
+    if (filteredCategories.length < 1) {
+      params.delete('category')
+      return navigate('/items')
+    }
+
+    params.set('category', filteredCategories.toString())
+
+    navigate({
+      pathname: '/items',
+      search: `?${createSearchParams(params)}`
+    });
   }
 
 
@@ -69,7 +113,14 @@ function Items() {
             <Chip variant='filled'
               key={category.category_id}
               label={category.category_name}
-              sx={{ height: 27 }}
+              clickable={true}
+              deleteIcon={search.includes(category.category_name.replaceAll(' ', '-')) ? <RemoveCircleIcon /> : <></>}
+              onDelete={() => { removeFromSearch(category.category_name) }}
+              onClick={() => updateSearch(category.category_name)}
+              sx={{
+                height: 27,
+                '&:hover': { backgroundColor: 'background.lightgrey', cursor: 'pointer' }
+              }}
             />
           ))}
         </Box>

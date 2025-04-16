@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CardMedia, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchAllCategories, selectAllCategories } from '../slices/itemsSlice';
@@ -17,76 +17,69 @@ function Home() {
 
   return (
     <Box>
+
+      {/* Hero banner */}
       <Box component='section' id='hero-container'
         sx={{
           backgroundImage: 'url(/hero.png)', height: 779, backgroundRepeat: 'no-repeat', width: '100%',
           backgroundSize: 'cover', backgroundPosition: 'center'
         }}>
         <Box
-          sx={{ width: 797, textAlign: 'center', height: '100%', display: 'flex', gap: '35px', margin: 'auto', justifyContent: 'center', flexDirection: 'column' }}>
+          sx={{ width: 'clamp(150px, 85vw, 797px)', textAlign: 'center', height: '100%', display: 'flex', gap: '35px', margin: 'auto', justifyContent: 'center', flexDirection: 'column' }}>
 
-          <Typography variant='h1'
-            sx={{ color: '#FFF' }}>Home for live-action role-playing games props</Typography>
-          <Typography variant='body1' sx={{ color: '#FFF' }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat</Typography>
+          <Typography variant='h1'>Home for live-action role-playing games props</Typography>
+          <Typography variant='body3'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat</Typography>
         </Box>
       </Box>
+
+
+      {/* Category section */}
       <Box component='section'
         sx={{ maxWidth: 1240, height: 690, margin: 'auto', textAlign: 'center', display: 'flex', flexDirection: 'column', my: '170px' }}>
         <Typography variant='h2'>View Our Range Of Categories</Typography>
-        <Typography variant='body1' sx={{ width: 609, margin: '12px auto 68px' }}>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.</Typography>
+        <Typography variant='body1' sx={{ width: 'clamp(150px, 80vw, 609px)', margin: '12px auto 68px' }}>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.</Typography>
 
-        <Stack direction='row' spacing={2} sx={{
-          width: '100%', px: 2, flexWrap: 'wrap',
-          '& .MuiCard-root:not(.css-2359du)': { borderRadius: '14px', backgroundSize: 'cover', position: 'relative' },
-          '& p': { justifySelf: 'start', color: '#FFF', fontSize: 22, fontWeight: 300 },
-          '& a': { textDecoration: 'none' },
-          '& .MuiCardMedia-root': { display: 'flex', alignItems: 'end', transition: 'scale 200ms' },
-          '& a:hover .MuiCardMedia-root': { scale: 1.03 },
-          '& .MuiCardContent-root': { position: 'absolute', bottom: '25px', left: '19px', p: 0 }
-        }}>
+        {/* Category Previews */}
+        <Grid container spacing={'32px'} columns={3} direction="row"
+          sx={{
+            height: 513,
+            '& .MuiGrid-root': { position: 'relative', height: 513, width: 392, overflow: 'hidden' },
+            '& .MuiStack-root a': { height: 240 },
+            '& a': { textDecoration: 'none', borderRadius: '14px', position: 'relative', overflow: 'hidden' },
+            '& img': { transition: 'scale 200ms' },
+            '& img:hover': { scale: 1.03 },
+            '& span': { left: 19, bottom: 25, position: 'absolute', fontSize: 22 }
+          }}>
           <Link to='/'>
-            <Card>
-              <CardMedia component='image' image={categories?.[0]?.image_path}
-                sx={{ backgroundImage: `url(${categories?.[0]?.image_path})`, height: 513, width: 392, flexShrink: 1 }}>
-              </CardMedia>
-              <CardContent>
-                <Typography variant='body1'>{categories?.[0]?.category_name}</Typography>
-              </CardContent>
-            </Card>
+            <Grid size={4}>
+              <img src={categories?.[0]?.image_path} alt="" />
+              <Typography variant='body3'>{categories?.[0]?.category_name}</Typography>
+            </Grid>
           </Link>
-          <Box sx={{ height: 513, width: 392, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 300 }}>
-            <Link to='/'>
-              <Card>
-                <CardMedia component='image' image={categories?.[1]?.image_path} sx={{ height: 240 }}>
-                </CardMedia>
-                <CardContent>
-                  <Typography variant='body1'>{categories?.[1]?.category_name}</Typography>
-                </CardContent>
-              </Card>
-            </Link>
-            <Link to='/'>
 
-              <Card>
-                <CardMedia component='image' image={categories?.[2]?.image_path} sx={{ height: 240 }}>
-                </CardMedia>
-                <CardContent>
-                  <Typography variant='body1'>{categories?.[2]?.category_name}</Typography>
-                </CardContent>
-              </Card>
-            </Link>
-          </Box>
+          <Grid size={4}>
+            <Stack sx={{ gap: '32px' }}>
+              <Link to='/'>
+                <img src={categories?.[1]?.image_path} alt="" />
+                <Typography variant='body3'>{categories?.[1]?.category_name}</Typography>
+              </Link>
+
+              <Link to='/'>
+                <img src={categories?.[2]?.image_path} alt="" />
+                <Typography variant='body3'>{categories?.[2]?.category_name}</Typography>
+              </Link>
+            </Stack>
+          </Grid>
+
           <Link to='/'>
-            <Card>
-              <CardMedia component='image' image={categories?.[3]?.image_path} sx={{ height: 513, width: 392, minWidth: 300, flexShrink: 1 }}>
-              </CardMedia>
-              <CardContent>
-                <Typography variant='body1'>{categories?.[3]?.category_name}</Typography>
-              </CardContent>
-            </Card>
+            <Grid size={4}>
+              <img src={categories?.[3]?.image_path} alt="" />
+              <Typography variant='body3'>{categories?.[3]?.category_name}</Typography>
+            </Grid>
           </Link>
-        </Stack>
+        </Grid>
       </Box>
-    </Box>
+    </Box >
   )
 }
 
