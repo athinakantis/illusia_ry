@@ -11,15 +11,14 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchAllItems } from '../../slices/itemsSlice';
-import { useParams } from 'react-router-dom';
-import { Provider, DateRangePicker, defaultTheme } from '@adobe/react-spectrum';
-import { parseDate, CalendarDate, getLocalTimeZone, today,DateValue, DateField } from '@internationalized/date';
+import { Link, useParams } from 'react-router-dom';
+import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
+import { DateValue, getLocalTimeZone, today } from '@internationalized/date';
 import type { RangeValue } from '@react-types/shared';
 
 const ItemDetail: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
-  const now = today(getLocalTimeZone())
-  console.log(now);
+  const now = today(getLocalTimeZone());
   const [range, setRange] = useState<RangeValue<DateValue> | null>({
     start: now,
     end: now.add({ months: 2 }),
@@ -28,10 +27,6 @@ const ItemDetail: React.FC = () => {
   const { itemId } = useParams<{ itemId: string }>();
   const items = useAppSelector((state) => state.items.items);
   const item = items.find((i) => i.item_id === itemId);
-  const categories = useAppSelector((state) => state.items.categories);
-  const category = categories.find(
-    (cat) => cat.category_id === item?.category_id,
-  );
 
   useEffect(() => {
     if (!items.length) {
@@ -39,12 +34,27 @@ const ItemDetail: React.FC = () => {
     }
   }, [dispatch, items]);
 
+  const categories = useAppSelector((state) => state.items.categories);
+  const category = categories.find(
+    (cat) => cat.category_id === item?.category_id,
+  );
+  console.log('Category:', category);
   const handleQuantityChange = (amount: number) => {
     setQuantity((prevQuantity) => Math.max(1, prevQuantity + amount));
   };
-  
+
   return (
-    <Box sx={{ p: 3, maxWidth: 1200, margin: 'auto' }}>
+    <Box sx={{ p: 3, maxWidth: 1300, margin: 'auto' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', px: 1, pb: 3 }}>
+        <Button
+          variant="outlined"
+          size="small"
+          component={Link}
+          to="/items"
+        >
+          Back
+        </Button>
+      </Box>
       <Grid container spacing={4}>
         {/* Left Column: Image */}
         <Grid size={{ xs: 12, md: 6 }}>
@@ -53,11 +63,11 @@ const ItemDetail: React.FC = () => {
             sx={{
               width: '100%',
               height: 'auto',
-              borderRadius: 2, // Match the rounded corners from the image
+              borderRadius: 2,
               objectFit: 'cover',
-              boxShadow: 3, // Add a subtle shadow like in the image
+              boxShadow: 3, //
             }}
-            src={item?.image_path || '/placeholder.jpg'}
+            src={item?.image_path || ''}
             alt={item?.item_name || 'Item'}
           />
         </Grid>
@@ -78,29 +88,36 @@ const ItemDetail: React.FC = () => {
             <Typography variant="h6" component="div" sx={{ mt: 2 }}>
               Select dates
             </Typography>
-            <Provider theme={defaultTheme} colorScheme="light" >
+            <Provider
+            theme={defaultTheme}
+            colorScheme="light"
+            maxWidth={250}
+            >
+                {/* Set the max width of the provider to the max width of the component to avoid nasty UI */}
               <DateRangePicker
                 labelPosition="side"
                 labelAlign="end"
-                aria-label='Select dates' 
+                width={250}
+                
+                aria-label="Select dates"
                 value={range}
                 minValue={now}
                 onChange={(value) => {
-                    if (!value) {
-                      setRange(null); // Or handle the null case appropriately
-                      return;
-                    }
-                    const startDate = new Date(value.start.toString());
-                    const endDate = new Date(value.end.toString());
-                    const diffInMs = endDate.getTime() - startDate.getTime();
-                    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-                    
-                    if (diffInDays > 14) {
-                      alert("You can only book a maximum of 14 days.");
-                      return;
-                    }
-                    setRange(value);
-                  }}
+                  if (!value) {
+                    setRange(null); // Or handle the null case appropriately
+                    return;
+                  }
+                  const startDate = new Date(value.start.toString());
+                  const endDate = new Date(value.end.toString());
+                  const diffInMs = endDate.getTime() - startDate.getTime();
+                  const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+                  if (diffInDays > 14) {
+                    alert('You can only book a maximum of 14 days.');
+                    return;
+                  }
+                  setRange(value);
+                }}
                 isRequired
                 maxVisibleMonths={1}
               />
