@@ -80,9 +80,10 @@ const ItemDetail: React.FC = () => {
                             {item?.category || "Category"}
                         </Typography>
                         <Typography
+                            component={"p"}
                             variant="body1"
                             color="text.secondary"
-                            paragraph
+                            
                         >
                             {item?.description || "Description not available."}
                         </Typography>
