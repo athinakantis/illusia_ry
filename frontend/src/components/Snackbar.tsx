@@ -13,9 +13,12 @@ export const Snackbar = () => {
     return (
         <MUISnackbar
             open={open}
-            autoHideDuration={4000}
+            autoHideDuration={2000}
             onClose={handleClose}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            sx={{
+                mt: '40px'
+            }}
         >
             <Alert
                 onClose={handleClose}
@@ -30,6 +33,6 @@ export const Snackbar = () => {
             >
                 {message}
             </Alert>
-        </MUISnackbar>
+        </MUISnackbar >
     );
 };
