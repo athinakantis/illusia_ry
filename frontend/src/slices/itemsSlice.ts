@@ -2,13 +2,15 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Item, ItemState } from '../types/types';
 import { CreateItemPayload, itemsApi } from '../api/items';
 import { RootState } from '../store/store';
+import { categoriesApi } from '../api/categories';
 
 
 const initialState: ItemState = {
   items: [],
   item: null,
   loading: false,
-  error: null
+  error: null,
+  categories: []
 }
 
 export const fetchAllItems = createAsyncThunk(
@@ -18,6 +20,15 @@ export const fetchAllItems = createAsyncThunk(
     return response;
   }
 );
+
+export const fetchAllCategories = createAsyncThunk(
+  'items/fetchAllCategories',
+  async () => {
+    const response = await categoriesApi.getAllCategories();
+    return response;
+  }
+);
+
 export const fetchItemById = createAsyncThunk(
   'items/fetchItemById',
   async (id: string) => {
@@ -41,6 +52,7 @@ export const deleteItem = createAsyncThunk(
   }
 );
 
+
 export const updateItem = createAsyncThunk(
   'items/updateItem',
   async ({ id, updatedData }: { id: string; updatedData: Item }) => {
@@ -62,6 +74,17 @@ export const itemsSlice = createSlice({
       state.items = action.payload.data
     })
     builder.addCase(fetchAllItems.rejected, (state) => {
+      state.loading = false
+      state.error = 'Could not fetch items'
+    })
+    builder.addCase(fetchAllCategories.pending, (state) => {
+      state.loading = true
+    })
+    builder.addCase(fetchAllCategories.fulfilled, (state, action) => {
+      state.loading = false
+      state.categories = action.payload.data
+    })
+    builder.addCase(fetchAllCategories.rejected, (state) => {
       state.loading = false
       state.error = 'Could not fetch items'
     })
@@ -98,6 +121,8 @@ export const itemsSlice = createSlice({
     })
   }
 })
+
+export const selectAllCategories = (state: RootState) => state.items.categories
 
 export const selectAllItems = (state: RootState) =>
   state.items.items;

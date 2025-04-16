@@ -19,6 +19,7 @@ export const theme = {
   },
   text: {
     primary: '#1F0A29',
+    main: '#FFF',
     secondary: '#666666',
     light: '#FAFAFA',
   },
@@ -63,9 +64,10 @@ export const createAppTheme = () =>
     typography: {
       fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
       h1: {
-        fontSize: '2rem',
+        fontSize: '45px',
         fontWeight: 500,
         fontFamily: 'Roboto Slab, sans-serif',
+        color: "#FFF"
       },
       h2: {
         fontSize: '1.75rem',
@@ -101,6 +103,12 @@ export const createAppTheme = () =>
         fontSize: '0.875rem',
         fontWeight: 400,
         fontFamily: 'Oxygen, sans-serif',
+      },
+      body3: {
+        fontFamily: 'Lato, sanf-serif',
+        fontSize: 16,
+        fontWeight: 300,
+        color: '#FFF'
       },
       link: {
         fontSize: '1 rem',
