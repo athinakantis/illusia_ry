@@ -15,11 +15,16 @@ import {
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { addItemToCart } from '../slices/cartSlice'
 import Pagination from './Pagination';
+import { store } from '../store/store';
+import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
+
 
 function Items() {
   const items = useAppSelector(selectAllItems);
   const dispatch = useAppDispatch();
-  const [offset, setOffset] = useState(0)
+  const [offset, setOffset] = useState(0);
+
+
 
   useEffect(() => {
     if (items.length < 1) {
@@ -27,14 +32,22 @@ function Items() {
     }
   }, [dispatch, items]);
 
+
   const addToCart = (item_id: string, quantityToAdd: number = 1) => {
 
-    // some checks of qty and if item exists should be implemented
-    const start_date = "null";
-    const end_date = "null";
+    // need to fetch the bookings and reservations first in order for this to work properly
+
+    const start_date = "2025-04-14";
+    const end_date = "2025-04-15";
+
+    if (checkAvailabilityForItemOnDates(item_id, quantityToAdd, start_date, end_date)(store.getState())) {
+      dispatch(addItemToCart({ item_id, quantityToAdd, start_date, end_date }));
+    } else {
+      console.log("not enough of item");
+
+    }
 
 
-    dispatch(addItemToCart({ item_id, quantityToAdd, start_date, end_date }));
   }
 
   return (

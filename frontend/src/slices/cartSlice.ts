@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { CartState } from '../types/types';
+import { CartState, Item, LocalReservation } from '../types/types';
 import { RootState } from '../store/store';
 
 
@@ -19,7 +19,6 @@ export const cartSlice = createSlice({
             } else {
                 state.cart.push({ item_id: action.payload.item_id, quantity: action.payload.quantityToAdd, start_date: action.payload.start_date, end_date: action.payload.end_date });
             }
-
         },
         removeItemFromCart: (state, action) => {
 
@@ -37,11 +36,21 @@ export const cartSlice = createSlice({
     }
 })
 
-export const selectCart = (state: RootState) =>
-    state.cart.cart;
+export const selectCart = (state: RootState) => {
+    return state.cart.cart;
+}
+
 
 export const { addItemToCart } = cartSlice.actions;
 export const { removeItemFromCart } = cartSlice.actions;
+export const selectItemInCartById = (id: string) => (state: RootState) => {
+    return state.cart.cart.find((item) => item.item_id === id);
+}
+export const selectItemQtyInCartById = (id: string) => (state: RootState) => {
+    const itemInCart: LocalReservation | undefined = state.cart.cart.find((item) => item.item_id === id);
+    return itemInCart ? itemInCart.quantity : 0;
+}
+
 
 
 export default cartSlice.reducer;

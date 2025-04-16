@@ -60,7 +60,8 @@ export interface Reservation extends LocalReservation {
 }
 
 export interface ReservationsState {
-  reservations: Reservation[],
+  // reservations: Reservation[],
+  reservations: LocalReservation[],
   error: null | string,
   loading: boolean
 }

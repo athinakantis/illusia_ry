@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { removeItemFromCart, selectCart } from "../slices/cartSlice";
 import { DataGridGeneric } from '../components/CustomComponents/DataGridGeneric';
@@ -26,30 +26,46 @@ function Cart() {
         { columnName: "Pcs ordered", columnField: "quantity" },
     ];
 
-    return (
-        <Box
-            sx={{
-                mt: 5,
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                padding: 4,
-                boxSizing: 'border-box',
-            }}
-        >
-            {itemsInCart.length > 0 ? (
-                <DataGridGeneric data={itemsInCartInfo} idColumn={"item_id"} usedColumns={usedColumns} functions={[
-                    {
-                        functionName: "remove", functionIcon: <ClearIcon />, functionBody: (item_id: string, quantityToRemove: number = 1) => {
-                            dispatch(removeItemFromCart({ item_id, quantityToRemove }));
-                        }
-                    },
-                ]} />
-            ) : (
-                <p>Cart is empty</p>
-            )}
+    const handleAddBooking = () => {
+        console.log("making booking");
 
-        </Box>
+    }
+
+    return (
+        <>
+            <Box
+                sx={{
+                    mt: 5,
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    padding: 4,
+                    boxSizing: 'border-box',
+                }}
+            >
+                {itemsInCart.length > 0 ? (
+                    <>
+                        <DataGridGeneric data={itemsInCartInfo} idColumn={"item_id"} usedColumns={usedColumns} functions={[
+                            {
+                                functionName: "remove", functionIcon: <ClearIcon />, functionBody: (item_id: string, quantityToRemove: number = 1) => {
+                                    dispatch(removeItemFromCart({ item_id, quantityToRemove }));
+                                }
+                            },
+                        ]} />
+
+                    </>
+                ) : (
+                    <p>Cart is empty</p>
+                )
+                }
+
+            </Box >
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddBooking}
+            > Make booking</Button>
+        </>
     );
 
 }
