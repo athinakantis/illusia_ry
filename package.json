@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:backend": "cd backend && npm run start:dev",
+    "dev:backend": "cd backend && npm run start",
     "dev:frontend": "cd frontend && npm run dev",
     "install:all": "concurrently \"cd backend && npm install\" \"cd frontend && npm install\"",
     "test:all": "concurrently \"cd backend && npm run test:e2e\" \"cd frontend && npm run test\""
