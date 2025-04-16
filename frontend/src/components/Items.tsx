@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { showNotification } from '../slices/notificationSlice';
 import { fetchAllItems, selectAllItems } from '../slices/itemsSlice';
 import {
   Button,
@@ -35,6 +36,10 @@ function Items() {
 
     // some checks of qty and if item exists should be implemented
     dispatch(addItemToCart({ itemToAdd, quantityOfItem }));
+    dispatch(showNotification({
+      message: 'Item added to cart',
+      severity: 'success',
+    }));
   }
 
   return (
