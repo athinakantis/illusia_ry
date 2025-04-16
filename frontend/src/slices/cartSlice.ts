@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { CartState, Item, LocalReservation } from '../types/types';
+import { CartState, LocalReservation } from '../types/types';
 import { RootState } from '../store/store';
 
 

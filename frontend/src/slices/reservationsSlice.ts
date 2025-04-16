@@ -42,4 +42,8 @@ export const reservationsSlice = createSlice({
 export const selectAllReservations = (state: RootState) =>
     state.reservations.reservations;
 
+export const selectAllReservationsForItem = (item_id: string) => (state: RootState) => {
+    return state.reservations.reservations.filter((item) => item.item_id === item_id);
+}
+
 export default reservationsSlice.reducer;

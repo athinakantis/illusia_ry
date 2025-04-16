@@ -14,6 +14,9 @@ export const checkAvailabilityForItemOnDates = (item_id: string, quantity: numbe
 
         const availableQuantityOfItem = (item?.quantity ? item.quantity : 0) - itemQtyInCart;
 
+        console.log(reservations);
+
+
         // somehow solve the reservations checkup
 
         return (quantity - availableQuantityOfItem) <= 0;
