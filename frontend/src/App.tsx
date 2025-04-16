@@ -7,6 +7,7 @@ import { store } from './store/store';
 function App() {
   return (
     <Box>
+
       <Provider store={store}>
         <RouterProvider router={router} >
         </RouterProvider>

@@ -26,7 +26,6 @@ function Items() {
   const categories = useAppSelector(selectAllCategories)
   const dispatch = useAppDispatch();
   const [offset, setOffset] = useState(0)
-  const { search } = useLocation()
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
