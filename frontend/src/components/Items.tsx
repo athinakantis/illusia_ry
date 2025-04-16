@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { showNotification } from '../slices/notificationSlice';
 import { fetchAllItems, selectAllItems } from '../slices/itemsSlice';
 import {
   Button,
@@ -48,6 +49,10 @@ function Items() {
     }
 
 
+    dispatch(showNotification({
+      message: 'Item added to cart',
+      severity: 'success',
+    }));
   }
 
   return (
