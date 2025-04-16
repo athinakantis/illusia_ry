@@ -1,7 +1,13 @@
+import getSession from "../utility/getSession";
 
 function Home() {
-
-  return <div>This is the Home route</div>
+    
+  return(
+    <div>
+      <h1>Home Page</h1>
+      <button onClick={getSession}>Get Session</button>
+    </div>
+  );
 }
 
 export default Home;

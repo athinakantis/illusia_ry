@@ -16,6 +16,7 @@ import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOu
 import { Item } from '../types/types';
 import { addItemToCart } from '../slices/cartSlice'
 import Pagination from './Pagination';
+import { Link } from 'react-router-dom';
 
 function Items() {
   const items = useAppSelector(selectAllItems);
@@ -77,6 +78,8 @@ function Items() {
 
           {items.slice(offset, offset + 8).map((item) => (
             <Card
+              component={Link}
+              to={`/item/${item.item_id}`}
               key={item.item_id}
               sx={{ width: 280, minHeight: 300, boxShadow: 'none' }}
             >
