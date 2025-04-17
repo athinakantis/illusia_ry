@@ -1,4 +1,4 @@
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Box, Container, Grid, Stack, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchAllCategories, selectAllCategories } from '../slices/itemsSlice';
@@ -17,7 +17,6 @@ function Home() {
 
   return (
     <Box>
-
       {/* Hero banner */}
       <Box component='section' id='hero-container'
         sx={{
@@ -35,51 +34,74 @@ function Home() {
 
       {/* Category section */}
       <Box component='section'
-        sx={{ maxWidth: 1240, height: 690, margin: 'auto', textAlign: 'center', display: 'flex', flexDirection: 'column', my: '170px' }}>
+        sx={{ maxWidth: 1240, minHeight: 690, margin: 'auto', textAlign: 'center', display: 'flex', flexDirection: 'column', my: '170px' }}>
         <Typography variant='h2'>View Our Range Of Categories</Typography>
         <Typography variant='body1' sx={{ width: 'clamp(150px, 80vw, 609px)', margin: '12px auto 68px' }}>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.</Typography>
 
         {/* Category Previews */}
-        <Grid container spacing={'32px'} columns={3} direction="row"
+        <Container
           sx={{
-            height: 513,
-            '& .MuiGrid-root': { position: 'relative', height: 513, width: 392, overflow: 'hidden' },
-            '& .MuiStack-root a': { height: 240 },
-            '& a': { textDecoration: 'none', borderRadius: '14px', position: 'relative', overflow: 'hidden' },
-            '& img': { transition: 'scale 200ms' },
-            '& img:hover': { scale: 1.03 },
-            '& span': { left: 19, bottom: 25, position: 'absolute', fontSize: 22 }
+            display: 'flex', paddingLeft: { xs: '10px', sm: 0 }, paddingRight: { xs: '10px', sm: 0 }, justifyContent: 'center', margin: '0 auto',
+            '& img': { width: '100%', transition: 'scale 200ms', objectFit: 'cover' },
+            '& .MuiBox-root': { width: { sm: 'clamp(180px, 30vw, 300px)', xl: 392 }, overflow: 'hidden', borderRadius: '14px', position: 'relative', height: { xs: 180, sm: '100%' } },
+            '& span': { position: 'absolute', bottom: 25, left: 19, fontSize: 22 },
+            '& .MuiStack-root': { gap: { xs: '10px', lg: '32px' } },
+            '& .MuiBox-root:hover img': { scale: 1.04, cursor: 'pointer' }
           }}>
-          <Link to='/'>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <img src={categories?.[0]?.image_path} alt="" />
-              <Typography variant='body3'>{categories?.[0]?.category_name}</Typography>
-            </Grid>
-          </Link>
+          <Stack direction={{ xs: 'column', sm: 'row' }}
+            justifyContent={'center'}
+            sx={{ maxHeight: { xs: '100%', sm: 400, xl: 513 } }}>
 
-          <Grid size={{ xs: 12, md: 4 }}>
-            <Stack sx={{ gap: '32px' }}>
-              <Link to='/'>
-                <img src={categories?.[1]?.image_path} alt="" />
-                <Typography variant='body3'>{categories?.[1]?.category_name}</Typography>
-              </Link>
 
-              <Link to='/'>
-                <img src={categories?.[2]?.image_path} alt="" />
-                <Typography variant='body3'>{categories?.[2]?.category_name}</Typography>
+            <Box sx={{
+              '& > a > img': {
+                height: { xs: 'auto', sm: '100%' }
+              }
+            }
+            }>
+              <Link to={`/items?category=${categories?.[0]?.category_name}`}>
+                <img src={categories?.[0]?.image_path} alt="" />
+                <Typography variant='body3'>{categories?.[0]?.category_name}</Typography>
               </Link>
+            </Box>
+
+            {/* Inner Stack: middle categories */}
+            <Stack
+              sx={{
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                '& .MuiBox-root': { maxHeight: 240 },
+                '& img': { height: { xs: '100%' } },
+                '& img:first-of-type': { objectPosition: '0% 60%' }
+              }}>
+              <Box>
+                <Link to={`/items?category=${categories?.[1]?.category_name}`}>
+                  <img src={categories?.[1]?.image_path} alt="" />
+                  <Typography variant='body3'>{categories?.[1]?.category_name}</Typography>
+                </Link>
+              </Box>
+              <Box>
+                <Link to={`/items?category=${categories?.[2]?.category_name}`}>
+                  <img src={categories?.[2]?.image_path} alt="" />
+                  <Typography variant='body3'>{categories?.[2]?.category_name}</Typography>
+                </Link>
+              </Box>
             </Stack>
-          </Grid>
-
-          <Link to='/'>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <img src={categories?.[3]?.image_path} alt="" />
-              <Typography variant='body3'>{categories?.[3]?.category_name}</Typography>
-            </Grid>
-          </Link>
-        </Grid>
-      </Box>
-    </Box >
+            <Box sx={{
+              '& > a > img': {
+                objectPosition: { xs: 'initial' },
+                height: '100%',
+              }
+            }}>
+              <Link to={`/items?category=${categories?.[3]?.category_name}`}>
+                <img src={categories?.[3]?.image_path} alt="" />
+                <Typography variant='body3'>{categories?.[3]?.category_name}</Typography>
+              </Link>
+            </Box>
+          </Stack>
+        </Container>
+      </Box >
+    </Box>
   )
 }
 
