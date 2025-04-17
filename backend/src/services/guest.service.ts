@@ -66,8 +66,6 @@ export class GuestService {
       .from('categories')
       .select('category_id, category_name, image_path')
 
-      console.log(data)
-
     if (error) {
       console.error('Error retrieving item: ', error);
       throw error;

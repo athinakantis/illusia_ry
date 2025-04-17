@@ -19,10 +19,8 @@ export class GuestController {
 
   @Get(`filter`)
   async getFilteredItems(@Query('category') categories: string) {
-    console.log(categories)
     const formattedCategories = categories.split(' ')
     formattedCategories.map(cat => cat.replace('-', ' '))
-    console.log(formattedCategories)
     return this.guestService.getItemsByCategories(formattedCategories);
   }
 
