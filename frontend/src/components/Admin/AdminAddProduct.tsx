@@ -83,12 +83,10 @@ const AdminAddProduct = () => {
     };
 
     const handleSelectChange = (event: SelectChangeEvent) => {
-        console.log(event.target.name, event.target.value)
         setFormData((prev) => ({
             ...prev,
             [event.target.name]: event.target.value,
         }));
-        console.log('Category id: ', formData.category_id)
     };
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
