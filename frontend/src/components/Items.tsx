@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchAllCategories, fetchAllItems, selectAllCategories, selectAllItems } from '../slices/itemsSlice';
+import { showNotification } from '../slices/notificationSlice';
+import { fetchAllItems, selectAllItems, selectAllCategories, fetchAllCategories } from '../slices/itemsSlice';
 import {
   Button,
   Card,
@@ -42,49 +43,11 @@ function Items() {
     const itemToAdd: Item | undefined = items.find((item: Item) => item.item_id === id);
     // some checks of qty and if item exists should be implemented
     dispatch(addItemToCart({ itemToAdd, quantityOfItem }));
+    dispatch(showNotification({
+      message: 'Item added to cart',
+      severity: 'success',
+    }));
   }
-
-  const updateSearch = (category: string) => {
-    const formattedCategory = category.replaceAll(' ', '-')
-    const currentCategories = searchParams.get('category')?.split('+') || []
-
-    if (currentCategories?.includes(formattedCategory)) return
-
-    // Add new category to current
-    currentCategories?.push(formattedCategory)
-
-    // Create new search parameters
-    const params = new URLSearchParams();
-    params.set("category", currentCategories!.join(','));
-
-    navigate({
-      pathname: '/items',
-      search: `?${createSearchParams(params)}`
-    });
-  }
-
-  const removeFromSearch = (category: string) => {
-    const formattedCategory = category.replaceAll(' ', '-')
-
-    let filteredCategories;
-    const params = new URLSearchParams(location.search)
-    const currentCategories = params.get('category')!.split(',')
-    filteredCategories = currentCategories.filter(cat => cat !== formattedCategory)
-
-    // If no more category filters, clear category query
-    if (filteredCategories.length < 1) {
-      params.delete('category')
-      return navigate('/items')
-    }
-
-    params.set('category', filteredCategories.toString())
-
-    navigate({
-      pathname: '/items',
-      search: `?${createSearchParams(params)}`
-    });
-  }
-
 
   return (
     <Box

@@ -1,4 +1,4 @@
-<p align="center">
+<file name=1 path=/Users/s2400784/REACT24/2GroupProject2/illusia_ry/backend/README.md><p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
   <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
 </p>
@@ -159,6 +159,131 @@ This is easy to switch to the authenticated version by just uncommenting certain
   - `date` — ISO date string (`YYYY-MM-DD`)
 - **Data**: Array of active bookings on that date.
 
+#### `POST /bookings/empty`
+
+- **Description**: Creates an empty booking to be updated later with items
+- **Params**:
+  - `uuid` — UUID of the user
+- **Returns:**
+
+```json
+{
+    "message": "Empty booking created successfully",
+    "data": {
+        "booking_id": "686c2879-870a-4dc0-a57c-eeeb777b8e3a",
+        "user_id": "6d6b537c-e38e-4109-ae8c-2b22a56e836b",
+        "status": "pending",
+        "created_at": "2025-04-15T09:37:02.944561"
+    }
+}
+```
+
+#### `POST /bookings/rpc`
+
+- **Description**: Adding a booking with a list of items already attached to it and checks if any item attached is still in stock during the date set in the start-end dates.
+- **Note** When we get the UI set up for testing you wont have to send the user_id anymore, it will be taken from the request in the backend.
+
+- **Post Example:**:
+
+```json
+{
+  "user_id": "6d6b537c-e38e-4109-ae8c-2b22a56e836b",
+  "items": [
+    {
+      "item_id": "07571c0b-ace8-4db4-842c-138a690dc7a3",
+      "start_date": "2025-04-20",
+      "end_date": "2025-04-24",
+      "quantity": 1
+    },
+    {
+      "item_id": "07571c0b-ace8-4db4-842c-138a690dc7a3",
+      "start_date": "2025-04-22",
+      "end_date": "2025-04-26",
+      "quantity": 1
+    }
+  ]
+}
+```
+
+- **Returns:**
+
+```json
+{
+    "status": "created",
+    "booking_id": "5498a4fd-d00d-41ab-a2e5-2c0a1cae7cc3"
+}
+
+OR
+
+{
+    "message": "Not enough stock for item 07571c0b-ace8-4db4-842c-138a690dc7a3, only 0 left during selected dates",
+    "error": "Bad Request",
+    "statusCode": 400
+}
+```
+
+---
+
+#### `POST /bookings/:id/review`
+
+- **Description**: Reviews all item reservations in a booking and checks for availability conflicts. Returns a list of issues if any item is overbooked during the selected date ranges.
+- **Params**:
+  - `id` — UUID of the booking to be reviewed.
+- **Returns:**
+
+```json
+{
+  "message": "Availability review completed",
+  "data": {
+    "booking_id": "686c2879-870a-4dc0-a57c-eeeb777b8e3a",
+    "status": "fail",
+    "issues": [
+      "Reservation f9ac2...: Item 07571... only has -3 left during 2025-05-01 - 2025-05-04"
+    ]
+  }
+}
+```
+
+If no issues:
+
+```json
+{
+  "message": "Availability review completed",
+  "data": {
+    "booking_id": "abc123",
+    "status": "ok",
+    "issues": []
+  }
+}
+```
+
+## **Reservations API**
+
+### `/reservations` API
+
+#### `POST /reservations`
+
+- **Description**: Create a new reservation for a given booking.
+- **Params**:
+  - `booking_id` — UUID of the booking.
+  - `item_id` — UUID of the item.
+  - `start_date` — Start date of the reservation.
+  - `end_date` — End date of the reservation.
+  - `quantity` — Quantity of items to reserve.
+- **Returns:**
+
+```json
+{
+    "message": "Reservation created successfully",
+    "data": {
+        "booking_id": "some-booking-id",
+        "item_id": "some-item-id",
+        "start_date": "2025-04-20",
+        "end_date": "2025-04-24",
+        "quantity": 1
+    }
+}
+```
 
 ## Deployment
 
@@ -190,3 +315,4 @@ Check out a few resources that may come in handy when working with NestJS:
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+</file>
