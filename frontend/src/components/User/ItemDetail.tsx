@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -38,7 +38,6 @@ const ItemDetail: React.FC = () => {
   const category = categories.find(
     (cat) => cat.category_id === item?.category_id,
   );
-  console.log('Category:', category);
   const handleQuantityChange = (amount: number) => {
     setQuantity((prevQuantity) => Math.max(1, prevQuantity + amount));
   };
@@ -89,16 +88,16 @@ const ItemDetail: React.FC = () => {
               Select dates
             </Typography>
             <Provider
-            theme={defaultTheme}
-            colorScheme="light"
-            maxWidth={250}
+              theme={defaultTheme}
+              colorScheme="light"
+              maxWidth={250}
             >
-                {/* Set the max width of the provider to the max width of the component to avoid nasty UI */}
+              {/* Set the max width of the provider to the max width of the component to avoid nasty UI */}
               <DateRangePicker
                 labelPosition="side"
                 labelAlign="end"
                 width={250}
-                
+
                 aria-label="Select dates"
                 value={range}
                 minValue={now}
