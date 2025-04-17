@@ -13,9 +13,13 @@ export interface ItemState {
   items: Item[],
   item: Item | null,
   error: null | string,
-  loading: boolean
+  loading: boolean,
+  categories: {
+    category_id: string,
+    category_name: string,
+    image_path: string
+  }[]
 }
-
 export interface ApiResponse<T> {
   data: T;
   error?: string | Error;
