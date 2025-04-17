@@ -19,6 +19,7 @@ declare module '@mui/material/Typography' {
   }
 }
 
+// Custom colors
 declare module '@mui/material/styles' {
   interface Palette {
     neutral: Palette['primary'];
@@ -29,8 +30,15 @@ declare module '@mui/material/styles' {
   }
 }
 
+// Custom  Components
 declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides {
     neutral: true;
+  }
+}
+
+declare module '@mui/material/Button' {
+  interface ButtonPropsVariantOverrides {
+    rounded: true;
   }
 }
