@@ -19,7 +19,7 @@ import { Item } from '../types/types';
 import { addItemToCart } from '../slices/cartSlice'
 import Pagination from './Pagination';
 import { Link } from 'react-router-dom';
-import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 function Items() {
@@ -28,7 +28,7 @@ function Items() {
   const dispatch = useAppDispatch();
   const [offset, setOffset] = useState(0)
   const navigate = useNavigate()
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, _] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -38,7 +38,7 @@ function Items() {
     if (!categories || categories.length < 1) {
       dispatch(fetchAllCategories())
     }
-  }, [dispatch, items]);
+  }, [dispatch, items, categories]);
 
   const addToCart = (id: string, quantityOfItem: number = 1) => {
     const itemToAdd: Item | undefined = items.find((item: Item) => item.item_id === id);
@@ -186,7 +186,12 @@ function Items() {
                 <CardActions
                   sx={{ padding: 0, justifySelf: 'end', width: 'fit-content' }}
                 >
-                  <Button sx={{ padding: '3px', minWidth: 'fit-content' }} onClick={() => addToCart(item.item_id)}>
+                  <Button sx={{ padding: '3px', minWidth: 'fit-content' }} onClick={(e) => {
+                    // Stop add-to-cart btn from navigating elsewhere
+                    e.preventDefault()
+                    e.stopPropagation()
+                    addToCart(item.item_id)
+                  }}>
                     <AddCircleOutlineOutlinedIcon />
                   </Button>
                 </CardActions>
