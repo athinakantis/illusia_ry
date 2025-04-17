@@ -59,7 +59,7 @@ function Home() {
               }
             }
             }>
-              <Link to={`/items?category=${categories?.[0]?.category_name}`}>
+              <Link to={`/items?category=${categories?.[0]?.category_name.replace(/ /g, '-')}`}>
                 <img src={categories?.[0]?.image_path} alt="" />
                 <Typography variant='body3'>{categories?.[0]?.category_name}</Typography>
               </Link>
@@ -75,13 +75,13 @@ function Home() {
                 '& img:first-of-type': { objectPosition: '0% 60%' }
               }}>
               <Box>
-                <Link to={`/items?category=${categories?.[1]?.category_name}`}>
+                <Link to={`/items?category=${categories?.[1]?.category_name.replace(/ /g, '-')}`}>
                   <img src={categories?.[1]?.image_path} alt="" />
                   <Typography variant='body3'>{categories?.[1]?.category_name}</Typography>
                 </Link>
               </Box>
               <Box>
-                <Link to={`/items?category=${categories?.[2]?.category_name}`}>
+                <Link to={`/items?category=${categories?.[2]?.category_name.replace(/ /g, '-')}`}>
                   <img src={categories?.[2]?.image_path} alt="" />
                   <Typography variant='body3'>{categories?.[2]?.category_name}</Typography>
                 </Link>
@@ -93,7 +93,7 @@ function Home() {
                 height: '100%',
               }
             }}>
-              <Link to={`/items?category=${categories?.[3]?.category_name}`}>
+              <Link to={`/items?category=${categories?.[3]?.category_name.replace(/ /g, '-')}`}>
                 <img src={categories?.[3]?.image_path} alt="" />
                 <Typography variant='body3'>{categories?.[3]?.category_name}</Typography>
               </Link>
