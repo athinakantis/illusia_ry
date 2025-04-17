@@ -1,30 +1,40 @@
 import { useState, FormEvent, useEffect } from 'react';
-import { useAppDispatch } from '../../store/hooks'; // Use your custom hooks
+import { useAppDispatch, useAppSelector } from '../../store/hooks'; // Use your custom hooks
 import { FormData } from '../../types/types';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth'; // Import your auth hook
-import { createItem } from '../../slices/itemsSlice';
+import {
+    createItem,
+    fetchAllCategories,
+    selectAllCategories,
+} from '../../slices/itemsSlice';
 import { supabase } from '../../config/supabase';
 import { v4 as uuidv4 } from 'uuid';
 import { TablesInsert } from '../../types/supabase.types';
 import MuiAlert, { AlertColor } from '@mui/material/Alert';
-import { Button } from '@mui/material';
+import {
+    Button,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+} from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import { ImCloudUpload } from 'react-icons/im';
 import { styled } from '@mui/material/styles';
 import { Box, TextField, Typography } from '@mui/material';
-
 
 type CreateItemPayload = Omit<
     TablesInsert<'items'>,
     'item_id' | 'created_at' | 'user_id'
 > & { image_path?: string | null };
 
-
 const AdminAddProduct = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { role, user } = useAuth()
+    const { role, user } = useAuth();
+    const categories = useAppSelector(selectAllCategories);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState<FormData>({
@@ -51,20 +61,34 @@ const AdminAddProduct = () => {
 
     // If user is not admin, navigate elsewhere (/items for now)
     useEffect(() => {
-        if (role === undefined) return
+        if (role === undefined) return;
         else if (!role || !role.includes('Admin')) {
             console.log('Unauthorized access, redirecting...');
             navigate('/items');
         }
     }, [role, navigate]);
 
+    useEffect(() => {
+        if (categories.length < 1) dispatch(fetchAllCategories());
+    }, [categories]);
 
     const handleInputChange = (
-        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+        event: React.ChangeEvent<
+            HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+        >,
     ) => {
         const { name, value, type } = event.target;
         const newValue = type === 'number' ? parseInt(value, 10) : value;
         setFormData((prev) => ({ ...prev, [name]: newValue }));
+    };
+
+    const handleSelectChange = (event: SelectChangeEvent) => {
+        console.log(event.target.name, event.target.value)
+        setFormData((prev) => ({
+            ...prev,
+            [event.target.name]: event.target.value,
+        }));
+        console.log('Category id: ', formData.category_id)
     };
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,7 +120,8 @@ const AdminAddProduct = () => {
         if (selectedFile) {
             const fileExt = selectedFile.name.split('.').pop() ?? 'jpg'; // fallback to jpg
             const category = formData.category_id; // Or fetch the category name
-            const filePath = `public/items/${category}/${selectedFile.name}_${uuidv4()}.${fileExt}`;
+            const filePath = `public/items/${category}/${selectedFile.name
+                }_${uuidv4()}.${fileExt}`;
             const bucketName = 'items';
             try {
                 const { error: uploadError } = await supabase.storage
@@ -108,7 +133,6 @@ const AdminAddProduct = () => {
 
                 if (uploadError) {
                     throw uploadError;
-
                 }
 
                 // Get public URL after successful upload
@@ -120,7 +144,7 @@ const AdminAddProduct = () => {
             } catch (error) {
                 console.error('Error uploading file:', error);
                 showSnackbar('Failed to upload image. Please try again.', 'error');
-                return
+                return;
             }
         }
 
@@ -141,12 +165,11 @@ const AdminAddProduct = () => {
                 quantity: 1,
             });
             setSelectedFile(null);
-
         } catch (err) {
             console.error('Failed to save the item:', err);
             setIsLoading(false);
             showSnackbar('Failed to save item. Please try again.', 'error');
-            return
+            return;
         }
     };
 
@@ -172,7 +195,6 @@ const AdminAddProduct = () => {
                 onChange={handleInputChange}
                 required
                 disabled={isLoading}
-
             />
             <TextField
                 label="Description"
@@ -197,29 +219,37 @@ const AdminAddProduct = () => {
                 type="number"
                 value={formData.quantity}
                 onChange={handleInputChange}
-                InputProps={{ inputProps: { min: 1 } }} // Prevent negative numbers   
+                InputProps={{ inputProps: { min: 1 } }} // Prevent negative numbers
                 required
                 disabled={isLoading}
             />
-            <TextField
-                label="Category ID"
-                name="category_id"
-                value={formData.category_id}
-                onChange={handleInputChange}
-                required
-                disabled={isLoading}
-            />
+            {/* Category Selection */}
+            <FormControl>
+                <InputLabel>Category</InputLabel>
+                <Select
+                    value={formData.category_id}
+                    label="Category"
+                    name='category_id'
+                    onChange={handleSelectChange}
+                >
+                    {categories.map((category) => (
+                        <MenuItem key={category.category_id} value={category.category_id}>
+                            {category.category_name}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
             {/* Upload Button */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Button
                     component="label"
                     role={'button'}
                     variant="contained"
-                    color='secondary'
+                    color="secondary"
                     tabIndex={-1}
                     startIcon={<ImCloudUpload />}
                     disabled={isLoading}
-                    sx={{ flexGrow: 1, mr: 0.5 }}
+                    sx={{ flexGrow: 1, height: 75 }}
                 >
                     Upload files
                     <VisuallyHiddenInput
@@ -242,7 +272,7 @@ const AdminAddProduct = () => {
                     variant="contained"
                     color="secondary"
                     disabled={isLoading}
-                    sx={{ flexGrow: 100, marginLeft: 1 }}
+                    sx={{ flexGrow: 100, mt: 2 }}
                 >
                     {isLoading ? 'Adding Item...' : 'Add Item'}
                 </Button>
@@ -253,7 +283,12 @@ const AdminAddProduct = () => {
                 onClose={() => setSnackbarOpen(false)}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             >
-                <MuiAlert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} elevation={6} variant="filled">
+                <MuiAlert
+                    onClose={() => setSnackbarOpen(false)}
+                    severity={snackbarSeverity}
+                    elevation={6}
+                    variant="filled"
+                >
                     {snackbarMessage}
                 </MuiAlert>
             </Snackbar>
