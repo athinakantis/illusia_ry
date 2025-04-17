@@ -70,7 +70,7 @@ const AdminAddProduct = () => {
 
     useEffect(() => {
         if (categories.length < 1) dispatch(fetchAllCategories());
-    }, [categories]);
+    }, [categories, dispatch]);
 
     const handleInputChange = (
         event: React.ChangeEvent<
