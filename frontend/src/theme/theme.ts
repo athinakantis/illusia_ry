@@ -106,7 +106,7 @@ export const createAppTheme = () =>
         fontFamily: 'Oxygen, sans-serif',
       },
       body3: {
-        fontFamily: 'Lato, sanf-serif',
+        fontFamily: 'Lato, sans-serif',
         fontSize: 16,
         fontWeight: 300,
         color: '#FFF'
