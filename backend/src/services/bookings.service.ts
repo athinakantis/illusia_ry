@@ -1,22 +1,18 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Tables } from 'src/types/supabase';
 import { ApiResponse } from 'src/types/response';
 import { SupabaseService } from './supabase.service';
-import { CustomRequest } from 'src/types/request'; // adjust path as needed
+import { CustomRequest } from 'src/types/request.type';
 
 
 @Injectable()
 export class BookingService {
     constructor(private readonly supabaseService: SupabaseService) {}
 
+  async getBookings(req: CustomRequest): Promise<ApiResponse<Tables<'bookings'>[]>> {
+    const supabase = req['supabase'];
 
-  // These use the SERVICE ROLE KEY for for now. You wont be able to test policies with this enabled.
-  // We will switch back to using the users anon key once we have the UI to test them.
-
-  async getBookings(/* req: CustomRequest */): Promise<ApiResponse<Tables<'bookings'>[]>> {
-    // const supabase = req['supabase'];
-
-    const { data, error } = await this.supabaseService.getClient()
+    const { data, error } = await supabase
       .from('bookings')
       .select('*')
       .order('created_at', { ascending: false });
@@ -31,17 +27,24 @@ export class BookingService {
     };
   }
 
-  async getBookingById(/* req: CustomRequest, */ id: string): Promise<ApiResponse<Tables<'bookings'>>> {
-    // const supabase = req['supabase'];
+  async getBookingById(req: CustomRequest, id: string): Promise<ApiResponse<Tables<'bookings'>>> {
+    const supabase = req['supabase'];
 
-    const { data, error } = await this.supabaseService.getClient()
+    const { data, error } = await supabase
       .from('bookings')
       .select('*')
       .eq('booking_id', id)
-      .single();
-
+      .maybeSingle();
+      console.log("data", data);
     if (error) {
       throw new BadRequestException(error.message);
+    }
+    if (!data) {
+      throw new NotFoundException(`Booking ${id} not found`);
+    }
+
+    if (error) {
+      throw new BadRequestException(error);
     }
 
     return {
@@ -49,10 +52,8 @@ export class BookingService {
       data,
     };
   }
-// Create booking with attached reservations(items). Does not check for availability.
-  // This is a simple insert into the bookings table and then an insert into the item_reservations table.
-  async createBooking(payload: {
-    user_id: string;
+
+  async createBooking(req: CustomRequest, payload: {
     items: {
       item_id: string;
       start_date: string;
@@ -60,12 +61,12 @@ export class BookingService {
       quantity: number;
     }[];
   }): Promise<ApiResponse<{ booking_id: Tables<'bookings'>['booking_id']; reservations: Tables<'item_reservations'>[] }>> {
-    const supabase = this.supabaseService.getClient();
-  
-    // 1. Insert the booking
+    const supabase = req['supabase'];
+    const userId = req['user']?.id;
+
     const { data: bookingData, error: bookingError } = await supabase
       .from('bookings')
-      .insert({ user_id: payload.user_id })
+      .insert({ user_id: userId })
       .select()
       .single();
   
@@ -75,7 +76,6 @@ export class BookingService {
   
     const booking_id = bookingData.booking_id;
   
-    // 2. Insert item reservations
     const reservationRows = payload.items.map((item) => ({
       booking_id,
       item_id: item.item_id,
@@ -101,8 +101,7 @@ export class BookingService {
     };
   }
 
-  async createBookingWithItemsViaRpc(payload: {
-    user_id: string;
+  async createBookingWithItemsViaRpc(req: CustomRequest, payload: {
     items: {
       item_id: string;
       start_date: string;
@@ -110,10 +109,11 @@ export class BookingService {
       quantity: number;
     }[];
   }): Promise<{ booking_id: string; status: string }> {
-    const supabase = this.supabaseService.getClient();
-  
+    const supabase = req['supabase'];
+    const userId = req['user']?.id;
+
     const { data, error } = await supabase.rpc('create_booking_with_reservations', {
-      _user_id: payload.user_id,
+      _user_id: userId,
       _items: payload.items,
     });
   
@@ -123,13 +123,13 @@ export class BookingService {
     return data;
   }
 
-
-  async createEmptyBooking(user_id: string): Promise<ApiResponse<Tables<'bookings'>>> {
-    const supabase = this.supabaseService.getClient();
+  async createEmptyBooking(req: CustomRequest): Promise<ApiResponse<Tables<'bookings'>>> {
+    const supabase = req['supabase'];
+    const userId = req['user']?.id;
 
     const { data, error } = await supabase
       .from('bookings')
-      .insert({ user_id })
+      .insert({ user_id: userId })
       .select()
       .single();
 
@@ -144,8 +144,8 @@ export class BookingService {
   }
 
    // New method to review booking availability. Checks all items in the booking to see if they are available.
-   async reviewBookingAvailability(bookingId: string): Promise<ApiResponse<{ booking_id: string; status: string; issues: string[] }>> {
-    const supabase = this.supabaseService.getClient();
+   async reviewBookingAvailability(req: CustomRequest, bookingId: string): Promise<ApiResponse<{ booking_id: string; status: string; issues: string[] }>> {
+    const supabase = req['supabase'];
 
     const { data: reservations, error } = await supabase
       .from('item_reservations')
@@ -189,7 +189,10 @@ export class BookingService {
         continue;
       }
 
-      const alreadyReserved = overlapping.reduce((sum, row) => sum + row.quantity, 0);
+      const alreadyReserved: number = overlapping.reduce<number>(
+        (sum: number, row: { quantity: number }) => sum + row.quantity,
+        0
+      );
       const available = totalStock - alreadyReserved;
 
       if (available < quantity) {
@@ -223,7 +226,6 @@ export class BookingService {
   ): Promise<ApiResponse<{ booking_id: string; reservations: Tables<'item_reservations'>[] }>> {
     const supabase = req['supabase'];
 
-    // Remove all existing reservations for this booking
     const { error: deleteError } = await supabase
       .from('item_reservations')
       .delete()
@@ -232,7 +234,6 @@ export class BookingService {
       throw new BadRequestException(deleteError.message);
     }
 
-    // Prepare new reservation rows
     const reservationRows = payload.items.map((item) => ({
       booking_id: bookingId,
       item_id: item.item_id,
@@ -241,7 +242,6 @@ export class BookingService {
       quantity: item.quantity,
     }));
 
-    // Insert updated reservations
     const { data: insertedReservations, error: insertError } = await supabase
       .from('item_reservations')
       .insert(reservationRows)
