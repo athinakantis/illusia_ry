@@ -80,11 +80,11 @@ function Items() {
   const filteredItems = items.filter((item) => {
     const matchesCategory = categoryParams.length
       ? (() => {
-          const category = categories.find(cat => cat.category_id === item.category_id);
-          if (!category) return false;
-          const formattedCategory = category.category_name.replace(/ /g, '-');
-          return categoryParams.includes(formattedCategory);
-        })()
+        const category = categories.find(cat => cat.category_id === item.category_id);
+        if (!category) return false;
+        const formattedCategory = category.category_name.replace(/ /g, '-');
+        return categoryParams.includes(formattedCategory);
+      })()
       : true;
 
     const matchesSearch = item.item_name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -156,7 +156,7 @@ function Items() {
           {filteredItems.slice(offset, offset + 8).map((item) => (
             <Card
               component={Link}
-              to={`/item/${item.item_id}`}
+              to={`/items/${item.item_id}`}
               key={item.item_id}
               sx={{ width: 280, minHeight: 300, boxShadow: 'none' }}
             >

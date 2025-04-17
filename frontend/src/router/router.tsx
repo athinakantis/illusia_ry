@@ -4,7 +4,7 @@ import LoginPage from '../pages/LoginPage';
 import ItemsPage from '../pages/Items';
 import Root from '../components/Root';
 import Home from '../pages/Home';
-import { SingleItem } from '../components/Admin/ItemView';
+import EditItem from '../components/Admin/ItemView';
 import AdminAddProduct from '../components/Admin/AdminAddProduct';
 import Cart from '../pages/Cart';
 import ItemDetail from '../components/User/ItemDetail';
@@ -31,19 +31,18 @@ export const router = createBrowserRouter([
         path: '/items',
         element: <ItemsPage />
       },
-      
+
       {
         path: '/cart',
         element: <Cart />
       },
       {
-        path: '/items/:itemId',
-        element: <SingleItem />
+        path: '/items/edit/:itemId',
+        element: <EditItem />
       },
       {
-        path: '/item/:itemId',
+        path: '/items/:itemId',
         element: <ItemDetail />
-      
       },
       {
         path: '/items/new',
