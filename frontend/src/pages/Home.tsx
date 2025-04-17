@@ -43,7 +43,7 @@ function Home() {
         <Container
           sx={{
             display: 'flex', paddingLeft: { xs: '10px', sm: 0 }, paddingRight: { xs: '10px', sm: 0 }, justifyContent: 'center', margin: '0 auto',
-            '& img': { width: '100%', transition: 'scale 200ms' },
+            '& img': { width: '100%', transition: 'scale 200ms', objectFit: 'cover' },
             '& .MuiBox-root': { width: { sm: 'clamp(180px, 30vw, 300px)', xl: 392 }, overflow: 'hidden', borderRadius: '14px', position: 'relative', height: { xs: 180, sm: '100%' } },
             '& span': { position: 'absolute', bottom: 25, left: 19, fontSize: 22 },
             '& .MuiStack-root': { gap: { xs: '10px', lg: '32px' } },
@@ -52,11 +52,18 @@ function Home() {
           <Stack direction={{ xs: 'column', sm: 'row' }}
             justifyContent={'center'}
             sx={{ maxHeight: { xs: '100%', sm: 400, xl: 513 } }}>
+
+
             <Box sx={{
-              '& > img': { height: { xs: 'auto', sm: '100%' } }
-            }}>
-              <img src={categories?.[0]?.image_path} alt="" />
-              <Typography variant='body3'>{categories?.[0]?.category_name}</Typography>
+              '& > a > img': {
+                height: { xs: 'auto', sm: '100%' } // Style only first category image
+              }
+            }
+            }>
+              <Link to={`/items?category=${categories?.[0]?.category_name.replaceAll(' ', '-')}`}>
+                <img src={categories?.[0]?.image_path} alt="" />
+                <Typography variant='body3'>{categories?.[0]?.category_name}</Typography>
+              </Link>
             </Box>
 
             {/* Inner Stack: middle categories */}
@@ -65,26 +72,32 @@ function Home() {
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 '& .MuiBox-root': { maxHeight: 240 },
-                '& img': { height: { xs: 'auto', sm: '100%' } }
+                '& img': { height: { xs: '100%' } },
+                '& img:first-of-type': { objectPosition: '0% 60%' }
               }}>
               <Box>
-                <img src={categories?.[1]?.image_path} alt="" />
-                <Typography variant='body3'>{categories?.[1]?.category_name}</Typography>
+                <Link to={`/items?category=${categories?.[1]?.category_name.replaceAll(' ', '-')}`}>
+                  <img src={categories?.[1]?.image_path} alt="" />
+                  <Typography variant='body3'>{categories?.[1]?.category_name}</Typography>
+                </Link>
               </Box>
               <Box>
-                <img src={categories?.[2]?.image_path} alt="" />
-                <Typography variant='body3'>{categories?.[2]?.category_name}</Typography>
+                <Link to={`/items?category=${categories?.[2]?.category_name.replaceAll(' ', '-')}`}>
+                  <img src={categories?.[2]?.image_path} alt="" />
+                  <Typography variant='body3'>{categories?.[2]?.category_name}</Typography>
+                </Link>
               </Box>
             </Stack>
             <Box sx={{
-              '& > img': {
+              '& > a > img': {
                 objectPosition: { xs: 'initial' },
-                objectFit: {},
-                height: { xs: 'auto', sm: '100%' }
+                height: '100%',
               }
             }}>
-              <img src={categories?.[3]?.image_path} alt="" />
-              <Typography variant='body3'>{categories?.[3]?.category_name}</Typography>
+              <Link to={`/items?category=${categories?.[3]?.category_name.replaceAll(' ', '-')}`}>
+                <img src={categories?.[3]?.image_path} alt="" />
+                <Typography variant='body3'>{categories?.[3]?.category_name}</Typography>
+              </Link>
             </Box>
           </Stack>
         </Container>

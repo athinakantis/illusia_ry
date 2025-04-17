@@ -64,7 +64,9 @@ export const updateItem = createAsyncThunk(
 export const itemsSlice = createSlice({
   name: 'items',
   initialState,
-  reducers: {},
+  reducers: {
+
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchAllItems.pending, (state) => {
       state.loading = true
@@ -121,6 +123,7 @@ export const itemsSlice = createSlice({
     })
   }
 })
+
 
 export const selectAllCategories = (state: RootState) => state.items.categories
 

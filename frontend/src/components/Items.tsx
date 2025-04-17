@@ -18,26 +18,38 @@ import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOu
 import { Item } from '../types/types';
 import { addItemToCart } from '../slices/cartSlice'
 import Pagination from './Pagination';
-import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+
 function Items() {
   const items = useAppSelector(selectAllItems);
   const categories = useAppSelector(selectAllCategories)
   const dispatch = useAppDispatch();
   const [offset, setOffset] = useState(0)
   const { search } = useLocation()
-  const navigate = useNavigate()
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, _] = useSearchParams();
+  const [filter, setFilter] = useState('')
 
+  const [displayedItems, setDisplayedItems] = useState(items)
 
+  // Fetch items and categories upon mount
   useEffect(() => {
     if (items.length < 1) {
-      dispatch(fetchAllItems())
+      dispatch(fetchAllItems()).then(() => setDisplayedItems(items))
     }
-    if (!categories || categories.length < 1) {
+    if (categories.length < 1) {
       dispatch(fetchAllCategories())
     }
   }, [dispatch, items]);
+
+  useEffect(() => {
+    console.log(searchParams.get('category'))
+    if (filter) {
+      //filterItemsByCategory()
+    }
+  }, [dispatch, filter, searchParams])
+
+
 
   const addToCart = (id: string, quantityOfItem: number = 1) => {
     const itemToAdd: Item | undefined = items.find((item: Item) => item.item_id === id);
@@ -104,7 +116,7 @@ function Items() {
           textAlign={'start'}
         >
 
-          {items.slice(offset, offset + 8).map((item) => (
+          {displayedItems.slice(offset, offset + 8).map((item) => (
             <Card
               key={item.item_id}
               sx={{ width: 280, minHeight: 300, boxShadow: 'none' }}
