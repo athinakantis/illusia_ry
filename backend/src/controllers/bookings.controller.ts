@@ -1,5 +1,4 @@
 import { Controller, Get, Param, Body, Post, Req } from '@nestjs/common';
-import { error } from 'console';
 import { CreateBookingDto } from 'src/dto/create-booking.dto';
 import { BookingService } from 'src/services/bookings.service';
 import { CustomRequest } from 'src/types/request.type';
