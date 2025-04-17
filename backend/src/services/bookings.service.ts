@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Tables } from 'src/types/supabase';
 import { ApiResponse } from 'src/types/response';
 import { SupabaseService } from './supabase.service';
+import { CustomRequest } from 'src/types/request'; // adjust path as needed
 
 
 @Injectable()
@@ -204,6 +205,56 @@ export class BookingService {
         booking_id: bookingId,
         status: uniqueIssues.length === 0 ? 'ok' : 'fail',
         issues: uniqueIssues,
+      },
+    };
+  }
+
+  async updateBooking(
+    req: CustomRequest,
+    bookingId: string,
+    payload: {
+      items: {
+        item_id: string;
+        start_date: string;
+        end_date: string;
+        quantity: number;
+      }[];
+    },
+  ): Promise<ApiResponse<{ booking_id: string; reservations: Tables<'item_reservations'>[] }>> {
+    const supabase = req['supabase'];
+
+    // Remove all existing reservations for this booking
+    const { error: deleteError } = await supabase
+      .from('item_reservations')
+      .delete()
+      .eq('booking_id', bookingId);
+    if (deleteError) {
+      throw new BadRequestException(deleteError.message);
+    }
+
+    // Prepare new reservation rows
+    const reservationRows = payload.items.map((item) => ({
+      booking_id: bookingId,
+      item_id: item.item_id,
+      start_date: item.start_date,
+      end_date: item.end_date,
+      quantity: item.quantity,
+    }));
+
+    // Insert updated reservations
+    const { data: insertedReservations, error: insertError } = await supabase
+      .from('item_reservations')
+      .insert(reservationRows)
+      .select();
+    if (insertError) {
+      throw new BadRequestException(insertError.message);
+    }
+
+    return {
+      message: 'Booking updated successfully',
+      data: {
+        booking_id: bookingId,
+        reservations: insertedReservations as Tables<'item_reservations'>[],
       },
     };
   }
