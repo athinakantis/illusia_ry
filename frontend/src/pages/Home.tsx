@@ -1,8 +1,10 @@
-import { Box, Container, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Container, Stack, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchAllCategories, selectAllCategories } from '../slices/itemsSlice';
 import { Link } from 'react-router-dom';
+import { GridExpandMoreIcon } from '@mui/x-data-grid';
+import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 
 
 function Home() {
@@ -97,6 +99,65 @@ function Home() {
                 <img src={categories?.[3]?.image_path} alt="" />
                 <Typography variant='body3'>{categories?.[3]?.category_name}</Typography>
               </Link>
+            </Box>
+          </Stack>
+        </Container>
+
+        {/* FAQ Section */}
+        <Container sx={{ maxWidth: 1264, pt: 15 }}>
+          <Stack sx={{
+            textAlign: 'start', flexDirection: { xs: 'column', sm: 'row' }, gap: '32px'
+          }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: 521 }}>
+              <Typography variant='h3'
+                sx={{ fontWeight: 700, fontFamily: 'Oxygen, sans-serif', color: '#3D3D3D', mb: '14px' }}>Frequently Asked Questions</Typography>
+              <Typography color='text.primary' variant='body3'>Before reaching out to us, see if you can find you're looking for in our FAQ</Typography>
+              <Button variant='rounded' endIcon={<ArrowForwardIosRoundedIcon />}
+                sx={{ mt: '32px' }}>Ask a question
+              </Button>
+            </Box>
+            <Box sx={{
+              maxWidth: 711,
+              '& .MuiAccordion-root': { border: '1px solid #A6A6A6', borderRadius: '4px', mb: '20px', boxShadow: 'none' },
+              '& .MuiAccordionDetails-root': { color: '#666666', fontSize: 16 },
+              '& .MuiTypography-root': { fontSize: 20, fontWeight: 300, letterSpacing: '-2%' }
+            }}>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<GridExpandMoreIcon />}
+                  aria-controls="panel1-content"
+                  id="panel1-header"
+                >
+                  <Typography component="span">When will my booking be approved?</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  We look through bookings as soon as we can. Bookings are usually approved within the span of 2-3 days. If you've waited longer than 5 days, send us an email
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<GridExpandMoreIcon />}
+                  aria-controls="panel2-content"
+                  id="panel2-header"
+                >
+                  <Typography component="span">How long can I book items for?</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  One booking can be a maximum duration of two weeks
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<GridExpandMoreIcon />}
+                  aria-controls="panel3-content"
+                  id="panel3-header"
+                >
+                  <Typography component="span">Why do I have to be approved before booking items?</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  We see the approval of our users as a guarantee that the items which have been lent will be returned after a maximum of 2 weeks.
+                </AccordionDetails>
+              </Accordion>
             </Box>
           </Stack>
         </Container>
