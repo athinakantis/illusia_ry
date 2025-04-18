@@ -15,10 +15,6 @@ function Cart() {
     const items = useAppSelector(selectAllItems);
     const { user } = useAuth();
 
-    console.log(itemsInCart);
-
-
-
     const itemsInCartInfo = itemsInCart.map(itemToShow => ({
         ...items.find(item => item.item_id === itemToShow.item_id),
         ...itemToShow,
@@ -38,13 +34,8 @@ function Cart() {
 
 
     const handleAddBooking = () => {
-        console.log("making booking");
         const newBookingData: object = createBookingFromCart();
-        console.log(newBookingData);
-
-        const response = dispatch(addBooking(newBookingData));
-        console.log(response);
-
+        dispatch(addBooking(newBookingData));
     }
 
     return (
