@@ -1,5 +1,6 @@
 import { Controller, Post, Body, Get } from '@nestjs/common';
 import { MailerService } from '../services/mailer.service';
+import { SentMessageInfo } from 'nodemailer';
 
 @Controller('mailer')
 export class MailerController {
@@ -15,7 +16,7 @@ export class MailerController {
         @Body('email') email: string,
         @Body('subject') subject: string,
         @Body('message') message: string,
-    ): Promise<any> {
+    ): Promise<{ message: string; result: SentMessageInfo } | { message: string; error: any }> {
         try {
             const result = await this.mailerService.sendEmail(email, subject, message);
             return { message: 'Email sent successfully!', result };

@@ -78,7 +78,7 @@ export const DataGridGeneric: React.FC<DataGridGeneric> = ({ data, idColumn, use
                 columns={columns}
                 pageSizeOptions={[10, 25, 50, 100]}
                 // getRowHeight={()=> "auto"}
-                rowHeight={110}
+                rowHeight={70}
                 sx={{
                     // Header CSS
                     '& .super-app-theme--header': {

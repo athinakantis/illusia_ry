@@ -7,6 +7,7 @@ import { deleteItem, fetchAllItems } from '../../slices/itemsSlice';
 import { formatDate } from '../../utility/formatDate';
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useNavigate } from 'react-router-dom';
 
 interface ItemDataGridProps {
   data: Item[];
@@ -22,6 +23,8 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       dispatch(deleteItem(id)).then(() => dispatch(fetchAllItems()));
     }
   };
+
+  const navigate = useNavigate();
 
   const columns: GridColDef[] = [
     {
@@ -111,7 +114,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
         <>
           <IconButton
             component="a"
-            href={`/items/${params.row.item_id}`}
+            onClick={() => navigate(`/items/${params.row.item_id}`)}
             aria-label="view"
             color="primary"
             size="medium"

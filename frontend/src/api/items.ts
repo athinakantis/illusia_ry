@@ -7,18 +7,18 @@ export type CreateItemPayload = Omit<TablesInsert<'items'>, 'item_id' | 'created
 export const itemsApi = {
     getAllItems: (): Promise<ApiResponse<Item[]>> =>
         api.get('items',
-            {headers: {'Access-Control-Allow-Origin': '*'}}
+            { headers: { 'Access-Control-Allow-Origin': '*' } }
         ),
-        
-    getItembyId: (id: string): Promise<ApiResponse<Item>> =>{
+
+    getItembyId: (id: string): Promise<ApiResponse<Item>> => {
         return api.get(`/items/${id}`)
     },
     createItem: (newItem: CreateItemPayload): Promise<ApiResponse<Item>> => {
         return api.post('/items', newItem)
     },
-    
+
     updateItem: (id: string, updatedItem: Partial<Item>) => {
-       return api.patch(`/items/${id}`, updatedItem)
+        return api.patch(`/items/${id}`, updatedItem)
     },
 
     deleteItem: (id: string) => {
