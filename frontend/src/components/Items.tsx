@@ -49,7 +49,10 @@ function Items() {
     const start_date = "2025-04-14";
     const end_date = "2025-04-15";
 
-    if (checkAvailabilityForItemOnDates(item_id, quantityToAdd, start_date, end_date)(store.getState())) {
+    //if (checkAvailabilityForItemOnDates(item_id, quantityToAdd, start_date, end_date)(store.getState())) {
+
+    const checkAdditionToCart = checkAvailabilityForItemOnDates(item_id, quantityToAdd, start_date, end_date)(store.getState());
+    if (checkAdditionToCart.severity === 'success') {
       dispatch(addItemToCart({ item_id, quantityToAdd, start_date, end_date }));
       dispatch(showNotification({
         message: 'Item added to cart',
@@ -57,8 +60,8 @@ function Items() {
       }));
     } else {
       dispatch(showNotification({
-        message: 'Not enough of items is available',
-        severity: 'error',
+        message: checkAdditionToCart.message,
+        severity: checkAdditionToCart.severity,
       }));
 
     }

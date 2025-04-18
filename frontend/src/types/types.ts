@@ -74,3 +74,8 @@ export interface ReservationsState {
 export interface CartState {
   cart: LocalReservation[];
 }
+
+export type Result =
+  | { severity: 'success'; data: boolean }
+  | { severity: 'error'; message: string }
+  | { severity: 'warning'; message: string };

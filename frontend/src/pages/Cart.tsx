@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { removeItemFromCart, selectCart } from "../slices/cartSlice";
+import { emptyCart, removeItemFromCart, selectCart } from "../slices/cartSlice";
 import { DataGridGeneric } from '../components/CustomComponents/DataGridGeneric';
 import { selectAllItems } from "../slices/itemsSlice";
 import ClearIcon from '@mui/icons-material/Clear';
@@ -72,6 +72,11 @@ function Cart() {
                 color="primary"
                 onClick={handleAddBooking}
             > Make booking</Button>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={() => dispatch(emptyCart())}
+            > Clear cart</Button>
         </>
     );
 

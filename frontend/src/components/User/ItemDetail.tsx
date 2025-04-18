@@ -27,7 +27,8 @@ const ItemDetail: React.FC = () => {
   const now = today(getLocalTimeZone());
   const [range, setRange] = useState<RangeValue<DateValue>>({
     start: now,
-    end: now.add({ months: 2 }),
+    // end: now.add({ months: 2 }),
+    end: now
   });
   const dispatch = useAppDispatch();
   const { itemId } = useParams<{ itemId: string }>();
@@ -63,7 +64,8 @@ const ItemDetail: React.FC = () => {
   const handleCartAddition = () => {
 
     if (itemId) {
-      if (checkAvailabilityForItemOnDates(itemId, quantity, range.start.toString(), range.end.toString())(store.getState())) {
+      const checkAdditionToCart = checkAvailabilityForItemOnDates(itemId, quantity, range.start.toString(), range.end.toString())(store.getState());
+      if (checkAdditionToCart.severity === 'success') {
         dispatch(addItemToCart({ item_id: itemId, quantityToAdd: quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
         dispatch(showNotification({
           message: 'Item added to cart',
@@ -71,8 +73,8 @@ const ItemDetail: React.FC = () => {
         }));
       } else {
         dispatch(showNotification({
-          message: 'Not enough of items is available',
-          severity: 'error',
+          message: checkAdditionToCart.message,
+          severity: checkAdditionToCart.severity,
         }));
 
       }
