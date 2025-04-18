@@ -21,8 +21,9 @@ import {
 import { ImPencil2 } from 'react-icons/im';
 import { CiTrash } from 'react-icons/ci';
 import Spinner from '../Spinner';
+import { useAuth } from '../../hooks/useAuth';
 
-export const SingleItem = () => {
+const SingleItem = () => {
   const { itemId } = useParams<{ itemId: string }>();
   const item = useAppSelector(selectItemById(itemId ?? ''));
   const [isEditing, setIsEditing] = useState(false);
@@ -30,6 +31,7 @@ export const SingleItem = () => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.items.loading);
   const navigate = useNavigate();
+  const { role } = useAuth();
 
 
   useEffect(() => {
@@ -43,6 +45,11 @@ export const SingleItem = () => {
       setFormData({ ...item });
     }
   }, [isEditing, item]);
+
+  useEffect(() => {
+    if (role === undefined) return
+    if (role === null) navigate('/items')
+  }, [role])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!formData) return;
@@ -67,6 +74,7 @@ export const SingleItem = () => {
         .then(() => navigate('/items'));
     }
   };
+
 
   if (loading) {
     return <Spinner />
@@ -230,3 +238,5 @@ export const SingleItem = () => {
     </Paper>
   );
 };
+
+export default SingleItem;

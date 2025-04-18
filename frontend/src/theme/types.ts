@@ -4,15 +4,18 @@
 declare module '@mui/material/styles' {
   interface TypographyVariants {
     link: React.CSSProperties;
+    body3: React.CSSProperties;
   }
 
   interface TypographyVariantsOptions {
     link?: React.CSSProperties;
+    body3?: React.CSSProperties;
   }
 }
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
     link: true;
+    body3: true;
   }
 }
 
