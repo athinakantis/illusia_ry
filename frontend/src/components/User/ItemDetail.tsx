@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -13,13 +13,19 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchAllItems } from '../../slices/itemsSlice';
 import { Link, useParams } from 'react-router-dom';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
-import { DateValue, getLocalTimeZone, today } from '@internationalized/date';
+import { CalendarDate, DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
 import type { RangeValue } from '@react-types/shared';
+import { checkAvailabilityForItemOnDates } from '../../selectors/availabilitySelector';
+import { addItemToCart } from '../../slices/cartSlice';
+import { showNotification } from '../../slices/notificationSlice';
+import { store } from '../../store/store';
+
 
 const ItemDetail: React.FC = () => {
+
   const [quantity, setQuantity] = useState(1);
   const now = today(getLocalTimeZone());
-  const [range, setRange] = useState<RangeValue<DateValue> | null>({
+  const [range, setRange] = useState<RangeValue<DateValue>>({
     start: now,
     end: now.add({ months: 2 }),
   });
@@ -33,6 +39,46 @@ const ItemDetail: React.FC = () => {
       dispatch(fetchAllItems());
     }
   }, [dispatch, items]);
+
+  const handleDateChange = (newRange: RangeValue<DateValue> | null) => {
+
+    if (newRange) {
+
+      const startDate = new Date(newRange.start.toString());
+      const endDate = new Date(newRange.end.toString());
+      const diffInMs = endDate.getTime() - startDate.getTime();
+      const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+      if (diffInDays > 14) {
+        alert('You can only book a maximum of 14 days.');
+        return;
+      }
+
+      setRange(newRange);
+    } else {
+
+    }
+  }
+
+  const handleCartAddition = () => {
+
+    if (itemId) {
+      if (checkAvailabilityForItemOnDates(itemId, quantity, range.start.toString(), range.end.toString())(store.getState())) {
+        dispatch(addItemToCart({ item_id: itemId, quantityToAdd: quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
+        dispatch(showNotification({
+          message: 'Item added to cart',
+          severity: 'success',
+        }));
+      } else {
+        dispatch(showNotification({
+          message: 'Not enough of items is available',
+          severity: 'error',
+        }));
+
+      }
+
+    }
+  }
 
   const categories = useAppSelector((state) => state.items.categories);
   const category = categories.find(
@@ -101,22 +147,7 @@ const ItemDetail: React.FC = () => {
                 aria-label="Select dates"
                 value={range}
                 minValue={now}
-                onChange={(value) => {
-                  if (!value) {
-                    setRange(null); // Or handle the null case appropriately
-                    return;
-                  }
-                  const startDate = new Date(value.start.toString());
-                  const endDate = new Date(value.end.toString());
-                  const diffInMs = endDate.getTime() - startDate.getTime();
-                  const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-
-                  if (diffInDays > 14) {
-                    alert('You can only book a maximum of 14 days.');
-                    return;
-                  }
-                  setRange(value);
-                }}
+                onChange={handleDateChange}
                 isRequired
                 maxVisibleMonths={1}
               />
@@ -158,6 +189,7 @@ const ItemDetail: React.FC = () => {
               <Button
                 variant="contained"
                 size="large"
+                onClick={handleCartAddition}
                 sx={{
                   backgroundColor: '#333', // Dark color like image
                   color: 'white',

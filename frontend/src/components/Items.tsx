@@ -42,7 +42,6 @@ function Items() {
     }
   }, [dispatch, items, categories]);
 
-
   const addToCart = (item_id: string, quantityToAdd: number = 1) => {
 
     // need to fetch the bookings and reservations first in order for this to work properly
@@ -52,16 +51,17 @@ function Items() {
 
     if (checkAvailabilityForItemOnDates(item_id, quantityToAdd, start_date, end_date)(store.getState())) {
       dispatch(addItemToCart({ item_id, quantityToAdd, start_date, end_date }));
+      dispatch(showNotification({
+        message: 'Item added to cart',
+        severity: 'success',
+      }));
     } else {
-      console.log("not enough of item");
+      dispatch(showNotification({
+        message: 'Not enough of items is available',
+        severity: 'error',
+      }));
 
     }
-
-
-    dispatch(showNotification({
-      message: 'Item added to cart',
-      severity: 'success',
-    }));
   }
 
   const toggleCategory = (category: string) => {
