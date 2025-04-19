@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchAllItems } from '../../slices/itemsSlice';
 import { Link, useParams } from 'react-router-dom';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
-import { CalendarDate, DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
+import { DateValue, getLocalTimeZone, today } from '@internationalized/date';
 import type { RangeValue } from '@react-types/shared';
 import { checkAvailabilityForItemOnDates } from '../../selectors/availabilitySelector';
 import { addItemToCart } from '../../slices/cartSlice';

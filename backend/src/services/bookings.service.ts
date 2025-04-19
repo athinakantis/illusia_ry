@@ -1,12 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Tables } from 'src/types/supabase';
 import { ApiResponse } from 'src/types/response';
 import { SupabaseService } from './supabase.service';
+import { log } from 'console';
 
 
 @Injectable()
 export class BookingService {
-    constructor(private readonly supabaseService: SupabaseService) {}
+  constructor(private readonly supabaseService: SupabaseService) { }
 
 
   // These use the SERVICE ROLE KEY for for now. You wont be able to test policies with this enabled.
@@ -48,7 +49,7 @@ export class BookingService {
       data,
     };
   }
-// Create booking with attached reservations(items). Does not check for availability.
+  // Create booking with attached reservations(items). Does not check for availability.
   // This is a simple insert into the bookings table and then an insert into the item_reservations table.
   async createBooking(payload: {
     user_id: string;
@@ -60,20 +61,20 @@ export class BookingService {
     }[];
   }): Promise<ApiResponse<{ booking_id: Tables<'bookings'>['booking_id']; reservations: Tables<'item_reservations'>[] }>> {
     const supabase = this.supabaseService.getClient();
-  
+
     // 1. Insert the booking
     const { data: bookingData, error: bookingError } = await supabase
       .from('bookings')
       .insert({ user_id: payload.user_id })
       .select()
       .single();
-  
+
     if (bookingError) {
       throw new BadRequestException(bookingError.message);
     }
-  
+
     const booking_id = bookingData.booking_id;
-  
+
     // 2. Insert item reservations
     const reservationRows = payload.items.map((item) => ({
       booking_id,
@@ -82,15 +83,15 @@ export class BookingService {
       end_date: item.end_date,
       quantity: item.quantity,
     }));
-  
+
     const { error: reservationError } = await supabase
       .from('item_reservations')
       .insert(reservationRows);
-  
+
     if (reservationError) {
       throw new BadRequestException(reservationError.message);
     }
-  
+
     return {
       message: 'Booking created successfully',
       data: {
@@ -110,12 +111,12 @@ export class BookingService {
     }[];
   }): Promise<{ booking_id: string; status: string }> {
     const supabase = this.supabaseService.getClient();
-  
+
     const { data, error } = await supabase.rpc('create_booking_with_reservations', {
       _user_id: payload.user_id,
       _items: payload.items,
     });
-  
+
     if (error) {
       throw new BadRequestException(error.message); // from @nestjs/common
     }
@@ -142,8 +143,8 @@ export class BookingService {
     };
   }
 
-   // New method to review booking availability. Checks all items in the booking to see if they are available.
-   async reviewBookingAvailability(bookingId: string): Promise<ApiResponse<{ booking_id: string; status: string; issues: string[] }>> {
+  // New method to review booking availability. Checks all items in the booking to see if they are available.
+  async reviewBookingAvailability(bookingId: string): Promise<ApiResponse<{ booking_id: string; status: string; issues: string[] }>> {
     const supabase = this.supabaseService.getClient();
 
     const { data: reservations, error } = await supabase

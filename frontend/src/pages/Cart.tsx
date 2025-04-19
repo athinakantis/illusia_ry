@@ -6,6 +6,7 @@ import { selectAllItems } from "../slices/itemsSlice";
 import ClearIcon from '@mui/icons-material/Clear';
 import { addBooking } from "../slices/bookingsSlice";
 import { useAuth } from "../hooks/useAuth";
+import { showNotification } from "../slices/notificationSlice";
 
 
 function Cart() {
@@ -33,9 +34,24 @@ function Cart() {
     }
 
 
-    const handleAddBooking = () => {
+    const handleAddBooking = async () => {
         const newBookingData: object = createBookingFromCart();
-        dispatch(addBooking(newBookingData));
+        const resultAction = await dispatch(addBooking(newBookingData));
+
+        if (addBooking.rejected.match(resultAction)) {
+            dispatch(showNotification({
+                message: resultAction.payload ?? "unknown error",
+                severity: 'error',
+            }));
+        } else {
+            dispatch(showNotification({
+                message: 'Booking created',
+                severity: 'success',
+            }));
+
+        }
+
+
     }
 
     return (

@@ -77,18 +77,13 @@ export const selectQtyForItemInCartByIdInDateRange = (id: string, start_date: st
 
     if (itemInCartReservations.length > 0) {
         // if any of the instances of the items found in cart
-
         if ((itemInCartReservations[0].start_date === start_date) || (itemInCartReservations[0].end_date === end_date)) {
-            // item added for already existing time range
-            return itemInCartReservations[0].quantity;
+            return itemInCartReservations[0].quantity; // item added for already existing time range
         } else {
-            // item added fora new time range
-            return -1;
+            return -1; // item added fora new time range
         }
-        // console.log(getOverlappingRange(parseDate(itemInCartReservations[0].start_date), parseDate(itemInCartReservations[0].end_date), parseDate(start_date), parseDate(end_date)));
     } else {
-        // new item added to cart
-        return 0;
+        return 0; // new item added to cart
     }
 }
 
@@ -111,6 +106,7 @@ export const selectQtyForItemInCartByIdInDateRange2 = (id: string, start_date: s
         // new item added to cart
         return 0;
     }
-}
-*/
+}*/
+
+
 export default cartSlice.reducer;

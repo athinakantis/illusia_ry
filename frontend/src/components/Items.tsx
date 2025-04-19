@@ -22,6 +22,7 @@ import { createSearchParams, useNavigate, useSearchParams } from 'react-router-d
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { store } from '../store/store';
 import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
+import { fetchAllReservations, selectAllReservations } from '../slices/reservationsSlice';
 
 
 function Items() {
@@ -32,6 +33,14 @@ function Items() {
   const navigate = useNavigate()
   const [searchParams, _] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
+
+  const reservations = useAppSelector(selectAllReservations);
+  useEffect(() => {
+    if (reservations.length < 1) {
+      dispatch(fetchAllReservations())
+    }
+  }, [dispatch, reservations]);
+
 
   useEffect(() => {
     if (items.length < 1) {

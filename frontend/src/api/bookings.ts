@@ -11,7 +11,9 @@ export const bookingsApi = {
         return api.get(`/items/${id}`)
     },*/
 
-    createBooking: (newBooking: object) => {
-        return api.post('bookings/rpc', newBooking);
+    createBooking: async (newBooking: object) => {
+
+        const response = await api.post('bookings/rpc', newBooking)
+        return response;
     }
 };
