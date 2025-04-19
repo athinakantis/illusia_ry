@@ -1,29 +1,38 @@
-import { CalendarDate } from "@internationalized/date";
-import type { RangeValue } from '@react-types/shared';
+import { LocalReservation } from "../types/types";
 
-
-function compareDatesManually(a: CalendarDate, b: CalendarDate): number {
-    if (a.year !== b.year) return a.year < b.year ? -1 : 1;
-    if (a.month !== b.month) return a.month < b.month ? -1 : 1;
-    if (a.day !== b.day) return a.day < b.day ? -1 : 1;
-    return 0;
+function getDailyKey(date: Date): string {
+    return date.toISOString().slice(0, 10); // 'YYYY-MM-DD'
 }
 
-export function getOverlappingRange(
-    startA: CalendarDate,
-    endA: CalendarDate,
-    startB: CalendarDate,
-    endB: CalendarDate
-): RangeValue<CalendarDate> | null {
-    if (
-        compareDatesManually(startA, endB) <= 0 &&
-        compareDatesManually(startB, endA) <= 0
-    ) {
-        const overlapStart = compareDatesManually(startA, startB) > 0 ? startA : startB;
-        const overlapEnd = compareDatesManually(endA, endB) < 0 ? endA : endB;
+export const getMaxAvailableQtyByDate = (newReservationStart: Date, newReservationEnd: Date, itemReservations: LocalReservation[]) => {
 
-        return { start: overlapStart, end: overlapEnd };
-    }
+    const availabilityMap: Record<string, number> = {};
 
-    return null;
+    itemReservations.forEach(reservation => {
+        const reservationStart = new Date(reservation.start_date);
+        const reservationEnd = new Date(reservation.end_date);
+
+        for (let dayOfReservation = new Date(newReservationStart); dayOfReservation <= newReservationEnd; dayOfReservation.setDate(dayOfReservation.getDate() + 1)) {
+
+            if (reservationStart <= dayOfReservation && reservationEnd >= dayOfReservation) {
+
+                const dailyKey = getDailyKey(dayOfReservation);
+                availabilityMap[dailyKey] = (availabilityMap[dailyKey] ?? 0) + reservation.quantity;
+            }
+        }
+        // creates a map of availability for each of the days for requested booking 
+    });
+    // it is done for each of the reservations and combined
+
+    return availabilityMap;
+}
+
+export const getMaxAvailableQtyInRange = (newReservationStart: Date, newReservationEnd: Date, itemReservations: LocalReservation[]) => {
+
+    const availabilityMap = getMaxAvailableQtyByDate(newReservationStart, newReservationEnd, itemReservations);
+
+    const higestQty = Math.max(...Object.values(availabilityMap));
+    // checkes what is the highest booked quantity on the date range
+
+    return (higestQty < 0) ? 0 : higestQty;
 }

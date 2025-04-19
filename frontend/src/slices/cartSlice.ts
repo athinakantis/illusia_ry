@@ -1,8 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { CartState, LocalReservation } from '../types/types';
 import { RootState } from '../store/store';
-import { parseDate } from '@internationalized/date';
-import { getOverlappingRange } from '../utility/OverlappingDates';
 
 
 

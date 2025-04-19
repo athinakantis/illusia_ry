@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { selectItemById } from "../slices/itemsSlice";
-import { selectAllReservations, selectAllReservationsForItem, selectQtyForItemInReservationsByIdInDateRange } from "../slices/reservationsSlice";
+import { selectQtyForItemInReservationsByIdInDateRange } from "../slices/reservationsSlice";
 import { selectQtyForItemInCartByIdInDateRange } from "../slices/cartSlice";
 import { Result } from "../types/types";
 
@@ -13,7 +13,7 @@ export const checkAvailabilityForItemOnDates = (item_id: string, quantity: numbe
         if (itemQtyInCart < 0) return { severity: 'warning', message: "Item is already in cart for another date" };
         // when trying to add the item on other date
 
-        if ((item?.quantity ? item.quantity : 0) < quantity) return { severity: 'warning', message: "Not enough of item overall" };
+        if ((item?.quantity ? item.quantity : 0) < quantity + itemQtyInCart) return { severity: 'warning', message: "Not enough of item overall" };
 
         const availableQuantityOfItem = (item?.quantity ? item.quantity : 0) - itemQtyInCart - reservation;
 

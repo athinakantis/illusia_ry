@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, isRejectedWithValue } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Booking, BookingsState } from "../types/types";
 import { RootState } from "../store/store";
 import { bookingsApi } from "../api/bookings";
