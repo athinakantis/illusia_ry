@@ -4,7 +4,7 @@ function getDailyKey(date: Date): string {
     return date.toISOString().slice(0, 10); // 'YYYY-MM-DD'
 }
 
-export const getMaxAvailableQtyByDate = (newReservationStart: Date, newReservationEnd: Date, itemReservations: LocalReservation[]) => {
+export const getMaxAvailableQtyByDateForOneItem = (newReservationStart: Date, newReservationEnd: Date, itemReservations: LocalReservation[]) => {
 
     const availabilityMap: Record<string, number> = {};
 
@@ -27,9 +27,9 @@ export const getMaxAvailableQtyByDate = (newReservationStart: Date, newReservati
     return availabilityMap;
 }
 
-export const getMaxAvailableQtyInRange = (newReservationStart: Date, newReservationEnd: Date, itemReservations: LocalReservation[]) => {
+export const getMaxAvailableQtyInRangeForOneItem = (newReservationStart: Date, newReservationEnd: Date, itemReservations: LocalReservation[]) => {
 
-    const availabilityMap = getMaxAvailableQtyByDate(newReservationStart, newReservationEnd, itemReservations);
+    const availabilityMap = getMaxAvailableQtyByDateForOneItem(newReservationStart, newReservationEnd, itemReservations);
 
     const higestQty = Math.max(...Object.values(availabilityMap));
     // checkes what is the highest booked quantity on the date range

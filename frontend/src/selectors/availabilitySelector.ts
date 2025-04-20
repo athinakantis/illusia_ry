@@ -12,6 +12,7 @@ export const checkAvailabilityForItemOnDates = (item_id: string, quantity: numbe
 
         if (itemQtyInCart < 0) return { severity: 'warning', message: "Item is already in cart for another date" };
         // when trying to add the item on other date
+        // should be fixed, so it is possible to do so, but the "item_id" column does not work for this
 
         if ((item?.quantity ? item.quantity : 0) < quantity + itemQtyInCart) return { severity: 'warning', message: "Not enough of item overall" };
 

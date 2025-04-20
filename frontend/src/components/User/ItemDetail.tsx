@@ -20,16 +20,16 @@ import { addItemToCart } from '../../slices/cartSlice';
 import { showNotification } from '../../slices/notificationSlice';
 import { store } from '../../store/store';
 
+type Props = {
+  initialStartDate: DateValue,
+  initialEndDate: DateValue
+} | null
 
-const ItemDetail: React.FC = () => {
+const ItemDetail: React.FC<Props> = (props) => {
 
   const [quantity, setQuantity] = useState(1);
   const now = today(getLocalTimeZone());
-  const [range, setRange] = useState<RangeValue<DateValue>>({
-    start: now,
-    // end: now.add({ months: 2 }),
-    end: now
-  });
+  const [range, setRange] = useState<RangeValue<DateValue> | null>(null);
   const dispatch = useAppDispatch();
   const { itemId } = useParams<{ itemId: string }>();
   const items = useAppSelector((state) => state.items.items);
@@ -40,6 +40,12 @@ const ItemDetail: React.FC = () => {
       dispatch(fetchAllItems());
     }
   }, [dispatch, items]);
+
+  useEffect(() => {
+    if (props) {
+      setRange({ start: props.initialStartDate, end: props.initialEndDate });
+    }
+  }, [])
 
   const handleDateChange = (newRange: RangeValue<DateValue> | null) => {
 
@@ -63,7 +69,15 @@ const ItemDetail: React.FC = () => {
 
   const handleCartAddition = () => {
 
-    if (itemId) {
+    if (range?.start === undefined) {
+      dispatch(showNotification({
+        message: "Select dates before adding to cart",
+        severity: 'warning',
+      }));
+      return;
+    }
+
+    if (itemId && range) {
       const checkAdditionToCart = checkAvailabilityForItemOnDates(itemId, quantity, range.start.toString(), range.end.toString())(store.getState());
       if (checkAdditionToCart.severity === 'success') {
         dispatch(addItemToCart({ item_id: itemId, quantityToAdd: quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
@@ -76,9 +90,7 @@ const ItemDetail: React.FC = () => {
           message: checkAdditionToCart.message,
           severity: checkAdditionToCart.severity,
         }));
-
       }
-
     }
   }
 
