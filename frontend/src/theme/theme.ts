@@ -16,6 +16,7 @@ export const theme = {
     default: '#FFFFFF',
     lightgrey: 'lightgrey',
     verylightgrey: '#ededed',
+    grey03: '#A6A6A6'
   },
   text: {
     primary: '#1F0A29',
@@ -105,7 +106,7 @@ export const createAppTheme = () =>
         fontFamily: 'Oxygen, sans-serif',
       },
       body3: {
-        fontFamily: 'Lato, sanf-serif',
+        fontFamily: 'Lato, sans-serif',
         fontSize: 16,
         fontWeight: 300,
         color: '#FFF'
@@ -144,4 +145,28 @@ export const createAppTheme = () =>
       '0px 2px 36px rgba(0,0,0,0.2)',
       '0px 2px 38px rgba(0,0,0,0.2)',
     ],
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            
+            variants: [{
+              props: {variant: 'rounded'},
+              style: {
+                height: 59,
+                borderRadius: '64px',
+                backgroundColor: '#282828',
+                fontFamily: 'Exo, sans-serif',
+                fontWeight: 600,
+                fontSize: 'clamp(14px, 2vw, 20px)',
+                color: '#FFF',
+                width: 'fit-content',
+                padding: '16px 24px',
+                '&:hover': { backgroundColor: '#464646'}
+              }
+            }]
+          } 
+        }
+      }
+    }
   });
