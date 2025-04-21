@@ -10,7 +10,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchAllItems } from '../../slices/itemsSlice';
+import { fetchAllCategories, fetchAllItems, selectAllCategories } from '../../slices/itemsSlice';
 import { Link, useParams } from 'react-router-dom';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 import { DateValue, getLocalTimeZone, today } from '@internationalized/date';
@@ -34,12 +34,14 @@ const ItemDetail: React.FC<Props> = (props) => {
   const { itemId } = useParams<{ itemId: string }>();
   const items = useAppSelector((state) => state.items.items);
   const item = items.find((i) => i.item_id === itemId);
+  const categories = useAppSelector(selectAllCategories)
 
   useEffect(() => {
     if (!items.length) {
       dispatch(fetchAllItems());
     }
-  }, [dispatch, items]);
+    if (categories.length < 1) dispatch(fetchAllCategories())
+  }, [dispatch, items, categories]);
 
   useEffect(() => {
     if (props) {
@@ -92,8 +94,7 @@ const ItemDetail: React.FC<Props> = (props) => {
     }
   }
 
-  const categories = useAppSelector((state) => state.items.categories);
-  const category = categories.find(
+  const itemCategory = categories.find(
     (cat) => cat.category_id === item?.category_id,
   );
   const handleQuantityChange = (amount: number) => {
@@ -112,9 +113,9 @@ const ItemDetail: React.FC<Props> = (props) => {
           Back
         </Button>
       </Box>
-      <Grid container spacing={4}>
+      <Grid container spacing={4} justifyContent={'center'}>
         {/* Left Column: Image */}
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <Box
             component="img"
             sx={{
@@ -130,13 +131,13 @@ const ItemDetail: React.FC<Props> = (props) => {
         </Grid>
 
         {/* Right Column: Details */}
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Stack spacing={2}>
-            <Typography variant="h4" component="h1" fontWeight="bold">
+            <Typography variant="h1" color='#3D3D3D' sx={{ fontWeight: 700, fontSize: 36, fontFamily: 'Lato, sans-serif' }}>
               {item?.item_name || 'Item name'}
             </Typography>
             <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-              {category?.category_name || 'Category'}
+              {itemCategory?.category_name || 'Category'}
             </Typography>
             <Typography component={'p'} variant="body1" color="text.secondary">
               {item?.description || 'Description not available.'}
@@ -169,7 +170,7 @@ const ItemDetail: React.FC<Props> = (props) => {
               direction="row"
               spacing={2}
               alignItems="center"
-              sx={{ mt: 3 }}
+              sx={{ mt: 3, height: '40px' }}
             >
               <Box
                 sx={{
@@ -198,22 +199,12 @@ const ItemDetail: React.FC<Props> = (props) => {
                   <AddIcon fontSize="small" />
                 </IconButton>
               </Box>
-              <Button
-                variant="contained"
-                size="large"
+              <Button variant="rounded"
                 onClick={handleCartAddition}
                 sx={{
-                  backgroundColor: '#333', // Dark color like image
-                  color: 'white',
-                  borderRadius: '50px', // Rounded corners
-                  px: 4, // Padding
-                  py: 1.5, // Padding
-                  textTransform: 'none', // Match image text case
-                  '&:hover': {
-                    backgroundColor: '#555', // Slightly lighter on hover
-                  },
-                }}
-              >
+                  height: '100%', fontSize: 'clamp(15px, 1.3vw, 20px)',
+                  width: '190px', textTransform: 'capitalize'
+                }}>
                 Add to Cart
               </Button>
             </Stack>

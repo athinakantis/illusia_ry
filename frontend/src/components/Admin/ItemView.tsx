@@ -4,7 +4,9 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { formatDate } from '../../utility/formatDate';
 import {
   deleteItem,
+  fetchAllCategories,
   fetchItemById,
+  selectAllCategories,
   selectItemById,
   updateItem,
 } from '../../slices/itemsSlice';
@@ -17,6 +19,9 @@ import {
   Paper,
   Typography,
   TextField,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
 } from '@mui/material';
 import { ImPencil2 } from 'react-icons/im';
 import { CiTrash } from 'react-icons/ci';
@@ -32,13 +37,18 @@ const SingleItem = () => {
   const loading = useAppSelector((state) => state.items.loading);
   const navigate = useNavigate();
   const { role } = useAuth();
+  const categories = useAppSelector(selectAllCategories);
+  const itemCategory = categories.find(
+    (cat) => cat.category_id === item?.category_id,
+  );
 
 
   useEffect(() => {
     if (!item) {
       dispatch(fetchItemById(itemId ?? ''));
     }
-  }, [item, itemId, dispatch]);
+    if (categories.length < 1) dispatch(fetchAllCategories());
+  }, [item, itemId, dispatch, categories]);
 
   useEffect(() => {
     if (isEditing && item) {
@@ -47,12 +57,17 @@ const SingleItem = () => {
   }, [isEditing, item]);
 
   useEffect(() => {
-    if (role === undefined) return
-    if (role === null) navigate('/items')
-  }, [role])
+    if (role === undefined) return;
+    if (role === null) navigate('/items');
+  }, [role]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!formData) return;
+    const { name, value } = e.target;
+    setFormData((prev) => (prev ? { ...prev, [name]: value } : ''));
+  };
+
+  const handleSelectChange = (e: SelectChangeEvent) => {
     const { name, value } = e.target;
     setFormData((prev) => (prev ? { ...prev, [name]: value } : ''));
   };
@@ -62,7 +77,7 @@ const SingleItem = () => {
   const handleSave = () => {
     if (!formData) return;
     if (item?.item_id) {
-      dispatch(updateItem({ id: item.item_id, updatedData: formData }))
+      dispatch(updateItem({ id: item.item_id, updatedData: formData }));
     }
 
     setIsEditing(false);
@@ -70,20 +85,24 @@ const SingleItem = () => {
 
   const handleDelete = () => {
     if (confirm('Are you sure you want to delete this item?')) {
-      dispatch(deleteItem(itemId ?? ''))
-        .then(() => navigate('/items'));
+      dispatch(deleteItem(itemId ?? '')).then(() => navigate('/items'));
     }
   };
 
-
   if (loading) {
-    return <Spinner />
+    return <Spinner />;
   }
 
   return (
     <Paper elevation={3} sx={{ p: 3, maxWidth: 1000, margin: 'auto', mt: 2 }}>
       <Grid container justifyContent="flex-end">
-        <Button variant='outlined' color='primary' onClick={() => navigate('/items')}>Back</Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => navigate('/items')}
+        >
+          Back
+        </Button>
       </Grid>
       <Typography variant="h4" gutterBottom component="h1">
         {item?.item_name}
@@ -177,11 +196,26 @@ const SingleItem = () => {
 
           <Box sx={{ mb: 2 }}>
             <Typography variant="subtitle1" color="text.secondary">
-              Category ID:
+              Category:
             </Typography>
-            <Typography variant="body1" sx={{ wordBreak: 'break-all' }}>
-              {item?.category_id || '-'}
-            </Typography>
+            {isEditing && formData ? (
+              <Select
+                value={formData.category_id}
+                label="Category"
+                name='category_id'
+                onChange={handleSelectChange}
+              >
+                {categories.map((category) => (
+                  <MenuItem key={category.category_id} value={category.category_id}>
+                    {category.category_name}
+                  </MenuItem>
+                ))}
+              </Select>
+            ) : (
+              <Typography variant="body1" sx={{ wordBreak: 'break-all' }}>
+                {itemCategory?.category_name || '-'}
+              </Typography>
+            )}
           </Box>
 
           <Divider sx={{ my: 1 }} />

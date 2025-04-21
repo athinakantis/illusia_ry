@@ -1,6 +1,6 @@
 import { ItemDataGrid } from '../ItemGrid/ItemDataGrid';
 import { useEffect } from 'react';
-import {  fetchAllItems, selectAllItems } from '../../slices/itemsSlice';
+import { fetchAllItems, selectAllItems } from '../../slices/itemsSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useAuth } from '../../hooks/useAuth';
 import { Box } from '@mui/material';
@@ -12,7 +12,9 @@ function Items() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!items || items.length < 1) {
+    // Fetch items upon mount.
+    // Less than or equal to one in case user first visited page with singular item
+    if (!items || items.length <= 1) {
       dispatch(fetchAllItems());
     }
 
