@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store/store";
 import { LocalReservation, ReservationsState } from "../types/types";
 import { reservationsApi } from "../api/reservations";
-import { getMaxBookedQtyForItem, getBookedQtyByDateAndItemForReservationsInRange, getMaxBookedQtyForManyItems } from "../utility/OverlappingDates";
+import { getMaxBookedQtyForItem, getBookedQtyByDateAndItemForReservationsInRange } from "../utility/overlappingDates";
 
 
 const initialState: ReservationsState = {
