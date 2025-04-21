@@ -8,6 +8,7 @@ import SingleItem from '../components/Admin/ItemView';
 import AdminAddProduct from '../components/Admin/AdminAddProduct';
 import Cart from '../pages/Cart';
 import ItemDetail from '../components/User/ItemDetail';
+import Test from '../pages/Test';
 
 export const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ export const router = createBrowserRouter([
         path: '/items/new',
         element: <AdminAddProduct />
       },
+      {
+        path: "/test",
+        element: <Test />
+      }
 
     ]
   },
