@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Tables } from 'src/types/supabase';
 import { ApiResponse } from 'src/types/response';
 import { CustomRequest } from 'src/types/request.type';
@@ -126,6 +126,11 @@ export class ItemReservationService {
         user_id: userId,
       },
     );
+    if (!data || data.length === 0) {
+      throw new NotFoundException(
+        `No bookings (or user) found for user_id ${userId}`,
+      );
+    }
 
     if (error) {
       throw new BadRequestException(error.message);
