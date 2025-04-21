@@ -233,10 +233,14 @@ export class BookingService {
       .update({ status })
       .eq('booking_id', bookingId)
       .select()
-      .single();
+      .maybeSingle();
+  
+    if (!data) {
+      throw new NotFoundException(`Booking ${bookingId} not found`);
+    }
  
     if (error) {
-      throw new BadRequestException(error.message);
+      throw new BadRequestException(error);
     }
  
     return {
@@ -245,7 +249,7 @@ export class BookingService {
     };
   }
   
-  async deleteBooking(req: CustomRequest, bookingId: string): Promise<ApiResponse<{ deleted: number }>> {
+  async deleteBooking(req: CustomRequest, bookingId: string): Promise<ApiResponse<Tables<'bookings'>[]>> {
     const supabase = req['supabase'];
  
     const { data, error } = await supabase
@@ -253,14 +257,23 @@ export class BookingService {
       .delete()
       .eq('booking_id', bookingId)
       .select();
- 
+      
+    if (!data) {
+      throw new NotFoundException(`Booking ${bookingId} not found`);
+    }
+    if (!data.length) {
+      throw new NotFoundException(`Booking ${bookingId} not found`);
+    }
+      console.log("error", error);
     if (error) {
-      throw new BadRequestException(error.message);
+      throw new BadRequestException(error);
     }
  
     return {
       message: 'Booking deleted successfully',
-      data: { deleted: data ? data.length : 0 },
+      data: data || [],
     };
   }  
+
+
 }

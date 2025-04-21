@@ -288,7 +288,7 @@ export class ItemReservationService {
      * @throws NotFoundException if no reservations are found
      * @returns 
      */
-    async deleteBookingReservations(
+    async deleteReservations(
       req: CustomRequest,
       bookingId: string,
       reservationIds: string[],

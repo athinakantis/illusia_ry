@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Body, Post, Req } from '@nestjs/common';
+import { Controller, Get, Param, Body, Post, Req, Patch, Delete } from '@nestjs/common';
 import { CreateBookingDto } from 'src/dto/create-booking.dto';
 import { BookingService } from 'src/services/bookings.service';
 import { CustomRequest } from 'src/types/request.type';
@@ -40,5 +40,16 @@ export class BookingController {
   @Post(':id/review')
   async reviewBooking(@Req() req: CustomRequest, @Param('id') bookingId: string) {
     return this.bookingService.reviewBookingAvailability(req,bookingId);
+  }
+
+  // UPDATE /bookings/:id → update a booking status
+  @Patch(':id')
+  async updateBookingStatus(@Req() req: CustomRequest, @Param('id') bookingId: string, @Body() payload: { status: string }) {
+    return this.bookingService.updateBookingStatus(req, bookingId, payload.status);
+  }
+  // DELETE /bookings/:id → delete a booking by booking_id
+  @Delete(':id')
+  async deleteBooking(@Req() req: CustomRequest, @Param('id') id: string) {
+    return this.bookingService.deleteBooking(req, id);
   }
 }
