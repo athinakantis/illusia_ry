@@ -10,7 +10,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchAllCategories, fetchAllItems } from '../../slices/itemsSlice';
+import { fetchAllCategories, fetchAllItems, selectAllCategories } from '../../slices/itemsSlice';
 import { Link, useParams } from 'react-router-dom';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 import { DateValue, getLocalTimeZone, today } from '@internationalized/date';
@@ -27,16 +27,16 @@ const ItemDetail: React.FC = () => {
   const { itemId } = useParams<{ itemId: string }>();
   const items = useAppSelector((state) => state.items.items);
   const item = items.find((i) => i.item_id === itemId);
+  const categories = useAppSelector(selectAllCategories)
 
   useEffect(() => {
     if (!items.length) {
       dispatch(fetchAllItems());
     }
-    if (!categories.length) dispatch(fetchAllCategories())
-  }, [dispatch, items]);
+    if (categories.length < 1) dispatch(fetchAllCategories())
+  }, [dispatch, items, categories]);
 
-  const categories = useAppSelector((state) => state.items.categories);
-  const category = categories.find(
+  const itemCategory = categories.find(
     (cat) => cat.category_id === item?.category_id,
   );
   const handleQuantityChange = (amount: number) => {
@@ -79,7 +79,7 @@ const ItemDetail: React.FC = () => {
               {item?.item_name || 'Item name'}
             </Typography>
             <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-              {category?.category_name || 'Category'}
+              {itemCategory?.category_name || 'Category'}
             </Typography>
             <Typography component={'p'} variant="body1" color="text.secondary">
               {item?.description || 'Description not available.'}
