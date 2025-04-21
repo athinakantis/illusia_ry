@@ -12,9 +12,12 @@ function Items() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    // Fetch items upon mount.
+    // Less than or equal to one in case user first visited page with singular item
     if (!items || items.length <= 1) {
       dispatch(fetchAllItems());
     }
+
   }, [dispatch, items]);
 
   // Check if user is authorized

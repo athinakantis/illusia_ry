@@ -16,8 +16,6 @@ export const itemsApi = {
     createItem: (newItem: CreateItemPayload): Promise<ApiResponse<Item>> => {
         return api.post('/items', newItem)
     },
-
-  
     
     updateItem: (id: string, updatedItem: Partial<Item>) => {
        return api.patch(`/items/${id}`, updatedItem)
@@ -27,4 +25,4 @@ export const itemsApi = {
         return api.delete(`/items/${id}`)
     }
 };
-// Create a new item
+

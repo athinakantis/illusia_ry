@@ -16,9 +16,11 @@ export const theme = {
     default: '#FFFFFF',
     lightgrey: 'lightgrey',
     verylightgrey: '#ededed',
+    grey03: '#A6A6A6'
   },
   text: {
     primary: '#1F0A29',
+    main: '#FFF',
     secondary: '#666666',
     light: '#FAFAFA',
   },
@@ -63,9 +65,10 @@ export const createAppTheme = () =>
     typography: {
       fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
       h1: {
-        fontSize: '2rem',
+        fontSize: '45px',
         fontWeight: 500,
         fontFamily: 'Roboto Slab, sans-serif',
+        color: "#FFF"
       },
       h2: {
         fontSize: '1.75rem',
@@ -102,6 +105,12 @@ export const createAppTheme = () =>
         fontWeight: 400,
         fontFamily: 'Oxygen, sans-serif',
       },
+      body3: {
+        fontFamily: 'Lato, sans-serif',
+        fontSize: 16,
+        fontWeight: 300,
+        color: '#FFF'
+      },
       link: {
         fontSize: '1 rem',
         fontWeight: 500,
@@ -136,4 +145,28 @@ export const createAppTheme = () =>
       '0px 2px 36px rgba(0,0,0,0.2)',
       '0px 2px 38px rgba(0,0,0,0.2)',
     ],
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            
+            variants: [{
+              props: {variant: 'rounded'},
+              style: {
+                height: 59,
+                borderRadius: '64px',
+                backgroundColor: '#282828',
+                fontFamily: 'Exo, sans-serif',
+                fontWeight: 600,
+                fontSize: 'clamp(14px, 2vw, 20px)',
+                color: '#FFF',
+                width: 'fit-content',
+                padding: '16px 24px',
+                '&:hover': { backgroundColor: '#464646'}
+              }
+            }]
+          } 
+        }
+      }
+    }
   });
