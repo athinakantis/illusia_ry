@@ -212,50 +212,55 @@ export class BookingService {
     };
   }
 
-  async updateBooking(
+  /**
+   * Update the status field of a booking.
+   * - Ordinary users can update only their own booking (enforced by RLS).
+   * - Admin / Head‑Admin can update any booking.
+   */
+  async updateBookingStatus(
     req: CustomRequest,
     bookingId: string,
-    payload: {
-      items: {
-        item_id: string;
-        start_date: string;
-        end_date: string;
-        quantity: number;
-      }[];
-    },
-  ): Promise<ApiResponse<{ booking_id: string; reservations: Tables<'item_reservations'>[] }>> {
+    status: Tables<'bookings'>['status'],
+  ): Promise<ApiResponse<Tables<'bookings'>>> {
     const supabase = req['supabase'];
-
-    const { error: deleteError } = await supabase
-      .from('item_reservations')
-      .delete()
-      .eq('booking_id', bookingId);
-    if (deleteError) {
-      throw new BadRequestException(deleteError.message);
+ 
+    if (!status) {
+      throw new BadRequestException('Status value is required');
     }
-
-    const reservationRows = payload.items.map((item) => ({
-      booking_id: bookingId,
-      item_id: item.item_id,
-      start_date: item.start_date,
-      end_date: item.end_date,
-      quantity: item.quantity,
-    }));
-
-    const { data: insertedReservations, error: insertError } = await supabase
-      .from('item_reservations')
-      .insert(reservationRows)
-      .select();
-    if (insertError) {
-      throw new BadRequestException(insertError.message);
+ 
+    const { data, error } = await supabase
+      .from('bookings')
+      .update({ status })
+      .eq('booking_id', bookingId)
+      .select()
+      .single();
+ 
+    if (error) {
+      throw new BadRequestException(error.message);
     }
-
+ 
     return {
-      message: 'Booking updated successfully',
-      data: {
-        booking_id: bookingId,
-        reservations: insertedReservations as Tables<'item_reservations'>[],
-      },
+      message: `Booking ${bookingId} status updated to "${status}"`,
+      data,
     };
   }
+  
+  async deleteBooking(req: CustomRequest, bookingId: string): Promise<ApiResponse<{ deleted: number }>> {
+    const supabase = req['supabase'];
+ 
+    const { data, error } = await supabase
+      .from('bookings')
+      .delete()
+      .eq('booking_id', bookingId)
+      .select();
+ 
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
+ 
+    return {
+      message: 'Booking deleted successfully',
+      data: { deleted: data ? data.length : 0 },
+    };
+  }  
 }

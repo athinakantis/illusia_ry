@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { SupabaseService } from './supabase.service';
 import { Tables } from 'src/types/supabase';
 import { ApiResponse } from 'src/types/response';
+import { CustomRequest } from 'src/types/request.type';
 
 @Injectable()
 export class ItemReservationService {
@@ -277,4 +278,41 @@ export class ItemReservationService {
       data,
     };
   }
+
+   // Delete one or many reservations that belong to a booking
+    /**
+     * @param req attached supabase client
+     * @param bookingId Booking ID of the reservations to delete
+     * @param reservationIds  Array of reservation IDs to delete
+     * @throws BadRequestException if the deletion fails
+     * @throws NotFoundException if no reservations are found
+     * @returns 
+     */
+    async deleteBookingReservations(
+      req: CustomRequest,
+      bookingId: string,
+      reservationIds: string[],
+    ): Promise<ApiResponse<{ deleted: number }>> {
+      const supabase = req['supabase'];
+  
+      if (!reservationIds.length) {
+        return { message: 'Nothing to delete', data: { deleted: 0 } };
+      }
+  
+      const { data, error } = await supabase
+        .from('item_reservations')
+        .delete()
+        .eq('booking_id', bookingId)   // make sure the rows belong to that booking
+        .in('id', reservationIds)
+        .select();
+  
+      if (error) {
+        throw new BadRequestException(error.message);
+      }
+  
+      return {
+        message: 'Reservations deleted successfully',
+        data: { deleted: data ? data.length : 0 },
+      };
+    }
 }
