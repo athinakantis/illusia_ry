@@ -281,22 +281,27 @@ export class ItemReservationService {
 
    // Delete one or many reservations that belong to a booking
     /**
-     * @param req attached supabase client
      * @param bookingId Booking ID of the reservations to delete
      * @param reservationIds  Array of reservation IDs to delete
-     * @throws BadRequestException if the deletion fails
-     * @throws NotFoundException if no reservations are found
-     * @returns 
+     * @example
+     * DELETE /reservations/booking/:bookingId
+     * Body: 
+     * {
+     * "reservationIds": [
+     * "54390b8a-1030-4277-b5d3-2711aca4a137",
+     * "42b11fb6-d03f-483a-97fa-97a067c8a680"
+     * ]
+     * }
      */
     async deleteReservations(
       req: CustomRequest,
       bookingId: string,
       reservationIds: string[],
-    ): Promise<ApiResponse<{ deleted: number }>> {
+    ): Promise<ApiResponse<{ deleted: number; deletedItems: Tables<'item_reservations'>[] }>> {
       const supabase = req['supabase'];
   
       if (!reservationIds.length) {
-        return { message: 'Nothing to delete', data: { deleted: 0 } };
+        return { message: 'Nothing to delete', data: { deleted: 0, deletedItems: [] } };
       }
   
       const { data, error } = await supabase
@@ -305,14 +310,26 @@ export class ItemReservationService {
         .eq('booking_id', bookingId)   // make sure the rows belong to that booking
         .in('id', reservationIds)
         .select();
-  
+
+      if (!data || data.length === 0) {
+        throw new BadRequestException('Booking not found or no reservations to delete');
+      }
+      // Check if the number of deleted rows matches the number of requested deletions
+      if (data.length !== reservationIds.length) {
+        throw new BadRequestException('Not all reservations were deleted');
+      }
+
+      // Check for errors
       if (error) {
-        throw new BadRequestException(error.message);
+        throw new BadRequestException(error);
       }
   
       return {
         message: 'Reservations deleted successfully',
-        data: { deleted: data ? data.length : 0 },
+        data: { 
+          deleted: data ? data.length : 0,
+          deletedItems: data  
+        },
       };
     }
 }
