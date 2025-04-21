@@ -1,4 +1,3 @@
-// src/slices/bookingsSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import {
   getUserBookings,
@@ -11,13 +10,16 @@ import {
 import { BookingResponse } from '../types/types';
 import { Tables } from '../types/supabase.types';
 
+// Extend UserBooking with optional BookingResponse fields
+type BookingWithStatus = UserBooking & Partial<BookingResponse>;
+
 /* ------------------------------------------------------------------ */
 /* 1.  Async thunks                                                   */
 /* ------------------------------------------------------------------ */
 
 // GET /reservations/user/:userId
 export const fetchUserBookings = createAsyncThunk<
-  UserBooking[],                    // return type
+  BookingWithStatus[],                    // return type
   string,                           // userId
   { rejectValue: string }
 >(
@@ -109,7 +111,7 @@ export const removeReservations = createAsyncThunk<
 /* ------------------------------------------------------------------ */
 
 export interface BookingsState {
-  bookings: UserBooking[];
+  bookings: BookingWithStatus[];
   loading:  boolean;
   error:    string | null;
 }
@@ -133,7 +135,7 @@ export const bookingsSlice = createSlice({
       })
       .addCase(
         fetchUserBookings.fulfilled,
-        (state, action: PayloadAction<UserBooking[]>) => {
+        (state, action: PayloadAction<BookingWithStatus[]>) => {
           state.loading = false;
           state.bookings = action.payload;
         }
