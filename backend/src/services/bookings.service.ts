@@ -1,14 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Tables } from 'src/types/supabase';
 import { ApiResponse } from 'src/types/response';
-import { SupabaseService } from './supabase.service';
 import { CustomRequest } from 'src/types/request.type';
-
 
 @Injectable()
 export class BookingService {
-    constructor(private readonly supabaseService: SupabaseService) {}
-
+  
   async getBookings(req: CustomRequest): Promise<ApiResponse<Tables<'bookings'>[]>> {
     const supabase = req['supabase'];
 
@@ -274,6 +271,4 @@ export class BookingService {
       data: data || [],
     };
   }  
-
-
 }

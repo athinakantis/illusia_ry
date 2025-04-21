@@ -1,12 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { SupabaseService } from './supabase.service';
 import { Tables } from 'src/types/supabase';
 import { ApiResponse } from 'src/types/response';
 import { CustomRequest } from 'src/types/request.type';
 
 @Injectable()
 export class ItemReservationService {
-  constructor(private readonly supabaseService: SupabaseService) {}
+
 
   /**
    * @returns ApiResponse containing an array of item reservations
