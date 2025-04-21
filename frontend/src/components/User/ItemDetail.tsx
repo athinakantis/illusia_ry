@@ -45,7 +45,7 @@ const ItemDetail: React.FC<Props> = (props) => {
     if (props) {
       setRange({ start: props.initialStartDate, end: props.initialEndDate });
     }
-  }, [])
+  }, [props])
 
   const handleDateChange = (newRange: RangeValue<DateValue> | null) => {
 
@@ -62,8 +62,6 @@ const ItemDetail: React.FC<Props> = (props) => {
       }
 
       setRange(newRange);
-    } else {
-
     }
   }
 
