@@ -257,6 +257,21 @@ If no issues:
 }
 ```
 
+#### `PATCH /bookings/:id`
+
+- **Description**: Update the **status** field of an existing booking.  
+- **Body**  
+
+  ```json
+  { "status": "approved" }
+  ```
+
+- **Params**:
+  - `id` — UUID of the booking to be updated.
+  
+  Accepted values depend on what we decide together. (e.g. `pending`, `approved`, `cancelled`).  
+- **Returns** `APIResponse<Tables<'bookings'>>` with the updated booking row.
+
 ## **Reservations API**
 
 ### `/reservations` API
@@ -284,6 +299,90 @@ If no issues:
     }
 }
 ```
+
+#### `PATCH /reservations/booking/:bookingId/:reservationId`
+
+- **Description**: Update an existing item reservation that belongs to a specific booking.
+- **URL params**  
+  - `bookingId` — UUID of the parent booking  
+  - `reservationId` — UUID of the reservation row to update  
+- **Headers**  
+  - `Authorization: Bearer <JWT>`  
+  - `Content‑Type: application/json`
+- **Body** – any combination of the editable fields  
+
+  ```json5
+  {
+    "item_id":    "07571c0b-ace8-4db4-842c-138a690dc7a3", // optional
+    "start_date": "2025-09-01",                           // optional
+    "end_date":   "2025-09-10",                           // optional
+    "quantity":    2                                      // optional, min 1
+  }
+  ```
+
+- **Validation rules**  
+  - If `start_date` **and** `end_date` are present, the period must not exceed **14 days**.  
+  - `quantity` must be ≥ 1.  
+- **Returns** `APIResponse<Tables<'item_reservations'>>`  
+ 
+  ```json
+  {
+    "message": "Reservation updated successfully",
+    "data": {
+      "id": "...",
+      "booking_id": "...",
+      "item_id": "07571c0b-ace8-4db4-842c-138a690dc7a3",
+      "start_date": "2025-09-01",
+      "end_date":   "2025-09-10",
+      "quantity":    2,
+      "created_at":  "2025-04-22T12:34:56.000Z"
+    }
+  }
+  ```
+
+- **Errors**  
+  - `400 Bad Request` – empty payload, period > 14 days, or RLS/validation failure  
+  - `404 Not Found` – reservation or booking does not exist / not accessible
+
+---
+
+#### `DELETE /reservations/booking/:bookingId`
+
+- **Description**: Delete one or more reservations that belong to the specified booking.
+- **URL params**  
+  - `bookingId` — UUID of the booking  
+- **Headers**  
+  - `Authorization: Bearer <JWT>`  
+  - `Content‑Type: application/json`
+- **Body** – list of reservation IDs to remove  
+  
+  ```json
+  {
+    "reservationIds": [
+      "123e4567-e89b-12d3-a456-426614174001",
+      "123e4567-e89b-12d3-a456-426614174002"
+    ]
+  }
+  ```
+
+- **Returns**
+
+  ```json
+  {
+    "message": "Reservations deleted successfully",
+    "data": {
+      "deleted": 2,
+      "deletedItems": [
+        { "id": "123e4567-e89b-12d3-a456-426614174001", "...": "..." },
+        { "id": "123e4567-e89b-12d3-a456-426614174002", "...": "..." }
+      ]
+    }
+  }
+  ```
+
+- **Errors**  
+  - `400 Bad Request` – body missing `reservationIds`, not all rows deleted  
+  - `404 Not Found` – booking not found or reservations don’t belong to booking
 
 ## Deployment
 
