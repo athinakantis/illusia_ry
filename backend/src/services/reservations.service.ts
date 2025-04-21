@@ -13,11 +13,10 @@ export class ItemReservationService {
    * @throws Error if there is an issue with the Supabase query
    * @description This method retrieves all item reservations from the database.
    */
-  async getAllReservations(/* req: CustomRequest */): Promise<
+  async getAllReservations(req: CustomRequest): Promise<
     ApiResponse<Tables<'item_reservations'>[]>
   > {
-    const supabase = this.supabaseService.getClient();
-    // const supabase = req['supabase'];
+    const supabase = req['supabase'];
 
     const { data, error } = await supabase
       .from('item_reservations')
@@ -42,11 +41,8 @@ export class ItemReservationService {
    * @throws Error if there is an issue with the Supabase query
    * @description This method retrieves all reservations associated with a specific item(item_id).
    */
-  async getReservationsForItem(
-    /* req: CustomRequest, */ itemId: string,
-  ): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
-    const supabase = this.supabaseService.getClient();
-    // const supabase = req['supabase'];
+  async getReservationsForItem(req: CustomRequest, itemId: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
+    const supabase = req['supabase'];
 
     const { data, error } = await supabase
       .from('item_reservations')
@@ -72,11 +68,8 @@ export class ItemReservationService {
    * @throws Error if there is an issue with the Supabase query
    * @description This method retrieves all reservations associated with a specific booking(booking_id).
    */
-  async getReservationsByBooking(
-    /* req: CustomRequest, */ bookingId: string,
-  ): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
-    const supabase = this.supabaseService.getClient();
-    // const supabase = req['supabase'];
+  async getReservationsByBooking(req: CustomRequest, bookingId: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
+    const supabase = req['supabase'];
 
     const { data, error } = await supabase
       .from('item_reservations')
@@ -126,11 +119,8 @@ export class ItemReservationService {
    * This is useful for displaying a user's full reservation history in a grouped format,
    * ideal for dashboards or account overviews.
    */
-  async getReservationsByUser(
-    /* req: CustomRequest, */ userId: string,
-  ): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
-    const supabase = this.supabaseService.getClient();
-    // const supabase = req['supabase'];
+  async getReservationsByUser(req: CustomRequest, userId: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
+    const supabase = req['supabase'];
     const { data, error } = await supabase.rpc(
       'get_user_reservations_grouped',
       {
@@ -154,12 +144,8 @@ export class ItemReservationService {
    * @param to   End date of the range
    * @returns    ApiResponse containing an array of item reservations within the specified date range
    */
-  async getReservationsInDateRange(
-    /* req: CustomRequest, */ from: string,
-    to: string,
-  ): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
-    const supabase = this.supabaseService.getClient();
-    // const supabase = req['supabase'];
+  async getReservationsInDateRange(req: CustomRequest, from: string, to: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
+    const supabase = req['supabase'];
     const { data, error } = await supabase
       .from('item_reservations')
       .select('*')
@@ -184,12 +170,8 @@ export class ItemReservationService {
    * @param to     End date of the range
    * @returns
    */
-  async getReservationsForItemInDateRange(
-    /* req: CustomRequest, */ itemId: string,
-    from: string,
-    to: string,
-  ): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
-    const supabase = this.supabaseService.getClient();
+  async getReservationsForItemInDateRange(req: CustomRequest, itemId: string, from: string, to: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
+    const supabase = req['supabase'];
 
     const { data, error } = await supabase
       .from('item_reservations')
@@ -209,11 +191,8 @@ export class ItemReservationService {
     };
   }
 
-  async getReservationsByStartDate(
-    /* req: CustomRequest, */ startDate: string,
-  ): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
-    const supabase = this.supabaseService.getClient();
-    // const supabase = req['supabase'];
+  async getReservationsByStartDate(req: CustomRequest, startDate: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
+    const supabase = req['supabase'];
 
     const { data, error } = await supabase
       .from('item_reservations')
@@ -230,11 +209,8 @@ export class ItemReservationService {
     };
   }
 
-  async getReservationsByEndDate(
-    /* req: CustomRequest, */ endDate: string,
-  ): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
-    const supabase = this.supabaseService.getClient();
-    // const supabase = req['supabase'];
+  async getReservationsByEndDate(req: CustomRequest, endDate: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
+    const supabase = req['supabase'];
 
     const { data, error } = await supabase
       .from('item_reservations')
@@ -254,14 +230,14 @@ export class ItemReservationService {
   // This method creates a new reservation in the item_reservations table.
   // In english: It adds an item to a booking.
   // It does not check for availability.
-  async createReservation(payload: {
+  async createReservation(req: CustomRequest, payload: {
     booking_id: string;
     item_id: string;
     start_date: string;
     end_date: string;
     quantity: number;
   }): Promise<ApiResponse<Tables<'item_reservations'>>> {
-    const supabase = this.supabaseService.getClient();
+    const supabase = req['supabase'];
  
     const { data, error } = await supabase
       .from('item_reservations')
