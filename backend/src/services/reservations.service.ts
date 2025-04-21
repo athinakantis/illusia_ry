@@ -262,19 +262,72 @@ export class ItemReservationService {
     quantity: number;
   }): Promise<ApiResponse<Tables<'item_reservations'>>> {
     const supabase = this.supabaseService.getClient();
-
+ 
     const { data, error } = await supabase
       .from('item_reservations')
       .insert(payload)
       .select()
       .single();
-
-      if (error) {
-        throw new BadRequestException(error.message); // Controlled response
-      }
-
+ 
+    if (error) {
+      throw new BadRequestException(error.message); // Controlled response
+    }
+ 
     return {
       message: 'Reservation created successfully',
+      data,
+    };
+  }
+
+  /**
+   * Update an existing reservation row that belongs to the given booking.
+   *
+   * The caller may supply any subset of the editable columns.  Columns
+   * not included in `payload` remain unchanged.
+   *
+   * RLS guarantees:
+   *   • Ordinary users can update only reservations tied to their own booking
+   *   • Admin / Head‑Admin can update any reservation
+   */
+  async updateReservation(
+    req: CustomRequest,
+    bookingId: string,
+    reservationId: string,
+    payload: Partial<{
+      item_id: string;
+      start_date: string;
+      end_date: string;
+      quantity: number;
+    }>,
+  ): Promise<ApiResponse<Tables<'item_reservations'>>> {
+    const supabase = req['supabase'];   
+
+    // Reject empty payloads to avoid accidental no‑op updates
+    if (!payload || Object.keys(payload).length === 0) {
+      throw new BadRequestException('Update payload is empty');
+    }
+
+    // Perform the update, ensuring both id and booking_id match
+    const { data, error } = await supabase
+      .from('item_reservations')
+      .update(payload)
+      .eq('id', reservationId)
+      .eq('booking_id', bookingId)
+      .select()
+      .maybeSingle();
+
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
+
+    if (!data) {
+      throw new BadRequestException(
+        'Reservation not found or not permitted to update(Check Booking/Reservation ID)',
+      );
+    }
+
+    return {
+      message: 'Reservation updated successfully',
       data,
     };
   }

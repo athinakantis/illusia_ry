@@ -1,4 +1,5 @@
-import { Controller, Get, Param, Query, Body, Post, Delete, Req } from "@nestjs/common";
+import { Controller, Get, Param, Query, Body, Post, Delete, Req, Patch } from "@nestjs/common";
+import { UpdateReservationDto } from "src/dto/updateReservations.dto";
 import { ItemReservationService } from "src/services/reservations.service";
 import { CustomRequest } from "src/types/request.type";
 
@@ -107,5 +108,20 @@ export class ItemReservationsController {
       );
     }
   
-  
+  // PATCH /reservations/booking/:bookingId/:reservationId
+  // This endpoint is used to update a reservation.
+  @Patch('booking/:bookingId/:reservationId')
+  async updateReservation(
+    @Req() req: CustomRequest,
+    @Param('bookingId') bookingId: string,
+    @Param('reservationId') reservationId: string,
+    @Body() dto: UpdateReservationDto,
+  ) {
+    return this.itemReservationService.updateReservation(
+      req,
+      bookingId,
+      reservationId,
+      dto,
+    );
+  }
 }
