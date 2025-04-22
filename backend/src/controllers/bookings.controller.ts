@@ -19,6 +19,23 @@ export class BookingController {
   ) {
     return this.bookingService.getBookingById( req,  id);
   }
+  // GET /bookings/user/:id → get all bookings for a user
+  @Get('user/:id')
+  async getBookingsByUserId( @Req() req: CustomRequest, @Param('id') user_id: string ) {
+    if (!user_id) {
+      return {
+        message: 'User ID is required',
+        error: 'User ID is required',
+      };
+    }
+    if (user_id.length !== 36) {
+      return {
+        message: 'Invalid User ID',
+        error: 'Invalid User ID',
+      };
+    }
+    return this.bookingService.getUserBookings( req, user_id );
+  }
 
   // POST /bookings → create a new booking with reservations
   @Post()

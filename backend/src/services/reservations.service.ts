@@ -28,7 +28,7 @@ export class ItemReservationService {
 
     return {
       message: 'All reservations retrieved successfully',
-      data: data || [],
+      data: data ?? [],
     };
   }
 
@@ -55,7 +55,7 @@ export class ItemReservationService {
 
     return {
       message: `Reservations for item ${itemId} retrieved successfully`,
-      data: data || [],
+      data: data ?? [],
     };
   }
 
@@ -81,58 +81,7 @@ export class ItemReservationService {
 
     return {
       message: `Reservations for booking ${bookingId} retrieved successfully`,
-      data: data || [],
-    };
-  }
-
-  // Search by user_id
-
-  /**
-   * @param userId UUID of the user whose reservations you want to retrieve
-   * @returns ApiResponse containing an array of bookings, each with its associated item reservations
-   * @throws Error if there is an issue with the Supabase RPC call
-   * @description
-   * This method retrieves all bookings for a given user, with each booking grouped
-   * together with its corresponding item reservations. It calls the
-   * Supabase RPC function `get_user_reservations_grouped`, which returns results in the following structure:
-   *
-   * [
-   *   {
-   *     booking_id: UUID,
-   *     user_id: UUID,
-   *     reservations: [
-   *       {
-   *         id: UUID,
-   *         item_id: UUID,
-   *         start_date: Date,
-   *         end_date: Date,
-   *         quantity: number,
-   *         created_at: timestamp
-   *       },
-   *       ...
-   *     ]
-   *   },
-   *   ...
-   * ]
-   *
-   * This is useful for displaying a user's full reservation history in a grouped format,
-   * ideal for dashboards or account overviews.
-   */
-  async getReservationsByUser(req: CustomRequest, userId: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
-    const supabase = req['supabase'];
-    const { data, error } = await supabase.rpc(
-      'get_user_reservations_grouped',
-      {
-        user_id: userId,
-      },
-    );
-
-    if (error) {
-      throw new BadRequestException(error.message);
-    }
-    return {
-      message: `Reservations for user ${userId} retrieved successfully`,
-      data: data || [],
+      data: data ?? [],
     };
   }
 
@@ -158,7 +107,7 @@ export class ItemReservationService {
 
     return {
       message: `Reservations between ${from} and ${to} retrieved successfully`,
-      data: data || [],
+      data: data ?? [],
     };
   }
 
@@ -186,7 +135,7 @@ export class ItemReservationService {
 
     return {
       message: `Reservations for item ${itemId} between ${from} and ${to} retrieved successfully`,
-      data: data || [],
+      data: data ?? [],
     };
   }
 
@@ -204,7 +153,7 @@ export class ItemReservationService {
 
     return {
       message: `Reservations starting on ${startDate} retrieved successfully`,
-      data: data || [],
+      data: data ?? [],
     };
   }
 
@@ -222,7 +171,7 @@ export class ItemReservationService {
 
     return {
       message: `Reservations ending on ${endDate} retrieved successfully`,
-      data: data || [],
+      data: data ?? [],
     };
   }
 

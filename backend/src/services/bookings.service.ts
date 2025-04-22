@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Tables } from 'src/types/supabase';
-import { ApiResponse } from 'src/types/response';
+import { ApiResponse, BookingWithRes } from 'src/types/response';
 import { CustomRequest } from 'src/types/request.type';
 
 @Injectable()
@@ -268,7 +268,31 @@ export class BookingService {
  
     return {
       message: 'Booking deleted successfully',
-      data: data || [],
+      data: data ?? [],
     };
   }  
+
+
+  /**
+   * Retrieve all bookings for a given user, including their reservations.
+   * Can be found here https://supabase.com/dashboard/project/crralkzqnflfzntlhccj/database/functions
+   */
+  async getUserBookings(
+    req: CustomRequest,
+    userId: string,
+  ): Promise<ApiResponse<BookingWithRes[]>> {
+    const supabase = req['supabase'];
+    const { data, error } = await supabase
+      .rpc('get_user_bookings', { p_user_id: userId });
+
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
+
+    return {
+      message: `Bookings for user ${userId} retrieved successfully`,
+      data: data ?? [],
+    };
+  }
+  
 }

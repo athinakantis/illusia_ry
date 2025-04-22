@@ -25,12 +25,6 @@ export class ItemReservationsController {
     return this.itemReservationService.getReservationsByBooking(req, bookingId);
   }
 
-  // GET /reservations/user/:userId
-  @Get('user/:userId')
-  async getByUser(@Req() req: CustomRequest, @Param('userId') userId: string) {
-    return this.itemReservationService.getReservationsByUser(req, userId);
-  }
-
   // GET /reservations/date-range?from=2025-04-14&to=2025-04-14
   // Example : http://localhost:5001/reservations/date-range?from=2025-04-16&to=2025-04-16
   @Get('date-range')
@@ -85,14 +79,12 @@ export class ItemReservationsController {
     /**
    * DELETE /reservations/booking/:bookingId
    * Body: { reservationIds: string[] }
-   * This endpoint is used to delete reservations from a booking.
    * It takes a bookingId as a parameter and an array of reservationIds in the body.
    * It deletes the reservations from the item_reservations table.
    * @param req - The request object
    * @param bookingId - The ID of the booking
    * @param reservationIds - The IDs of the reservations to be deleted: { reservationIds: string[] }
    * @returns - The result of the deletion
-   * @throws BadRequestException - If the deletion fails
    * @example
    * DELETE /reservations/booking/12345
    * {
