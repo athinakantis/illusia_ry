@@ -66,11 +66,11 @@ export class BookingService {
       .insert({ user_id: userId })
       .select()
       .single();
-  
+
     if (bookingError) {
       throw new BadRequestException(bookingError.message);
     }
-  
+
     const booking_id = bookingData.booking_id;
   
     const reservationRows = payload.items.map((item) => ({
@@ -80,15 +80,15 @@ export class BookingService {
       end_date: item.end_date,
       quantity: item.quantity,
     }));
-  
+
     const { error: reservationError } = await supabase
       .from('item_reservations')
       .insert(reservationRows);
-  
+
     if (reservationError) {
       throw new BadRequestException(reservationError.message);
     }
-  
+
     return {
       message: 'Booking created successfully',
       data: {
@@ -113,7 +113,7 @@ export class BookingService {
       _user_id: userId,
       _items: payload.items,
     });
-  
+
     if (error) {
       throw new BadRequestException(error.message); // from @nestjs/common
     }

@@ -42,6 +42,7 @@ const SingleItem = () => {
     (cat) => cat.category_id === item?.category_id,
   );
 
+
   useEffect(() => {
     if (!item) {
       dispatch(fetchItemById(itemId ?? ''));

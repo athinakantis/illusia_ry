@@ -5,7 +5,7 @@ import { CustomRequest } from 'src/types/request.type';
 
 @Controller('bookings')
 export class BookingController {
-  constructor(private readonly bookingService: BookingService) {}
+  constructor(private readonly bookingService: BookingService) { }
   // GET /bookings → all bookings
   @Get()
   async getAllBookings( @Req() req: CustomRequest ) {

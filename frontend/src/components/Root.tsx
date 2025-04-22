@@ -4,6 +4,7 @@ import Footer from './Footer';
 import { Snackbar } from './Snackbar';
 
 function Root() {
+
   return (
     <div
       style={{

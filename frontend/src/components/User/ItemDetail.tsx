@@ -15,14 +15,21 @@ import { Link, useParams } from 'react-router-dom';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 import { DateValue, getLocalTimeZone, today } from '@internationalized/date';
 import type { RangeValue } from '@react-types/shared';
+import { checkAvailabilityForItemOnDates } from '../../selectors/availabilitySelector';
+import { addItemToCart } from '../../slices/cartSlice';
+import { showNotification } from '../../slices/notificationSlice';
+import { store } from '../../store/store';
 
-const ItemDetail: React.FC = () => {
+type Props = {
+  initialStartDate: DateValue,
+  initialEndDate: DateValue
+} | null
+
+const ItemDetail: React.FC<Props> = (props) => {
+
   const [quantity, setQuantity] = useState(1);
   const now = today(getLocalTimeZone());
-  const [range, setRange] = useState<RangeValue<DateValue> | null>({
-    start: now,
-    end: now.add({ months: 2 }),
-  });
+  const [range, setRange] = useState<RangeValue<DateValue> | null>(null);
   const dispatch = useAppDispatch();
   const { itemId } = useParams<{ itemId: string }>();
   const items = useAppSelector((state) => state.items.items);
@@ -35,6 +42,57 @@ const ItemDetail: React.FC = () => {
     }
     if (categories.length < 1) dispatch(fetchAllCategories())
   }, [dispatch, items, categories]);
+
+  useEffect(() => {
+    if (props) {
+      setRange({ start: props.initialStartDate, end: props.initialEndDate });
+    }
+  }, [props])
+
+  const handleDateChange = (newRange: RangeValue<DateValue> | null) => {
+
+    if (newRange) {
+
+      const startDate = new Date(newRange.start.toString());
+      const endDate = new Date(newRange.end.toString());
+      const diffInMs = endDate.getTime() - startDate.getTime();
+      const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+      if (diffInDays > 14) {
+        alert('You can only book a maximum of 14 days.');
+        return;
+      }
+
+      setRange(newRange);
+    }
+  }
+
+  const handleCartAddition = () => {
+
+    if (range?.start === undefined) {
+      dispatch(showNotification({
+        message: "Select dates before adding to cart",
+        severity: 'warning',
+      }));
+      return;
+    }
+
+    if (itemId && range) {
+      const checkAdditionToCart = checkAvailabilityForItemOnDates(itemId, quantity, range.start.toString(), range.end.toString())(store.getState());
+      if (checkAdditionToCart.severity === 'success') {
+        dispatch(addItemToCart({ item_id: itemId, quantityToAdd: quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
+        dispatch(showNotification({
+          message: 'Item added to cart',
+          severity: 'success',
+        }));
+      } else {
+        dispatch(showNotification({
+          message: checkAdditionToCart.message,
+          severity: checkAdditionToCart.severity,
+        }));
+      }
+    }
+  }
 
   const itemCategory = categories.find(
     (cat) => cat.category_id === item?.category_id,
@@ -102,22 +160,7 @@ const ItemDetail: React.FC = () => {
                 aria-label="Select dates"
                 value={range}
                 minValue={now}
-                onChange={(value) => {
-                  if (!value) {
-                    setRange(null); // Or handle the null case appropriately
-                    return;
-                  }
-                  const startDate = new Date(value.start.toString());
-                  const endDate = new Date(value.end.toString());
-                  const diffInMs = endDate.getTime() - startDate.getTime();
-                  const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-
-                  if (diffInDays > 14) {
-                    alert('You can only book a maximum of 14 days.');
-                    return;
-                  }
-                  setRange(value);
-                }}
+                onChange={handleDateChange}
                 isRequired
                 maxVisibleMonths={1}
               />
@@ -156,10 +199,12 @@ const ItemDetail: React.FC = () => {
                   <AddIcon fontSize="small" />
                 </IconButton>
               </Box>
-              <Button variant="rounded" sx={{
-                height: '100%', fontSize: 'clamp(15px, 1.3vw, 20px)',
-                width: '190px', textTransform: 'capitalize'
-              }}>
+              <Button variant="rounded"
+                onClick={handleCartAddition}
+                sx={{
+                  height: '100%', fontSize: 'clamp(15px, 1.3vw, 20px)',
+                  width: '190px', textTransform: 'capitalize'
+                }}>
                 Add to Cart
               </Button>
             </Stack>

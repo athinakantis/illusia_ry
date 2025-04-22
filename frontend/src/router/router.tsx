@@ -7,6 +7,7 @@ import Home from '../pages/Home';
 import SingleItem from '../components/Admin/ItemView';
 import AdminAddProduct from '../components/Admin/AdminAddProduct';
 import Cart from '../pages/Cart';
+import Contacts from '../pages/Contacts';
 import ItemDetail from '../components/User/ItemDetail';
 
 export const router = createBrowserRouter([
@@ -47,6 +48,10 @@ export const router = createBrowserRouter([
       {
         path: '/items/new',
         element: <AdminAddProduct />
+      },
+      {
+        path: '/contacts',
+        element: <Contacts />
       },
 
     ]
