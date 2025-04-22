@@ -36,10 +36,11 @@ export const fetchItemById = createAsyncThunk(
     return response;
   }
 );
+
 // Async thunk for creating a new item
 export const createItem = createAsyncThunk(
   'items/createItem',
-  async (newItemData: CreateItemPayload) => { 
+  async (newItemData: CreateItemPayload) => {
     const response = await itemsApi.createItem(newItemData);
     return response;
   }
@@ -71,7 +72,7 @@ export const itemsSlice = createSlice({
     })
     builder.addCase(fetchAllItems.fulfilled, (state, action) => {
       state.loading = false
-      state.items = action.payload.data
+      state.items = action.payload.data;
     })
     builder.addCase(fetchAllItems.rejected, (state) => {
       state.loading = false
@@ -100,7 +101,7 @@ export const itemsSlice = createSlice({
         state.items.push(fetchedItem);
       }
     })
-    .addCase(createItem.fulfilled, (state, action) => {
+    builder.addCase(createItem.fulfilled, (state, action) => {
 
       state.items.push(action.payload.data);
     })
@@ -124,10 +125,13 @@ export const itemsSlice = createSlice({
 
 export const selectAllCategories = (state: RootState) => state.items.categories
 
-export const selectAllItems = (state: RootState) =>
-  state.items.items;
 
-export const selectItemById = (id: string) => (state: RootState) =>
-  state.items.items.find((item) => item.item_id === id);
+export const selectAllItems = (state: RootState) => {
+  return state.items.items;
+}
+
+export const selectItemById = (id: string) => (state: RootState) => {
+  return state.items.items.find((item) => item.item_id === id);
+}
 
 export default itemsSlice.reducer;

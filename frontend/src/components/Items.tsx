@@ -15,12 +15,15 @@ import {
   Chip,
 } from '@mui/material';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import { Item } from '../types/types';
 import { addItemToCart } from '../slices/cartSlice'
 import Pagination from './Pagination';
 import { Link } from 'react-router-dom';
 import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import { store } from '../store/store';
+import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
+import { fetchAllReservations, selectAllReservations } from '../slices/reservationsSlice';
+
 
 function Items() {
   const items = useAppSelector(selectAllItems);
@@ -31,6 +34,14 @@ function Items() {
   const [searchParams, _] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
 
+  const reservations = useAppSelector(selectAllReservations);
+  useEffect(() => {
+    if (reservations.length < 1) {
+      dispatch(fetchAllReservations())
+    }
+  }, [dispatch, reservations]);
+
+
   useEffect(() => {
     if (items.length < 1) {
       dispatch(fetchAllItems())
@@ -40,14 +51,29 @@ function Items() {
     }
   }, [dispatch, items, categories]);
 
-  const addToCart = (id: string, quantityOfItem: number = 1) => {
-    const itemToAdd: Item | undefined = items.find((item: Item) => item.item_id === id);
-    // some checks of qty and if item exists should be implemented
-    dispatch(addItemToCart({ itemToAdd, quantityOfItem }));
-    dispatch(showNotification({
-      message: 'Item added to cart',
-      severity: 'success',
-    }));
+  const addToCart = (item_id: string, quantityToAdd: number = 1) => {
+
+    // need to fetch the bookings and reservations first in order for this to work properly
+
+    const start_date = "2025-04-14";
+    const end_date = "2025-04-15";
+
+    //if (checkAvailabilityForItemOnDates(item_id, quantityToAdd, start_date, end_date)(store.getState())) {
+
+    const checkAdditionToCart = checkAvailabilityForItemOnDates(item_id, quantityToAdd, start_date, end_date)(store.getState());
+    if (checkAdditionToCart.severity === 'success') {
+      dispatch(addItemToCart({ item_id, quantityToAdd, start_date, end_date }));
+      dispatch(showNotification({
+        message: 'Item added to cart',
+        severity: 'success',
+      }));
+    } else {
+      dispatch(showNotification({
+        message: checkAdditionToCart.message,
+        severity: checkAdditionToCart.severity,
+      }));
+
+    }
   }
 
   const toggleCategory = (category: string) => {

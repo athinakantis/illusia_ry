@@ -26,14 +26,7 @@ export interface ApiResponse<T> {
   message: string;
 }
 
-export interface ItemAndQuantity {
-  itemInCart: Item,
-  quantityOfItem: number,
-}
 
-export interface CartState {
-  cart: ItemAndQuantity[];
-}
 
 export interface FormData {
   item_name: string;
@@ -43,3 +36,46 @@ export interface FormData {
   quantity: number;
   // Add other relevant fields from your 'items' table if needed
 }
+
+export interface Booking {
+  booking_id: string,
+  user_id: string,
+  status: string,
+  created_at: string,
+}
+
+export interface BookingsState {
+  bookings: Booking[],
+  error: null | string,
+  loading: boolean
+}
+
+export interface LocalReservation {
+  item_id: string,
+  start_date: string,
+  end_date: string,
+  quantity: number,
+}
+
+export interface Reservation extends LocalReservation {
+  id: string,
+  booking_id: string,
+  created_at: string,
+}
+
+export interface ReservationsState {
+  // reservations: Reservation[],
+  reservations: LocalReservation[],
+  error: null | string,
+  loading: boolean
+}
+
+
+export interface CartState {
+  cart: LocalReservation[];
+}
+
+export type Result =
+  | { severity: 'success'; data: boolean }
+  | { severity: 'error'; message: string }
+  | { severity: 'warning'; message: string };

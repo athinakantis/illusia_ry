@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import { SentMessageInfo, Transporter } from 'nodemailer';
 
 @Injectable()
 export class MailerService {
-    private transporter;
+    private transporter: Transporter<SentMessageInfo>;;
 
     constructor() {
         // Set up the transporter (configure email service and credentials)
@@ -18,7 +19,7 @@ export class MailerService {
     }
 
     // Send email method
-    async sendEmail(to: string, subject: string, text: string): Promise<any> {
+    async sendEmail(to: string, subject: string, text: string): Promise<SentMessageInfo> {
         const mailOptions = {
             from: process.env.EMAIL, // Sender address
             to, // Receiver address
