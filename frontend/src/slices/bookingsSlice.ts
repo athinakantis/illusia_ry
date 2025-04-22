@@ -27,7 +27,7 @@ export const fetchUserBookings = createAsyncThunk<
   async (userId, { rejectWithValue }) => {
     try {
       const res = await getUserBookings(userId);    // AxiosResponse<ApiEnvelope<UserBooking[]>>
-      return res.data.data;                         // unwrap to plain array
+      return res.data;                         // unwrap to plain array
     } catch (err) {
       return rejectWithValue(
         err instanceof Error ? err.message : 'Failed to fetch bookings',

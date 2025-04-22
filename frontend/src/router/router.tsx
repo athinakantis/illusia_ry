@@ -9,6 +9,7 @@ import AdminAddProduct from '../components/Admin/AdminAddProduct';
 import Cart from '../pages/Cart';
 import ItemDetail from '../components/User/ItemDetail';
 import Test from '../pages/Test';
+import Bookings from '../components/User/Bookings';
 
 export const router = createBrowserRouter([
   {
@@ -51,7 +52,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/test",
-        element: <Test />
+        element: <Bookings />
       }
 
     ]
