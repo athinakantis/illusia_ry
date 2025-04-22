@@ -47,6 +47,6 @@ import { ItemReservationService } from './services/reservations.service';
 
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(ItemController, ViewsController);
+    consumer.apply(AuthMiddleware).forRoutes(ItemController, ViewsController, MailerController, BookingController, ItemReservationsController);
   }
 }
