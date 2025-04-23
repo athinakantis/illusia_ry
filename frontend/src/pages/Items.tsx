@@ -56,13 +56,13 @@ function Items() {
 
   // Load locally stored cart
   useEffect(() => {
-    const savedCart: LocallyStoredItem[] = JSON.parse(localStorage.getItem('savedCart') ?? '[]')
+    const savedCart = JSON.parse(localStorage.getItem('savedCart') ?? '[]')
     // If cart has less items than the locally stored array
     // load from storage
-    if (cart.length < savedCart.length) {
+    if (cart.cart.length < savedCart.cart.length) {
       dispatch(loadCartFromStorage(savedCart))
     }
-  }, [cart.length, dispatch])
+  }, [cart, dispatch])
 
 
   // If user is Admin or Head Admin, return AdminItems / UserItems

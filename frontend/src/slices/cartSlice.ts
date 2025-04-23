@@ -28,7 +28,7 @@ export const cartSlice = createSlice({
                 });
             }
             state.selectedDateRange = { start_date, end_date };
-            localStorage.setItem('savedCart', JSON.stringify(state.cart));
+            localStorage.setItem('savedCart', JSON.stringify(state));
         },
         removeItemFromCart: (state, action) => {
             // Destructure item to remove
@@ -47,7 +47,7 @@ export const cartSlice = createSlice({
                 state.selectedDateRange = { start_date: null, end_date: null };
             }
             // if the cart is fully empty, remove the selected date range
-            localStorage.setItem('savedCart', JSON.stringify(state.cart));
+            localStorage.setItem('savedCart', JSON.stringify(state));
         },
         emptyCart: (state) => {
             state.cart = [];
@@ -57,13 +57,14 @@ export const cartSlice = createSlice({
 
         },
         loadCartFromStorage: (state, action) => {
-            state.cart = action.payload;
+            state.cart = action.payload.cart;
+            state.selectedDateRange = action.payload.selectedDateRange;
         },
     },
 });
 
 export const selectCart = (state: RootState) => {
-    return state.cart.cart;
+    return state.cart;
 };
 
 export const {
