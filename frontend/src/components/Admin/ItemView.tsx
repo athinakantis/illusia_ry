@@ -59,7 +59,7 @@ const SingleItem = () => {
   useEffect(() => {
     if (role === undefined) return;
     if (role === null) navigate('/items');
-  }, [role]);
+  }, [role,navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!formData) return;
