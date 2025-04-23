@@ -6,6 +6,7 @@ import {
   fetchAllItems,
   selectAllCategories,
   selectAllItems,
+  selectItemById,
 } from '../slices/itemsSlice';
 import {
   Button,
@@ -30,7 +31,7 @@ import {
 } from 'react-router-dom';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { store } from '../store/store';
-import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
+import { checkAvailabilityForAllItemsOnDates, checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
 import {
   fetchAllReservations,
   selectAllReservations,
@@ -56,8 +57,6 @@ function Items() {
     if (selectedDateRange.start_date && selectedDateRange.end_date) {
       setRange({ start: parseDate(selectedDateRange.start_date), end: parseDate(selectedDateRange.end_date) });
     }
-    console.log(selectedDateRange);
-
   }, [selectedDateRange]);
 
   useEffect(() => {
@@ -96,7 +95,7 @@ function Items() {
     // checks if item can be added to cart
 
     if (checkAdditionToCart.severity === 'success') {
-      dispatch(addItemToCart({ item_id, quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
+      dispatch(addItemToCart({ item: selectItemById(item_id)(store.getState()), quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
       dispatch(
         showNotification({
           message: 'Item added to cart',
@@ -175,7 +174,7 @@ function Items() {
         alert('You can only book a maximum of 14 days.');
         return;
       }
-
+      checkAvailabilityForAllItemsOnDates(newRange.start.toString(), newRange.end.toString())(store.getState());
       setRange(newRange);
     }
   }

@@ -2,11 +2,11 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store/store";
 import { LocalReservation, ReservationsState } from "../types/types";
 import { reservationsApi } from "../api/reservations";
-import { getMaxBookedQtyForItem, getBookedQtyByDateAndItemForReservationsInRange } from "../utility/overlappingDates";
+import { getMaxBookedQtyForItem, getBookedQtyByDateAndItemForReservationsInRange, getMaxBookedQtyForManyItems } from "../utility/overlappingDates";
 
 
 const initialState: ReservationsState = {
-    reservations: [],
+    reservations: [], // probably should store only future or current reservations here
     loading: false,
     error: null
     // reservatonsMap: 
@@ -57,6 +57,16 @@ export const selectQtyForItemInReservationsByIdInDateRange = (id: string, start_
 
     // should we just build a map of all the reservations straight from the beginning? Shhould make the things much simpler
     return maxAvailableQtyInRange;
+}
+
+export const selectQtyForAllItemsInReservationsInDateRange = (start_date: string, end_date: string) => (state: RootState) => {
+
+    const itemsBookedQty = getBookedQtyByDateAndItemForReservationsInRange(new Date(start_date), new Date(end_date), state.reservations.reservations);
+
+    console.log(itemsBookedQty);
+    console.log(getMaxBookedQtyForManyItems(itemsBookedQty));
+
+    return itemsBookedQty;
 }
 
 export default reservationsSlice.reducer;

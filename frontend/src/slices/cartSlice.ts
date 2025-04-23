@@ -13,20 +13,18 @@ export const cartSlice = createSlice({
     reducers: {
         addItemToCart: (state, action) => {
             // Destructure new item
-            const { item_id, quantity, start_date, end_date } = action.payload;
+            const { item, quantity, start_date, end_date } = action.payload;
             console.log('Quantity: ', quantity);
             const itemAlreadyInCart = state.cart.find(
-                (item) => item.item_id == item_id,
+                (itemAndQuantity) => itemAndQuantity.item.item_id == item.item_id,
             );
 
             if (itemAlreadyInCart) {
                 itemAlreadyInCart.quantity += +quantity;
             } else {
                 state.cart.push({
-                    item_id: item_id,
+                    item: item,
                     quantity: quantity,
-                    start_date: start_date,
-                    end_date: end_date,
                 });
             }
             state.selectedDateRange = { start_date, end_date };
@@ -36,13 +34,13 @@ export const cartSlice = createSlice({
             // Destructure item to remove
             const { item_id, quantityToRemove } = action.payload;
             const itemAlreadyInCart = state.cart.find(
-                (item) => item.item_id == item_id,
+                (item) => item.item.item_id == item_id,
             );
             if (itemAlreadyInCart) {
                 if (itemAlreadyInCart.quantity > +quantityToRemove) {
                     itemAlreadyInCart.quantity -= +quantityToRemove;
                 } else {
-                    state.cart = state.cart.filter((item) => item.item_id !== item_id);
+                    state.cart = state.cart.filter((item) => item.item.item_id !== item_id);
                 }
             }
             if (state.cart.length < 1) {
@@ -76,24 +74,24 @@ export const {
 } = cartSlice.actions;
 
 export const selectItemInCartById = (id: string) => (state: RootState) => {
-    return state.cart.cart.find((item) => item.item_id === id);
+    return state.cart.cart.find((item) => item.item.item_id === id);
 };
 
 export const selectQtyForItemInCartByIdInDateRange =
     (id: string, start_date: string, end_date: string) => (state: RootState) => {
-        const itemInCartReservations: LocalReservation[] = state.cart.cart.filter(
-            (item) => item.item_id === id,
+        const itemInCartReservations = state.cart.cart.filter(
+            (item) => item.item.item_id === id,
         );
 
         if (itemInCartReservations.length > 0) {
             // if any of the instances of the items found in cart
             if (
-                itemInCartReservations[0].start_date === start_date ||
-                itemInCartReservations[0].end_date === end_date
+                state.cart.selectedDateRange.start_date === start_date ||
+                state.cart.selectedDateRange.end_date === end_date
             ) {
                 return itemInCartReservations[0].quantity; // item added for already existing time range
             } else {
-                return -1; // item added fora new time range
+                return -1; // item added for a new time range
             }
         } else {
             return 0; // new item added to cart
@@ -103,7 +101,6 @@ export const selectQtyForItemInCartByIdInDateRange =
 export const setDateRange = (newStartDate: string | null, newEndDate: string | null) => (state: RootState) => {
     state.cart.selectedDateRange.start_date = newStartDate;
     state.cart.selectedDateRange.end_date = newEndDate;
-    console.log("done");
 
 }
 

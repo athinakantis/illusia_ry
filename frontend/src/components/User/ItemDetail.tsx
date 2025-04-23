@@ -10,7 +10,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchAllCategories, fetchAllItems, selectAllCategories } from '../../slices/itemsSlice';
+import { fetchAllCategories, fetchAllItems, selectAllCategories, selectItemById } from '../../slices/itemsSlice';
 import { Link, useParams } from 'react-router-dom';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
@@ -45,8 +45,6 @@ const ItemDetail: React.FC = () => {
     if (selectedDateRange.start_date && selectedDateRange.end_date) {
       setRange({ start: parseDate(selectedDateRange.start_date), end: parseDate(selectedDateRange.end_date) });
     }
-    console.log(selectedDateRange);
-
   }, [selectedDateRange]);
 
 
@@ -63,7 +61,6 @@ const ItemDetail: React.FC = () => {
         alert('You can only book a maximum of 14 days.');
         return;
       }
-
       setRange(newRange);
     }
   }
@@ -82,7 +79,7 @@ const ItemDetail: React.FC = () => {
       const checkAdditionToCart = checkAvailabilityForItemOnDates(itemId, quantity, range.start.toString(), range.end.toString())(store.getState());
 
       if (checkAdditionToCart.severity === 'success') {
-        dispatch(addItemToCart({ item_id: itemId, quantity: quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
+        dispatch(addItemToCart({ item: selectItemById(itemId)(store.getState()), quantity: quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
         dispatch(showNotification({
           message: 'Item added to cart',
           severity: 'success',

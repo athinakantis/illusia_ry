@@ -1,8 +1,7 @@
 import { Box, Button } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { emptyCart, loadCartFromStorage, removeItemFromCart, selectCart } from '../slices/cartSlice';
+import { emptyCart, loadCartFromStorage, removeItemFromCart, selectCart, selectDateRange } from '../slices/cartSlice';
 import { DataGridGeneric } from '../components/CustomComponents/DataGridGeneric';
-import { selectAllItems } from '../slices/itemsSlice';
 import ClearIcon from '@mui/icons-material/Clear';
 import { addBooking } from '../slices/bookingsSlice';
 import { useAuth } from '../hooks/useAuth';
@@ -13,8 +12,9 @@ import { useEffect } from 'react';
 function Cart() {
     const dispatch = useAppDispatch();
     const cart = useAppSelector(selectCart);
-    const items = useAppSelector(selectAllItems);
     const { user } = useAuth();
+    const selectedDateRange = useAppSelector(selectDateRange);
+
 
     // Load locally stored cart
     useEffect(() => {
@@ -26,17 +26,13 @@ function Cart() {
         }
     }, [])
 
-    const cartInfo = cart.map((itemToShow) => ({
-        ...items.find((item) => item.item_id === itemToShow.item_id),
-        ...itemToShow,
+    const cartInfo = cart.map(({ item, quantity }) => ({
+        ...item, quantity
     }));
-
 
     const usedColumns = [
         { columnName: 'Item ID', columnField: 'item_id' },
         { columnName: 'Item Name', columnField: 'item_name' },
-        { columnName: 'Start Date', columnField: 'start_date' },
-        { columnName: 'End Date', columnField: 'end_date' },
         { columnName: 'Pcs ordered', columnField: 'quantity' },
     ];
 

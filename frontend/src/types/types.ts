@@ -70,9 +70,21 @@ export interface ReservationsState {
   loading: boolean
 }
 
-
+/*
 export interface CartState {
   cart: LocalReservation[];
+  selectedDateRange: { start_date: string | null, end_date: string | null }
+  // stores the items added to the cart and the date range, on which all the items will be booked
+}
+*/
+
+export interface ItemWithQuantity {
+  item: Item,
+  quantity: number,
+}
+
+export interface CartState {
+  cart: ItemWithQuantity[];
   selectedDateRange: { start_date: string | null, end_date: string | null }
   // stores the items added to the cart and the date range, on which all the items will be booked
 }
