@@ -4,7 +4,6 @@ import { RootState } from '../store/store';
 
 const initialState: CartState = {
   cart: [],
-  loading: false,
 };
 
 export const cartSlice = createSlice({
