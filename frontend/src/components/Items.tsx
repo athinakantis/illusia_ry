@@ -20,7 +20,7 @@ import {
   Chip,
 } from '@mui/material';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import { addItemToCart } from '../slices/cartSlice';
+import { addItemToCart, selectDateRange } from '../slices/cartSlice';
 import Pagination from './Pagination';
 import { Link } from 'react-router-dom';
 import {
@@ -35,6 +35,9 @@ import {
   fetchAllReservations,
   selectAllReservations,
 } from '../slices/reservationsSlice';
+import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
+import { RangeValue } from '@react-types/shared';
+import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
 
 function Items() {
   const items = useAppSelector(selectAllItems);
@@ -45,6 +48,17 @@ function Items() {
   const [searchParams, _] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const reservations = useAppSelector(selectAllReservations);
+  const now = today(getLocalTimeZone());
+  const [range, setRange] = useState<RangeValue<DateValue> | null>(null);
+  const selectedDateRange = useAppSelector(selectDateRange);
+
+  useEffect(() => {
+    if (selectedDateRange.start_date && selectedDateRange.end_date) {
+      setRange({ start: parseDate(selectedDateRange.start_date), end: parseDate(selectedDateRange.end_date) });
+    }
+    console.log(selectedDateRange);
+
+  }, [selectedDateRange]);
 
   useEffect(() => {
     if (reservations.length < 1) {
@@ -64,25 +78,32 @@ function Items() {
   const addToCart = (item_id: string, quantity: number = 1) => {
     // need to fetch the bookings and reservations first in order for this to work properly
 
-    const start_date = '2025-04-14';
-    const end_date = '2025-04-15';
-
-    //if (checkAvailabilityForItemOnDates(item_id, quantityToAdd, start_date, end_date)(store.getState())) {
+    if (range?.start === undefined) {
+      dispatch(showNotification({
+        message: "Select dates before adding to cart",
+        severity: 'warning',
+      }));
+      return;
+    }
+    // checks if there is any range selected
 
     const checkAdditionToCart = checkAvailabilityForItemOnDates(
       item_id,
       quantity,
-      start_date,
-      end_date,
+      range.start.toString(),
+      range.end.toString(),
     )(store.getState());
+    // checks if item can be added to cart
+
     if (checkAdditionToCart.severity === 'success') {
-      dispatch(addItemToCart({ item_id, quantity, start_date, end_date }));
+      dispatch(addItemToCart({ item_id, quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
       dispatch(
         showNotification({
           message: 'Item added to cart',
           severity: 'success',
         }),
       );
+      // adds the item in case it is available
     } else {
       dispatch(
         showNotification({
@@ -141,6 +162,24 @@ function Items() {
     return matchesCategory && matchesSearch;
   });
 
+  const handleDateChange = (newRange: RangeValue<DateValue> | null) => {
+
+    if (newRange) {
+
+      const startDate = new Date(newRange.start.toString());
+      const endDate = new Date(newRange.end.toString());
+      const diffInMs = endDate.getTime() - startDate.getTime();
+      const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+      if (diffInDays > 14) {
+        alert('You can only book a maximum of 14 days.');
+        return;
+      }
+
+      setRange(newRange);
+    }
+  }
+
   return (
     <Box
       sx={{
@@ -197,6 +236,25 @@ function Items() {
             />
           ))}
         </Box>
+        <Provider
+          theme={defaultTheme}
+          colorScheme="light"
+          maxWidth={250}
+        >
+          <DateRangePicker
+            labelPosition="side"
+            labelAlign="end"
+            width={250}
+
+            aria-label="Select dates"
+            value={range}
+            minValue={now}
+            onChange={handleDateChange}
+            isRequired
+            maxVisibleMonths={1}
+            isDisabled={(selectedDateRange.start_date != null)}
+          />
+        </Provider>
       </Box>
 
       <Box
