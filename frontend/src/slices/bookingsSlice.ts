@@ -1,9 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Booking, BookingWithRes, BookingsState } from "../types/types";
+import { Booking, BookingsState, } from "../types/types";
 import { RootState } from "../store/store";
 import { bookingsApi } from "../api/bookings";
 import axios from "axios";
 
+
+
+  
 const initialState: BookingsState = {
     bookings: [],
     loading: false,
@@ -17,13 +20,44 @@ export const fetchAllBookings = createAsyncThunk(
         return response.data;
     }
 );
+
+/**
+ * Delete a booking by ID
+ * @param id - The ID of the booking to delete
+ * @returns A promise that resolves to the backend response
+ */
+export const deleteBooking = createAsyncThunk<
+  Booking,
+  string,
+  { rejectValue: string }
+>(
+  'bookings/deleteBooking',
+  async (id, { rejectWithValue }) => {
+    try {
+      const { data, error, message } = await bookingsApi.removeBooking(id);
+      if (error) {
+        return rejectWithValue(message);
+      }
+
+      return data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError<{ message: string }>(error)) {
+        return rejectWithValue(
+          error.response?.data?.message ?? 'Network error'
+        );
+      }
+      return rejectWithValue('Unknown error');
+    }
+    
+  }
+);
 /**
  * Fetch all bookings for a specific user (including reservations)
  * @param userId - The ID of the user whose bookings to fetch
  * @returns A promise that resolves to an array of bookings with reservations
  */
 export const fetchUserBookings = createAsyncThunk<
-  BookingWithRes[],
+    Booking[],
   string,
   { rejectValue: string }
 >(
@@ -34,7 +68,6 @@ export const fetchUserBookings = createAsyncThunk<
         if (error) return rejectWithValue(message);
         return data;
       } catch (error: unknown) {
-        // now error is unknown, so we narrow it:
         if (axios.isAxiosError<{ message: string }>(error)) {
           return rejectWithValue(
             error.response?.data?.message ?? 'Network error'
@@ -60,11 +93,14 @@ export const addBooking = createAsyncThunk<Booking, object, { rejectValue: strin
         try {
             const response = await bookingsApi.createBooking(newBooking);
             return response.data;
-        } catch (err: any) {
-            if (err.response?.data?.message) {
-                return rejectWithValue(err.response.data.message);
-            }
-            return "Unknown error";
+        } catch (error: unknown) {
+            if (axios.isAxiosError<{ message: string }>(error)) {
+                return rejectWithValue(
+                  error.response?.data?.message ?? 'Network error'
+                );
+              }
+              return rejectWithValue('Unknown error');
+            
         }
     }
 
@@ -111,6 +147,23 @@ export const bookingsSlice = createSlice({
             state.loading = false;
             state.error = action.payload ?? "Failed to add item";
         })
+
+        // handle deleting a booking
+        builder.addCase(deleteBooking.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        });
+        builder.addCase(deleteBooking.fulfilled, (state, action) => {
+            state.loading = false;
+            const deletedId = action.meta.arg; // id passed to the thunk
+            state.bookings = state.bookings.filter(
+                (booking) => booking.booking_id !== deletedId
+            );
+        });
+        builder.addCase(deleteBooking.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload ?? 'Could not delete booking';
+        });
 
     }
 })

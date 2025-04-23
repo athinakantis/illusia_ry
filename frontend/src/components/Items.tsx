@@ -42,6 +42,8 @@ function Items() {
   const dispatch = useAppDispatch();
   const [offset, setOffset] = useState(0);
   const navigate = useNavigate();
+  
+  // eslint-disable-next-line
   const [searchParams, _] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const reservations = useAppSelector(selectAllReservations);
