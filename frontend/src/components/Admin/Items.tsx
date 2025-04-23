@@ -4,12 +4,14 @@ import { fetchAllItems, selectAllItems } from '../../slices/itemsSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useAuth } from '../../hooks/useAuth';
 import { Box, Button, Link } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 
 function Items() {
   const { role } = useAuth();
   const items = useAppSelector(selectAllItems);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate()
 
   useEffect(() => {
     // Fetch items upon mount.
@@ -31,7 +33,7 @@ function Items() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          padding: 4,
+          padding: 2,
           boxSizing: 'border-box',
           '& .super-app-theme--header': {
             fontFamily: 'Roboto Slab, sans-serif',
@@ -44,6 +46,7 @@ function Items() {
       >
         <Box>
           <Button component={Link} variant='contained'
+            onClick={() => navigate('/items/new')}
             sx={{ fontSize: 20, px: 5 }}>Add</Button>
         </Box>
         <ItemDataGrid data={items} />
