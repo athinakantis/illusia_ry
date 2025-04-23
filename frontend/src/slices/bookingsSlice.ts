@@ -34,11 +34,10 @@ export const deleteBooking = createAsyncThunk<
   'bookings/deleteBooking',
   async (id, { rejectWithValue }) => {
     try {
-      const response = await bookingsApi.removeBooking(id);
-      if (!response.success) {
-        return rejectWithValue(response.message || 'Failed to delete booking');
+      const { data, error, message } = await bookingsApi.removeBooking(id);
+      if (error) {
+        return rejectWithValue(message);
       }
-      const { data } = response;
 
       return data;
     } catch (error: unknown) {
