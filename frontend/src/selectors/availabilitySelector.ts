@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { selectAllItems, selectItemById } from '../slices/itemsSlice';
-import { selectAllReservations, selectQtyForAllItemsInReservationsInDateRange, selectQtyForItemInReservationsByIdInDateRange } from '../slices/reservationsSlice';
-import { selectCart, selectQtyForItemInCartByIdInDateRange } from '../slices/cartSlice';
+import { selectAllReservations, selectQtyForItemInReservationsByIdInDateRange } from '../slices/reservationsSlice';
+import { selectQtyForItemInCartByIdInDateRange } from '../slices/cartSlice';
 import { Result } from '../types/types';
 import { getBookedQtyByDateAndItemForReservationsInRange, getMaxBookedQtyForManyItems } from '../utility/overlappingDates';
 
@@ -53,17 +53,15 @@ export const checkAvailabilityForAllItemsOnDates = (
         [
             selectAllItems,
             selectAllReservations,
-            selectCart,
         ],
-        (items, reservations, cart) => {
+        (items, reservations) => {
 
             const itemsMaxBookedQty = getMaxBookedQtyForManyItems(getBookedQtyByDateAndItemForReservationsInRange(new Date(start_date), new Date(end_date), reservations))
 
             const itemsAvailability = items.map(item => {
                 return { item_id: item.item_id, quantity: item.quantity - (itemsMaxBookedQty[item.item_id] || 0) }
             });
-
-            // console.log(itemsAvailability);
+            // calculates the availability of the ites for filtering
 
         }
     );

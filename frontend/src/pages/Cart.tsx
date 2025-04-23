@@ -6,7 +6,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { addBooking } from '../slices/bookingsSlice';
 import { useAuth } from '../hooks/useAuth';
 import { showNotification } from '../slices/notificationSlice';
-import { LocalReservation } from '../types/types';
+import { ItemWithQuantity, LocalReservation } from '../types/types';
 import { useEffect } from 'react';
 
 function Cart() {
@@ -18,7 +18,7 @@ function Cart() {
 
     // Load locally stored cart
     useEffect(() => {
-        const savedCart: LocalReservation[] = JSON.parse(localStorage.getItem('savedCart') ?? '[]')
+        const savedCart: ItemWithQuantity[] = JSON.parse(localStorage.getItem('savedCart') ?? '[]')
         // If cart has less items than the locally stored array
         // load from storage
         if (cart.length < savedCart.length) {
@@ -37,7 +37,10 @@ function Cart() {
     ];
 
     const createBookingFromCart = () => {
-        return { user_id: user?.id, items: cart };
+        const itemsForBooking = cart.map(item => {
+            return { item_id: item.item.item_id, start_date: selectedDateRange.start_date, end_date: selectedDateRange.end_date, quantity: item.quantity }
+        })
+        return { user_id: user?.id, items: itemsForBooking };
     };
 
     const handleAddBooking = async () => {
