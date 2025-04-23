@@ -31,6 +31,7 @@ const Header = () => {
     { text: 'Home', path: '/' },
     { text: 'Items', path: '/items' },
     { text: 'Contact', path: '/items' },
+    { text: 'Bookings', path: '/bookings' },
   ];
 
   const drawer = (
@@ -84,7 +85,13 @@ const Header = () => {
           <Box sx={{
             display: 'flex',
             gap: '2rem',
-            '& a:active': { color: 'primary.light' }
+            /* Booking was blue so had to add these to adjust colors */
+            '& a:active': { color: 'primary.light' },
+            '& a:hover': { color: 'primary.main' },
+            '& a': {
+              textDecoration: 'none',
+              color: "primary.light", 
+            }
           }}>
             {navigationLinks.map((item) => (
               <Typography key={item.text} variant='link'>
@@ -140,6 +147,13 @@ const Header = () => {
         sx={{
           display: { xs: 'block', md: 'none' },
           '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
+          /* Had to add something to fix the link colors, Booking was blue when added */
+          '& a:active': { color: 'primary.light' },
+          '& a:hover': { color: 'primary.main' },
+          '& a': {
+            textDecoration: 'none',
+            color: "secondary.main", 
+          }
         }}
       >
         {drawer}

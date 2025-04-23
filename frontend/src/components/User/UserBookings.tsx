@@ -16,30 +16,40 @@ import {
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { RootState } from '../../store/store';
-import { BookingWithRes } from '../../types/types';
+import { BookingWithRes, Item } from '../../types/types';
 import { useAuth } from '../../hooks/useAuth';
 import { useEffect } from 'react';
 import { fetchUserBookings } from '../../slices/bookingsSlice';
+import { fetchAllItems } from '../../slices/itemsSlice';
 
 const UserBookings = () => {
   const { user } = useAuth();
   const userId = user?.id;
   const dispatch = useAppDispatch();
+
   const {
     bookings: rawBookings,
     loading,
     error,
   } = useAppSelector((state: RootState) => state.bookings);
 
-  // Assert that these bookings include reservations
+  // Assert that these bookings include reservations, had to cast because of having different types than the store.
   const bookings = rawBookings as BookingWithRes[];
-  console.log('bookings', bookings);
+
 
   useEffect(() => {
-    if (userId) {
+    if (userId && bookings.length === 0) {
       dispatch(fetchUserBookings(userId));
     }
-  }, [dispatch, userId]);
+  }, [dispatch, userId, bookings.length]);
+
+  // Brought in items to match by id with the item name
+  const items = useAppSelector((state: RootState) => state.items.items as Item[]);
+  
+  // This isnt ideal but we need the name of the item to show in the table
+  if(items.length === 0) {
+    dispatch(fetchAllItems());
+  }
 
   if (loading) {
     return (
@@ -73,9 +83,18 @@ const UserBookings = () => {
                 <Typography variant="subtitle2" color="textSecondary">
                   {new Date(booking.created_at).toLocaleString()}
                 </Typography>
+                {/* Status colors */}
                 <Chip
                   label={booking.status}
-                  color={booking.status === 'confirmed' ? 'success' : 'default'}
+                  color={
+                    booking.status === 'approved'
+                      ? 'success'
+                      : booking.status === 'pending'
+                      ? 'warning'
+                      : booking.status === 'rejected'
+                      ? 'error'
+                      : 'default'
+                  }
                 />
               </Box>
               <TableContainer>
@@ -91,7 +110,9 @@ const UserBookings = () => {
                   <TableBody>
                     {booking.reservations.map((res) => (
                       <TableRow key={res.reservation_id}>
-                        <TableCell>{res.item_id}</TableCell>
+                        <TableCell>
+                          {items.find((i) => i.item_id === res.item_id)?.item_name ?? res.item_id}
+                        </TableCell>
                         <TableCell>
                           {new Date(res.start_date).toLocaleDateString()}
                         </TableCell>
