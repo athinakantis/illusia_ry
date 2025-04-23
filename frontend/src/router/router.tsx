@@ -9,7 +9,6 @@ import AdminAddProduct from '../components/Admin/AdminAddProduct';
 import Cart from '../pages/Cart';
 import Contacts from '../pages/Contacts';
 import ItemDetail from '../components/User/ItemDetail';
-import Test from '../pages/Test';
 import UserBookings from '../components/User/UserBookings';
 
 export const router = createBrowserRouter([
@@ -54,10 +53,6 @@ export const router = createBrowserRouter([
       {
         path: '/contacts',
         element: <Contacts />
-      },
-      {
-        path: '/test',
-        element: <Test />
       },
       {
         path: "/bookings",

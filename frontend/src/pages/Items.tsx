@@ -26,7 +26,7 @@ function Items() {
     if (cart.length < savedCart.length) {
       dispatch(loadCartFromStorage(savedCart))
     }
-  }, [])
+  }, [cart.length, dispatch])
 
 
   // If user is Admin or Head Admin, return AdminItems / UserItems
