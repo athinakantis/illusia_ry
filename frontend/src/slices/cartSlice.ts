@@ -2,88 +2,95 @@ import { createSlice } from '@reduxjs/toolkit';
 import { CartState, LocalReservation } from '../types/types';
 import { RootState } from '../store/store';
 
-
-
 const initialState: CartState = {
-    cart: []
+  cart: [],
+  loading: false,
 };
 
 export const cartSlice = createSlice({
-    name: 'cart',
-    initialState,
-    reducers: {
-        addItemToCart: (state, action) => {
+  name: 'cart',
+  initialState,
+  reducers: {
+    addItemToCart: (state, action) => {
+      // Destructure new item
+      const { item_id, quantity, start_date, end_date } = action.payload;
+      console.log('Quantity: ', quantity);
+      const itemAlreadyInCart = state.cart.find(
+        (item) => item.item_id == item_id,
+      );
 
-            const itemAlreadyInCart = state.cart.find(item => item.item_id == action.payload.item_id);
-            if (itemAlreadyInCart) {
-                itemAlreadyInCart.quantity += action.payload.quantityToAdd;
-            } else {
-                state.cart.push({ item_id: action.payload.item_id, quantity: action.payload.quantityToAdd, start_date: action.payload.start_date, end_date: action.payload.end_date });
-            }
-            // can only add the same item on one date
-        },
-        /*addItemToCart: (state, action) => {
-
-            const itemAlreadyInCart = state.cart.find(item => item.item_id == action.payload.item_id);
-            if (itemAlreadyInCart) {
-                console.log("same item");
-
-                if ((itemAlreadyInCart.start_date === action.payload.start_date) || (itemAlreadyInCart.end_date === action.payload.end_date)) {
-                    itemAlreadyInCart.quantity += action.payload.quantityToAdd;
-                    console.log("same date");
-
-                    return;
-                }
-            }
-            state.cart.push({ item_id: action.payload.item_id, quantity: action.payload.quantityToAdd, start_date: action.payload.start_date, end_date: action.payload.end_date });
-            // can only add the same item on one date
-        },*/
-        removeItemFromCart: (state, action) => {
-
-            const itemAlreadyInCart = state.cart.find(item => item.item_id == action.payload.item_id);
-            if (itemAlreadyInCart) {
-                if (itemAlreadyInCart.quantity > action.payload.quantityToRemove) {
-                    itemAlreadyInCart.quantity -= action.payload.quantityToRemove;
-                } else {
-                    state.cart = state.cart.filter(item => item.item_id !== action.payload.item_id);
-                }
-            } else {
-                state.cart = state.cart.filter(item => item.item_id !== action.payload.item_id);
-            }
-        },
-        emptyCart: (state) => {
-            state.cart = [];
+      if (itemAlreadyInCart) {
+        itemAlreadyInCart.quantity += +quantity;
+      } else {
+        state.cart.push({
+          item_id: item_id,
+          quantity: quantity,
+          start_date: start_date,
+          end_date: end_date,
+        });
+      }
+      localStorage.setItem('savedCart', JSON.stringify(state.cart));
+    },
+    removeItemFromCart: (state, action) => {
+      // Destructure item to remove
+      const { item_id, quantityToRemove } = action.payload;
+      const itemAlreadyInCart = state.cart.find(
+        (item) => item.item_id == item_id,
+      );
+      if (itemAlreadyInCart) {
+        if (itemAlreadyInCart.quantity > +quantityToRemove) {
+          itemAlreadyInCart.quantity -= +quantityToRemove;
+        } else {
+          state.cart = state.cart.filter((item) => item.item_id !== item_id);
         }
-    }
-})
+      }
+      localStorage.setItem('savedCart', JSON.stringify(state.cart));
+    },
+    emptyCart: (state) => {
+      state.cart = [];
+      localStorage.removeItem('savedCart');
+    },
+    loadCartFromStorage: (state, action) => {
+      state.cart = action.payload;
+    },
+  },
+});
 
 export const selectCart = (state: RootState) => {
-    return state.cart.cart;
-}
+  return state.cart.cart;
+};
 
-
-export const { addItemToCart } = cartSlice.actions;
-export const { removeItemFromCart } = cartSlice.actions;
-export const { emptyCart } = cartSlice.actions;
+export const {
+  addItemToCart,
+  removeItemFromCart,
+  emptyCart,
+  loadCartFromStorage,
+} = cartSlice.actions;
 
 export const selectItemInCartById = (id: string) => (state: RootState) => {
-    return state.cart.cart.find((item) => item.item_id === id);
-}
+  return state.cart.cart.find((item) => item.item_id === id);
+};
 
-export const selectQtyForItemInCartByIdInDateRange = (id: string, start_date: string, end_date: string) => (state: RootState) => {
-    const itemInCartReservations: LocalReservation[] = state.cart.cart.filter((item) => item.item_id === id);
+export const selectQtyForItemInCartByIdInDateRange =
+  (id: string, start_date: string, end_date: string) => (state: RootState) => {
+    const itemInCartReservations: LocalReservation[] = state.cart.cart.filter(
+      (item) => item.item_id === id,
+    );
 
     if (itemInCartReservations.length > 0) {
-        // if any of the instances of the items found in cart
-        if ((itemInCartReservations[0].start_date === start_date) || (itemInCartReservations[0].end_date === end_date)) {
-            return itemInCartReservations[0].quantity; // item added for already existing time range
-        } else {
-            return -1; // item added fora new time range
-        }
+      // if any of the instances of the items found in cart
+      if (
+        itemInCartReservations[0].start_date === start_date ||
+        itemInCartReservations[0].end_date === end_date
+      ) {
+        return itemInCartReservations[0].quantity; // item added for already existing time range
+      } else {
+        return -1; // item added fora new time range
+      }
     } else {
-        return 0; // new item added to cart
+      return 0; // new item added to cart
     }
-}
+  };
 
 /*
 export const selectQtyForItemInCartByIdInDateRange2 = (id: string, start_date: string, end_date: string) => (state: RootState) => {
@@ -105,6 +112,5 @@ export const selectQtyForItemInCartByIdInDateRange2 = (id: string, start_date: s
         return 0;
     }
 }*/
-
 
 export default cartSlice.reducer;
