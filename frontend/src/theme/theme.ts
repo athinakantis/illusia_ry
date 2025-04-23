@@ -65,7 +65,7 @@ export const createAppTheme = () =>
     typography: {
       fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
       h1: {
-        fontSize: '45px',
+        fontSize: 45,
         fontWeight: 500,
         fontFamily: 'Roboto Slab, sans-serif',
         color: "#FFF"
@@ -73,7 +73,7 @@ export const createAppTheme = () =>
       h2: {
         fontSize: '1.75rem',
         fontWeight: 500,
-        fontFamily: 'Roboto Slab, sans-serif',
+        fontFamily: 'Lato, sans-serif',
       },
       h3: {
         fontSize: '1.5rem',
@@ -96,14 +96,14 @@ export const createAppTheme = () =>
         fontFamily: 'Roboto Slab, sans-serif',
       },
       body1: {
-        fontSize: '1rem',
+        fontSize: 16,
         fontWeight: 400,
         fontFamily: 'Oxygen, sans-serif',
       },
       body2: {
         fontSize: '0.875rem',
         fontWeight: 400,
-        fontFamily: 'Oxygen, sans-serif',
+        fontFamily: 'Lato, sans-serif',
       },
       body3: {
         fontFamily: 'Lato, sans-serif',
@@ -117,6 +117,15 @@ export const createAppTheme = () =>
         fontFamily: 'Roboto, sans-serif',
         textTransform: 'uppercase',
       },
+      heading_secondary: {
+        fontSize: 40,
+        fontFamily: 'Lato, sans-serif'
+      },
+      heading_secondary_bold: {
+        fontSize: 36,
+        fontWeight: 700,
+        fontFamily: 'Lato, sans-serif'
+      }
     },
     shadows: [
       'none',
@@ -147,9 +156,11 @@ export const createAppTheme = () =>
     ],
     components: {
       MuiButton: {
+        defaultProps: {
+          disableRipple: true
+        },
         styleOverrides: {
           root: {
-            
             variants: [{
               props: {variant: 'rounded'},
               style: {
@@ -163,10 +174,34 @@ export const createAppTheme = () =>
                 width: 'fit-content',
                 padding: '16px 24px',
                 '&:hover': { backgroundColor: '#464646'}
+              }, 
+            }, {
+              props: {variant: 'rounded', size: 'small'},
+              style: {
+                textTransform: 'capitalize',
+                height: 54,
+                width: '100%'
               }
             }]
           } 
         }
-      }
+      },
+      MuiTabs: {
+        styleOverrides: {
+          root: {
+            
+          }
+        }
+      },
+      MuiTab: {
+        defaultProps: {
+          disableRipple: true
+        },
+        styleOverrides: {
+          root: {
+            fontSize: 20,            
+          },
+        }
+      },
     }
   });

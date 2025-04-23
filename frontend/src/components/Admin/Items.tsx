@@ -3,13 +3,15 @@ import { useEffect } from 'react';
 import { fetchAllItems, selectAllItems } from '../../slices/itemsSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useAuth } from '../../hooks/useAuth';
-import { Box } from '@mui/material';
+import { Box, Button, Link } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 
 function Items() {
   const { role } = useAuth();
   const items = useAppSelector(selectAllItems);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate()
 
   useEffect(() => {
     // Fetch items upon mount.
@@ -27,11 +29,11 @@ function Items() {
     <>
       <Box
         sx={{
-          mt: 5,
           width: '100%',
           display: 'flex',
+          flexDirection: 'column',
           justifyContent: 'center',
-          padding: 4,
+          padding: 2,
           boxSizing: 'border-box',
           '& .super-app-theme--header': {
             fontFamily: 'Roboto Slab, sans-serif',
@@ -42,6 +44,11 @@ function Items() {
           }
         }}
       >
+        <Box>
+          <Button component={Link} variant='contained'
+            onClick={() => navigate('/items/new')}
+            sx={{ fontSize: 20, px: 5 }}>Add</Button>
+        </Box>
         <ItemDataGrid data={items} />
       </Box>
     </>
