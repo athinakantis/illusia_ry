@@ -67,6 +67,10 @@ const ItemDetail: React.FC<Props> = (props) => {
     }
   }
 
+  const handleBrokenImg = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+  }
+
   const handleCartAddition = () => {
 
     if (range?.start === undefined) {
@@ -125,7 +129,8 @@ const ItemDetail: React.FC<Props> = (props) => {
               objectFit: 'cover',
               boxShadow: 3, //
             }}
-            src={item?.image_path || ''}
+            onError={handleBrokenImg}
+            src={item?.image_path ?? '/src/assets/broken_img.png'}
             alt={item?.item_name || 'Item'}
           />
         </Grid>
@@ -156,7 +161,6 @@ const ItemDetail: React.FC<Props> = (props) => {
                 labelPosition="side"
                 labelAlign="end"
                 width={250}
-
                 aria-label="Select dates"
                 value={range}
                 minValue={now}

@@ -93,6 +93,10 @@ function Items() {
     }
   };
 
+  const handleBrokenImg = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+  }
+
   const toggleCategory = (category: string) => {
     const formattedCategory = category.replace(/ /g, '-');
     const currentCategories = searchParams.get('category')?.split(',') || [];
@@ -144,28 +148,31 @@ function Items() {
   return (
     <Box
       sx={{
-        width: '95%',
-        margin: 'auto',
         display: 'flex',
+        padding: 0,
         pb: '8rem',
+        gap: '32px'
       }}
     >
+      {/* Side panel */}
       <Box
         sx={{
           minWidth: 300,
-          p: 2,
+          maxWidth: 286,
         }}
       >
+        {/* Search */}
         <TextField
           id="filled-search"
           label="Search our items"
           type="search"
           variant="standard"
-          sx={{ width: '80%', mt: 1 }}
+          sx={{ width: '90%', mt: 1 }}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <Box sx={{ pt: 4, pr: 2, gap: 1, display: 'flex' }}>
+        {/* Categories */}
+        <Box sx={{ pt: 4, pr: 2, gap: 1, display: 'flex', flexWrap: 'wrap' }}>
           {categories.map((category) => (
             <Chip
               variant={
@@ -199,6 +206,8 @@ function Items() {
         </Box>
       </Box>
 
+
+      {/* Items Display */}
       <Box
         sx={{
           display: 'flex',
@@ -223,11 +232,12 @@ function Items() {
               component={Link}
               to={`/items/${item.item_id}`}
               key={item.item_id}
-              sx={{ width: 280, minHeight: 300, boxShadow: 'none' }}
+              sx={{ width: 280, minHeight: 300, boxShadow: 'none', textDecoration: 'none' }}
             >
               <CardMedia
                 component="img"
-                image={item.image_path ?? ''}
+                image={item.image_path || '/src/assets/broken_img.png'}
+                onError={handleBrokenImg}
                 sx={{
                   bgcolor: 'background.lightgrey',
                   height: '300px',
