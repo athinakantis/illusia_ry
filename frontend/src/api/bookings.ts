@@ -26,7 +26,7 @@ export const bookingsApi = {
     api.get(`bookings/user/${userId}`, {
       headers: { 'Access-Control-Allow-Origin': '*' },
     }),
-    removeBooking: (id: string): Promise<ApiResponse<Booking>> => {
-        return api.delete(`/bookings/${id}`)
+    removeBooking: (id: string): Promise<ApiResponse<DeleteBookingResponse>> => {
+        return api.delete(`/bookings/${id}`);
     }
 };
