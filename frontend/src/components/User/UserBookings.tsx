@@ -13,6 +13,7 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  Button,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { RootState } from '../../store/store';
@@ -21,12 +22,23 @@ import { useAuth } from '../../hooks/useAuth';
 import { useEffect } from 'react';
 import { fetchUserBookings } from '../../slices/bookingsSlice';
 import { fetchAllItems } from '../../slices/itemsSlice';
+import { bookingsApi } from '../../api/bookings';
 
 const UserBookings = () => {
   const { user } = useAuth();
   const userId = user?.id;
   const dispatch = useAppDispatch();
-
+  async function test () {
+    if (userId) {
+      
+        const { data, error, message } = await bookingsApi.getUserBookings(userId);
+        console.log("data", data);
+        console.log("error", error);
+        console.log("message", message);
+    }
+  }
+    const { data } = bookingsApi.getUserBookings(userId);
+  console.log("data", data);
   const {
     bookings: rawBookings,
     loading,
@@ -35,7 +47,7 @@ const UserBookings = () => {
 
   // Assert that these bookings include reservations, had to cast because of having different types than the store.
   const bookings = rawBookings as BookingWithRes[];
-
+console.log(bookings)
 
   useEffect(() => {
     if (userId && bookings.length === 0) {
@@ -43,13 +55,19 @@ const UserBookings = () => {
     }
   }, [dispatch, userId, bookings.length]);
 
+  useEffect(() => {
+ 
+  }, []);
+
   // Brought in items to match by id with the item name
   const items = useAppSelector((state: RootState) => state.items.items as Item[]);
-  
-  // This isnt ideal but we need the name of the item to show in the table
-  if(items.length === 0) {
-    dispatch(fetchAllItems());
-  }
+
+    // This isnt ideal but we need the name of the item to show in the table
+  useEffect(() => {
+    if (items.length === 0) {
+      dispatch(fetchAllItems());
+    }
+  }, [dispatch, items.length]);
 
   if (loading) {
     return (
@@ -72,7 +90,7 @@ const UserBookings = () => {
       <Typography variant="h4" gutterBottom>
         Your Bookings
       </Typography>
-
+<Button onClick={test}>Test</Button>
       {bookings.length === 0 ? (
         <Typography>No bookings yet.</Typography>
       ) : (

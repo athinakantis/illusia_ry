@@ -114,7 +114,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
         <>
           <IconButton
             component="a"
-            onClick={() => navigate(`/items/${params.row.item_id}`)}
+            onClick={() => navigate(`/items/manage/${params.row.item_id}`)}
             aria-label="view"
             color="primary"
             size="medium"
