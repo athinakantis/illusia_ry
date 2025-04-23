@@ -13,19 +13,15 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchAllCategories, fetchAllItems, selectAllCategories } from '../../slices/itemsSlice';
 import { Link, useParams } from 'react-router-dom';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
-import { DateValue, getLocalTimeZone, today } from '@internationalized/date';
+import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
 import type { RangeValue } from '@react-types/shared';
 import { checkAvailabilityForItemOnDates } from '../../selectors/availabilitySelector';
-import { addItemToCart } from '../../slices/cartSlice';
+import { addItemToCart, selectDateRange } from '../../slices/cartSlice';
 import { showNotification } from '../../slices/notificationSlice';
 import { store } from '../../store/store';
 
-type Props = {
-  initialStartDate: DateValue,
-  initialEndDate: DateValue
-} | null
 
-const ItemDetail: React.FC<Props> = (props) => {
+const ItemDetail: React.FC = () => {
 
   const [quantity, setQuantity] = useState(1);
   const now = today(getLocalTimeZone());
@@ -34,7 +30,8 @@ const ItemDetail: React.FC<Props> = (props) => {
   const { itemId } = useParams<{ itemId: string }>();
   const items = useAppSelector((state) => state.items.items);
   const item = items.find((i) => i.item_id === itemId);
-  const categories = useAppSelector(selectAllCategories)
+  const categories = useAppSelector(selectAllCategories);
+  const selectedDateRange = useAppSelector(selectDateRange);
 
   useEffect(() => {
     if (!items.length) {
@@ -43,11 +40,15 @@ const ItemDetail: React.FC<Props> = (props) => {
     if (categories.length < 1) dispatch(fetchAllCategories())
   }, [dispatch, items, categories]);
 
+
   useEffect(() => {
-    if (props) {
-      setRange({ start: props.initialStartDate, end: props.initialEndDate });
+    if (selectedDateRange.start_date && selectedDateRange.end_date) {
+      setRange({ start: parseDate(selectedDateRange.start_date), end: parseDate(selectedDateRange.end_date) });
     }
-  }, [props])
+    console.log(selectedDateRange);
+
+  }, [selectedDateRange]);
+
 
   const handleDateChange = (newRange: RangeValue<DateValue> | null) => {
 
@@ -79,8 +80,9 @@ const ItemDetail: React.FC<Props> = (props) => {
 
     if (itemId && range) {
       const checkAdditionToCart = checkAvailabilityForItemOnDates(itemId, quantity, range.start.toString(), range.end.toString())(store.getState());
+
       if (checkAdditionToCart.severity === 'success') {
-        dispatch(addItemToCart({ item_id: itemId, quantityToAdd: quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
+        dispatch(addItemToCart({ item_id: itemId, quantity: quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
         dispatch(showNotification({
           message: 'Item added to cart',
           severity: 'success',
@@ -163,6 +165,7 @@ const ItemDetail: React.FC<Props> = (props) => {
                 onChange={handleDateChange}
                 isRequired
                 maxVisibleMonths={1}
+                isDisabled={(selectedDateRange.start_date != null)}
               />
             </Provider>
 

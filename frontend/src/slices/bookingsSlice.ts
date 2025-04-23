@@ -23,25 +23,25 @@ export const fetchAllBookings = createAsyncThunk(
  * @returns A promise that resolves to an array of bookings with reservations
  */
 export const fetchUserBookings = createAsyncThunk<
-  BookingWithRes[],
-  string,
-  { rejectValue: string }
+    BookingWithRes[],
+    string,
+    { rejectValue: string }
 >(
-  'bookings/fetchUserBookings',
-  async (userId, { rejectWithValue }) => {
-    try {
-        const { data, error, message } = await bookingsApi.getUserBookings(userId);
-        if (error) return rejectWithValue(message);
-        return data;
-      } catch (error: unknown) {
-        // now error is unknown, so we narrow it:
-        if (axios.isAxiosError<{ message: string }>(error)) {
-          return rejectWithValue(
-            error.response?.data?.message ?? 'Network error'
-          );
+    'bookings/fetchUserBookings',
+    async (userId, { rejectWithValue }) => {
+        try {
+            const { data, error, message } = await bookingsApi.getUserBookings(userId);
+            if (error) return rejectWithValue(message);
+            return data;
+        } catch (error: unknown) {
+            // now error is unknown, so we narrow it:
+            if (axios.isAxiosError<{ message: string }>(error)) {
+                return rejectWithValue(
+                    error.response?.data?.message ?? 'Network error'
+                );
+            }
+            return rejectWithValue('Unknown error');
         }
-        return rejectWithValue('Unknown error');
-      }
     }
 );
 
@@ -90,16 +90,16 @@ export const bookingsSlice = createSlice({
 
         // handle fetching bookings for a specific user
         builder.addCase(fetchUserBookings.pending, (state) => {
-          state.loading = true;
-          state.error = null;
+            state.loading = true;
+            state.error = null;
         });
         builder.addCase(fetchUserBookings.fulfilled, (state, action) => {
-          state.loading = false;
-          state.bookings = action.payload;
+            state.loading = false;
+            state.bookings = action.payload;
         });
         builder.addCase(fetchUserBookings.rejected, (state, action) => {
-          state.loading = false;
-          state.error = action.payload ?? 'Could not fetch user bookings';
+            state.loading = false;
+            state.error = action.payload ?? 'Could not fetch user bookings';
         });
 
         builder.addCase(addBooking.fulfilled, (state, action) => {
