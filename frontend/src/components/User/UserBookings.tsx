@@ -13,20 +13,39 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { RootState } from '../../store/store';
 import { BookingWithRes, Item } from '../../types/types';
 import { useAuth } from '../../hooks/useAuth';
 import { useEffect } from 'react';
-import { fetchUserBookings } from '../../slices/bookingsSlice';
+import { deleteBooking, fetchUserBookings } from '../../slices/bookingsSlice';
 import { fetchAllItems } from '../../slices/itemsSlice';
+import { showNotification } from '../../slices/notificationSlice';
 
 const UserBookings = () => {
   const { user } = useAuth();
   const userId = user?.id;
   const dispatch = useAppDispatch();
- 
+
+  const handleCancel = (bookingId: string) => {
+    try {
+      dispatch(deleteBooking(bookingId));
+      dispatch(
+        showNotification({
+          message: 'Booking cancelled', // adjust wording if you like
+          severity: 'info',
+        })
+      );
+      
+    } catch (error) {
+      console.error('Error cancelling booking:', error);
+    }
+  };
+
   const {
     bookings: rawBookings,
     loading,
@@ -37,11 +56,10 @@ const UserBookings = () => {
   const bookings = rawBookings as BookingWithRes[];
 
   useEffect(() => {
-    if (userId && bookings.length === 0) {
+    if (userId) {
       dispatch(fetchUserBookings(userId));
     }
-  }, [dispatch, userId, bookings.length]);
-
+  }, [dispatch, userId]);
   // Brought in items to match by id with the item name
   const items = useAppSelector((state: RootState) => state.items.items as Item[]);
 
@@ -80,23 +98,34 @@ const UserBookings = () => {
         <Stack spacing={4}>
           {bookings.map((booking) => (
             <Paper key={booking.booking_id} sx={{ p: 2 }}>
-              <Box display="flex" justifyContent="space-between" mb={2}>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                 <Typography variant="subtitle2" color="textSecondary">
                   {new Date(booking.created_at).toLocaleString()}
                 </Typography>
-                {/* Status colors */}
-                <Chip
-                  label={booking.status}
-                  color={
-                    booking.status === 'approved'
-                      ? 'success'
-                      : booking.status === 'pending'
-                      ? 'warning'
-                      : booking.status === 'rejected'
-                      ? 'error'
-                      : 'default'
-                  }
-                />
+
+                <Box display="flex" alignItems="center">
+                  <Chip
+                    sx={{ mr: 1 }}
+                    label={booking.status}
+                    color={
+                      booking.status === 'approved'
+                        ? 'success'
+                        : booking.status === 'pending'
+                        ? 'warning'
+                        : booking.status === 'rejected'
+                        ? 'error'
+                        : 'default'
+                    }
+                  />
+                  <Tooltip title="Cancel booking">
+                    <IconButton
+                      size="small"
+                      onClick={() => handleCancel(booking.booking_id)}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
               </Box>
               <TableContainer>
                 <Table>

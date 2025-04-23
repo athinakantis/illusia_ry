@@ -150,7 +150,6 @@ export const bookingsSlice = createSlice({
 
         // handle deleting a booking
         builder.addCase(deleteBooking.pending, (state) => {
-            state.loading = true;
             state.error = null;
         });
         builder.addCase(deleteBooking.fulfilled, (state, action) => {
