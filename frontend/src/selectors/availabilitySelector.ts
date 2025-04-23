@@ -57,12 +57,13 @@ export const checkAvailabilityForAllItemsOnDates = (
         ],
         (items, reservations, cart) => {
 
-            const itemsBookedQty = getBookedQtyByDateAndItemForReservationsInRange(new Date(start_date), new Date(end_date), reservations);
+            const itemsMaxBookedQty = getMaxBookedQtyForManyItems(getBookedQtyByDateAndItemForReservationsInRange(new Date(start_date), new Date(end_date), reservations))
 
-            console.log(itemsBookedQty);
-            console.log(getMaxBookedQtyForManyItems(itemsBookedQty));
+            const itemsAvailability = items.map(item => {
+                return { item_id: item.item_id, quantity: item.quantity - (itemsMaxBookedQty[item.item_id] || 0) }
+            });
 
-
+            // console.log(itemsAvailability);
 
         }
     );
