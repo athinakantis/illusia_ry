@@ -1,3 +1,4 @@
+// src/components/User/UserBookings.tsx
 import {
   Container,
   Typography,
@@ -15,6 +16,7 @@ import {
   TableBody,
   IconButton,
   Tooltip,
+  useTheme,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -30,136 +32,164 @@ const UserBookings = () => {
   const { user } = useAuth();
   const userId = user?.id;
   const dispatch = useAppDispatch();
+  const theme = useTheme();           
 
+  /* ─────────────────── handlers ─────────────────── */
   const handleCancel = (bookingId: string) => {
-    try {
-      dispatch(deleteBooking(bookingId));
+    dispatch(deleteBooking(bookingId)).then(() =>
       dispatch(
         showNotification({
-          message: 'Booking cancelled', // adjust wording if you like
+          message: 'Booking cancelled',
           severity: 'info',
-        })
-      );
-      
-    } catch (error) {
-      console.error('Error cancelling booking:', error);
-    }
+        }),
+      ),
+    );
   };
 
+  /* ─────────────────── selectors ─────────────────── */
   const {
     bookings: rawBookings,
     loading,
     error,
   } = useAppSelector((state: RootState) => state.bookings);
 
-  // Assert that these bookings include reservations, had to cast because of having different types than the store.
+  // cast so TS knows reservations exist
   const bookings = rawBookings as BookingWithRes[];
 
+  /* ─────────────────── side-effects ─────────────────── */
   useEffect(() => {
-    if (userId) {
-      dispatch(fetchUserBookings(userId));
-    }
+    if (userId) dispatch(fetchUserBookings(userId));
   }, [dispatch, userId]);
-  // Brought in items to match by id with the item name
-  const items = useAppSelector((state: RootState) => state.items.items as Item[]);
 
-    // This isnt ideal but we need the name of the item to show in the table
+  const items = useAppSelector(
+    (state: RootState) => state.items.items as Item[],
+  );
   useEffect(() => {
-    if (items.length === 0) {
-      dispatch(fetchAllItems());
-    }
+    if (items.length === 0) dispatch(fetchAllItems());
   }, [dispatch, items.length]);
 
-  if (loading) {
+  /* ─────────────────── UI states ─────────────────── */
+  if (loading)
     return (
       <Container sx={{ textAlign: 'center', mt: 4 }}>
-        <CircularProgress />
+        <CircularProgress color="secondary" />
       </Container>
     );
-  }
 
-  if (error) {
+  if (error)
     return (
       <Container sx={{ mt: 4 }}>
         <Alert severity="error">{error}</Alert>
       </Container>
     );
-  }
 
+  /* ─────────────────── main render ─────────────────── */
   return (
     <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Your Bookings
-      </Typography>
+    <Typography variant="h4" gutterBottom>
+      Your Bookings
+    </Typography>
 
-      {bookings.length === 0 ? (
-        <Typography>No bookings yet.</Typography>
-      ) : (
-        <Stack spacing={4}>
-          {bookings.map((booking) => (
-            <Paper key={booking.booking_id} sx={{ p: 2 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="subtitle2" color="textSecondary">
+    {bookings.length === 0 ? (
+      <Typography>No bookings yet.</Typography>
+    ) : (
+      <Stack spacing={4}>
+        {bookings.map((booking) => (
+          <Paper key={booking.booking_id} sx={{ p: 2 }}>
+            {/* booking header */}
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              mb={1}
+            >
+              <Typography
+                variant="h6"
+                fontWeight={600}
+                color={theme.palette.primary.main}
+              >
+                Booking&nbsp;ID:&nbsp;{booking.booking_id}
+              </Typography>
+            </Box>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+              
+                <Typography
+                  variant="body1"
+                  fontWeight={500}
+                  color={theme.palette.text.primary}
+                >
                   {new Date(booking.created_at).toLocaleString()}
                 </Typography>
-
-                <Box display="flex" alignItems="center">
-                  <Chip
-                    sx={{ mr: 1 }}
-                    label={booking.status}
-                    color={
-                      booking.status === 'approved'
-                        ? 'success'
-                        : booking.status === 'pending'
-                        ? 'warning'
-                        : booking.status === 'rejected'
-                        ? 'error'
-                        : 'default'
-                    }
-                  />
-                  <Tooltip title="Cancel booking">
-                    <IconButton
-                      size="small"
-                      onClick={() => handleCancel(booking.booking_id)}
-                    >
-                      <CloseIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
+       
+              <Box display="flex" alignItems="center">
+                <Chip
+                  sx={{
+                    mr: 1,
+                    ...(booking.status === 'pending'
+                      ? { bgcolor: '#FFCA28', color: theme.palette.getContrastText('#FFCA28') }
+                      : {}),
+                  }}
+                  label={booking.status}
+                  color={
+                    booking.status === 'approved'
+                      ? 'success'
+                      : booking.status === 'pending'
+                      ? 'warning'
+                      : booking.status === 'rejected'
+                      ? 'error'
+                      : 'default'
+                  }
+                />
+                <Tooltip title="Cancel booking">
+                  <IconButton
+                    size="small"
+                    onClick={() => handleCancel(booking.booking_id)}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
               </Box>
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Item ID</TableCell>
-                      <TableCell>Start Date</TableCell>
-                      <TableCell>End Date</TableCell>
-                      <TableCell>Quantity</TableCell>
+            </Box>
+            <TableContainer>
+              <Table
+                sx={{
+                  // Remove bottom border (divider) on the last row
+                  '& .MuiTableRow-root:last-child td, & .MuiTableRow-root:last-child th': {
+                    borderBottom: 0,
+                  },
+                }}
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Item ID</TableCell>
+                    <TableCell>Start Date</TableCell>
+                    <TableCell>End Date</TableCell>
+                    <TableCell>Quantity</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {booking.reservations.map((res) => (
+                    <TableRow key={res.reservation_id}>
+                      <TableCell>
+                        {items.find((i) => i.item_id === res.item_id)?.item_name ?? res.item_id}
+                      </TableCell>
+                      <TableCell>
+                        {new Date(res.start_date).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        {new Date(res.end_date).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>{res.quantity}</TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {booking.reservations.map((res) => (
-                      <TableRow key={res.reservation_id}>
-                        <TableCell>
-                          {items.find((i) => i.item_id === res.item_id)?.item_name ?? res.item_id}
-                        </TableCell>
-                        <TableCell>
-                          {new Date(res.start_date).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell>
-                          {new Date(res.end_date).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell>{res.quantity}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Paper>
-          ))}
-        </Stack>
-      )}
-    </Container>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        ))}
+      </Stack>
+    )}
+  </Container>
   );
 };
 
