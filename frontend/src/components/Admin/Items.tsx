@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { fetchAllItems, selectAllItems } from '../../slices/itemsSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useAuth } from '../../hooks/useAuth';
-import { Box } from '@mui/material';
+import { Box, Button, Link } from '@mui/material';
 
 
 function Items() {
@@ -27,9 +27,9 @@ function Items() {
     <>
       <Box
         sx={{
-          mt: 5,
           width: '100%',
           display: 'flex',
+          flexDirection: 'column',
           justifyContent: 'center',
           padding: 4,
           boxSizing: 'border-box',
@@ -42,6 +42,10 @@ function Items() {
           }
         }}
       >
+        <Box>
+          <Button component={Link} variant='contained'
+            sx={{ fontSize: 20, px: 5 }}>Add</Button>
+        </Box>
         <ItemDataGrid data={items} />
       </Box>
     </>
