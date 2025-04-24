@@ -4,7 +4,7 @@ import {
   Controller,
   Get,
   Param,
-  Post,
+  Patch,
   Req,
 } from '@nestjs/common';
 import { AdminService } from 'src/services/admin.service';
@@ -58,7 +58,7 @@ export class AdminController {
    * @param body { status: string }
    * @returns { message:string, data: AdminUserRow }
    */ // POST /admin/users/:id/status
-  @Post('users/:id/status')
+  @Patch('users/:id/status')
   async updateUserStatus(
     @Req() req: CustomRequest,
     @Param('id') userId: string,
