@@ -27,7 +27,7 @@ import { useEffect } from 'react';
 
 function Cart() {
     const dispatch = useAppDispatch();
-    const cart = useAppSelector(selectCart);
+    const { cart } = useAppSelector(selectCart);
     const { user } = useAuth();
     const items = useAppSelector(selectAllItems);
     const selectedDateRange = useAppSelector(selectDateRange);
@@ -42,12 +42,12 @@ function Cart() {
 
         // If cart has less items than the locally stored array
         // load from storage
-        if (cart.cart.length < savedCart.cart.length) {
+        if (cart.length < savedCart.length) {
             dispatch(loadCartFromStorage(savedCart));
         }
     }, [])
 
-    const cartInfo = cart.cart.map(({ item, quantity }) => ({
+    const cartInfo = cart.map(({ item, quantity }) => ({
         ...item, quantity
     }));
 
@@ -92,7 +92,7 @@ function Cart() {
         >
             <Typography variant="heading_secondary_bold">Your Cart</Typography>
 
-            {cart.cart.length > 0 ? (
+            {cart.length > 0 ? (
                 <Stack direction={'row'}
                     sx={{
                         gap: '32px',
@@ -154,7 +154,8 @@ function Cart() {
                             maxWidth: 392,
                             flex: 1,
                             gap: '24px',
-                            height: 'fit-content'
+                            height: 'fit-content',
+                            minWidth: 290
                         }}>
                         <Typography
                             variant="body3"
