@@ -10,7 +10,7 @@ const TestPage = () => {
 
     return (
         <>
-            <div>This is the test route</div>
+            <div>This is a route I need for getting a token to give to Postman</div>
             <Button onClick={handleClick}>
                 Get Token
             </Button>

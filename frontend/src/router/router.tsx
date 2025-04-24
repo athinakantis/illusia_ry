@@ -10,7 +10,7 @@ import Cart from '../pages/Cart';
 import Contacts from '../pages/Contacts';
 import ItemDetail from '../components/User/ItemDetail';
 import UserBookings from '../components/User/UserBookings';
-import TestPage from '../pages/Test';
+import TestPage from '../Test/Test';
 
 export const router = createBrowserRouter([
   {
