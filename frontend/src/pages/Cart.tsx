@@ -14,7 +14,6 @@ import {
 import ClearIcon from '@mui/icons-material/Clear';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
-    emptyCart,
     loadCartFromStorage,
     removeItemFromCart,
     selectCart,

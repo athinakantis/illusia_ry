@@ -7,10 +7,11 @@ import { useDispatch } from 'react-redux';
 import { loadCartFromStorage, selectCart } from '../slices/cartSlice';
 import { useAppSelector } from '../store/hooks';
 
+/*
 type LocallyStoredItem = {
   item_id: string;
   quantity: number
-}
+}*/
 
 interface TabPanelProps {
   children?: React.ReactNode;

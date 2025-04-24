@@ -33,7 +33,7 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { store } from '../store/store';
 import { checkAvailabilityForAllItemsOnDates, checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
 import {
-  fetchAllReservations,
+  fetchFutureReservations,
   selectAllReservations,
 } from '../slices/reservationsSlice';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
@@ -46,7 +46,7 @@ function Items() {
   const dispatch = useAppDispatch();
   const [offset, setOffset] = useState(0);
   const navigate = useNavigate();
-  
+
   // eslint-disable-next-line
   const [searchParams, _] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
@@ -63,7 +63,7 @@ function Items() {
 
   useEffect(() => {
     if (reservations.length < 1) {
-      dispatch(fetchAllReservations());
+      dispatch(fetchFutureReservations());
     }
   }, [dispatch, reservations]);
 
@@ -95,6 +95,7 @@ function Items() {
       range.end.toString(),
     )(store.getState());
     // checks if item can be added to cart
+
 
     if (checkAdditionToCart.severity === 'success') {
       dispatch(addItemToCart({ item: selectItemById(item_id)(store.getState()), quantity, start_date: range.start.toString(), end_date: range.end.toString() }));

@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store/store";
-import { LocalReservation, ReservationsState } from "../types/types";
+import { LocalReservation, Reservation, ReservationsState } from "../types/types";
 import { reservationsApi } from "../api/reservations";
 import { getMaxBookedQtyForItem, getBookedQtyByDateAndItemForReservationsInRange } from "../utility/overlappingDates";
+import axios from "axios";
 
 
 const initialState: ReservationsState = {
@@ -20,8 +21,13 @@ export const fetchAllReservations = createAsyncThunk(
     }
 );
 
-// export const fetchReservationsByItemId = createAsyncThunk();
-
+export const fetchFutureReservations = createAsyncThunk(
+    'reservations/fetchFutureReservations',
+    async () => {
+        const response = await reservationsApi.getFutureReservations();
+        return response;
+    }
+);
 
 export const reservationsSlice = createSlice({
     name: 'reservations',
@@ -36,6 +42,17 @@ export const reservationsSlice = createSlice({
             state.reservations = action.payload.data;
         })
         builder.addCase(fetchAllReservations.rejected, (state) => {
+            state.loading = false
+            state.error = 'Could not fetch items'
+        })
+        builder.addCase(fetchFutureReservations.pending, (state) => {
+            state.loading = true
+        })
+        builder.addCase(fetchFutureReservations.fulfilled, (state, action) => {
+            state.loading = false
+            state.reservations = action.payload.data;
+        })
+        builder.addCase(fetchFutureReservations.rejected, (state) => {
             state.loading = false
             state.error = 'Could not fetch items'
         })
