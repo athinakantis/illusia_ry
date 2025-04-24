@@ -6,7 +6,7 @@ import axios from "axios";
 
 
 
-  
+
 const initialState: BookingsState = {
     bookings: [],
     loading: false,
@@ -27,29 +27,29 @@ export const fetchAllBookings = createAsyncThunk(
  * @returns A promise that resolves to the backend response
  */
 export const deleteBooking = createAsyncThunk<
-  Booking,
-  string,
-  { rejectValue: string }
+    Booking,
+    string,
+    { rejectValue: string }
 >(
-  'bookings/deleteBooking',
-  async (id, { rejectWithValue }) => {
-    try {
-      const { data, error, message } = await bookingsApi.removeBooking(id);
-      if (error) {
-        return rejectWithValue(message);
-      }
+    'bookings/deleteBooking',
+    async (id, { rejectWithValue }) => {
+        try {
+            const { data, error, message } = await bookingsApi.removeBooking(id);
+            if (error) {
+                return rejectWithValue(message);
+            }
 
-      return data;
-    } catch (error: unknown) {
-      if (axios.isAxiosError<{ message: string }>(error)) {
-        return rejectWithValue(
-          error.response?.data?.message ?? 'Network error'
-        );
-      }
-      return rejectWithValue('Unknown error');
+            return data;
+        } catch (error: unknown) {
+            if (axios.isAxiosError<{ message: string }>(error)) {
+                return rejectWithValue(
+                    error.response?.data?.message ?? 'Network error'
+                );
+            }
+            return rejectWithValue('Unknown error');
+        }
+
     }
-    
-  }
 );
 /**
  * Fetch all bookings for a specific user (including reservations)
@@ -58,23 +58,24 @@ export const deleteBooking = createAsyncThunk<
  */
 export const fetchUserBookings = createAsyncThunk<
     Booking[],
-  string,
-  { rejectValue: string }
+    string,
+    { rejectValue: string }
 >(
-  'bookings/fetchUserBookings',
-  async (userId, { rejectWithValue }) => {
-    try {
-        const { data, error, message } = await bookingsApi.getUserBookings(userId);
-        if (error) return rejectWithValue(message);
-        return data;
-      } catch (error: unknown) {
-        if (axios.isAxiosError<{ message: string }>(error)) {
-          return rejectWithValue(
-            error.response?.data?.message ?? 'Network error'
-          );
+    'bookings/fetchUserBookings',
+    async (userId, { rejectWithValue }) => {
+        try {
+            const { data, error, message } = await bookingsApi.getUserBookings(userId);
+            if (error) return rejectWithValue(message);
+            return data;
+        } catch (error: unknown) {
+            // now error is unknown, so we narrow it:
+            if (axios.isAxiosError<{ message: string }>(error)) {
+                return rejectWithValue(
+                    error.response?.data?.message ?? 'Network error'
+                );
+            }
+            return rejectWithValue('Unknown error');
         }
-        return rejectWithValue('Unknown error');
-      }
     }
 );
 
@@ -96,11 +97,11 @@ export const addBooking = createAsyncThunk<Booking, object, { rejectValue: strin
         } catch (error: unknown) {
             if (axios.isAxiosError<{ message: string }>(error)) {
                 return rejectWithValue(
-                  error.response?.data?.message ?? 'Network error'
+                    error.response?.data?.message ?? 'Network error'
                 );
-              }
-              return rejectWithValue('Unknown error');
-            
+            }
+            return rejectWithValue('Unknown error');
+
         }
     }
 
@@ -126,16 +127,16 @@ export const bookingsSlice = createSlice({
 
         // handle fetching bookings for a specific user
         builder.addCase(fetchUserBookings.pending, (state) => {
-          state.loading = true;
-          state.error = null;
+            state.loading = true;
+            state.error = null;
         });
         builder.addCase(fetchUserBookings.fulfilled, (state, action) => {
-          state.loading = false;
-          state.bookings = action.payload;
+            state.loading = false;
+            state.bookings = action.payload;
         });
         builder.addCase(fetchUserBookings.rejected, (state, action) => {
-          state.loading = false;
-          state.error = action.payload ?? 'Could not fetch user bookings';
+            state.loading = false;
+            state.error = action.payload ?? 'Could not fetch user bookings';
         });
 
         builder.addCase(addBooking.fulfilled, (state, action) => {

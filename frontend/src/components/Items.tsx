@@ -6,6 +6,7 @@ import {
   fetchAllItems,
   selectAllCategories,
   selectAllItems,
+  selectItemById,
 } from '../slices/itemsSlice';
 import {
   Button,
@@ -20,7 +21,7 @@ import {
   Chip,
 } from '@mui/material';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import { addItemToCart } from '../slices/cartSlice';
+import { addItemToCart, selectDateRange } from '../slices/cartSlice';
 import Pagination from './Pagination';
 import { Link } from 'react-router-dom';
 import {
@@ -30,11 +31,14 @@ import {
 } from 'react-router-dom';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { store } from '../store/store';
-import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
+import { checkAvailabilityForAllItemsOnDates, checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
 import {
-  fetchAllReservations,
+  fetchFutureReservations,
   selectAllReservations,
 } from '../slices/reservationsSlice';
+import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
+import { RangeValue } from '@react-types/shared';
+import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
 
 function Items() {
   const items = useAppSelector(selectAllItems);
@@ -42,15 +46,24 @@ function Items() {
   const dispatch = useAppDispatch();
   const [offset, setOffset] = useState(0);
   const navigate = useNavigate();
-  
+
   // eslint-disable-next-line
   const [searchParams, _] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const reservations = useAppSelector(selectAllReservations);
+  const now = today(getLocalTimeZone());
+  const [range, setRange] = useState<RangeValue<DateValue> | null>(null);
+  const selectedDateRange = useAppSelector(selectDateRange);
+
+  useEffect(() => {
+    if (selectedDateRange.start_date && selectedDateRange.end_date) {
+      setRange({ start: parseDate(selectedDateRange.start_date), end: parseDate(selectedDateRange.end_date) });
+    }
+  }, [selectedDateRange]);
 
   useEffect(() => {
     if (reservations.length < 1) {
-      dispatch(fetchAllReservations());
+      dispatch(fetchFutureReservations());
     }
   }, [dispatch, reservations]);
 
@@ -66,25 +79,33 @@ function Items() {
   const addToCart = (item_id: string, quantity: number = 1) => {
     // need to fetch the bookings and reservations first in order for this to work properly
 
-    const start_date = '2025-04-14';
-    const end_date = '2025-04-15';
-
-    //if (checkAvailabilityForItemOnDates(item_id, quantityToAdd, start_date, end_date)(store.getState())) {
+    if (range?.start === undefined) {
+      dispatch(showNotification({
+        message: "Select dates before adding to cart",
+        severity: 'warning',
+      }));
+      return;
+    }
+    // checks if there is any range selected
 
     const checkAdditionToCart = checkAvailabilityForItemOnDates(
       item_id,
       quantity,
-      start_date,
-      end_date,
+      range.start.toString(),
+      range.end.toString(),
     )(store.getState());
+    // checks if item can be added to cart
+
+
     if (checkAdditionToCart.severity === 'success') {
-      dispatch(addItemToCart({ item_id, quantity, start_date, end_date }));
+      dispatch(addItemToCart({ item: selectItemById(item_id)(store.getState()), quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
       dispatch(
         showNotification({
           message: 'Item added to cart',
           severity: 'success',
         }),
       );
+      // adds the item in case it is available
     } else {
       dispatch(
         showNotification({
@@ -94,6 +115,10 @@ function Items() {
       );
     }
   };
+
+  const handleBrokenImg = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+  }
 
   const toggleCategory = (category: string) => {
     const formattedCategory = category.replace(/ /g, '-');
@@ -143,31 +168,52 @@ function Items() {
     return matchesCategory && matchesSearch;
   });
 
+  const handleDateChange = (newRange: RangeValue<DateValue> | null) => {
+
+    if (newRange) {
+
+      const startDate = new Date(newRange.start.toString());
+      const endDate = new Date(newRange.end.toString());
+      const diffInMs = endDate.getTime() - startDate.getTime();
+      const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+      if (diffInDays > 14) {
+        alert('You can only book a maximum of 14 days.');
+        return;
+      }
+      checkAvailabilityForAllItemsOnDates(newRange.start.toString(), newRange.end.toString())(store.getState());
+      setRange(newRange);
+    }
+  }
+
   return (
     <Box
       sx={{
-        width: '95%',
-        margin: 'auto',
         display: 'flex',
+        padding: 0,
         pb: '8rem',
+        gap: '32px'
       }}
     >
+      {/* Side panel */}
       <Box
         sx={{
           minWidth: 300,
-          p: 2,
+          maxWidth: 286,
         }}
       >
+        {/* Search */}
         <TextField
           id="filled-search"
           label="Search our items"
           type="search"
           variant="standard"
-          sx={{ width: '80%', mt: 1 }}
+          sx={{ width: '90%', mt: 1 }}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <Box sx={{ pt: 4, pr: 2, gap: 1, display: 'flex' }}>
+        {/* Categories */}
+        <Box sx={{ pt: 4, pr: 2, gap: 1, display: 'flex', flexWrap: 'wrap' }}>
           {categories.map((category) => (
             <Chip
               variant={
@@ -199,8 +245,29 @@ function Items() {
             />
           ))}
         </Box>
+        <Provider
+          theme={defaultTheme}
+          colorScheme="light"
+          maxWidth={250}
+        >
+          <DateRangePicker
+            labelPosition="side"
+            labelAlign="end"
+            width={250}
+
+            aria-label="Select dates"
+            value={range}
+            minValue={now}
+            onChange={handleDateChange}
+            isRequired
+            maxVisibleMonths={1}
+            isDisabled={(selectedDateRange.start_date != null)}
+          />
+        </Provider>
       </Box>
 
+
+      {/* Items Display */}
       <Box
         sx={{
           display: 'flex',
@@ -225,11 +292,12 @@ function Items() {
               component={Link}
               to={`/items/${item.item_id}`}
               key={item.item_id}
-              sx={{ width: 280, minHeight: 300, boxShadow: 'none' }}
+              sx={{ width: 280, minHeight: 300, boxShadow: 'none', textDecoration: 'none' }}
             >
               <CardMedia
                 component="img"
-                image={item.image_path ?? ''}
+                image={item.image_path || '/src/assets/broken_img.png'}
+                onError={handleBrokenImg}
                 sx={{
                   bgcolor: 'background.lightgrey',
                   height: '300px',

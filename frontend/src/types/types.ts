@@ -42,13 +42,13 @@ export interface Booking {
   user_id: string,
   status: string,
   created_at: string,
-  reservations?:  Array<{
+  reservations?: Array<{
     reservation_id: string
-    item_id:        string
-    start_date:     string
-    end_date:       string
-    quantity:       number
-    created_at:     string
+    item_id: string
+    start_date: string
+    end_date: string
+    quantity: number
+    created_at: string
   }>
 }
 
@@ -78,9 +78,23 @@ export interface ReservationsState {
   loading: boolean
 }
 
-
+/*
 export interface CartState {
   cart: LocalReservation[];
+  selectedDateRange: { start_date: string | null, end_date: string | null }
+  // stores the items added to the cart and the date range, on which all the items will be booked
+}
+*/
+
+export interface ItemWithQuantity {
+  item: Item,
+  quantity: number,
+}
+
+export interface CartState {
+  cart: ItemWithQuantity[];
+  selectedDateRange: { start_date: string | null, end_date: string | null }
+  // stores the items added to the cart and the date range, on which all the items will be booked
 }
 
 export type Result =
@@ -88,22 +102,22 @@ export type Result =
   | { severity: 'error'; message: string }
   | { severity: 'warning'; message: string };
 
-  export type BookingWithRes = {
-    booking_id: string
-    user_id:    string
-    status:     string
+export type BookingWithRes = {
+  booking_id: string
+  user_id: string
+  status: string
+  created_at: string
+  reservations: Array<{
+    reservation_id: string
+    item_id: string
+    start_date: string
+    end_date: string
+    quantity: number
     created_at: string
-    reservations: Array<{
-      reservation_id: string
-      item_id:        string
-      start_date:     string
-      end_date:       string
-      quantity:       number
-      created_at:     string
-    }>
-  }
+  }>
+}
 
-  /** Shape of the successful DELETE /bookings/:id response */
+/** Shape of the successful DELETE /bookings/:id response */
 export interface DeleteBookingResponse {
   message: string;    // "Booking deleted successfully"
   data: Booking[];    // usually a one-element array with the deleted booking
