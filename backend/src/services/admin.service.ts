@@ -8,7 +8,7 @@ import {
   import { CustomRequest } from 'src/types/request.type';
   import { Tables } from 'src/types/supabase';
   import { ApiResponse } from 'src/types/response';
-  
+  import { AdminUserRow } from 'src/types/admin-user.type';
   @Injectable()
   export class AdminService {
     /**
@@ -36,15 +36,15 @@ import {
      */
     async getAllUsers(
       req: CustomRequest,
-    ): Promise<ApiResponse<Tables<'users'>[]>> {
+    ): Promise<ApiResponse<AdminUserRow[]>> {
       await this.assertAdmin(req);
-  
+      
       const supabase = req['supabase'];
-  
+
       const { data, error } = await supabase
         .from('users')
-        .select('user_id, display_name, email, created_at')
-        .order('created_at', { ascending: true });
+        .select('user_id, display_name, email, user_status')
+        .order('user_id', { ascending: true });
   
       if (error) {
         throw new BadRequestException(error.message);
@@ -55,9 +55,65 @@ import {
         data: data ?? [],
       };
     }
-  
+    
     /**
-     * Get a single user by primary key.
+     * Simple endpoint to get a users role
+     * @parms req CustomRequest with Supabase Client
+     * @param userId UUID of the user
+     * @returns role: string
+     */
+    async getUserRoleById(req: CustomRequest, userId: string): Promise<ApiResponse<{ role: string }>> {
+      const supabase = req['supabase'];
+     
+  
+      const { data, error } = await supabase
+        .from('user_with_roles_view')
+        .select('role_title')
+        .eq('user_id', userId)
+        .maybeSingle();
+      if (error) {
+        throw new BadRequestException(error.message);
+      }
+      if (!data) {
+        throw new NotFoundException(`User ${userId} not found`);
+      }
+      return {
+        message: `User ${userId} role retrieved successfully`,
+        data: {
+          role: data.role_title,
+        },
+      };
+    }
+
+      /**
+     * A function to get all users from the user_role_view table
+     * @returns {Promise<ApiResponse<AdminUserRow[]>>}
+     * @throws {BadRequestException} if there is an error with the request
+     */
+  async getUsersWithRole(req: CustomRequest): Promise<ApiResponse<AdminUserRow[]>> {
+
+    await this.assertAdmin(req);
+
+    const supabase = req['supabase'];
+
+    const { data, error } = await supabase
+      .from('user_with_roles_view')
+      .select("*")
+      .order('user_id', { ascending: true });
+
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
+
+    return {
+      message: 'All users retrieved successfully',
+      data: data ?? [],
+    };
+  }
+    /**
+     * Get a single user from users table by user_id
+     * @param req Custom Reqest with Supabase Client
+     * @param userId UUID of user
      */
     async getUserById(
       req: CustomRequest,
@@ -69,7 +125,7 @@ import {
   
       const { data, error } = await supabase
         .from('users')
-        .select('user_id, display_name, email, created_at')
+        .select('user_id, display_name, email, user_status')
         .eq('user_id', userId)
         .maybeSingle();
   
@@ -82,7 +138,64 @@ import {
   
       return {
         message: `User ${userId} retrieved successfully`,
-        data,
+        data 
+      };
+    }
+
+    /**
+     * Change a user's status from "pending" to either "approved" or "rejected".
+     * Only callable by admins (enforced via assertAdmin).
+     * This column(user_status) does not do anything right now but will be used in the future.
+     */
+    async updateUserStatus(
+      req: CustomRequest,
+      userId: string,
+      status: 'approved' | 'rejected',
+    ): Promise<ApiResponse<Tables<'users'>>> {
+      await this.assertAdmin(req);
+
+      if (!['approved', 'rejected'].includes(status)) {
+        throw new BadRequestException('Status must be "approved" or "rejected".');
+      }
+
+      const supabase = req['supabase'];
+
+      // Make sure the user exists and is currently pending
+      const { data: existing, error: fetchErr } = await supabase
+        .from('users')
+        .select('user_status')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (fetchErr) {
+        throw new BadRequestException(fetchErr.message);
+      }
+      if (!existing) {
+        throw new NotFoundException(`User ${userId} not found`);
+      }
+      if (existing.user_status !== 'pending') {
+        throw new BadRequestException(
+          `User ${userId} status is already "${existing.user_status}"`,
+        );
+      }
+
+      // Perform the update
+      const { data, error } = await supabase
+        .from('users')
+        .update({ user_status: status })
+        .eq('user_id', userId)
+        .select('user_id, display_name, email, user_status')
+        .maybeSingle();
+
+      if (error) {
+        throw new BadRequestException(error.message);
+      }
+      if(!data) {
+        throw new NotFoundException(`User ${userId} not found`);
+      }
+      return {
+        message: `User ${userId} status updated to "${status}"`,
+        data 
       };
     }
   }

@@ -33,6 +33,7 @@ import { AdminController } from './controllers/admin.controller';
     ViewsController,
     BookingController,
     ItemReservationsController,
+    AdminController
     
   ], // Controller imports go here
   providers: [
