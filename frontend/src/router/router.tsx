@@ -10,6 +10,7 @@ import Cart from '../pages/Cart';
 import Contacts from '../pages/Contacts';
 import ItemDetail from '../components/User/ItemDetail';
 import UserBookings from '../components/User/UserBookings';
+import TestPage from '../../Test/Test';
 
 export const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ export const router = createBrowserRouter([
       {
         path: "/bookings",
         element: <UserBookings />
+      },
+      {
+        path: "/test",
+        element: <TestPage />
       }
 
     ]

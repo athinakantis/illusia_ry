@@ -16,6 +16,8 @@ import { BookingService } from './services/bookings.service';
 import { BookingController } from './controllers/bookings.controller';
 import { ItemReservationsController } from './controllers/reservations.controller';
 import { ItemReservationService } from './services/reservations.service';
+import { AdminService } from './services/admin.service';
+import { AdminController } from './controllers/admin.controller';
 
 @Module({
   imports: [
@@ -30,7 +32,8 @@ import { ItemReservationService } from './services/reservations.service';
     MailerController,
     ViewsController,
     BookingController,
-    ItemReservationsController
+    ItemReservationsController,
+    AdminController
     
   ], // Controller imports go here
   providers: [
@@ -41,12 +44,19 @@ import { ItemReservationService } from './services/reservations.service';
     GuestService,
     MailerService,
     BookingService,
-    ItemReservationService
+    ItemReservationService,
+    AdminService
   ], // Services are used to handle business logic and data access
 })
 
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(ItemController, ViewsController, MailerController, BookingController, ItemReservationsController);
+    consumer.apply(AuthMiddleware).forRoutes(
+      ItemController,
+      ViewsController,
+      MailerController,
+      BookingController,
+      ItemReservationsController,
+      AdminController,);
   }
 }

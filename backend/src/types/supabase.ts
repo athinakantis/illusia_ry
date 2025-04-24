@@ -76,18 +76,21 @@ export type Database = {
           category_name: string | null
           created_at: string | null
           description: string | null
+          image_path: string | null
         }
         Insert: {
           category_id?: string
           category_name?: string | null
           created_at?: string | null
           description?: string | null
+          image_path?: string | null
         }
         Update: {
           category_id?: string
           category_name?: string | null
           created_at?: string | null
           description?: string | null
+          image_path?: string | null
         }
         Relationships: []
       }
@@ -124,6 +127,13 @@ export type Database = {
             foreignKeyName: "item_reservations_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "booking_owners"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "item_reservations_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "bookings"
             referencedColumns: ["booking_id"]
           },
@@ -141,37 +151,51 @@ export type Database = {
             referencedRelation: "items"
             referencedColumns: ["item_id"]
           },
+          {
+            foreignKeyName: "item_reservations_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "items_with_tags_and_categories"
+            referencedColumns: ["item_id"]
+          },
         ]
       }
       item_tags: {
         Row: {
           created_at: string
           item_id: string
-          tag_id: string | null
+          tag_id: string
         }
         Insert: {
           created_at?: string
           item_id: string
-          tag_id?: string | null
+          tag_id: string
         }
         Update: {
           created_at?: string
           item_id?: string
-          tag_id?: string | null
+          tag_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "item_tags_item_id_fkey"
             columns: ["item_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "frontend_item_view"
             referencedColumns: ["item_id"]
           },
           {
             foreignKeyName: "item_tags_item_id_fkey"
             columns: ["item_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "items"
+            referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "item_tags_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "items_with_tags_and_categories"
             referencedColumns: ["item_id"]
           },
           {
@@ -389,21 +413,50 @@ export type Database = {
           display_name: string | null
           email: string
           user_id: string
+          user_status: string | null
         }
         Insert: {
           display_name?: string | null
           email?: string
           user_id?: string
+          user_status?: string | null
         }
         Update: {
           display_name?: string | null
           email?: string
           user_id?: string
+          user_status?: string | null
         }
         Relationships: []
       }
     }
     Views: {
+      booking_owners: {
+        Row: {
+          booking_id: string | null
+          created_at: string | null
+          display_name: string | null
+          email: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_role_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "bookings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       frontend_item_view: {
         Row: {
           category_name: string | null
@@ -412,6 +465,16 @@ export type Database = {
           item_id: string | null
           item_name: string | null
           quantity: number | null
+          tags: string[] | null
+        }
+        Relationships: []
+      }
+      items_with_tags_and_categories: {
+        Row: {
+          category_name: string | null
+          description: string | null
+          item_id: string | null
+          item_name: string | null
           tags: string[] | null
         }
         Relationships: []
@@ -439,13 +502,35 @@ export type Database = {
         }
         Returns: number
       }
+      create_booking_with_reservations: {
+        Args: { _user_id: string; _items: Json }
+        Returns: Json
+      }
       custom_access_token_hook: {
         Args: { event: Json }
+        Returns: Json
+      }
+      get_user_bookings: {
+        Args: { p_user_id: string }
+        Returns: {
+          booking_id: string
+          user_id: string
+          status: string
+          created_at: string
+          reservations: Json
+        }[]
+      }
+      get_user_reservations_grouped: {
+        Args: { user_id: string }
         Returns: Json
       }
       get_user_role: {
         Args: { p_user_id: string }
         Returns: string
+      }
+      has_role: {
+        Args: { role_name: string }
+        Returns: boolean
       }
       is_user_admin: {
         Args: { p_user_id: string }
