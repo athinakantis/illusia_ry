@@ -35,10 +35,10 @@ const StatCard: React.FC<{ label: string; value: number | string }> = ({
   value,
 }) => (
   <Paper
-    elevation={0}
+    elevation={1}
     sx={{ p: 3, border: "1px solid", borderColor: "divider", height: "100%" }}
   >
-    <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+    <Typography variant="subtitle1" color="text.secondary" fontSize={"1.1rem"}gutterBottom>
       {label}
     </Typography>
     <Typography variant="h4">{value}</Typography>
@@ -122,11 +122,16 @@ const AdminDashboard = () => {
       </Grid>
 
       {/* ───── Quick actions ───── */}
-      <Box mt={4} mb={3} >
+      <Box mt={4} mb={3} textAlign="center">
         <Typography variant="h5" gutterBottom>
           Quick Actions
         </Typography>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          spacing={2}
+          justifyContent="center"
+          alignItems="center"
+        >
           <Button variant="contained" color="secondary">
             Add item
           </Button>
@@ -141,7 +146,7 @@ const AdminDashboard = () => {
 
 
       {/* ───── Bookings overview ───── */}
-      <Box width={"90%"} mt={3}>
+      <Box p={2} mt={3}>
         <Typography variant="h5" gutterBottom>
           Bookings overview
         </Typography>
@@ -173,8 +178,8 @@ const AdminDashboard = () => {
       </Box>
 
       {/* ───── Recent activity & Users/Roles ───── */}
-      <Grid container spacing={0} mt={4}>
-        <Grid size={{ xs: 12, md: 6 }}>
+      <Grid container spacing={4} mt={4} justifyContent="space-between">
+        <Grid item xs={12} md={6}>
           <Typography variant="h5" gutterBottom>
             Recent activity
           </Typography>
@@ -214,7 +219,7 @@ const AdminDashboard = () => {
           </TableContainer>
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 10, md: 4.6, lg: 4 }}>
           <Typography variant="h5" gutterBottom>
             Users &amp; Roles
           </Typography>
@@ -227,7 +232,7 @@ const AdminDashboard = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.slice(0, 5).map((u) => (
+                {users.slice(0, 3).map((u) => (
                   <TableRow key={u.user_id}>
                     <TableCell>{u.display_name ?? u.email}</TableCell>
                     <TableCell>{u.role_title ?? "—"}</TableCell>
