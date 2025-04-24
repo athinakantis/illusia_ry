@@ -10,7 +10,7 @@ import {
 } from '../../slices/itemsSlice';
 import { supabase } from '../../config/supabase';
 import { v4 as uuidv4 } from 'uuid';
-import { TablesInsert } from '../../types/supabase.types';
+import { TablesInsert } from '../../types/supabase.type';
 import MuiAlert, { AlertColor } from '@mui/material/Alert';
 import {
     Button,
