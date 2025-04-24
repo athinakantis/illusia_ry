@@ -3,6 +3,7 @@
 test.controller.ts
 .scannerwork
 /src/Test/
+/frontend/src/Test/
 # compiled output
 dist
 node_modules
