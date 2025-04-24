@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../store/store';
 import { User, UsersState } from '../types/users.type';
-import { usersApi
+import { usersApi } from '../api/users';
 
 const initialState: UsersState = {
-  users: [],
+  users: [], 
   loading: false,
   error: null,
   user: null,
@@ -18,34 +18,45 @@ export const fetchAllUsers = createAsyncThunk(
     return response.data;
   },
 );
-
-export const fetchUserById = createAsyncThunk(
+export const fetchAllUsersWithRole = createAsyncThunk(
+    'users/fetchUsersWithRole',
+    async () => {
+      const response = await usersApi.getUsersWithRole();
+      return response.data;
+    },
+  );
+  
+export const fetchUserById = createAsyncThunk<User, string>(
   'users/fetchUserById',
   async (id: string) => {
     const response = await usersApi.getUserById(id);
-    return response.data;
+    const data = response.data;
+    return Array.isArray(data) ? data[0] : data;
   },
 );
 
-export const fetchUsersWithRole = createAsyncThunk(
-  'users/fetchUsersWithRole',
-  async () => {
-    const response = await usersApi.getUsersWithRole();
-    return response.data;
+
+export const fetchUserWithRoleById = createAsyncThunk<User, string>(
+  'users/fetchUserWithRoleById',
+  async (id: string) => {
+    const response = await usersApi.getUserWithRoleById(id);
+   
+    const data = response.data;
+    return Array.isArray(data) ? data[0] : data;
   },
 );
 
-export const updateUserStatus = createAsyncThunk(
+export const updateUserStatus = createAsyncThunk<User, {userId: string; status: 'approved' | 'rejected'}>(
   'users/updateUserStatus',
-  async ({
-    userId,
-    status,
-  }: {
-    userId: string;
-    status: 'approved' | 'rejected';
-  }) => {
+  async ({ userId, status }) => {
     const response = await usersApi.updateUserStatus(userId, status);
-    return response.data;
+    if (!response.data) {
+      throw new Error('Empty response from server');
+    }
+    
+    const data = response.data;
+
+    return Array.isArray(data) ? data[0] : data;
   },
 );
 
@@ -56,44 +67,70 @@ export const usersSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchAllUsers.pending, (state) => {
       state.loading = true;
+      state.status = 'loading';
     });
     builder.addCase(fetchAllUsers.fulfilled, (state, action) => {
       state.loading = false;
+      state.status = 'succeeded';
       state.users = action.payload;
     });
     builder.addCase(fetchAllUsers.rejected, (state) => {
       state.loading = false;
+      state.status = 'failed';
       state.error = 'Could not fetch users';
     });
     builder.addCase(fetchUserById.pending, (state) => {
       state.loading = true;
+      state.status = 'loading';
     });
     builder.addCase(fetchUserById.fulfilled, (state, action) => {
       state.loading = false;
-      state.user = action.payload;
+      state.status = 'succeeded';
+      state.user = action.payload; 
     });
     builder.addCase(fetchUserById.rejected, (state) => {
       state.loading = false;
+      state.status = 'failed';
       state.error = 'Could not fetch user';
     });
 
-    builder.addCase(fetchUsersWithRole.pending, (state) => {
+    builder.addCase(fetchUserWithRoleById.pending, (state) => {
       state.loading = true;
+      state.status = 'loading';
     });
-    builder.addCase(fetchUsersWithRole.fulfilled, (state, action) => {
+    builder.addCase(fetchUserWithRoleById.fulfilled, (state, action) => {
       state.loading = false;
-      state.users = action.payload;
+      state.status = 'succeeded';
+      state.user = action.payload; 
     });
-    builder.addCase(fetchUsersWithRole.rejected, (state) => {
+    builder.addCase(fetchUserWithRoleById.rejected, (state) => {
       state.loading = false;
+      state.status = 'failed';
+      state.error = 'Could not fetch user with role';
+    });
+
+    builder.addCase(fetchAllUsersWithRole.pending, (state) => {
+      state.loading = true;
+      state.status = 'loading';
+    });
+    builder.addCase(fetchAllUsersWithRole.fulfilled, (state, action) => {
+      state.loading = false;
+      state.status = 'succeeded';
+      state.users = action.payload; 
+    });
+    builder.addCase(fetchAllUsersWithRole.rejected, (state) => {
+      state.loading = false;
+      state.status = 'failed';
       state.error = 'Could not fetch users with roles';
     });
 
     builder.addCase(updateUserStatus.pending, (state) => {
       state.loading = true;
+      state.status = 'loading';
     });
     builder.addCase(updateUserStatus.fulfilled, (state, action) => {
       state.loading = false;
+      state.status = 'succeeded';
       const updatedUser: User = action.payload;
       const idx = state.users.findIndex(
         (u) => u.user_id === updatedUser.user_id,
@@ -107,6 +144,7 @@ export const usersSlice = createSlice({
     });
     builder.addCase(updateUserStatus.rejected, (state) => {
       state.loading = false;
+      state.status = 'failed';
       state.error = 'Could not update user status';
     });
   },
