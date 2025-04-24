@@ -42,6 +42,14 @@ export interface Booking {
   user_id: string,
   status: string,
   created_at: string,
+  reservations?: Array<{
+    reservation_id: string
+    item_id: string
+    start_date: string
+    end_date: string
+    quantity: number
+    created_at: string
+  }>
 }
 
 export interface BookingsState {
@@ -107,4 +115,10 @@ export type BookingWithRes = {
     quantity: number
     created_at: string
   }>
+}
+
+/** Shape of the successful DELETE /bookings/:id response */
+export interface DeleteBookingResponse {
+  message: string;    // "Booking deleted successfully"
+  data: Booking[];    // usually a one-element array with the deleted booking
 }
