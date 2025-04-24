@@ -196,10 +196,11 @@ function Items() {
       }}
     >
       {/* Side panel */}
-      <Box
+      <Stack
         sx={{
           minWidth: 300,
           maxWidth: 286,
+          gap: '30px',
         }}
       >
         {/* Search */}
@@ -207,13 +208,13 @@ function Items() {
           id="filled-search"
           label="Search our items"
           type="search"
-          variant="standard"
+          variant="outlined"
           sx={{ width: '90%', mt: 1 }}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         {/* Categories */}
-        <Box sx={{ pt: 4, pr: 2, gap: 1, display: 'flex', flexWrap: 'wrap' }}>
+        <Box sx={{ pr: 2, gap: 1, display: 'flex', flexWrap: 'wrap' }}>
           {categories.map((category) => (
             <Chip
               variant={
@@ -248,13 +249,12 @@ function Items() {
         <Provider
           theme={defaultTheme}
           colorScheme="light"
-          maxWidth={250}
+          maxWidth={270}
         >
           <DateRangePicker
             labelPosition="side"
             labelAlign="end"
-            width={250}
-
+            width={270}
             aria-label="Select dates"
             value={range}
             minValue={now}
@@ -264,7 +264,7 @@ function Items() {
             isDisabled={(selectedDateRange.start_date != null)}
           />
         </Provider>
-      </Box>
+      </Stack>
 
 
       {/* Items Display */}
@@ -276,7 +276,7 @@ function Items() {
           '& .css-1c5o7vy-MuiPagination-ul': {
             justifyContent: 'center',
             pt: 2,
-          },
+          }
         }}
       >
         <Stack
