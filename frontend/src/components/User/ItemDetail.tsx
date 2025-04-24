@@ -80,7 +80,7 @@ const ItemDetail: React.FC<Props> = (props) => {
     if (itemId && range) {
       const checkAdditionToCart = checkAvailabilityForItemOnDates(itemId, quantity, range.start.toString(), range.end.toString())(store.getState());
       if (checkAdditionToCart.severity === 'success') {
-        dispatch(addItemToCart({ item_id: itemId, quantityToAdd: quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
+        dispatch(addItemToCart({ item_id: itemId, quantity: quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
         dispatch(showNotification({
           message: 'Item added to cart',
           severity: 'success',
