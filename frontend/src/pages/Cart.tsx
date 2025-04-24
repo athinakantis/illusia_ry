@@ -24,6 +24,7 @@ import { addBooking } from '../slices/bookingsSlice';
 import { useAuth } from '../hooks/useAuth';
 import { showNotification } from '../slices/notificationSlice';
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 function Cart() {
     const dispatch = useAppDispatch();
@@ -32,36 +33,37 @@ function Cart() {
     const items = useAppSelector(selectAllItems);
     const selectedDateRange = useAppSelector(selectDateRange);
 
-    console.log(cart)
-
     // Load locally stored cart
     useEffect(() => {
-        if (items.length <= 1) dispatch(fetchAllItems())
-        const savedCart = JSON.parse(
-            localStorage.getItem('savedCart') ?? '[]',
-        );
+        if (items.length <= 1) dispatch(fetchAllItems());
+        const savedCart = JSON.parse(localStorage.getItem('savedCart') ?? '[]');
 
+        if (!savedCart || !savedCart.cart) return
         // If cart has less items than the locally stored array
         // load from storage
-        if (cart.length < savedCart.length) {
+        if (cart.length < savedCart.cart.length) {
             dispatch(loadCartFromStorage(savedCart));
         }
-    }, [])
-
-    const cartInfo = cart.map(({ item, quantity }) => ({
-        ...item, quantity
-    }));
+    }, []);
 
     const createBookingFromCart = () => {
-        const itemsForBooking = cartInfo.map(item => {
-            return { item_id: item.item_id, start_date: selectedDateRange.start_date, end_date: selectedDateRange.end_date, quantity: item.quantity }
-        })
+        const itemsForBooking = cart.map((item) => {
+            const { start_date, end_date } = selectedDateRange;
+            return {
+                item_id: item.item_id,
+                start_date: start_date,
+                end_date: end_date,
+                quantity: item.quantity,
+            };
+        });
         return { user_id: user?.id, items: itemsForBooking };
     };
 
-    const handleBrokenImg = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const handleBrokenImg = (
+        e: React.SyntheticEvent<HTMLImageElement, Event>,
+    ) => {
         (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
-    }
+    };
 
     const handleAddBooking = async () => {
         const newBookingData: object = createBookingFromCart();
@@ -89,21 +91,21 @@ function Cart() {
             sx={{
                 maxWidth: 1240,
                 m: '0 auto',
-                px: 2
+                px: 2,
             }}
         >
             <Typography variant="heading_secondary_bold">Your Cart</Typography>
 
             {cart.length > 0 ? (
-                <Stack direction={'row'}
+                <Stack
+                    direction={'row'}
                     sx={{
                         gap: '32px',
-                        flexWrap: 'wrap'
+                        flexWrap: 'wrap',
                     }}
                 >
-                    <TableContainer
-                        sx={{ maxWidth: 816 }}>
-                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableContainer sx={{ maxWidth: 816, flex: 1, minWidth: 360 }}>
+                        <Table aria-label="simple table">
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Items ({cart.length})</TableCell>
@@ -112,47 +114,56 @@ function Cart() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {cart.map((i) => {
-                                    const { item } = i // Extract the item to display
-                                    return (
-                                        <TableRow
-                                            key={item.item_id}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                        >
-                                            <TableCell>
-                                                <Stack direction={'row'} sx={{ gap: '21px' }}>
-                                                    <img src={item.image_path} style={{ width: 78, borderRadius: 14 }}
-                                                        onError={handleBrokenImg} />
-                                                    <Stack sx={{ maxWidth: 186 }}>
-                                                        <Typography>{item.item_name}</Typography>
-                                                    </Stack>
+                                {cart.map((item) => (
+                                    <TableRow
+                                        key={item.item_id}
+                                        sx={{
+                                            '&:last-child td, &:last-child th': { border: 0 },
+                                            '& > td': { minHeight: 127.64 },
+                                            minHeight: 127.64
+                                        }}
+                                    >
+                                        <TableCell>
+                                            <Stack direction={'row'} sx={{ gap: '21px' }}>
+                                                <img
+                                                    src={item.image_path}
+                                                    style={{ width: 78, borderRadius: 14 }}
+                                                    onError={handleBrokenImg}
+                                                />
+                                                <Stack sx={{ maxWidth: 186 }}>
+                                                    <Typography>{item.item_name}</Typography>
                                                 </Stack>
-                                            </TableCell>
-                                            <TableCell align="right">
-                                                <Typography>{item.quantity}</Typography>
-                                            </TableCell>
-                                            <TableCell align="right">
-                                                < IconButton
-                                                    onClick={(
-                                                    ) => {
-                                                        dispatch(removeItemFromCart({ item_id: item.item_id, quantityToRemove: 1 }));
-                                                    }}
-                                                    aria-label="view"
-                                                    color="primary"
-                                                    size="medium"
-                                                >
-                                                    <ClearIcon />
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    )
-                                })}
+                                            </Stack>
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <Typography>{item.quantity}</Typography>
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <IconButton
+                                                onClick={() => {
+                                                    dispatch(
+                                                        removeItemFromCart({
+                                                            item_id: item.item_id,
+                                                            quantityToRemove: 1,
+                                                        }),
+                                                    );
+                                                }}
+                                                aria-label="view"
+                                                color="primary"
+                                                size="medium"
+                                            >
+                                                <ClearIcon />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
 
                     {/* Booking Summary */}
-                    <Stack id="booking_summary"
+                    <Stack
+                        id="booking_summary"
                         sx={{
                             border: '1px solid #E2E2E2',
                             padding: '40px 30px',
@@ -160,8 +171,9 @@ function Cart() {
                             flex: 1,
                             gap: '24px',
                             height: 'fit-content',
-                            minWidth: 290
-                        }}>
+                            minWidth: 290,
+                        }}
+                    >
                         <Typography
                             variant="body3"
                             sx={{
@@ -169,25 +181,28 @@ function Cart() {
                                 borderLeft: '2px solid black',
                                 color: 'text.primary',
                                 pl: 2,
-                                fontWeight: 500
+                                fontWeight: 500,
                             }}
                         >
                             Booking Summary
                         </Typography>
                         <Stack direction={'row'} justifyContent={'space-between'}>
-                            <Typography variant='body2'>Dates</Typography>
-                            <Typography variant='body2'>{selectedDateRange.start_date} - {selectedDateRange.end_date}</Typography>
+                            <Typography variant="body2">Dates</Typography>
+                            <Typography variant="body2">
+                                {selectedDateRange.start_date} - {selectedDateRange.end_date}
+                            </Typography>
                         </Stack>
                         <Stack direction={'row'} justifyContent={'space-between'}>
-                            <Typography variant='body2'>Total items</Typography>
-                            <Typography variant='body2'>{cartInfo.length}</Typography>
+                            <Typography variant="body2">Total items</Typography>
+                            <Typography variant="body2">{cart.length}</Typography>
                         </Stack>
-                        <Button variant='rounded' size='small' onClick={handleAddBooking}>Book items</Button>
+                        <Button variant="rounded" size="small" onClick={handleAddBooking}>
+                            Book items
+                        </Button>
                     </Stack>
-
                 </Stack>
             ) : (
-                <></>
+                <Typography>Your cart is currently empty! <Link to='/items'>Browse Items</Link></Typography>
             )}
         </Box>
     );

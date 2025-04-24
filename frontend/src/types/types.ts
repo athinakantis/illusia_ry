@@ -86,8 +86,7 @@ export interface CartState {
 }
 */
 
-export interface ItemWithQuantity {
-  item: Item,
+export interface ItemWithQuantity extends Item {
   quantity: number,
 }
 

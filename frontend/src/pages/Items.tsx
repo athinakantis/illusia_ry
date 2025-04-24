@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { loadCartFromStorage, selectCart } from '../slices/cartSlice';
 import { useAppSelector } from '../store/hooks';
 import { a11yProps, CustomTabPanel } from '../components/CustomComponents/CustomTabPanel';
+import { CartState } from '../types/types';
 
 function Items() {
   const { role } = useAuth()
@@ -21,13 +22,15 @@ function Items() {
 
   // Load locally stored cart
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem('savedCart') ?? '[]')
+    const savedCart: CartState = JSON.parse(localStorage.getItem('savedCart') ?? '[]');
+    if (!savedCart || !savedCart.cart) return
+
     // If cart has less items than the locally stored array
     // load from storage
-    if (cart.length < savedCart.length) {
-      dispatch(loadCartFromStorage(savedCart))
+    if (cart.length < savedCart.cart.length) {
+      dispatch(loadCartFromStorage(savedCart));
     }
-  }, [cart, dispatch])
+  }, [])
 
 
   // If user is Admin or Head Admin, return AdminItems / UserItems

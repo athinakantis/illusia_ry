@@ -31,14 +31,23 @@ import {
 } from 'react-router-dom';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { store } from '../store/store';
-import { checkAvailabilityForAllItemsOnDates, checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
+import {
+  checkAvailabilityForAllItemsOnDates,
+  checkAvailabilityForItemOnDates,
+} from '../selectors/availabilitySelector';
 import {
   fetchFutureReservations,
   selectAllReservations,
 } from '../slices/reservationsSlice';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 import { RangeValue } from '@react-types/shared';
-import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
+import {
+  DateValue,
+  getLocalTimeZone,
+  parseDate,
+  today,
+} from '@internationalized/date';
+import { Item } from '../types/types';
 
 function Items() {
   const items = useAppSelector(selectAllItems);
@@ -57,7 +66,10 @@ function Items() {
 
   useEffect(() => {
     if (selectedDateRange.start_date && selectedDateRange.end_date) {
-      setRange({ start: parseDate(selectedDateRange.start_date), end: parseDate(selectedDateRange.end_date) });
+      setRange({
+        start: parseDate(selectedDateRange.start_date),
+        end: parseDate(selectedDateRange.end_date),
+      });
     }
   }, [selectedDateRange]);
 
@@ -76,20 +88,22 @@ function Items() {
     }
   }, [dispatch, items, categories]);
 
-  const addToCart = (item_id: string, quantity: number = 1) => {
+  const addToCart = (item: Item, quantity: number = 1) => {
     // need to fetch the bookings and reservations first in order for this to work properly
 
     if (range?.start === undefined) {
-      dispatch(showNotification({
-        message: "Select dates before adding to cart",
-        severity: 'warning',
-      }));
+      dispatch(
+        showNotification({
+          message: 'Select dates before adding to cart',
+          severity: 'warning',
+        }),
+      );
       return;
     }
     // checks if there is any range selected
 
     const checkAdditionToCart = checkAvailabilityForItemOnDates(
-      item_id,
+      item.item_id,
       quantity,
       range.start.toString(),
       range.end.toString(),
@@ -98,7 +112,14 @@ function Items() {
 
 
     if (checkAdditionToCart.severity === 'success') {
-      dispatch(addItemToCart({ item: selectItemById(item_id)(store.getState()), quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
+      dispatch(
+        addItemToCart({
+          item: item,
+          quantity: quantity,
+          start_date: range.start.toString(),
+          end_date: range.end.toString(),
+        }),
+      );
       dispatch(
         showNotification({
           message: 'Item added to cart',
@@ -116,9 +137,11 @@ function Items() {
     }
   };
 
-  const handleBrokenImg = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+  const handleBrokenImg = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>,
+  ) => {
     (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
-  }
+  };
 
   const toggleCategory = (category: string) => {
     const formattedCategory = category.replace(/ /g, '-');
@@ -169,9 +192,7 @@ function Items() {
   });
 
   const handleDateChange = (newRange: RangeValue<DateValue> | null) => {
-
     if (newRange) {
-
       const startDate = new Date(newRange.start.toString());
       const endDate = new Date(newRange.end.toString());
       const diffInMs = endDate.getTime() - startDate.getTime();
@@ -181,10 +202,13 @@ function Items() {
         alert('You can only book a maximum of 14 days.');
         return;
       }
-      checkAvailabilityForAllItemsOnDates(newRange.start.toString(), newRange.end.toString())(store.getState());
+      checkAvailabilityForAllItemsOnDates(
+        newRange.start.toString(),
+        newRange.end.toString(),
+      )(store.getState());
       setRange(newRange);
     }
-  }
+  };
 
   return (
     <Box
@@ -192,7 +216,7 @@ function Items() {
         display: 'flex',
         padding: 0,
         pb: '8rem',
-        gap: '32px'
+        gap: '32px',
       }}
     >
       {/* Side panel */}
@@ -246,11 +270,7 @@ function Items() {
             />
           ))}
         </Box>
-        <Provider
-          theme={defaultTheme}
-          colorScheme="light"
-          maxWidth={270}
-        >
+        <Provider theme={defaultTheme} colorScheme="light" maxWidth={270}>
           <DateRangePicker
             labelPosition="side"
             labelAlign="end"
@@ -261,11 +281,10 @@ function Items() {
             onChange={handleDateChange}
             isRequired
             maxVisibleMonths={1}
-            isDisabled={(selectedDateRange.start_date != null)}
+            isDisabled={selectedDateRange.start_date != null}
           />
         </Provider>
       </Stack>
-
 
       {/* Items Display */}
       <Box
@@ -276,7 +295,7 @@ function Items() {
           '& .css-1c5o7vy-MuiPagination-ul': {
             justifyContent: 'center',
             pt: 2,
-          }
+          },
         }}
       >
         <Stack
@@ -292,7 +311,12 @@ function Items() {
               component={Link}
               to={`/items/${item.item_id}`}
               key={item.item_id}
-              sx={{ width: 280, minHeight: 300, boxShadow: 'none', textDecoration: 'none' }}
+              sx={{
+                width: 280,
+                minHeight: 300,
+                boxShadow: 'none',
+                textDecoration: 'none',
+              }}
             >
               <CardMedia
                 component="img"
@@ -329,7 +353,7 @@ function Items() {
                       // Stop add-to-cart btn from navigating elsewhere
                       e.preventDefault();
                       e.stopPropagation();
-                      addToCart(item.item_id);
+                      addToCart(item);
                     }}
                   >
                     <AddCircleOutlineOutlinedIcon />
