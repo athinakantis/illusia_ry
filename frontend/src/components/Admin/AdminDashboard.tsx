@@ -103,7 +103,7 @@ const AdminDashboard = () => {
     
   /* ────────── Render ────────── */
   return (
-    <Box p={4}>
+    <Box p={4} maxWidth={1200} mx="auto">
       <Typography variant="h4" gutterBottom>
         Admin Dashboard
       </Typography>
