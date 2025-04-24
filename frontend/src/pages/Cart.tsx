@@ -32,6 +32,7 @@ function Cart() {
     const items = useAppSelector(selectAllItems);
     const selectedDateRange = useAppSelector(selectDateRange);
 
+    console.log(cart)
 
     // Load locally stored cart
     useEffect(() => {
@@ -88,6 +89,7 @@ function Cart() {
             sx={{
                 maxWidth: 1240,
                 m: '0 auto',
+                px: 2
             }}
         >
             <Typography variant="heading_secondary_bold">Your Cart</Typography>
@@ -104,44 +106,47 @@ function Cart() {
                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Items ({cartInfo.length})</TableCell>
+                                    <TableCell>Items ({cart.length})</TableCell>
                                     <TableCell align="right">Qty</TableCell>
                                     <TableCell align="right">Action</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {cartInfo.map((item) => (
-                                    <TableRow
-                                        key={item.item_id}
-                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    >
-                                        <TableCell>
-                                            <Stack direction={'row'} sx={{ gap: '21px' }}>
-                                                <img src={item.image_path} style={{ width: 78, borderRadius: 14 }}
-                                                    onError={handleBrokenImg} />
-                                                <Stack sx={{ maxWidth: 186 }}>
-                                                    <Typography>{item.item_name}</Typography>
+                                {cart.map((i) => {
+                                    const { item } = i // Extract the item to display
+                                    return (
+                                        <TableRow
+                                            key={item.item_id}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell>
+                                                <Stack direction={'row'} sx={{ gap: '21px' }}>
+                                                    <img src={item.image_path} style={{ width: 78, borderRadius: 14 }}
+                                                        onError={handleBrokenImg} />
+                                                    <Stack sx={{ maxWidth: 186 }}>
+                                                        <Typography>{item.item_name}</Typography>
+                                                    </Stack>
                                                 </Stack>
-                                            </Stack>
-                                        </TableCell>
-                                        <TableCell align="right">
-                                            <Typography>{item.quantity}</Typography>
-                                        </TableCell>
-                                        <TableCell align="right">
-                                            < IconButton
-                                                onClick={(
-                                                ) => {
-                                                    dispatch(removeItemFromCart({ item_id: item.item_id, quantityToRemove: 1 }));
-                                                }}
-                                                aria-label="view"
-                                                color="primary"
-                                                size="medium"
-                                            >
-                                                <ClearIcon />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                <Typography>{item.quantity}</Typography>
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                < IconButton
+                                                    onClick={(
+                                                    ) => {
+                                                        dispatch(removeItemFromCart({ item_id: item.item_id, quantityToRemove: 1 }));
+                                                    }}
+                                                    aria-label="view"
+                                                    color="primary"
+                                                    size="medium"
+                                                >
+                                                    <ClearIcon />
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                })}
                             </TableBody>
                         </Table>
                     </TableContainer>
