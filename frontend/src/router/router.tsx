@@ -58,10 +58,6 @@ export const router = createBrowserRouter([
       {
         path: "/bookings",
         element: <UserBookings />
-      },
-      {
-        path: "/test",
-        element: <TestPage />
       }
 
     ]
