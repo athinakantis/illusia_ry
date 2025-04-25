@@ -54,7 +54,7 @@ export class AppModule implements NestModule {
     consumer.apply(AuthMiddleware).forRoutes(
       ItemController,
       ViewsController,
-      MailerController,
+      // MailerController,
       BookingController,
       ItemReservationsController,
       AdminController,);
