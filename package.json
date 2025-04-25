@@ -9,6 +9,12 @@
     "test:all": "concurrently \"cd backend && npm run test:e2e\" \"cd frontend && npm run test\""
   },
   "dependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.1.2",
+    "email-templates": "^12.0.2",
+    "express-handlebars": "^8.0.1",
+    "nodemailer-express-handlebars": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/express-handlebars": "^5.3.1"
   }
 }

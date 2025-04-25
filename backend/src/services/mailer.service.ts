@@ -3,9 +3,8 @@ import { ConfigService } from '@nestjs/config';
 
 import { google } from 'googleapis';
 
-import path from 'path';
 import  { createTransport, SentMessageInfo } from 'nodemailer';
-import hbs from 'nodemailer-express-handlebars';
+// import hbs from 'nodemailer-express-handlebars';
 
 
 @Injectable()
@@ -46,20 +45,6 @@ export class MailerService {
       this.transporter.options.auth.accessToken = token;
       return orig(options);
     };
-
-    // attach Handlebars plugin for HTML templates
-    this.transporter.use(
-      'compile', hbs({
-        viewEngine: {
-          extname: '.hbs',
-          partialsDir: path.resolve(__dirname, '../../templates/partials'),
-          layoutsDir: path.resolve(__dirname, '../../templates/layouts'),
-          defaultLayout: 'main',
-        },
-        viewPath: path.resolve(__dirname, '../../templates'),
-        extName: '.hbs',
-      })
-    );
   }
   
   
@@ -90,21 +75,14 @@ export class MailerService {
     to: string,
     displayName: string
   ) {
-    return this.transporter.sendMail({
-      from: this.config.get<string>('EMAIL'),
-      to,
-      subject: 'Welcome to Illusia!',
-      // @ts-expect-error Property 'template' does not exist on type 'SendMailOptions'.
-      template: 'signup',               // uses signup.hbs
-      context: { displayName },          // data for template
-      attachments: [
-        {
-          filename: 'logo.png',
-          path: path.resolve(__dirname, '../../assets/logo.png'),
-          cid: 'logo@illusia',          // matches <img src="cid:logo@illusia">
-        },
-      ],
-    });
+    const subject = 'Welcome to Illusia!';
+    const text = `Hi ${displayName},
+
+Thank you for signing up for Illusia. We're excited to have you onboard!
+
+Best regards,
+The Illusia Team`;
+    return this.sendEmail(to, subject, text);
   }
 
   /**
@@ -120,20 +98,21 @@ export class MailerService {
     startDate?: string,
     endDate?: string
   ) {
-    return this.transporter.sendMail({
-      from: this.config.get<string>('EMAIL'),
-      to,
-      subject: 'Your booking has been approved',
-      // @ts-expect-error Property 'template' does not exist on type 'SendMailOptions'.
-      template: 'bookingApproved',      // uses bookingApproved.hbs
-      context: { bookingId, startDate, endDate },
-      attachments: [
-        {
-          filename: 'logo.png',
-          path: path.resolve(__dirname, '../../assets/logo.png'),
-          cid: 'logo@illusia',
-        },
-      ],
-    });
+    const subject = 'Your booking has been approved';
+    let text = `Hello,
+
+Your booking with ID ${bookingId} has been approved.`;
+    if (startDate && endDate) {
+      text += `
+
+Booking dates: ${startDate} - ${endDate}`;
+    }
+    text += `
+
+You can view more details in your dashboard.
+
+Thanks,
+The Illusia Team`;
+    return this.sendEmail(to, subject, text);
   }
 }

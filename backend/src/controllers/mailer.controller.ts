@@ -16,7 +16,7 @@ export class MailerController {
     @Body('email') email: string,
     @Body('subject') subject: string,
     @Body('message') message: string,
-  ): Promise<{ message: string; result?: SentMessageInfo; error?: any }> {
+  ): Promise<{ message: string; result?: SentMessageInfo; error?: undefined }> {
     try {
       const result = await this.mailerService.sendEmail(email, subject, message);
       return { message: 'Email sent successfully!', result };
@@ -30,7 +30,7 @@ export class MailerController {
   async signupEmailTest(
     @Body('to') to: string,
     @Body('displayName') displayName: string,
-  ): Promise<{ message: string; result?: SentMessageInfo; error?: any }> {
+  ): Promise<{ message: string; result?: SentMessageInfo; error?: undefined }> {
     try {
       const result = await this.mailerService.sendSignupEmail(to, displayName);
       return { message: 'Signup email sent successfully!', result };
@@ -46,7 +46,7 @@ export class MailerController {
     @Body('bookingId') bookingId: string,
     @Body('startDate') startDate?: string,
     @Body('endDate') endDate?: string,
-  ): Promise<{ message: string; result?: SentMessageInfo; error?: any }> {
+  ): Promise<{ message: string; result?: SentMessageInfo; error?: undefined }> {
     try {
       const result = await this.mailerService.sendBookingApprovedEmail(
         to,
