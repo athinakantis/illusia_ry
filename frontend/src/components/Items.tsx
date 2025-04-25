@@ -172,6 +172,14 @@ function Items() {
 
   const categoryParams = searchParams.get('category')?.split(',') || [];
 
+  const itemsMaxBookedQty = (range) ? checkAvailabilityForAllItemsOnDates(
+    range.start.toString(),
+    range.end.toString(),
+  )(store.getState())
+    :
+    {};
+  // checks the bookings of the items in date range
+
   const filteredItems = items.filter((item) => {
     const matchesCategory = categoryParams.length
       ? (() => {
@@ -188,7 +196,10 @@ function Items() {
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
 
-    return matchesCategory && matchesSearch;
+    const matchesQty = (range) ? (item.quantity - (itemsMaxBookedQty[item.item_id] || 0) > 0) : true;
+    // checks the map, if any of hte item is available
+
+    return matchesCategory && matchesSearch && matchesQty;
   });
 
   const handleDateChange = (newRange: RangeValue<DateValue> | null) => {
@@ -202,10 +213,7 @@ function Items() {
         alert('You can only book a maximum of 14 days.');
         return;
       }
-      checkAvailabilityForAllItemsOnDates(
-        newRange.start.toString(),
-        newRange.end.toString(),
-      )(store.getState());
+
       setRange(newRange);
     }
   };

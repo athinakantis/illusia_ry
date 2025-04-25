@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store/store";
-import { LocalReservation, ReservationsState } from "../types/types";
+import { Reservation, ReservationsState } from "../types/types";
 import { reservationsApi } from "../api/reservations";
 import { getMaxBookedQtyForItem, getBookedQtyByDateAndItemForReservationsInRange } from "../utility/overlappingDates";
 
@@ -68,7 +68,7 @@ export const selectAllReservationsForItem = (item_id: string) => (state: RootSta
 }
 
 export const selectQtyForItemInReservationsByIdInDateRange = (id: string, start_date: string, end_date: string) => (state: RootState) => {
-    const itemReservations: LocalReservation[] = state.reservations.reservations.filter((item) => item.item_id === id);
+    const itemReservations: Reservation[] = state.reservations.reservations.filter((item) => item.item_id === id);
 
     const maxAvailableQtyInRange = getMaxBookedQtyForItem(getBookedQtyByDateAndItemForReservationsInRange(new Date(start_date), new Date(end_date), itemReservations)[id]);
 

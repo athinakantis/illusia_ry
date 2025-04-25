@@ -40,7 +40,7 @@ export const checkAvailabilityForItemOnDates = (
                 ? { severity: 'success', data: true }
                 : {
                     severity: 'warning',
-                    message: 'Not enough quantity for selected dates',
+                    message: 'Not enough of item available',
                 };
         },
     );
@@ -61,6 +61,8 @@ export const checkAvailabilityForAllItemsOnDates = (
             const itemsAvailability = items.map(item => {
                 return { item_id: item.item_id, quantity: item.quantity - (itemsMaxBookedQty[item.item_id] || 0) }
             });
+
+            return itemsMaxBookedQty;
             // calculates the availability of the ites for filtering
 
         }
