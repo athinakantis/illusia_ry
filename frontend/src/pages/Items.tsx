@@ -6,47 +6,13 @@ import { Box, Tab, Tabs } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { loadCartFromStorage, selectCart } from '../slices/cartSlice';
 import { useAppSelector } from '../store/hooks';
-
-/*
-type LocallyStoredItem = {
-  item_id: string;
-  quantity: number
-}*/
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function CustomTabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ pt: 4 }}>{children}</Box>}
-    </div>
-  );
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
-
+import { a11yProps, CustomTabPanel } from '../components/CustomComponents/CustomTabPanel';
+import { CartState } from '../types/types';
 
 function Items() {
   const { role } = useAuth()
   const dispatch = useDispatch()
-  const cart = useAppSelector(selectCart)
+  const { cart } = useAppSelector(selectCart)
   const [value, setValue] = useState(0);
 
 
@@ -54,16 +20,17 @@ function Items() {
     setValue(newValue);
   };
 
-
   // Load locally stored cart
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem('savedCart') ?? '[]')
+    const savedCart: CartState = JSON.parse(localStorage.getItem('savedCart') ?? '[]');
+    if (!savedCart || !savedCart.cart) return
+
     // If cart has less items than the locally stored array
     // load from storage
-    if (cart.cart.length < savedCart.cart.length) {
-      dispatch(loadCartFromStorage(savedCart))
+    if (cart.length < savedCart.cart.length) {
+      dispatch(loadCartFromStorage(savedCart));
     }
-  }, [cart, dispatch])
+  }, [])
 
 
   // If user is Admin or Head Admin, return AdminItems / UserItems

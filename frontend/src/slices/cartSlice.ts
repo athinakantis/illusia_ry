@@ -14,39 +14,41 @@ export const cartSlice = createSlice({
         addItemToCart: (state, action) => {
             // Destructure new item
             const { item, quantity, start_date, end_date } = action.payload;
-            console.log('Quantity: ', quantity);
-            const itemAlreadyInCart = state.cart.find(
-                (itemAndQuantity) => itemAndQuantity.item.item_id == item.item_id,
-            );
 
-            if (itemAlreadyInCart) {
-                itemAlreadyInCart.quantity += +quantity;
+            const itemAlreadyInCart = state.cart.findIndex(cartItem => cartItem.item_id == item.item_id);
+            console.log('Item is in cart: ',!!itemAlreadyInCart)
+
+            if (itemAlreadyInCart !== -1) {
+                state.cart[itemAlreadyInCart].quantity += quantity;
             } else {
-                state.cart.push({
-                    item: item,
-                    quantity: quantity,
-                });
+                const newItem = {...item, ['quantity']: quantity}
+                console.log('New item object: ',newItem)
+                state.cart.push(newItem);
             }
             state.selectedDateRange = { start_date, end_date };
+
+            // Save the updated cart to localStorage
             localStorage.setItem('savedCart', JSON.stringify(state));
         },
         removeItemFromCart: (state, action) => {
             // Destructure item to remove
             const { item_id, quantityToRemove } = action.payload;
             const itemAlreadyInCart = state.cart.find(
-                (item) => item.item.item_id == item_id,
+                (item) => item.item_id == item_id,
             );
             if (itemAlreadyInCart) {
                 if (itemAlreadyInCart.quantity > +quantityToRemove) {
                     itemAlreadyInCart.quantity -= +quantityToRemove;
                 } else {
-                    state.cart = state.cart.filter((item) => item.item.item_id !== item_id);
+                    state.cart = state.cart.filter((item) => item.item_id !== item_id);
                 }
             }
             if (state.cart.length < 1) {
                 state.selectedDateRange = { start_date: null, end_date: null };
+                localStorage.removeItem('savedCart')
             }
-            // if the cart is fully empty, remove the selected date range
+
+            // Save the updated cart to localStorage
             localStorage.setItem('savedCart', JSON.stringify(state));
         },
         emptyCart: (state) => {
@@ -75,13 +77,13 @@ export const {
 } = cartSlice.actions;
 
 export const selectItemInCartById = (id: string) => (state: RootState) => {
-    return state.cart.cart.find((item) => item.item.item_id === id);
+    return state.cart.cart.find((item) => item.item_id === id);
 };
 
 export const selectQtyForItemInCartByIdInDateRange =
     (id: string, start_date: string, end_date: string) => (state: RootState) => {
         const itemInCartReservations = state.cart.cart.filter(
-            (item) => item.item.item_id === id,
+            (item) => item.item_id === id,
         );
 
         if (itemInCartReservations.length > 0) {

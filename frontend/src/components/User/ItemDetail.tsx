@@ -70,7 +70,6 @@ const ItemDetail: React.FC = () => {
   }
 
   const handleCartAddition = () => {
-
     if (range?.start === undefined) {
       dispatch(showNotification({
         message: "Select dates before adding to cart",
