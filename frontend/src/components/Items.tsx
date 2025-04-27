@@ -6,7 +6,6 @@ import {
   fetchAllItems,
   selectAllCategories,
   selectAllItems,
-  selectItemById,
 } from '../slices/itemsSlice';
 import {
   Button,
@@ -32,10 +31,10 @@ import {
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { store } from '../store/store';
 import {
-  checkAvailabilityForAllItemsOnDates,
   checkAvailabilityForItemOnDates,
 } from '../selectors/availabilitySelector';
 import {
+  checkAvailabilityForAllItemsOnDates,
   fetchFutureReservations,
   selectAllReservations,
 } from '../slices/reservationsSlice';
