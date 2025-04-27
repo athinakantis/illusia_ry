@@ -33,6 +33,7 @@
     "@supabase/supabase-js": "^2.49.4",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "email-templates": "^2.7.1",
     "express-handlebars": "^8.0.1",
     "express-list-routes": "^1.2.4",
     "express-rate-limit": "^7.5.0",
@@ -46,7 +47,9 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "postgres": "^3.4.5",
-    "reflect-metadata": "^0.2.0",
+    "preview-email": "^3.1.0",
+    "pug": "^3.0.3",
+    "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
@@ -55,6 +58,7 @@
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
+    "@types/email-templates": "^10.0.4",
     "@types/express": "^5.0.0",
     "@types/express-handlebars": "^5.3.1",
     "@types/jest": "^29.5.2",

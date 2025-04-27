@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-
 import { google } from 'googleapis';
-
 import  { createTransport, SentMessageInfo } from 'nodemailer';
 // import hbs from 'nodemailer-express-handlebars';
 
