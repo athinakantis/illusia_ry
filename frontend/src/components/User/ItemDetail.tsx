@@ -144,13 +144,13 @@ const ItemDetail: React.FC = () => {
             <Provider
               theme={defaultTheme}
               colorScheme="light"
-              maxWidth={250}
+              maxWidth={290}
             >
               {/* Set the max width of the provider to the max width of the component to avoid nasty UI */}
               <DateRangePicker
                 labelPosition="side"
                 labelAlign="end"
-                width={250}
+                width={290}
                 aria-label="Select dates"
                 value={range}
                 minValue={now}
