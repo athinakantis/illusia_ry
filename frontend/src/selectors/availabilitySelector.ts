@@ -1,9 +1,8 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { selectAllItems, selectItemById } from '../slices/itemsSlice';
-import { selectAllReservations, selectQtyForItemInReservationsByIdInDateRange } from '../slices/reservationsSlice';
+import { selectItemById } from '../slices/itemsSlice';
+import { selectQtyForItemInReservationsByIdInDateRange } from '../slices/reservationsSlice';
 import { selectQtyForItemInCartByIdInDateRange } from '../slices/cartSlice';
 import { Result } from '../types/types';
-import { getBookedQtyByDateAndItemForReservationsInRange, getMaxBookedQtyForManyItems } from '../utility/overlappingDates';
 
 export const checkAvailabilityForItemOnDates = (
     item_id: string,
@@ -21,30 +20,35 @@ export const checkAvailabilityForItemOnDates = (
             ),
             selectQtyForItemInCartByIdInDateRange(item_id, start_date, end_date),
         ],
-        (item, reservation, itemQtyInCart): Result => {
-            if (itemQtyInCart < 0)
-                return {
-                    severity: 'warning',
-                    message: 'Item is already in cart for another date',
-                };
-            // when trying to add the item on other date
-            // should be fixed, so it is possible to do so, but the "item_id" column does not work for this
+        (item, itemQtyInReservatios, itemQtyInCart): Result => {
 
-            if ((item?.quantity ? item.quantity : 0) < quantity + itemQtyInCart)
-                return { severity: 'warning', message: 'Not enough of item overall' };
+            const overallItemQty = (item?.quantity ? item.quantity : 0);
+            const availableQuantityOfItem = overallItemQty - itemQtyInCart - itemQtyInReservatios;
 
-            const availableQuantityOfItem =
-                (item?.quantity ? item.quantity : 0) - itemQtyInCart - reservation;
+            if (overallItemQty === itemQtyInCart)
+                return { severity: 'warning', message: 'Max quantity of the item is already in cart' };
+
+            if (availableQuantityOfItem === 0) {
+                if (itemQtyInCart === 0) return { severity: 'warning', message: "Item is not available for selected dates" };
+                else return { severity: 'warning', message: "Max quantity of the item for the dates is already in cart" };
+
+            }
+
+            if (overallItemQty < quantity)
+                return { severity: 'warning', message: `Requested bigger quantity than available overall by ${quantity - overallItemQty}` };
 
             return quantity - availableQuantityOfItem <= 0
                 ? { severity: 'success', data: true }
                 : {
                     severity: 'warning',
-                    message: 'Not enough quantity for selected dates',
+                    message: `Not enough of item available for selected dates. Only available ${availableQuantityOfItem}`,
                 };
         },
+
+        // add error that tracks if the item is already in cart, then error "all the item already in cart"
     );
 
+/*
 export const checkAvailabilityForAllItemsOnDates = (
     start_date: string,
     end_date: string,
@@ -61,7 +65,12 @@ export const checkAvailabilityForAllItemsOnDates = (
             const itemsAvailability = items.map(item => {
                 return { item_id: item.item_id, quantity: item.quantity - (itemsMaxBookedQty[item.item_id] || 0) }
             });
+
+            return itemsMaxBookedQty;
             // calculates the availability of the ites for filtering
 
+            // move this to just reservations slice
         }
     );
+
+*/
