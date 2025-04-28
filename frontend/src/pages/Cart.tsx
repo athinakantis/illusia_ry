@@ -14,11 +14,12 @@ import {
 import ClearIcon from '@mui/icons-material/Clear';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
+    emptyCart,
     removeItemFromCart,
     selectCart,
     selectDateRange,
 } from '../slices/cartSlice';
-import { addBooking } from '../slices/bookingsSlice';
+import { addBooking, fetchUserBookings } from '../slices/bookingsSlice';
 import { useAuth } from '../hooks/useAuth';
 import { showNotification } from '../slices/notificationSlice';
 import { Link } from 'react-router-dom';
@@ -69,6 +70,7 @@ function Cart() {
                     severity: 'success',
                 }),
             );
+            dispatch(emptyCart())
         }
     };
 
