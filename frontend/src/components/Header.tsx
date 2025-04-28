@@ -17,11 +17,17 @@ import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
+import { useAppSelector } from '../store/hooks';
+import { selectCart } from '../slices/cartSlice';
 
 const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { cart } = useAppSelector(selectCart)
+
+  // Calculate total quantity of all cart items
+  const totalItems = cart.reduce((total, item) => total + (item.quantity || 0), 0)
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -90,7 +96,7 @@ const Header = () => {
             '& a:hover': { color: 'primary.main' },
             '& a': {
               textDecoration: 'none',
-              color: "primary.light", 
+              color: "primary.light",
             }
           }}>
             {navigationLinks.map((item) => (
@@ -128,8 +134,28 @@ const Header = () => {
           <Link to='/' aria-label="View profile">
             <PersonIcon />
           </Link>
-          <Link to='/cart' aria-label="Go to cart">
+          <Link to='/cart' aria-label="Go to cart" style={{ position: 'relative' }}>
             <ShoppingBagIcon />
+            {totalItems > 0 &&
+              <Box component='span' sx={{
+                '&::after': {
+                  content: `"${totalItems}"`,
+                  width: '15px',
+                  height: '15px',
+                  position: 'absolute',
+                  top: '-2px',
+                  right: '-2px',
+                  bgcolor: '#9339C9',
+                  color: '#FFF',
+                  borderRadius: '50px',
+                  fontSize: '10px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                  fontWeight: 800
+                }
+              }} />
+            }
           </Link>
           <Logout />
         </Box>
@@ -152,7 +178,7 @@ const Header = () => {
           '& a:hover': { color: 'primary.main' },
           '& a': {
             textDecoration: 'none',
-            color: "secondary.main", 
+            color: "secondary.main",
           }
         }}
       >
