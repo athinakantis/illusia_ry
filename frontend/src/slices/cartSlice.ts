@@ -16,13 +16,11 @@ export const cartSlice = createSlice({
             const { item, quantity, start_date, end_date } = action.payload;
 
             const itemAlreadyInCart = state.cart.findIndex(cartItem => cartItem.item_id == item.item_id);
-            console.log('Item is in cart: ',!!itemAlreadyInCart)
 
             if (itemAlreadyInCart !== -1) {
                 state.cart[itemAlreadyInCart].quantity += quantity;
             } else {
                 const newItem = {...item, ['quantity']: quantity}
-                console.log('New item object: ',newItem)
                 state.cart.push(newItem);
             }
             state.selectedDateRange = { start_date, end_date };
