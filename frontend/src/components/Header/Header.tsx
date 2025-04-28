@@ -11,12 +11,13 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import Logout from './Auth/LoginOutBtn';
+import Logout from '../Auth/LoginOutBtn';
 import PersonIcon from '@mui/icons-material/Person';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
+import PersonMenu from './PersonMenu';
 
 const Header = () => {
   const theme = useTheme();
@@ -125,9 +126,7 @@ const Header = () => {
             p: '6px 8px'
           }
         }}>
-          <Link to='/' aria-label="View profile">
-            <PersonIcon />
-          </Link>
+         <PersonMenu />
           <Link to='/cart' aria-label="Go to cart">
             <ShoppingBagIcon />
           </Link>
