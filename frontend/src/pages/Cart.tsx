@@ -56,6 +56,10 @@ function Cart() {
         const newBookingData: object = createBookingFromCart();
         const resultAction = await dispatch(addBooking(newBookingData));
 
+        if (!user) {
+            return dispatch(showNotification({ message: 'Only registered users can make a booking', severity: 'error' }))
+        }
+
         if (addBooking.rejected.match(resultAction)) {
             dispatch(
                 showNotification({
@@ -71,6 +75,7 @@ function Cart() {
                 }),
             );
             dispatch(emptyCart())
+            dispatch(fetchUserBookings(user.id))
         }
     };
 

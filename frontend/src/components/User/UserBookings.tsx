@@ -96,7 +96,7 @@ const UserBookings = () => {
         ) : (
           <Stack spacing={4}>
             {sortedBookings.map((booking) => (
-              <Box key={booking?.booking_id} sx={{ p: 3, pb: 4 }} border={'1px solid #E2E2E2'}>
+              <Box key={booking.booking_id} sx={{ p: 3, pb: 4 }} border={'1px solid #E2E2E2'}>
                 {/* booking header */}
                 <Stack justifyContent={'space-between'} sx={{ mb: 2, flexDirection: { xs: 'column', md: 'row' }, gap: { xs: 2, md: 0 } }}>
                   <Stack sx={{ gap: '2px' }}>
@@ -104,14 +104,14 @@ const UserBookings = () => {
                       variant="subheading"
                       fontWeight={600}
                     >
-                      Booking&nbsp;ID:&nbsp;{booking?.booking_id}
+                      Booking&nbsp;ID:&nbsp;{booking.booking_id}
                     </Typography>
                     <Typography
                       variant="body3"
                       fontWeight={500}
                       fontSize={14}
                     >Created at{' '}
-                      {new Date(booking?.created_at).toLocaleString()}
+                      {new Date(booking.created_at).toLocaleString()}
                     </Typography>
                   </Stack>
 
@@ -119,17 +119,17 @@ const UserBookings = () => {
                     <Chip
                       sx={{
                         mr: 1,
-                        ...(booking?.status === 'pending'
+                        ...(booking.status === 'pending'
                           ? { bgcolor: '#FFCA28', color: theme.palette.getContrastText('#FFCA28') }
                           : {}),
                       }}
-                      label={booking?.status}
+                      label={booking.status}
                       color={
-                        booking?.status === 'approved'
+                        booking.status === 'approved'
                           ? 'success'
-                          : booking?.status === 'pending'
+                          : booking.status === 'pending'
                             ? 'warning'
-                            : booking?.status === 'rejected'
+                            : booking.status === 'rejected'
                               ? 'error'
                               : 'default'
                       }
@@ -137,7 +137,7 @@ const UserBookings = () => {
                     <Tooltip title="Cancel booking">
                       <IconButton
                         size="small"
-                        onClick={() => handleCancel(booking?.booking_id)}
+                        onClick={() => handleCancel(booking.booking_id)}
                       >
                         <CloseIcon fontSize="small" />
                       </IconButton>
@@ -163,7 +163,7 @@ const UserBookings = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {booking?.reservations.map((res) => (
+                      {booking.reservations.map((res) => (
                         <TableRow key={res.reservation_id}>
                           <TableCell align='left' sx={{ pl: 0 }}>
                             {items.find((i) => i.item_id === res.item_id)?.item_name ?? res.item_id}
