@@ -168,6 +168,9 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
           '& .MuiDataGrid-footerContainer :is(svg)': {
             fill: 'white'
           },
+          '& .MuiTablePagination-select': {
+            color: 'background.default'
+          },
           // Hover CSS
           '& .MuiDataGrid-row:hover': {
             backgroundColor: 'background.verylightgrey',
