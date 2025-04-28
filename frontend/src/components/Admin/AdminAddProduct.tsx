@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth'; // Import your auth hook
 import {
     createItem,
-    fetchAllCategories,
     selectAllCategories,
 } from '../../slices/itemsSlice';
 import { supabase } from '../../config/supabase';
