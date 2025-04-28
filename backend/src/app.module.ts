@@ -10,7 +10,6 @@ import { ViewsController } from './controllers/views.controller';
 import { ViewsService } from './services/view.service';
 import { GuestService } from './services/guest.service';
 import { GuestController } from './controllers/guest.controller';
-import { MailerService } from './services/mailer.service';
 import { MailerController } from './controllers/mailer.controller';
 import { BookingService } from './services/bookings.service';
 import { BookingController } from './controllers/bookings.controller';
@@ -18,6 +17,7 @@ import { ItemReservationsController } from './controllers/reservations.controlle
 import { ItemReservationService } from './services/reservations.service';
 import { AdminService } from './services/admin.service';
 import { AdminController } from './controllers/admin.controller';
+import { MailerService } from './services/mailer.service';
 
 @Module({
   imports: [
@@ -54,7 +54,7 @@ export class AppModule implements NestModule {
     consumer.apply(AuthMiddleware).forRoutes(
       ItemController,
       ViewsController,
-      MailerController,
+      // MailerController,
       BookingController,
       ItemReservationsController,
       AdminController,);

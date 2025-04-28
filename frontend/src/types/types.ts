@@ -58,33 +58,22 @@ export interface BookingsState {
   loading: boolean
 }
 
-export interface LocalReservation {
+export interface Reservation {
+  id?: string,
+  booking_id?: string,
+  created_at?: string,
   item_id: string,
   start_date: string,
   end_date: string,
   quantity: number,
 }
 
-export interface Reservation extends LocalReservation {
-  id: string,
-  booking_id: string,
-  created_at: string,
-}
-
 export interface ReservationsState {
   // reservations: Reservation[],
-  reservations: LocalReservation[],
+  reservations: Reservation[],
   error: null | string,
   loading: boolean
 }
-
-/*
-export interface CartState {
-  cart: LocalReservation[];
-  selectedDateRange: { start_date: string | null, end_date: string | null }
-  // stores the items added to the cart and the date range, on which all the items will be booked
-}
-*/
 
 export interface ItemWithQuantity extends Item {
   quantity: number,

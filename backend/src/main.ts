@@ -4,8 +4,9 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
+  console.log('1');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
+console.log('2');
   // Serve React static files
   app.useStaticAssets(join(__dirname, '..', 'frontend'));
   app.setBaseViewsDir(join(__dirname, '..', 'frontend'));

@@ -11,6 +11,7 @@ import Contacts from '../pages/Contacts';
 import ItemDetail from '../components/User/ItemDetail';
 import UserBookings from '../components/User/UserBookings';
 import AdminDashboard from '../components/Admin/AdminDashboard';
+import Account from '../components/Account';
 
 export const router = createBrowserRouter([
   {
@@ -62,6 +63,10 @@ export const router = createBrowserRouter([
       {
         path: "/admin/dashboard",
         element: <AdminDashboard />
+      },
+      {
+        path: "/account",
+        element: <Account />
       }
 
     ]
