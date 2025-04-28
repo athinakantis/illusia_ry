@@ -1,9 +1,9 @@
 import { Box, Button, Divider, IconButton, Menu, MenuItem } from "@mui/material";
 import { Link } from "react-router-dom";
-import Logout from "../Auth/LoginOutBtn";
 import PersonIcon from "@mui/icons-material/Person";
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import Logout from "../Auth/LoginOutBtn";
 
 const PersonMenu = () => {
   // ─── profile menu state ──────────────────────────────────────────────
@@ -72,7 +72,7 @@ const PersonMenu = () => {
             </MenuItem>
             <Divider />
             <MenuItem disableRipple sx={{ pl: 2, pr: 2 }}>
-              <Logout  />({user?.email})
+            <Logout />({user?.email})
             </MenuItem>
             <Divider />
             {/* language buttons */}
