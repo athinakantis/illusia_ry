@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import { Snackbar } from './Snackbar';
+import ScrollToTop from '../utility/ScrollToTop';
 
 function Root() {
 
@@ -21,6 +22,8 @@ function Root() {
           paddingBottom: '3rem',
         }}
       >
+        {/* Component that scrolls to top of page when navigating */}
+        <ScrollToTop />
         <Outlet />
       </main>
       <Footer />

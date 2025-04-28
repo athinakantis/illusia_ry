@@ -11,7 +11,7 @@ import Contacts from '../pages/Contacts';
 import ItemDetail from '../components/User/ItemDetail';
 import UserBookings from '../components/User/UserBookings';
 import AdminDashboard from '../components/Admin/AdminDashboard';
-import AdminBookings from '../components/Admin/AdminBookings';
+import AdminBookings from '../components/Admin/AdminBookings/AdminBookings';
 
 export const router = createBrowserRouter([
   {

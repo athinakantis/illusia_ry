@@ -78,6 +78,35 @@ export const fetchUserBookings = createAsyncThunk<
         }
     }
 );
+/**
+ * Change the status of a booking
+ * @param id - The ID of the booking to change
+ * @param status - The new status to set for the booking(either "approved" or "rejected")
+ * @returns A promise that resolves to the updated booking
+ */
+export const updateBookingStatus = createAsyncThunk<
+    Booking,
+    { id: string; status: "approved" | "rejected" },
+    { rejectValue: string }
+>(
+    'bookings/updateBookingStatus',
+    async ({ id,status}, { rejectWithValue }) => {
+        try {
+            const { data, error, message } = await bookingsApi.updateBookingStatus(id, status);
+            if (error) return rejectWithValue(message);
+            return data;
+        } catch (error: unknown) {
+            if (axios.isAxiosError<{ message: string }>(error)) {
+                return rejectWithValue(
+                    error.response?.data?.message ?? 'Network error'
+                );
+            }
+            return rejectWithValue('Unknown error');
+        }
+    }
+);
+
+
 
 /*
 export const fetchBookingById = createAsyncThunk(
@@ -148,6 +177,24 @@ export const bookingsSlice = createSlice({
             state.loading = false;
             state.error = action.payload ?? "Failed to add item";
         })
+        //────── handle changing booking status ─────────────────────
+        builder.addCase(updateBookingStatus.pending, (state) => {
+            state.error = null;
+        });
+        builder.addCase(updateBookingStatus.fulfilled, (state, action) => {
+            state.loading = false;
+            const updatedBooking = action.payload;
+            const index = state.bookings.findIndex(
+                (booking) => booking.booking_id === updatedBooking.booking_id
+            );
+            if (index !== -1) {
+                state.bookings[index] = updatedBooking;
+            }
+        });
+        builder.addCase(updateBookingStatus.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload ?? 'Could not change booking status';
+        });    
 
         // handle deleting a booking
         builder.addCase(deleteBooking.pending, (state) => {
@@ -174,5 +221,13 @@ export const selectAllBookings = (state: RootState) =>
 export const selectBookingById = (id: string) => (state: RootState) => {
     return state.bookings.bookings.find((booking) => booking.booking_id === id);
 }
+export const selectBookingsLoading = (state: RootState) =>
+    state.bookings.loading;
+export const selectBookingsError = (state: RootState) =>
+    state.bookings.error;
+export const selectBookingsCount = (state: RootState) =>
+    state.bookings.bookings.length;
+export const selectBookingsByUserId = (userId: string) => (state: RootState) =>
+    state.bookings.bookings.filter((booking) => booking.user_id === userId);
 
 export default bookingsSlice.reducer;

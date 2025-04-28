@@ -1,4 +1,3 @@
-// src/components/User/UserBookings.tsx
 import {
   Container,
   Typography,
