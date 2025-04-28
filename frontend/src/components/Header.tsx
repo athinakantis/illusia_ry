@@ -62,29 +62,32 @@ const Header = () => {
     >
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         {/* Logo */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {isMobile && (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
-          <Typography variant="h1" color='secondary' component="div"
-            sx={{ fontWeight: '400', fontSize: { xs: '1.2rem', sm: '1.7rem' } }}>
-            ILLUSIA
-          </Typography>
-          <Typography
-            sx={{
-              fontWeight: 400,
-              fontFamily: 'Lato, sans-serif',
-              fontSize: { xs: '1.2rem', sm: '1.7rem' }
-            }}
-          >STORE</Typography>
-        </Box>
+        <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            {isMobile && (
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
+            <Typography variant="h1" color='secondary' component="div"
+              sx={{ fontWeight: '400', fontSize: { xs: '1.2rem', sm: '1.7rem' } }}>
+              ILLUSIA
+            </Typography>
+            <Typography
+              sx={{
+                fontWeight: 400,
+                fontFamily: 'Lato, sans-serif',
+                fontSize: { xs: '1.2rem', sm: '1.7rem' }
+              }}
+            >STORE</Typography>
+          </Box>
+        </Link>
+
 
         {/* Navigation Links - Desktop */}
         {!isMobile && (
