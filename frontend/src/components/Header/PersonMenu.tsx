@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 
 const PersonMenu = () => {
-      // ─── profile menu state ──────────────────────────────────────────────
+  // ─── profile menu state ──────────────────────────────────────────────
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { user } = useAuth();
   const menuOpen = Boolean(anchorEl);
@@ -15,7 +15,7 @@ const PersonMenu = () => {
   };
   const handleMenuClose = () => setAnchorEl(null);
 
-  // ──────────────────────────────────────────────────────────────────────
+  // ─── Render ───────────────────────────────────────────────────────────────
     return (
         <Box sx={{
             display: 'flex',

@@ -12,7 +12,6 @@ import {
   useTheme,
 } from '@mui/material';
 import Logout from '../Auth/LoginOutBtn';
-import PersonIcon from '@mui/icons-material/Person';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
