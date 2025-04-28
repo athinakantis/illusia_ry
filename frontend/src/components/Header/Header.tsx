@@ -11,14 +11,15 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import Logout from './Auth/LoginOutBtn';
-import PersonIcon from '@mui/icons-material/Person';
+import Logout from '../Auth/LoginOutBtn';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
-import { useAppSelector } from '../store/hooks';
-import { selectCart } from '../slices/cartSlice';
+import PersonMenu from './PersonMenu';
+import { Item } from '../../types/types';
+import { selectCart } from '../../slices/cartSlice';
+import { useAppSelector } from '../../store/hooks';
 
 const Header = () => {
   const theme = useTheme();
@@ -27,7 +28,7 @@ const Header = () => {
   const { cart } = useAppSelector(selectCart)
 
   // Calculate total quantity of all cart items
-  const totalItems = cart.reduce((total, item) => total + (item.quantity || 0), 0)
+  const totalItems = cart.reduce((total: number, item: Item) => total + (item.quantity || 0), 0)
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -134,9 +135,8 @@ const Header = () => {
             p: '6px 8px'
           }
         }}>
-          <Link to='/' aria-label="View profile">
-            <PersonIcon />
-          </Link>
+
+          <PersonMenu />
           <Link to='/cart' aria-label="Go to cart" style={{ position: 'relative' }}>
             <ShoppingBagIcon />
             {totalItems > 0 &&
@@ -188,7 +188,7 @@ const Header = () => {
         {drawer}
       </Drawer>
     </AppBar>
-  );
-};
+  )
+}
 
 export default Header;
