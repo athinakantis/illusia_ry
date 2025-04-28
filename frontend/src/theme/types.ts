@@ -7,6 +7,7 @@ declare module '@mui/material/styles' {
     body3: React.CSSProperties;
     heading_secondary: React.CSSProperties;
     heading_secondary_bold: React.CSSProperties;
+    subheading: React.CSSProperties;
   }
 
   interface TypographyVariantsOptions {
@@ -14,6 +15,7 @@ declare module '@mui/material/styles' {
     body3?: React.CSSProperties;
     heading_secondary: React.CSSProperties;
     heading_secondary_bold: React.CSSProperties;
+    subheading: React.CSSProperties;
   }
 }
 declare module '@mui/material/Typography' {
@@ -22,6 +24,7 @@ declare module '@mui/material/Typography' {
     body3: true;
     heading_secondary: true;
     heading_secondary_bold: true;
+    subheading: true;
   }
 }
 

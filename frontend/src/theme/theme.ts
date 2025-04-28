@@ -109,7 +109,6 @@ export const createAppTheme = () =>
         fontFamily: 'Lato, sans-serif',
         fontSize: 16,
         fontWeight: 300,
-        color: '#FFF'
       },
       link: {
         fontSize: '1 rem',
@@ -119,12 +118,17 @@ export const createAppTheme = () =>
       },
       heading_secondary: {
         fontSize: 40,
-        fontFamily: 'Lato, sans-serif'
+        fontFamily: 'Lato, sans-serif',
       },
       heading_secondary_bold: {
         fontSize: 36,
         fontWeight: 700,
         fontFamily: 'Lato, sans-serif'
+      },
+      subheading: {
+        fontFamily: 'Lato, sans-serif',
+        fontWeight: 400,
+        fontSize: 18
       }
     },
     shadows: [
@@ -202,6 +206,6 @@ export const createAppTheme = () =>
             fontSize: 20,            
           },
         }
-      },
+      }
     }
   });
