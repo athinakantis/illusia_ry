@@ -23,7 +23,7 @@ import { RootState } from '../../store/store';
 import { BookingWithRes, Item } from '../../types/types';
 import { useAuth } from '../../hooks/useAuth';
 import { useEffect } from 'react';
-import { deleteBooking, fetchUserBookings } from '../../slices/bookingsSlice';
+import { deleteBooking, fetchUserBookings, selectUserBookings } from '../../slices/bookingsSlice';
 import { fetchAllItems } from '../../slices/itemsSlice';
 import { showNotification } from '../../slices/notificationSlice';
 
@@ -47,13 +47,12 @@ const UserBookings = () => {
 
   /* ─────────────────── selectors ─────────────────── */
   const {
-    bookings: rawBookings,
     loading,
     error,
   } = useAppSelector((state: RootState) => state.bookings);
 
-  // cast so TS knows reservations exist
-  const bookings = rawBookings as BookingWithRes[];
+  // Use selector for user bookings
+  const bookings = useAppSelector(selectUserBookings) as BookingWithRes[];
 
   /* ─────────────────── side-effects ─────────────────── */
   useEffect(() => {

@@ -9,6 +9,7 @@ import axios from "axios";
 
 const initialState: BookingsState = {
     bookings: [],
+    userBookings: [],
     loading: false,
     error: null as string | null
 }
@@ -161,7 +162,7 @@ export const bookingsSlice = createSlice({
         });
         builder.addCase(fetchUserBookings.fulfilled, (state, action) => {
             state.loading = false;
-            state.bookings = action.payload;
+            state.userBookings = action.payload;
         });
         builder.addCase(fetchUserBookings.rejected, (state, action) => {
             state.loading = false;
@@ -217,6 +218,9 @@ export const bookingsSlice = createSlice({
 
 export const selectAllBookings = (state: RootState) =>
     state.bookings.bookings;
+
+export const selectUserBookings = (state: RootState) =>
+    state.bookings.userBookings;
 
 export const selectBookingById = (id: string) => (state: RootState) => {
     return state.bookings.bookings.find((booking) => booking.booking_id === id);

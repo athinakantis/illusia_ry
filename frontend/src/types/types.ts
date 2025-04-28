@@ -54,6 +54,7 @@ export interface Booking {
 
 export interface BookingsState {
   bookings: Booking[],
+  userBookings: Booking[],
   error: null | string,
   loading: boolean
 }
