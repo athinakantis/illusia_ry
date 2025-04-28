@@ -26,6 +26,9 @@ export const bookingsApi = {
     api.get(`bookings/user/${userId}`, {
       headers: { 'Access-Control-Allow-Origin': '*' },
     }),
+    updateBookingStatus: (id: string, status: "approved" | "rejected"): Promise<ApiResponse<Booking>> => {
+        return api.patch(`/bookings/${id}`, { status })
+    },
     removeBooking: (id: string): Promise<ApiResponse<Booking>> => {
         return api.delete(`/bookings/${id}`)
     }
