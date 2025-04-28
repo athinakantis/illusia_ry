@@ -10,7 +10,8 @@ import Cart from '../pages/Cart';
 import Contacts from '../pages/Contacts';
 import ItemDetail from '../components/User/ItemDetail';
 import UserBookings from '../components/User/UserBookings';
-import TestPage from '../../Test/Test';
+import AdminDashboard from '../components/Admin/AdminDashboard';
+import Account from '../components/Account';
 
 export const router = createBrowserRouter([
   {
@@ -60,8 +61,12 @@ export const router = createBrowserRouter([
         element: <UserBookings />
       },
       {
-        path: "/test",
-        element: <TestPage />
+        path: "/admin/dashboard",
+        element: <AdminDashboard />
+      },
+      {
+        path: "/account",
+        element: <Account />
       }
 
     ]

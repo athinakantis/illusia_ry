@@ -173,11 +173,12 @@ import {
       if (!existing) {
         throw new NotFoundException(`User ${userId} not found`);
       }
-      if (existing.user_status !== 'pending') {
+    /* Stops you from updating a user that is not pending. For now we should keep it disabled.  
+     if (existing.user_status !== 'pending') {
         throw new BadRequestException(
           `User ${userId} status is already "${existing.user_status}"`,
         );
-      }
+      } */
 
       // Perform the update
       const { data, error } = await supabase
@@ -195,7 +196,8 @@ import {
       }
       return {
         message: `User ${userId} status updated to "${status}"`,
-        data 
+        data,
+        
       };
     }
   }
