@@ -10,7 +10,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchAllCategories, fetchAllItems, selectAllCategories, selectItemById } from '../../slices/itemsSlice';
+import { selectAllCategories, selectItemById } from '../../slices/itemsSlice';
 import { Link, useParams } from 'react-router-dom';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
