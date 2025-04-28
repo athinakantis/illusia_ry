@@ -12,6 +12,7 @@ import ItemDetail from '../components/User/ItemDetail';
 import UserBookings from '../components/User/UserBookings';
 import AdminDashboard from '../components/Admin/AdminDashboard';
 import AdminBookings from '../components/Admin/AdminBookings/AdminBookings';
+import Account from '../components/Account';
 
 export const router = createBrowserRouter([
   {
@@ -67,6 +68,10 @@ export const router = createBrowserRouter([
       {
         path: "/admin/bookings",
         element: <AdminBookings />
+      },
+      {
+        path: "/account",
+        element: <Account />
       }
 
     ]
