@@ -34,14 +34,6 @@ const ItemDetail: React.FC = () => {
   const selectedDateRange = useAppSelector(selectDateRange);
 
   useEffect(() => {
-    if (!items.length) {
-      dispatch(fetchAllItems());
-    }
-    if (categories.length < 1) dispatch(fetchAllCategories())
-  }, [dispatch, items, categories]);
-
-
-  useEffect(() => {
     if (selectedDateRange.start_date && selectedDateRange.end_date) {
       setRange({ start: parseDate(selectedDateRange.start_date), end: parseDate(selectedDateRange.end_date) });
     }

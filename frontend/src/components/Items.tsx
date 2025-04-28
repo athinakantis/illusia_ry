@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { showNotification } from '../slices/notificationSlice';
 import {
-  fetchAllCategories,
-  fetchAllItems,
   selectAllCategories,
   selectAllItems,
 } from '../slices/itemsSlice';
@@ -64,28 +62,19 @@ function Items() {
   const selectedDateRange = useAppSelector(selectDateRange);
 
   useEffect(() => {
+    if (reservations.length < 1) {
+      dispatch(fetchFutureReservations());
+    }
+  }, []);
+
+  useEffect(() => {
     if (selectedDateRange.start_date && selectedDateRange.end_date) {
       setRange({
         start: parseDate(selectedDateRange.start_date),
         end: parseDate(selectedDateRange.end_date),
       });
     }
-  }, [selectedDateRange]);
-
-  useEffect(() => {
-    if (reservations.length < 1) {
-      dispatch(fetchFutureReservations());
-    }
-  }, [dispatch, reservations]);
-
-  useEffect(() => {
-    if (items.length < 1) {
-      dispatch(fetchAllItems());
-    }
-    if (!categories || categories.length < 1) {
-      dispatch(fetchAllCategories());
-    }
-  }, [dispatch, items, categories]);
+  }, []);
 
   const addToCart = (item: Item, quantity: number = 1) => {
     // need to fetch the bookings and reservations first in order for this to work properly
@@ -325,16 +314,23 @@ function Items() {
                 textDecoration: 'none',
               }}
             >
-              <CardMedia
-                component="img"
-                image={item.image_path || '/src/assets/broken_img.png'}
-                onError={handleBrokenImg}
-                sx={{
-                  bgcolor: 'background.lightgrey',
-                  height: '300px',
-                  borderRadius: '14px',
-                }}
-              />
+              <Box sx={{
+                height: 300,
+                borderRadius: '14px',
+                bgcolor: 'background.lightgrey',
+                overflow: 'hidden',
+                '&:hover img': { scale: 1.03 }
+              }}>
+                <CardMedia
+                  component="img"
+                  image={item.image_path || '/src/assets/broken_img.png'}
+                  onError={handleBrokenImg}
+                  sx={{
+                    height: '100%',
+                    transition: 'scale 200ms'
+                  }}
+                />
+              </Box>
               <CardContent
                 sx={{
                   padding: '0.5rem 0',

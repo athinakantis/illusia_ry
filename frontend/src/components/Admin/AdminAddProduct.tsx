@@ -68,10 +68,6 @@ const AdminAddProduct = () => {
         }
     }, [role, navigate]);
 
-    useEffect(() => {
-        if (categories.length < 1) dispatch(fetchAllCategories());
-    }, [categories, dispatch]);
-
     const handleInputChange = (
         event: React.ChangeEvent<
             HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
