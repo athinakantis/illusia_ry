@@ -23,7 +23,6 @@ import { BookingWithRes, Item } from '../../types/types';
 import { useAuth } from '../../hooks/useAuth';
 import { useEffect } from 'react';
 import { deleteBooking, fetchUserBookings, selectUserBookings } from '../../slices/bookingsSlice';
-import { fetchAllItems } from '../../slices/itemsSlice';
 import { showNotification } from '../../slices/notificationSlice';
 
 const UserBookings = () => {
