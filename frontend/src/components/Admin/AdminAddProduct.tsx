@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth'; // Import your auth hook
 import {
     createItem,
-    fetchAllCategories,
     selectAllCategories,
 } from '../../slices/itemsSlice';
 import { supabase } from '../../config/supabase';
@@ -67,10 +66,6 @@ const AdminAddProduct = () => {
             navigate('/items');
         }
     }, [role, navigate]);
-
-    useEffect(() => {
-        if (categories.length < 1) dispatch(fetchAllCategories());
-    }, [categories, dispatch]);
 
     const handleInputChange = (
         event: React.ChangeEvent<

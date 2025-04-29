@@ -14,37 +14,24 @@ import {
 import ClearIcon from '@mui/icons-material/Clear';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
-    loadCartFromStorage,
+    emptyCart,
     removeItemFromCart,
     selectCart,
     selectDateRange,
 } from '../slices/cartSlice';
-import { fetchAllItems, selectAllItems } from '../slices/itemsSlice';
-import { addBooking } from '../slices/bookingsSlice';
+import { addBooking, fetchUserBookings } from '../slices/bookingsSlice';
 import { useAuth } from '../hooks/useAuth';
 import { showNotification } from '../slices/notificationSlice';
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function Cart() {
     const dispatch = useAppDispatch();
     const { cart } = useAppSelector(selectCart);
     const { user } = useAuth();
-    const items = useAppSelector(selectAllItems);
     const selectedDateRange = useAppSelector(selectDateRange);
 
-    // Load locally stored cart
-    useEffect(() => {
-        if (items.length <= 1) dispatch(fetchAllItems());
-        const savedCart = JSON.parse(localStorage.getItem('savedCart') ?? '[]');
-
-        if (!savedCart || !savedCart.cart) return
-        // If cart has less items than the locally stored array
-        // load from storage
-        if (cart.length < savedCart.cart.length) {
-            dispatch(loadCartFromStorage(savedCart));
-        }
-    }, []);
+    // Calculate total quantity of all cart items
+    const totalItems = cart.reduce((total, item) => total + (item.quantity || 0), 0)
 
     const createBookingFromCart = () => {
         const itemsForBooking = cart.map((item) => {
@@ -69,6 +56,10 @@ function Cart() {
         const newBookingData: object = createBookingFromCart();
         const resultAction = await dispatch(addBooking(newBookingData));
 
+        if (!user) {
+            return dispatch(showNotification({ message: 'Only registered users can make a booking', severity: 'error' }))
+        }
+
         if (addBooking.rejected.match(resultAction)) {
             dispatch(
                 showNotification({
@@ -83,6 +74,8 @@ function Cart() {
                     severity: 'success',
                 }),
             );
+            dispatch(emptyCart())
+            dispatch(fetchUserBookings(user.id))
         }
     };
 
@@ -98,17 +91,20 @@ function Cart() {
 
             {cart.length > 0 ? (
                 <Stack
-                    direction={'row'}
                     sx={{
                         gap: '32px',
                         flexWrap: 'wrap',
+                        flexDirection: {
+                            xs: 'column',
+                            md: 'row'
+                        }
                     }}
                 >
                     <TableContainer sx={{ maxWidth: 816, flex: 1, minWidth: 360 }}>
                         <Table aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Items ({cart.length})</TableCell>
+                                    <TableCell>Items ({totalItems})</TableCell>
                                     <TableCell align="right">Qty</TableCell>
                                     <TableCell align="right">Action</TableCell>
                                 </TableRow>
@@ -167,7 +163,10 @@ function Cart() {
                         sx={{
                             border: '1px solid #E2E2E2',
                             padding: '40px 30px',
-                            maxWidth: 392,
+                            maxWidth: {
+                                xs: 'auto',
+                                md: 392
+                            },
                             flex: 1,
                             gap: '24px',
                             height: 'fit-content',
@@ -194,9 +193,9 @@ function Cart() {
                         </Stack>
                         <Stack direction={'row'} justifyContent={'space-between'}>
                             <Typography variant="body2">Total items</Typography>
-                            <Typography variant="body2">{cart.length}</Typography>
+                            <Typography variant="body2">{totalItems}</Typography>
                         </Stack>
-                        <Button variant="rounded" size="small" onClick={handleAddBooking}>
+                        <Button sx={{ width: { xs: 'fit-content', md: '100%' }, mx: 'auto', px: 10 }} variant="rounded" size="small" onClick={handleAddBooking}>
                             Book items
                         </Button>
                     </Stack>

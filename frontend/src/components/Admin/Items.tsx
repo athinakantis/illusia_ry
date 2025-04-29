@@ -1,7 +1,6 @@
 import { ItemDataGrid } from '../ItemGrid/ItemDataGrid';
-import { useEffect } from 'react';
-import { fetchAllItems, selectAllItems } from '../../slices/itemsSlice';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { selectAllItems } from '../../slices/itemsSlice';
+import { useAppSelector } from '../../store/hooks';
 import { useAuth } from '../../hooks/useAuth';
 import { Box, Button, Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -10,17 +9,7 @@ import { useNavigate } from 'react-router-dom';
 function Items() {
   const { role } = useAuth();
   const items = useAppSelector(selectAllItems);
-  const dispatch = useAppDispatch();
   const navigate = useNavigate()
-
-  useEffect(() => {
-    // Fetch items upon mount.
-    // Less than or equal to one in case user first visited page with singular item
-    if (!items || items.length <= 1) {
-      dispatch(fetchAllItems());
-    }
-
-  }, [dispatch, items]);
 
   // Check if user is authorized
   if (!role?.includes('Admin') || !role) return

@@ -28,20 +28,20 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
 
   const columns: GridColDef[] = [
     {
-      field: 'item_id',// ID of the item
-      headerClassName: 'super-app-theme--header',// Class to edit the Header CSS
-      headerAlign: 'left',
-      headerName: 'ID',
-      width: uuidLength, // Adjust width as needed
-      renderCell: renderCellExpand,// Function to render the cell content with word wrapping
-    },
-    {
       field: 'item_name',
       headerClassName: 'super-app-theme--header',
       headerAlign: 'left',
       headerName: 'Name',
       minWidth: 150,
       renderCell: renderCellExpand,
+    },
+    {
+      field: 'item_id',// ID of the item
+      headerClassName: 'super-app-theme--header',// Class to edit the Header CSS
+      headerAlign: 'left',
+      headerName: 'ID',
+      width: uuidLength, // Adjust width as needed
+      renderCell: renderCellExpand,// Function to render the cell content with word wrapping
     },
     {
       field: 'description',
@@ -152,6 +152,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
             backgroundColor: 'primary.main',
             color: 'text.light',
             fontSize: '1.1rem',
+            fontFamily: 'Oxygen, sans-serif'
           },
           // Individual Cell CSS
           '& .MuiDataGrid-cell': {
@@ -167,6 +168,9 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
           },
           '& .MuiDataGrid-footerContainer :is(svg)': {
             fill: 'white'
+          },
+          '& .MuiTablePagination-select': {
+            color: 'background.default'
           },
           // Hover CSS
           '& .MuiDataGrid-row:hover': {

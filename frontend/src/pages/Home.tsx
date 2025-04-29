@@ -26,7 +26,7 @@ function Home() {
 
 
   return (
-    <Box>
+    <Box id='home'>
       {/* Hero banner */}
       <Box component='section' id='hero-container'
         sx={{
@@ -37,7 +37,7 @@ function Home() {
           sx={{ width: 'clamp(150px, 85vw, 797px)', textAlign: 'center', height: '100%', display: 'flex', gap: '35px', margin: 'auto', justifyContent: 'center', flexDirection: 'column' }}>
 
           <Typography variant='h1'>Home for live-action role-playing games props</Typography>
-          <Typography variant='body3'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat</Typography>
+          <Typography variant='body3' color='text.main'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat</Typography>
         </Box>
       </Box>
 
@@ -71,7 +71,7 @@ function Home() {
             }>
               <Link to={`/items?category=${displayCategories?.[0]?.category_name.replace(/ /g, '-')}`}>
                 <img src={displayCategories?.[0]?.image_path} alt="" />
-                <Typography variant='body3'>{displayCategories?.[0]?.category_name}</Typography>
+                <Typography variant='body3' color='text.main'>{displayCategories?.[0]?.category_name}</Typography>
               </Link>
             </Box>
 
@@ -87,13 +87,13 @@ function Home() {
               <Box>
                 <Link to={`/items?category=${displayCategories?.[1]?.category_name.replace(/ /g, '-')}`}>
                   <img src={displayCategories?.[1]?.image_path} alt="" />
-                  <Typography variant='body3'>{displayCategories?.[1]?.category_name}</Typography>
+                  <Typography variant='body3' color='text.main'>{displayCategories?.[1]?.category_name}</Typography>
                 </Link>
               </Box>
               <Box>
                 <Link to={`/items?category=${displayCategories?.[3]?.category_name.replace(/ /g, '-')}`}>
                   <img src={displayCategories?.[3]?.image_path} alt="" />
-                  <Typography variant='body3'>{displayCategories?.[3]?.category_name}</Typography>
+                  <Typography variant='body3' color='text.main'>{displayCategories?.[3]?.category_name}</Typography>
                 </Link>
               </Box>
             </Stack>
@@ -105,7 +105,7 @@ function Home() {
             }}>
               <Link to={`/items?category=${displayCategories?.[2]?.category_name.replace(/ /g, '-')}`}>
                 <img src={displayCategories?.[2]?.image_path} alt="" />
-                <Typography variant='body3'>{displayCategories?.[2]?.category_name}</Typography>
+                <Typography variant='body3' color='text.main'>{displayCategories?.[2]?.category_name}</Typography>
               </Link>
             </Box>
           </Stack>

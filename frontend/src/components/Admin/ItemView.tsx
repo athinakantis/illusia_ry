@@ -14,7 +14,6 @@ import {
   Box,
   Button,
   CardMedia,
-  Divider,
   Grid,
   Paper,
   Typography,
@@ -22,6 +21,7 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  Stack,
 } from '@mui/material';
 import { ImPencil2 } from 'react-icons/im';
 import { CiTrash } from 'react-icons/ci';
@@ -59,7 +59,7 @@ const SingleItem = () => {
   useEffect(() => {
     if (role === undefined) return;
     if (role === null) navigate('/items');
-  }, [role,navigate]);
+  }, [role, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!formData) return;
@@ -89,40 +89,43 @@ const SingleItem = () => {
     }
   };
 
+  const handleBrokenImg = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>,
+  ) => {
+    (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+  };
+
   if (loading) {
     return <Spinner />;
   }
 
   return (
-    <Paper elevation={3} sx={{ p: 3, maxWidth: 1000, margin: 'auto', mt: 2 }}>
-      <Grid container justifyContent="flex-end">
+    <Paper elevation={1} sx={{ p: 3, maxWidth: 1000, margin: 'auto', mt: 2 }}>
+      <Stack direction={'row'} justifyContent={'space-between'}>
+        <Typography variant="heading_secondary" gutterBottom component="h1">
+          {item?.item_name}
+        </Typography>
         <Button
           variant="outlined"
           color="primary"
           onClick={() => navigate(-1)}
+          sx={{ height: 'fit-content' }}
         >
           Back
         </Button>
-      </Grid>
-      <Typography variant="h4" gutterBottom component="h1">
-        {item?.item_name}
-      </Typography>
-      <Divider sx={{ mb: 2 }} />
+      </Stack>
 
       <Grid container spacing={3}>
         {/* Image Section */}
         <Grid component={Box}>
           <CardMedia
             component="img"
-            image={
-              item?.image_path || 'https://placehold.co/400x400?text=No+Image'
+            onError={handleBrokenImg}
+            image={item?.image_path
             }
             alt={item?.item_name}
             sx={{
-              width: '100%',
-              maxHeight: 400,
-              minHeight: 400,
-              minWidth: 400,
+              width: 400,
               objectFit: 'contain',
               borderRadius: 2,
               bgcolor: 'background.lightgrey',
@@ -131,14 +134,10 @@ const SingleItem = () => {
         </Grid>
 
         {/* Details Section */}
-        <Grid component={Box} sx={{ flex: 1 }}>
-          <Typography variant="h5" gutterBottom>
-            {item?.item_name}
-          </Typography>
-
-          <Box sx={{ mb: 2 }}>
+        <Stack sx={{ gap: 2, flex: 1 }}>
+          <Box >
             <Typography variant="subtitle1" color="text.secondary">
-              Description:
+              Description
             </Typography>
             {isEditing && formData ? (
               <TextField
@@ -154,9 +153,7 @@ const SingleItem = () => {
             )}
           </Box>
 
-          <Divider sx={{ my: 1 }} />
-
-          <Box sx={{ mb: 2 }}>
+          <Box>
             <Typography variant="subtitle1" color="text.secondary">
               Location:
             </Typography>
@@ -172,9 +169,8 @@ const SingleItem = () => {
             )}
           </Box>
 
-          <Divider sx={{ my: 1 }} />
 
-          <Box sx={{ mb: 2 }}>
+          <Box >
             <Typography variant="subtitle1" color="text.secondary">
               Quantity:
             </Typography>
@@ -192,9 +188,8 @@ const SingleItem = () => {
             )}
           </Box>
 
-          <Divider sx={{ my: 1 }} />
 
-          <Box sx={{ mb: 2 }}>
+          <Box >
             <Typography variant="subtitle1" color="text.secondary">
               Category:
             </Typography>
@@ -218,9 +213,8 @@ const SingleItem = () => {
             )}
           </Box>
 
-          <Divider sx={{ my: 1 }} />
 
-          <Box sx={{ mb: 2 }}>
+          <Box >
             <Typography variant="subtitle1" color="text.secondary">
               Item ID:
             </Typography>
@@ -229,9 +223,8 @@ const SingleItem = () => {
             </Typography>
           </Box>
 
-          <Divider sx={{ my: 1 }} />
 
-          <Box sx={{ mb: 2 }}>
+          <Box >
             <Typography variant="subtitle1" color="text.secondary">
               Created At:
             </Typography>
@@ -240,9 +233,8 @@ const SingleItem = () => {
               {item?.created_at ? formatDate(item.created_at) : '-'}
             </Typography>
           </Box>
-          <Divider sx={{ my: 2 }} />
 
-          <Box display="flex" gap={10} justifyContent="center">
+          <Box display="flex" gap={2}>
             {isEditing ? (
               <Button variant="contained" color="success" onClick={handleSave}>
                 Save
@@ -267,7 +259,7 @@ const SingleItem = () => {
               </>
             )}
           </Box>
-        </Grid>
+        </Stack>
       </Grid>
     </Paper>
   );

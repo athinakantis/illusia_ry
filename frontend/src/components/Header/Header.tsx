@@ -17,11 +17,18 @@ import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 import PersonMenu from './PersonMenu';
+import { Item } from '../../types/types';
+import { selectCart } from '../../slices/cartSlice';
+import { useAppSelector } from '../../store/hooks';
 
 const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { cart } = useAppSelector(selectCart)
+
+  // Calculate total quantity of all cart items
+  const totalItems = cart.reduce((total: number, item: Item) => total + (item.quantity || 0), 0)
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -56,29 +63,32 @@ const Header = () => {
     >
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         {/* Logo */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {isMobile && (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
-          <Typography variant="h1" color='secondary' component="div"
-            sx={{ fontWeight: '400', fontSize: { xs: '1.2rem', sm: '1.7rem' } }}>
-            ILLUSIA
-          </Typography>
-          <Typography
-            sx={{
-              fontWeight: 400,
-              fontFamily: 'Lato, sans-serif',
-              fontSize: { xs: '1.2rem', sm: '1.7rem' }
-            }}
-          >STORE</Typography>
-        </Box>
+        <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            {isMobile && (
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
+            <Typography variant="h1" color='secondary' component="div"
+              sx={{ fontWeight: '400', fontSize: { xs: '1.2rem', sm: '1.7rem' } }}>
+              ILLUSIA
+            </Typography>
+            <Typography
+              sx={{
+                fontWeight: 400,
+                fontFamily: 'Lato, sans-serif',
+                fontSize: { xs: '1.2rem', sm: '1.7rem' }
+              }}
+            >STORE</Typography>
+          </Box>
+        </Link>
+
 
         {/* Navigation Links - Desktop */}
         {!isMobile && (
@@ -90,7 +100,7 @@ const Header = () => {
             '& a:hover': { color: 'primary.main' },
             '& a': {
               textDecoration: 'none',
-              color: "primary.light", 
+              color: "primary.light",
             }
           }}>
             {navigationLinks.map((item) => (
@@ -125,9 +135,30 @@ const Header = () => {
             p: '6px 8px'
           }
         }}>
-         <PersonMenu />
-          <Link to='/cart' aria-label="Go to cart">
+
+          <PersonMenu />
+          <Link to='/cart' aria-label="Go to cart" style={{ position: 'relative' }}>
             <ShoppingBagIcon />
+            {totalItems > 0 &&
+              <Box component='span' sx={{
+                '&::after': {
+                  content: `"${totalItems}"`,
+                  width: '15px',
+                  height: '15px',
+                  position: 'absolute',
+                  top: '-2px',
+                  right: '-2px',
+                  bgcolor: '#9339C9',
+                  color: '#FFF',
+                  borderRadius: '50px',
+                  fontSize: '10px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                  fontWeight: 800
+                }
+              }} />
+            }
           </Link>
           <Logout />
         </Box>
@@ -150,14 +181,14 @@ const Header = () => {
           '& a:hover': { color: 'primary.main' },
           '& a': {
             textDecoration: 'none',
-            color: "secondary.main", 
+            color: "secondary.main",
           }
         }}
       >
         {drawer}
       </Drawer>
     </AppBar>
-  );
-};
+  )
+}
 
 export default Header;
