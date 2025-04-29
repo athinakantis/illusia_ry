@@ -17,8 +17,9 @@ import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalize
 import type { RangeValue } from '@react-types/shared';
 import { checkAvailabilityForItemOnDates } from '../../selectors/availabilitySelector';
 import { addItemToCart, selectDateRange } from '../../slices/cartSlice';
-import { showNotification } from '../../slices/notificationSlice';
 import { store } from '../../store/store';
+import { useSnackbar } from 'notistack';
+import { CustomSnackbar } from '../CustomSnackbar';
 
 
 const ItemDetail: React.FC = () => {
@@ -32,6 +33,8 @@ const ItemDetail: React.FC = () => {
   const item = items.find((i) => i.item_id === itemId);
   const categories = useAppSelector(selectAllCategories);
   const selectedDateRange = useAppSelector(selectDateRange);
+  const { enqueueSnackbar } = useSnackbar();
+
 
   useEffect(() => {
     if (selectedDateRange.start_date && selectedDateRange.end_date) {
@@ -50,7 +53,13 @@ const ItemDetail: React.FC = () => {
       const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
 
       if (diffInDays > 14) {
-        alert('You can only book a maximum of 14 days.');
+
+        enqueueSnackbar('notification', {
+          variant: 'info', // still needed for context
+          content: () => (
+            <CustomSnackbar message='You can only book a maximum of 14 days' variant='warning' onClose={() => { }} />
+          )
+        });
         return;
       }
       setRange(newRange);
@@ -63,10 +72,13 @@ const ItemDetail: React.FC = () => {
 
   const handleCartAddition = () => {
     if (range?.start === undefined) {
-      dispatch(showNotification({
-        message: "Select dates before adding to cart",
-        severity: 'warning',
-      }));
+
+      enqueueSnackbar('notification', {
+        variant: 'info', // still needed for context
+        content: () => (
+          <CustomSnackbar message='Select dates before adding to cart' variant='warning' onClose={() => { }} />
+        )
+      });
       return;
     }
 
@@ -75,15 +87,21 @@ const ItemDetail: React.FC = () => {
 
       if (checkAdditionToCart.severity === 'success') {
         dispatch(addItemToCart({ item: selectItemById(itemId)(store.getState()), quantity: quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
-        dispatch(showNotification({
-          message: 'Item added to cart',
-          severity: 'success',
-        }));
+
+        enqueueSnackbar('notification', {
+          variant: 'info', // still needed for context
+          content: () => (
+            <CustomSnackbar message='Item added to cart' variant='success' onClose={() => { }} />
+          )
+        });
+
       } else {
-        dispatch(showNotification({
-          message: checkAdditionToCart.message,
-          severity: checkAdditionToCart.severity,
-        }));
+        enqueueSnackbar('notification', {
+          variant: 'info', // still needed for context
+          content: () => (
+            <CustomSnackbar message={checkAdditionToCart.message} variant={checkAdditionToCart.severity} onClose={() => { }} />
+          )
+        });
       }
     }
   }

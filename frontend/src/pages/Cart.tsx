@@ -21,14 +21,17 @@ import {
 } from '../slices/cartSlice';
 import { addBooking, fetchUserBookings } from '../slices/bookingsSlice';
 import { useAuth } from '../hooks/useAuth';
-import { showNotification } from '../slices/notificationSlice';
 import { Link } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import { CustomSnackbar } from '../components/CustomSnackbar';
 
 function Cart() {
     const dispatch = useAppDispatch();
     const { cart } = useAppSelector(selectCart);
     const { user } = useAuth();
     const selectedDateRange = useAppSelector(selectDateRange);
+    const { enqueueSnackbar } = useSnackbar();
+
 
     // Calculate total quantity of all cart items
     const totalItems = cart.reduce((total, item) => total + (item.quantity || 0), 0)
@@ -57,23 +60,35 @@ function Cart() {
         const resultAction = await dispatch(addBooking(newBookingData));
 
         if (!user) {
-            return dispatch(showNotification({ message: 'Only registered users can make a booking', severity: 'error' }))
+
+            enqueueSnackbar('notification', {
+                variant: 'info', // still needed for context
+                content: () => (
+                    <CustomSnackbar message='Only registered users can make a booking' variant='error' onClose={() => { }} />
+                )
+            });
+            return;
         }
 
         if (addBooking.rejected.match(resultAction)) {
-            dispatch(
-                showNotification({
-                    message: resultAction.payload ?? 'unknown error',
-                    severity: 'error',
-                }),
-            );
+
+            enqueueSnackbar('notification', {
+                variant: 'info', // still needed for context
+                content: () => (
+                    <CustomSnackbar message={resultAction.payload ?? 'unknown error'} variant='error' onClose={() => { }} />
+                )
+            });
+
+
         } else {
-            dispatch(
-                showNotification({
-                    message: 'Booking created',
-                    severity: 'success',
-                }),
-            );
+
+            enqueueSnackbar('notification', {
+                variant: 'info', // still needed for context
+                content: () => (
+                    <CustomSnackbar message='Booking created' variant='success' onClose={() => { }} />
+                )
+            });
+
             dispatch(emptyCart())
             dispatch(fetchUserBookings(user.id))
         }

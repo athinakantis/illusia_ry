@@ -3,16 +3,25 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from './router/router';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
+import { SnackbarProvider } from 'notistack';
 
 
 function App() {
   return (
     <Box>
+
       <Provider store={store}>
-        <RouterProvider router={router} >
-        </RouterProvider>
+        <SnackbarProvider
+          maxSnack={3}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          autoHideDuration={2000}
+        >
+          <RouterProvider router={router} >
+          </RouterProvider>
+        </ SnackbarProvider>
       </Provider>
-    </Box>
+
+    </Box >
   );
 }
 
