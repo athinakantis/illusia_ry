@@ -19,17 +19,16 @@ import {
     buildBookingOverviews,
     BookingOverview} from "../../utility/bookings";
     import { supabase } from "../../config/supabase";
-/* ──────────────────────────────────────────────────────────
-   Thunk actions – make sure these already exist in your app.
-   ────────────────────────────────────────────────────────── */
+
+// ─── Thunk actions ──────────────────────────────────────────
 import { fetchAllItems } from "../../slices/itemsSlice";
 import { fetchAllBookings } from "../../slices/bookingsSlice";
 import { fetchAllUsersWithRole } from "../../slices/usersSlice";
 import { fetchAllReservations } from "../../slices/reservationsSlice";
 import { format, parseISO } from "date-fns";
-/* ──────────────────────────────────────────────────────────
-   Re-usable stat card (outlined box with a headline number)
-   ────────────────────────────────────────────────────────── */
+import { Link } from "react-router-dom";
+
+// ─── Re-usable stat card ────────────────────────────────────
 const StatCard: React.FC<{ label: string; value: number | string }> = ({
   label,
   value,
@@ -45,9 +44,8 @@ const StatCard: React.FC<{ label: string; value: number | string }> = ({
   </Paper>
 );
 
-/* ──────────────────────────────────────────────────────────
-   Main component
-   ────────────────────────────────────────────────────────── */
+// ── Main component ────────────────────────────────────────
+ 
 const AdminDashboard = () => {
   const dispatch = useAppDispatch();
   const { user } = useAuth();
@@ -60,14 +58,14 @@ const AdminDashboard = () => {
     }[]
   >([]);
 
-  /*----------- Selectors ------------- */
+// ─── Selectors ───────────────────────────────────────────────
   const users = useAppSelector((state) => state.users.users);
   const items = useAppSelector((state) => state.items.items);
   const bookings = useAppSelector((state) => state.bookings.bookings);
   const reservations = useAppSelector((state) => state.reservations.reservations);
 
-    /* ────────── Effects ────────── */
-  useEffect(() => {
+  // ─── Side-Effects ────────────────────────────────────────────
+useEffect(() => {
     if (users.length === 0) dispatch(fetchAllUsersWithRole());
     if (items.length === 0) dispatch(fetchAllItems());
     if (bookings.length === 0) dispatch(fetchAllBookings());
@@ -135,7 +133,7 @@ const AdminDashboard = () => {
           <Button variant="contained" color="secondary">
             Add item
           </Button>
-          <Button variant="contained" color="secondary">
+          <Button component={Link} to="/admin/bookings" variant="contained" color="secondary">
             Approve bookings
           </Button>
           <Button variant="contained" color="secondary">
@@ -179,7 +177,7 @@ const AdminDashboard = () => {
 
       {/* ───── Recent activity & Users/Roles ───── */}
       <Grid container spacing={4} mt={4} justifyContent="space-between">
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 10, md: 4.6, lg: 4 }}>
           <Typography variant="h5" gutterBottom>
             Recent activity
           </Typography>
