@@ -101,7 +101,7 @@ export class MailerService {
 
     const attachments = [{
       fileName: "welcome.jpg",
-      path: "https://crralkzqnflfzntlhccj.supabase.co/storage/v1/object/public/email-images//41103945280_6ba926b4bc_k_resized.jpg",
+      path: `${process.env.SUPABASE_URL}/storage/v1/object/public/email-images//41103945280_6ba926b4bc_k_resized.jpg`,
       cid: "illusia_ry_signup_notification"
     }]
     return this.sendEmail(to, subject, text, html, attachments);
