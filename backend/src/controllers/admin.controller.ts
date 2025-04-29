@@ -51,26 +51,56 @@ export class AdminController {
   async getUserRole(@Req() req: CustomRequest, @Param('id') userId: string) {
     return this.AdminsService.getUserRoleById(req, userId);
   }
-  /**
-   * Update user status
-   * @param req Custom Reqest with Supabase Client
-   * @param userId UUID of user
-   * @param body { status: string }
-   * @returns { message:string, data: AdminUserRow }
-   */ // POST /admin/users/:id/status
   @Patch('users/:id/status')
   async updateUserStatus(
     @Req() req: CustomRequest,
     @Param('id') userId: string,
-    @Body() body: { status: string },
+    @Body() body: { status: 'approved' | 'rejected' | 'deactivated' | 'active' },
   ) {
-    if (body.status !== 'approved' && body.status !== 'rejected') {
-      throw new BadRequestException('Status must be "approved" or "rejected".');
-    }
     return this.AdminsService.updateUserStatus(
       req,
       userId,
-      body.status as 'approved' | 'rejected',
+      body.status,
     );
   }
+
+  /**
+   * Update a user's role
+   * @param req  CustomRequest with Supabase client
+   * @param userId UUID of the user
+   * @param body  { role: string }
+   */
+  @Patch('users/:id/role')
+  async updateUserRole(
+    @Req() req: CustomRequest,
+    @Param('id') userId: string,
+    @Body() body: { role: string },
+  ) {
+    if (!body.role || typeof body.role !== 'string') {
+      throw new BadRequestException('Body must contain a "role" string property');
+    }
+    return this.AdminsService.updateUserRole(req, userId, body.role);
+  }
+
+  /**
+ * Promote a User to Admin
+ */
+@Patch('users/:id/promote-to-admin')
+async promoteUserToAdmin(
+  @Req() req: CustomRequest,
+  @Param('id') userId: string,
+) {
+  return this.AdminsService.promoteUserToAdmin(req, userId);
+}
+
+/**
+ * Approve Unapproved user to regular User
+ */
+@Patch('users/:id/approve')
+async approveUserToUser(
+  @Req() req: CustomRequest,
+  @Param('id') userId: string,
+) {
+  return this.AdminsService.approveUserToUser(req, userId);
+}
 }

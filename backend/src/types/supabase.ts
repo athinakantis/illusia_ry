@@ -58,7 +58,21 @@ export type Database = {
             foreignKeyName: "bookings_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "user_activity_view_test"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "bookings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "user_role_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "bookings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_with_roles_view"
             referencedColumns: ["user_id"]
           },
           {
@@ -396,7 +410,21 @@ export type Database = {
             foreignKeyName: "user_roles_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "user_activity_view_test"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_roles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "user_role_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_roles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_with_roles_view"
             referencedColumns: ["user_id"]
           },
           {
@@ -445,7 +473,21 @@ export type Database = {
             foreignKeyName: "bookings_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "user_activity_view_test"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "bookings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "user_role_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "bookings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_with_roles_view"
             referencedColumns: ["user_id"]
           },
           {
@@ -479,12 +521,40 @@ export type Database = {
         }
         Relationships: []
       }
+      user_activity_view: {
+        Row: {
+          confirmed_at: string | null
+          display_name: string | null
+          last_sign_in_at: string | null
+        }
+        Relationships: []
+      }
+      user_activity_view_test: {
+        Row: {
+          confirmed_at: string | null
+          display_name: string | null
+          email: string | null
+          last_sign_in_at: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
       user_role_view: {
         Row: {
           display_name: string | null
           email: string | null
           role_title: string | null
           user_id: string | null
+        }
+        Relationships: []
+      }
+      user_with_roles_view: {
+        Row: {
+          display_name: string | null
+          email: string | null
+          role_title: string | null
+          user_id: string | null
+          user_status: string | null
         }
         Relationships: []
       }
@@ -533,6 +603,14 @@ export type Database = {
         Returns: boolean
       }
       is_user_admin: {
+        Args: { p_user_id: string }
+        Returns: boolean
+      }
+      is_user_head_admin: {
+        Args: { p_user_id: string }
+        Returns: boolean
+      }
+      is_user_strict_admin: {
         Args: { p_user_id: string }
         Returns: boolean
       }
