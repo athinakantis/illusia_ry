@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchFutureReservations, selectAllReservations } from '../slices/reservationsSlice';
 import { fetchAllCategories, fetchAllItems, selectAllCategories, selectAllItems } from '../slices/itemsSlice';
 import { loadCartFromStorage, selectCart } from '../slices/cartSlice';
-import ScrollTo from './ScrollToTop';
+import ScrollToTop from '../utility/ScrollToTop';
 
 function Root() {
   const reservations = useAppSelector(selectAllReservations);
@@ -58,7 +58,6 @@ function Root() {
         '& main:not(:has(>#home))': { paddingTop: '3rem' } // Padding for all pages except Home
       }}
     >
-      <ScrollTo />
       <Header />
       <main
         style={{
@@ -66,6 +65,8 @@ function Root() {
           paddingBottom: '3rem',
         }}
       >
+        {/* Component that scrolls to top of page when navigating */}
+        <ScrollToTop />
         <Outlet />
       </main>
       <Footer />

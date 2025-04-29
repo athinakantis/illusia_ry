@@ -211,7 +211,6 @@ export class BookingService {
 
   /**
    * Update the status field of a booking.
-   * - Ordinary users can update only their own booking (enforced by RLS).
    * - Admin / Head‑Admin can update any booking.
    */
   async updateBookingStatus(

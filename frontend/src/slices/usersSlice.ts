@@ -150,9 +150,9 @@ export const usersSlice = createSlice({
   },
 });
 
-export const selectUsers = (state: RootState) => state.users.users;
-export const selectUser = (state: RootState) => state.users.user;
-export const selectLoading = (state: RootState) => state.users.loading;
-export const selectError = (state: RootState) => state.users.error;
+export const selectAllUsers = (state: RootState) => state.users.users;
+export const selectAUser = (state: RootState) => state.users.user;
+export const selectUserLoading = (state: RootState) => state.users.loading;
+export const selectUserError = (state: RootState) => state.users.error;
 
 export default usersSlice.reducer;

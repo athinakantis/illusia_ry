@@ -1,5 +1,4 @@
 
-
 // Custom Typography Variant Types
 declare module '@mui/material/styles' {
   interface TypographyVariants {
@@ -32,10 +31,18 @@ declare module '@mui/material/Typography' {
 declare module '@mui/material/styles' {
   interface Palette {
     neutral: Palette['primary'];
+    accent: Palette['primary'];
+  }
+  
+  interface TypeBackground { // Added this so we can properly use the background colors
+    lightgrey: string;
+    verylightgrey: string;
+    grey03: string;
   }
 
   interface PaletteOptions {
     neutral?: PaletteOptions['primary'];
+   
   }
 }
 

@@ -108,7 +108,7 @@ const SingleItem = () => {
         <Button
           variant="outlined"
           color="primary"
-          onClick={() => navigate('/items')}
+          onClick={() => navigate(-1)}
           sx={{ height: 'fit-content' }}
         >
           Back
