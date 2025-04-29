@@ -11,9 +11,11 @@ import {
     TableRow,
     Typography,
 } from '@mui/material';
-import ClearIcon from '@mui/icons-material/Clear';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
+    addItemToCart,
     emptyCart,
     removeItemFromCart,
     selectCart,
@@ -24,6 +26,9 @@ import { useAuth } from '../hooks/useAuth';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { CustomSnackbar } from '../components/CustomSnackbar';
+import { store } from '../store/store';
+import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
+
 
 function Cart() {
     const dispatch = useAppDispatch();
@@ -55,12 +60,55 @@ function Cart() {
         (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
     };
 
+    const handleIncrease = (item_id: string, quantity: number = 1) => {
+
+        const { start_date, end_date } = selectedDateRange;
+
+        if (start_date && end_date) {
+            const checkAdditionToCart = checkAvailabilityForItemOnDates(
+                item_id,
+                quantity,
+                start_date,
+                end_date,
+            )(store.getState());
+            // checks if item can be added to cart
+
+
+            if (checkAdditionToCart.severity === 'success') {
+                dispatch(
+                    addItemToCart({
+                        item: cart.find(itemInCart => itemInCart.item_id === item_id),
+                        quantity: quantity,
+                        start_date: start_date,
+                        end_date: end_date,
+                    }),
+                );
+
+                enqueueSnackbar('notification', {
+                    variant: 'info', // still needed for context
+                    content: () => (
+                        <CustomSnackbar message='Item added to cart' variant='success' onClose={() => { }} />
+                    )
+                });
+
+                // adds the item in case it is available
+            } else {
+
+                enqueueSnackbar('notification', {
+                    variant: 'info', // still needed for context
+                    content: () => (
+                        <CustomSnackbar message={checkAdditionToCart.message} variant={checkAdditionToCart.severity} onClose={() => { }} />
+                    )
+                });
+            }
+        }
+
+    }
+
     const handleAddBooking = async () => {
         const newBookingData: object = createBookingFromCart();
         const resultAction = await dispatch(addBooking(newBookingData));
-
         if (!user) {
-
             enqueueSnackbar('notification', {
                 variant: 'info', // still needed for context
                 content: () => (
@@ -69,26 +117,20 @@ function Cart() {
             });
             return;
         }
-
         if (addBooking.rejected.match(resultAction)) {
-
             enqueueSnackbar('notification', {
                 variant: 'info', // still needed for context
                 content: () => (
                     <CustomSnackbar message={resultAction.payload ?? 'unknown error'} variant='error' onClose={() => { }} />
                 )
             });
-
-
         } else {
-
             enqueueSnackbar('notification', {
                 variant: 'info', // still needed for context
                 content: () => (
                     <CustomSnackbar message='Booking created' variant='success' onClose={() => { }} />
                 )
             });
-
             dispatch(emptyCart())
             dispatch(fetchUserBookings(user.id))
         }
@@ -152,6 +194,16 @@ function Cart() {
                                         <TableCell align="right">
                                             <IconButton
                                                 onClick={() => {
+                                                    handleIncrease(item.item_id)
+                                                }}
+                                                aria-label="view"
+                                                color="primary"
+                                                size="medium"
+                                            >
+                                                <AddIcon />
+                                            </IconButton>
+                                            <IconButton
+                                                onClick={() => {
                                                     dispatch(
                                                         removeItemFromCart({
                                                             item_id: item.item_id,
@@ -163,8 +215,9 @@ function Cart() {
                                                 color="primary"
                                                 size="medium"
                                             >
-                                                <ClearIcon />
+                                                <RemoveIcon />
                                             </IconButton>
+
                                         </TableCell>
                                     </TableRow>
                                 ))}
