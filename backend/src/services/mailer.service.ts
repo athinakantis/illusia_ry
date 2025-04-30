@@ -84,32 +84,88 @@ The Illusia Team`;
   }
 
   /**
-   * Notify the user when their booking is approved.
+   * Notify the user when their booking status is updated.
    * @param to           The user’s email address.
    * @param bookingId    The booking identifier.
+   * @param status       The new booking status ('approved' or 'rejected').
    * @param startDate?   (Optional) Booking start date (YYYY-MM-DD).
    * @param endDate?     (Optional) Booking end date (YYYY-MM-DD).
    */
-  async sendBookingApprovedEmail(
+  async sendBookingStatusUpdateEmail(
     to: string,
     bookingId: string,
+    status: 'approved' | 'rejected',
     startDate?: string,
     endDate?: string
   ) {
-    const subject = 'Your booking has been approved';
+    if (!['approved', 'rejected'].includes(status)) {
+      throw new Error('Invalid status. Must be "approved" or "rejected".');
+    }
+    const subject = `Your booking has been ${status}`;
+    
     let text = `Hello,
 
-Your booking with ID ${bookingId} has been approved.`;
+Your booking with ID ${bookingId} has been ${status}.`;
+
     if (startDate && endDate) {
       text += `
 
 Booking dates: ${startDate} - ${endDate}`;
     }
+
     text += `
 
 You can view more details in your dashboard.
 
 Thanks,
+The Illusia Team`;
+
+    return this.sendEmail(to, subject, text);
+  }
+
+  /**
+   * Notify the user when their account has been deactivated.
+   * @param to           The user’s email address.
+   */
+  async sendAccountDeactivatedEmail(to: string) {
+    const subject = 'Your Illusia Account Has Been Deactivated';
+    const text = `Hello,
+  
+  We wanted to inform you that your Illusia account has been deactivated. 
+  
+  If you believe this was a mistake or would like to appeal, please contact our support team.
+  
+  Thank you,
+  The Illusia Team`;
+  
+    return this.sendEmail(to, subject, text);
+  }
+
+  async newUserEmail(to: string, displayName: string) {
+    const subject = 'New User Signup';
+    const text = `A new user has signed up on Illusia:
+Name: ${displayName}
+Email: ${to}`;
+    return this.sendEmail(to, subject, text);
+  }
+
+  /** An email is sent to let a user know their account has been approved
+   * @param to The user’s email address.
+   * @param displayName The user’s display name.
+   */
+  async approveAccountEmail(
+    to: string,
+    displayName: string,
+  ) {
+   
+    const subject = `Your account has been approved!`;
+    const text = `Hello ${displayName},
+Your account has been activated  on Illusia.
+You can now log in and start using our platform.
+We are thrilled to have you as part of our community and look forward to supporting you on your journey.
+
+If you have any questions, please contact our support team.
+Thank you,
 The Illusia Team`;
     return this.sendEmail(to, subject, text);
   }
