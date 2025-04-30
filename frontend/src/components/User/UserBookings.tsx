@@ -55,7 +55,6 @@ const UserBookings = () => {
     new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   );
 
-
   /* ─────────────────── side-effects ─────────────────── */
   useEffect(() => {
     if (userId) dispatch(fetchUserBookings(userId));
@@ -64,7 +63,6 @@ const UserBookings = () => {
   const items = useAppSelector(
     (state: RootState) => state.items.items as Item[],
   );
-
 
   /* ─────────────────── UI states ─────────────────── */
   if (loading)
@@ -102,7 +100,7 @@ const UserBookings = () => {
                       variant="subheading"
                       fontWeight={600}
                     >
-                      Booking&nbsp;ID:&nbsp;{booking.booking_id}
+                      Booking&nbsp;ID:&nbsp;{booking.booking_id.slice(-12).toUpperCase()}
                     </Typography>
                     <Typography
                       variant="body3"
@@ -154,7 +152,7 @@ const UserBookings = () => {
                   >
                     <TableHead>
                       <TableRow>
-                        <TableCell align='left' sx={{ pl: 0 }}>Item ID</TableCell>
+                        <TableCell align='left' sx={{ pl: 0 }}>Item</TableCell>
                         <TableCell>Start Date</TableCell>
                         <TableCell>End Date</TableCell>
                         <TableCell align='center'>Quantity</TableCell>

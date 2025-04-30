@@ -206,6 +206,7 @@ export const createAppTheme = () =>
                 style: {
                   backgroundColor: '#282828',
                   color: 'white',
+                  '&:hover': { backgroundColor: '#3f3f3f' }
                 },
               },
             ],

@@ -131,13 +131,13 @@ const AdminDashboard = () => {
           direction={{ xs: "column", sm: "row" }}
           spacing={2}
         >
-          <Button variant="contained" color="secondary">
+          <Button variant="contained" color="grey">
             Add item
           </Button>
-          <Button component={Link} to="/admin/bookings" variant="contained" color="secondary">
+          <Button component={Link} to="/admin/bookings" variant="contained" color="grey">
             Approve bookings
           </Button>
-          <Button variant="contained" color="secondary">
+          <Button variant="contained" color="grey">
             Manage users
           </Button>
         </Stack>
