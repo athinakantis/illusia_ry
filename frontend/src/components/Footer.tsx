@@ -55,7 +55,8 @@ const Footer = () => {
                             fontSize: '1.5rem',
                             mt: 4,
                             mb: 3,
-                            fontWeight: 400
+                            fontWeight: 400,
+                            color: '#FFF'
                         }}
                     >
                         Subscribe to our newsletter to stay up-to-date with additions to our catalog and price discounts.
