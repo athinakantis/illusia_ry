@@ -18,7 +18,6 @@ import { ItemReservationService } from './services/reservations.service';
 import { AdminService } from './services/admin.service';
 import { AdminController } from './controllers/admin.controller';
 import { MailerService } from './services/mailer.service';
-import { TagService } from './modules/tags/tags.service';
 import { TagController } from './modules/tags/tags.controller';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { TagModule } from './modules/tags/tags.module';
@@ -41,7 +40,6 @@ import { TagModule } from './modules/tags/tags.module';
     BookingController,
     ItemReservationsController,
     AdminController,
-    TagController,
     
   ], // Controller imports go here
   providers: [
@@ -54,7 +52,6 @@ import { TagModule } from './modules/tags/tags.module';
     BookingService,
     ItemReservationService,
     AdminService,
-    TagService,
   ], // Services are used to handle business logic and data access
 })
 
@@ -67,7 +64,8 @@ export class AppModule implements NestModule {
       BookingController,
       ItemReservationsController,
       AdminController,
-      TagController,
+      TagModule,
+      CategoriesModule
       );
   }
 }

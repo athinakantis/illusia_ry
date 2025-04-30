@@ -8,6 +8,7 @@ import {
   import { UpdateCategoryDto } from 'src/modules/categories/dto/update-category.dto';
   import { Tables } from '../../types/supabase';
   import { ApiResponse } from '../../types/response';
+import { CustomRequest } from 'src/types/request.type';
   
   @Injectable()
   export class CategoryService {
@@ -17,8 +18,9 @@ import {
   
     async create(
       dto: CreateCategoryDto,
+      req: CustomRequest,
     ): Promise<ApiResponse<Tables<'categories'>>> {
-      const supabase = this.supabaseService.getClient();
+      const supabase = req["supabase"]
   
       const { data, error } = await supabase
         .from('categories')
@@ -42,10 +44,11 @@ import {
     }
   
     async update(
+      req: CustomRequest,
       category_id: string,
       dto: UpdateCategoryDto,
     ): Promise<ApiResponse<Tables<'categories'>>> {
-      const supabase = this.supabaseService.getClient();
+      const supabase = req["supabase"]
   
       const { data, error } = await supabase
         .from('categories')
@@ -64,8 +67,8 @@ import {
       return { message: 'Category updated', data };
     }
   
-    async remove(category_id: string): Promise<ApiResponse<null>> {
-      const supabase = this.supabaseService.getClient();
+    async remove(req: CustomRequest, category_id: string): Promise<ApiResponse<null>> {
+      const supabase = req["supabase"]
   
       const { error, count } = await supabase
         .from('categories')
@@ -82,10 +85,11 @@ import {
     /* ---------- link / unlink items ---------- */
   
     async assignItemToCategory(
+      req: CustomRequest,
       item_id: string,
       category_id: string,
     ): Promise<ApiResponse<Tables<'items'>>> {
-      const supabase = this.supabaseService.getClient();
+      const supabase = req["supabase"]
   
       const { data, error } = await supabase
         .from('items')
@@ -105,9 +109,10 @@ import {
     }
   
     async replaceCategoryWithUncategorized(
+      req: CustomRequest,
       item_id: string,
     ): Promise<ApiResponse<Tables<'items'>>> {
-      const supabase = this.supabaseService.getClient();
+      const supabase = req["supabase"]
       // Move to env later
       const uncategorized = "c5995b26-a630-46ca-84f0-aad9c02a3553";
   
