@@ -21,6 +21,7 @@ import { MailerService } from './services/mailer.service';
 import { TagController } from './modules/tags/tags.controller';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { TagModule } from './modules/tags/tags.module';
+import { CategoryController } from './modules/categories/categories.controller';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -64,8 +65,8 @@ export class AppModule implements NestModule {
       BookingController,
       ItemReservationsController,
       AdminController,
-      TagModule,
-      CategoriesModule
+      TagController,
+      CategoryController
       );
   }
 }
