@@ -44,13 +44,15 @@ export class MailerController {
   async bookingApprovedTest(
     @Body('to') to: string,
     @Body('bookingId') bookingId: string,
+    @Body('status') status: 'approved' | 'rejected',
     @Body('startDate') startDate?: string,
     @Body('endDate') endDate?: string,
   ): Promise<{ message: string; result?: SentMessageInfo; error?: undefined }> {
     try {
-      const result = await this.mailerService.sendBookingApprovedEmail(
+      const result = await this.mailerService.sendBookingStatusUpdateEmail(
         to,
         bookingId,
+        status,
         startDate,
         endDate,
       );

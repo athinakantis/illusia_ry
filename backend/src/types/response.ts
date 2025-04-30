@@ -1,3 +1,5 @@
+import { Database } from 'src/types/supabase';
+    
 export interface ApiResponse<T> {
     data: T;
     error?: string | Error;
@@ -18,3 +20,6 @@ export interface ApiResponse<T> {
       created_at:     string
     }>
   }
+
+  // Command + Click "user_with_roles_view" to see the view structure
+  export type UserWithRole = Database['public']['Views']['user_with_roles_view']['Row'];
