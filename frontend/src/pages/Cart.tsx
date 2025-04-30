@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    CardMedia,
     IconButton,
     Stack,
     Table,
@@ -31,7 +32,10 @@ function Cart() {
     const selectedDateRange = useAppSelector(selectDateRange);
 
     // Calculate total quantity of all cart items
-    const totalItems = cart.reduce((total, item) => total + (item.quantity || 0), 0)
+    const totalItems = cart.reduce(
+        (total, item) => total + (item.quantity || 0),
+        0,
+    );
 
     const createBookingFromCart = () => {
         const itemsForBooking = cart.map((item) => {
@@ -49,6 +53,7 @@ function Cart() {
     const handleBrokenImg = (
         e: React.SyntheticEvent<HTMLImageElement, Event>,
     ) => {
+        console.log('handle error');
         (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
     };
 
@@ -57,7 +62,12 @@ function Cart() {
         const resultAction = await dispatch(addBooking(newBookingData));
 
         if (!user) {
-            return dispatch(showNotification({ message: 'Only registered users can make a booking', severity: 'error' }))
+            return dispatch(
+                showNotification({
+                    message: 'Only registered users can make a booking',
+                    severity: 'error',
+                }),
+            );
         }
 
         if (addBooking.rejected.match(resultAction)) {
@@ -74,8 +84,8 @@ function Cart() {
                     severity: 'success',
                 }),
             );
-            dispatch(emptyCart())
-            dispatch(fetchUserBookings(user.id))
+            dispatch(emptyCart());
+            dispatch(fetchUserBookings(user.id));
         }
     };
 
@@ -96,8 +106,8 @@ function Cart() {
                         flexWrap: 'wrap',
                         flexDirection: {
                             xs: 'column',
-                            md: 'row'
-                        }
+                            md: 'row',
+                        },
                     }}
                 >
                     <TableContainer sx={{ maxWidth: 816, flex: 1, minWidth: 360 }}>
@@ -116,15 +126,16 @@ function Cart() {
                                         sx={{
                                             '&:last-child td, &:last-child th': { border: 0 },
                                             '& > td': { minHeight: 127.64 },
-                                            minHeight: 127.64
+                                            minHeight: 127.64,
                                         }}
                                     >
                                         <TableCell>
                                             <Stack direction={'row'} sx={{ gap: '21px' }}>
-                                                <img
-                                                    src={item.image_path}
-                                                    style={{ width: 78, borderRadius: 14 }}
+                                                <CardMedia
+                                                    component="img"
+                                                    image={item.image_path || '/src/assets/broken_img.png'}
                                                     onError={handleBrokenImg}
+                                                    style={{ width: 78, borderRadius: 14 }}
                                                 />
                                                 <Stack sx={{ maxWidth: 186 }}>
                                                     <Typography>{item.item_name}</Typography>
@@ -165,7 +176,7 @@ function Cart() {
                             padding: '40px 30px',
                             maxWidth: {
                                 xs: 'auto',
-                                md: 392
+                                md: 392,
                             },
                             flex: 1,
                             gap: '24px',
@@ -195,13 +206,24 @@ function Cart() {
                             <Typography variant="body2">Total items</Typography>
                             <Typography variant="body2">{totalItems}</Typography>
                         </Stack>
-                        <Button sx={{ width: { xs: 'fit-content', md: '100%' }, mx: 'auto', px: 10 }} variant="rounded" size="small" onClick={handleAddBooking}>
+                        <Button
+                            sx={{
+                                width: { xs: 'fit-content', md: '100%' },
+                                mx: 'auto',
+                                px: 10,
+                            }}
+                            variant="rounded"
+                            size="small"
+                            onClick={handleAddBooking}
+                        >
                             Book items
                         </Button>
                     </Stack>
                 </Stack>
             ) : (
-                <Typography>Your cart is currently empty! <Link to='/items'>Browse Items</Link></Typography>
+                <Typography>
+                    Your cart is currently empty! <Link to="/items">Browse Items</Link>
+                </Typography>
             )}
         </Box>
     );
