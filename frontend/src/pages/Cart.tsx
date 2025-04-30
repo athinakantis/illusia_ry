@@ -24,10 +24,10 @@ import {
 import { addBooking, fetchUserBookings } from '../slices/bookingsSlice';
 import { useAuth } from '../hooks/useAuth';
 import { Link } from 'react-router-dom';
-import { useSnackbar } from 'notistack';
-import { CustomSnackbar } from '../components/CustomSnackbar';
+import { showCustomSnackbar } from '../components/CustomSnackbar';
 import { store } from '../store/store';
 import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
+import { useState } from 'react';
 
 
 function Cart() {
@@ -35,11 +35,14 @@ function Cart() {
     const { cart } = useAppSelector(selectCart);
     const { user } = useAuth();
     const selectedDateRange = useAppSelector(selectDateRange);
-    const { enqueueSnackbar } = useSnackbar();
-
+    const [editingDate, setEditingDate] = useState(false);
 
     // Calculate total quantity of all cart items
     const totalItems = cart.reduce((total, item) => total + (item.quantity || 0), 0)
+
+    const handleToggle = () => {
+        setEditingDate(prev => !prev); // Toggles between true/false
+    };
 
     const createBookingFromCart = () => {
         const itemsForBooking = cart.map((item) => {
@@ -84,53 +87,33 @@ function Cart() {
                     }),
                 );
 
-                enqueueSnackbar('notification', {
-                    variant: 'info', // still needed for context
-                    content: () => (
-                        <CustomSnackbar message='Item added to cart' variant='success' onClose={() => { }} />
-                    )
-                });
+                showCustomSnackbar('Item added to cart', 'success');
 
                 // adds the item in case it is available
             } else {
 
-                enqueueSnackbar('notification', {
-                    variant: 'info', // still needed for context
-                    content: () => (
-                        <CustomSnackbar message={checkAdditionToCart.message} variant={checkAdditionToCart.severity} onClose={() => { }} />
-                    )
-                });
+                showCustomSnackbar(checkAdditionToCart.message, checkAdditionToCart.severity);
             }
         }
-
     }
 
     const handleAddBooking = async () => {
         const newBookingData: object = createBookingFromCart();
         const resultAction = await dispatch(addBooking(newBookingData));
         if (!user) {
-            enqueueSnackbar('notification', {
-                variant: 'info', // still needed for context
-                content: () => (
-                    <CustomSnackbar message='Only registered users can make a booking' variant='error' onClose={() => { }} />
-                )
-            });
+
+            showCustomSnackbar('Only registered users can make a booking', 'error');
+
             return;
         }
         if (addBooking.rejected.match(resultAction)) {
-            enqueueSnackbar('notification', {
-                variant: 'info', // still needed for context
-                content: () => (
-                    <CustomSnackbar message={resultAction.payload ?? 'unknown error'} variant='error' onClose={() => { }} />
-                )
-            });
+
+            showCustomSnackbar(resultAction.payload ?? 'unknown error', 'error');
+
         } else {
-            enqueueSnackbar('notification', {
-                variant: 'info', // still needed for context
-                content: () => (
-                    <CustomSnackbar message='Booking created' variant='success' onClose={() => { }} />
-                )
-            });
+
+            showCustomSnackbar('Booking created', 'success');
+
             dispatch(emptyCart())
             dispatch(fetchUserBookings(user.id))
         }
@@ -256,8 +239,33 @@ function Cart() {
                         <Stack direction={'row'} justifyContent={'space-between'}>
                             <Typography variant="body2">Dates</Typography>
                             <Typography variant="body2">
-                                {selectedDateRange.start_date} - {selectedDateRange.end_date}
+                                {!editingDate ?
+                                    ` ${selectedDateRange.start_date} - ${selectedDateRange.end_date} `
+                                    :
+                                    "lala"
+                                }
                             </Typography>
+                        </Stack>
+                        <Stack direction={'row'} justifyContent={'right'}>
+                            <Button
+                                variant="text"
+                                color="primary"
+                                sx={{
+                                    textDecoration: 'underline',
+                                    textTransform: 'none',     // Keep original casing
+                                    padding: 0,                // Remove extra space
+                                    minWidth: 0,               // Optional: tighter layout
+                                    fontWeight: 'normal'       // Optional: make it look like regular link text
+                                }}
+                                onClick={handleToggle}
+                            >
+                                {!editingDate ?
+                                    "Change the booking dates"
+                                    :
+                                    "Confirm new dates"
+                                }
+                            </Button>
+
                         </Stack>
                         <Stack direction={'row'} justifyContent={'space-between'}>
                             <Typography variant="body2">Total items</Typography>

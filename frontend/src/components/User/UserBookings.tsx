@@ -23,28 +23,20 @@ import { BookingWithRes, Item } from '../../types/types';
 import { useAuth } from '../../hooks/useAuth';
 import { useEffect } from 'react';
 import { deleteBooking, fetchUserBookings, selectUserBookings } from '../../slices/bookingsSlice';
-import { useSnackbar } from 'notistack';
-import { CustomSnackbar } from '../CustomSnackbar';
+import { showCustomSnackbar } from '../CustomSnackbar';
 
 const UserBookings = () => {
   const { user } = useAuth();
   const userId = user?.id;
   const dispatch = useAppDispatch();
   const theme = useTheme();
-  const { enqueueSnackbar } = useSnackbar();
 
 
   /* ─────────────────── handlers ─────────────────── */
   const handleCancel = (bookingId: string) => {
     dispatch(deleteBooking(bookingId)).then(() =>
 
-      enqueueSnackbar('notification', {
-        variant: 'info', // still needed for context
-        content: () => (
-          <CustomSnackbar message='Booking cancelled' variant='info' onClose={() => { }} />
-        )
-      }));
-
+      showCustomSnackbar('Booking cancelled', 'info'));
   };
 
   /* ─────────────────── selectors ─────────────────── */

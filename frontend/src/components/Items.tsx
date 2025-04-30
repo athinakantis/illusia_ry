@@ -44,8 +44,7 @@ import {
   today,
 } from '@internationalized/date';
 import { Item } from '../types/types';
-import { useSnackbar } from 'notistack';
-import { CustomSnackbar } from './CustomSnackbar';
+import { showCustomSnackbar } from './CustomSnackbar';
 
 function Items() {
   const items = useAppSelector(selectAllItems);
@@ -77,20 +76,14 @@ function Items() {
     }
   }, []);
 
-  const { enqueueSnackbar } = useSnackbar();
+
 
   const addToCart = (item: Item, quantity: number = 1) => {
     // need to fetch the bookings and reservations first in order for this to work properly
 
     if (range?.start === undefined) {
 
-      enqueueSnackbar('notification', {
-        variant: 'info', // still needed for context
-        content: () => (
-          <CustomSnackbar message='Select dates before adding to cart' variant='warning' onClose={() => { }} />
-        )
-      });
-
+      showCustomSnackbar('Select dates before adding to cart', 'warning');
       return;
     }
     // checks if there is any range selected
@@ -114,22 +107,11 @@ function Items() {
         }),
       );
 
-      enqueueSnackbar('notification', {
-        variant: 'info', // still needed for context
-        content: () => (
-          <CustomSnackbar message='Item added to cart' variant='success' onClose={() => { }} />
-        )
-      });
+      showCustomSnackbar('Item added to cart', 'success');
 
       // adds the item in case it is available
     } else {
-
-      enqueueSnackbar('notification', {
-        variant: 'info', // still needed for context
-        content: () => (
-          <CustomSnackbar message={checkAdditionToCart.message} variant={checkAdditionToCart.severity} onClose={() => { }} />
-        )
-      });
+      showCustomSnackbar(checkAdditionToCart.message, checkAdditionToCart.severity);
     }
   };
 
@@ -207,12 +189,8 @@ function Items() {
 
       if (diffInDays > 14) {
 
-        enqueueSnackbar('notification', {
-          variant: 'info', // still needed for context
-          content: () => (
-            <CustomSnackbar message='You can only book a maximum of 14 days' variant='warning' onClose={() => { }} />
-          )
-        });
+        showCustomSnackbar('You can only book a maximum of 14 days', 'warning');
+
         return;
       }
 

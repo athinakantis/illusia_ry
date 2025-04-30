@@ -1,12 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, LinearProgress, Box } from '@mui/material';
 import { forwardRef } from 'react';
+import { enqueueSnackbar } from 'notistack';
 
 interface CustomSnackbarProps {
     message: string;
     variant: 'success' | 'error' | 'info' | 'warning';
     onClose: () => void; // Callback for when snackbar closes
 }
+
+// showCustomSnackbar('Select dates before adding to cart', 'warning');
+
+export const showCustomSnackbar = (
+    message: string,
+    variant: 'success' | 'error' | 'info' | 'warning' = 'info'
+) => {
+
+    enqueueSnackbar('notification', {
+        variant: "default", // still needed for context
+        content: () => (
+            <CustomSnackbar message={message} variant={variant} onClose={() => { }} />
+        )
+    });
+
+};
 
 export const CustomSnackbar = forwardRef<HTMLDivElement, CustomSnackbarProps>(
     ({ message, variant, onClose }, ref) => {

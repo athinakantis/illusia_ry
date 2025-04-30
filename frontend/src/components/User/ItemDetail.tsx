@@ -18,8 +18,7 @@ import type { RangeValue } from '@react-types/shared';
 import { checkAvailabilityForItemOnDates } from '../../selectors/availabilitySelector';
 import { addItemToCart, selectDateRange } from '../../slices/cartSlice';
 import { store } from '../../store/store';
-import { useSnackbar } from 'notistack';
-import { CustomSnackbar } from '../CustomSnackbar';
+import { showCustomSnackbar } from '../CustomSnackbar';
 
 
 const ItemDetail: React.FC = () => {
@@ -33,7 +32,6 @@ const ItemDetail: React.FC = () => {
   const item = items.find((i) => i.item_id === itemId);
   const categories = useAppSelector(selectAllCategories);
   const selectedDateRange = useAppSelector(selectDateRange);
-  const { enqueueSnackbar } = useSnackbar();
 
 
   useEffect(() => {
@@ -54,12 +52,7 @@ const ItemDetail: React.FC = () => {
 
       if (diffInDays > 14) {
 
-        enqueueSnackbar('notification', {
-          variant: 'info', // still needed for context
-          content: () => (
-            <CustomSnackbar message='You can only book a maximum of 14 days' variant='warning' onClose={() => { }} />
-          )
-        });
+        showCustomSnackbar('You can only book a maximum of 14 days', 'warning');
         return;
       }
       setRange(newRange);
@@ -73,12 +66,8 @@ const ItemDetail: React.FC = () => {
   const handleCartAddition = () => {
     if (range?.start === undefined) {
 
-      enqueueSnackbar('notification', {
-        variant: 'info', // still needed for context
-        content: () => (
-          <CustomSnackbar message='Select dates before adding to cart' variant='warning' onClose={() => { }} />
-        )
-      });
+      showCustomSnackbar('Select dates before adding to cart', 'warning');
+
       return;
     }
 
@@ -88,20 +77,12 @@ const ItemDetail: React.FC = () => {
       if (checkAdditionToCart.severity === 'success') {
         dispatch(addItemToCart({ item: selectItemById(itemId)(store.getState()), quantity: quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
 
-        enqueueSnackbar('notification', {
-          variant: 'info', // still needed for context
-          content: () => (
-            <CustomSnackbar message='Item added to cart' variant='success' onClose={() => { }} />
-          )
-        });
+        showCustomSnackbar('Item added to cart', 'success');
 
       } else {
-        enqueueSnackbar('notification', {
-          variant: 'info', // still needed for context
-          content: () => (
-            <CustomSnackbar message={checkAdditionToCart.message} variant={checkAdditionToCart.severity} onClose={() => { }} />
-          )
-        });
+
+        showCustomSnackbar(checkAdditionToCart.message, checkAdditionToCart.severity);
+
       }
     }
   }

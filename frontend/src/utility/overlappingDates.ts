@@ -1,10 +1,10 @@
-import { LocalReservation } from "../types/types";
+import { Reservation } from "../types/types";
 
 function getDailyKey(date: Date): string {
     return date.toISOString().slice(0, 10); // 'YYYY-MM-DD'
 }
 
-export const getBookedQtyByDateAndItemForReservationsInRange = (startOfTheRange: Date, endOfTheRange: Date, itemReservations: LocalReservation[]) => {
+export const getBookedQtyByDateAndItemForReservationsInRange = (startOfTheRange: Date, endOfTheRange: Date, itemReservations: Reservation[]) => {
 
     const availabilityMap: Record<string, Record<string, number>> = {};
 
