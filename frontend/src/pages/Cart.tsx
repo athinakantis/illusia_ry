@@ -242,7 +242,7 @@ function Cart() {
                                 {!editingDate ?
                                     ` ${selectedDateRange.start_date} - ${selectedDateRange.end_date} `
                                     :
-                                    "lala"
+                                    "I am still working on it"
                                 }
                             </Typography>
                         </Stack>
