@@ -7,10 +7,11 @@ import {
     Put,
     Req,
   } from '@nestjs/common';
-  import { CreateTagDto } from 'src/dto/tags/create-tag.dto';
-  import { UpdateTagDto } from 'src/dto/tags/update-tag.dto';
-  import { TagService } from 'src/services/tags.service';
+import { TagService } from './tags.service';
+import { CreateTagDto } from './dto/create-tag.dto';
 import { CustomRequest } from 'src/types/request.type';
+import { UpdateTagDto } from './dto/update-tag.dto';
+
   
   @Controller('tags')
   export class TagController {

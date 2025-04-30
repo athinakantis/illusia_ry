@@ -5,12 +5,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { SupabaseService } from '../supabase/supabase.service';
 import { CustomRequest } from 'src/types/request.type';
-import { Tables } from 'src/types/supabase';
+import { CreateTagDto } from './dto/create-tag.dto';
 import { ApiResponse } from 'src/types/response';
-import { CreateTagDto } from 'src/dto/tags/create-tag.dto';
-import { UpdateTagDto } from 'src/dto/tags/update-tag.dto';
-import { SupabaseService } from './supabase.service';
+import { Tables } from 'src/types/supabase';
+import { UpdateTagDto } from './dto/update-tag.dto';
+
 
 @Injectable()
 export class TagService {

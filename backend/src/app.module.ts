@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './controllers/app.controller';
 import { AppService } from './services/app.service';
-import { SupabaseService } from './services/supabase.service';
+import { SupabaseService } from './modules/supabase/supabase.service';
 import { ItemController } from './controllers/item.controller';
 import { ItemService } from './services/items.service';
 import { AuthMiddleware } from './middlewares/auth.middleware';
@@ -18,13 +18,19 @@ import { ItemReservationService } from './services/reservations.service';
 import { AdminService } from './services/admin.service';
 import { AdminController } from './controllers/admin.controller';
 import { MailerService } from './services/mailer.service';
-import { TagService } from './services/tags.service';
-import { TagController } from './controllers/tags.controller';
+import { TagService } from './modules/tags/tags.service';
+import { TagController } from './modules/tags/tags.controller';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { TagModule } from './modules/tags/tags.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    // Import other modules here if needed
+    CategoriesModule,
+    TagModule,
+    
   ],
   controllers: [
     AppController,

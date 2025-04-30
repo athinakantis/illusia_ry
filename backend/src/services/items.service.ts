@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SupabaseService } from './supabase.service';
+import { SupabaseService } from '../modules/supabase/supabase.service';
 import { Tables } from 'src/types/supabase';
 import { CustomRequest } from 'src/types/request.type';
 import { ApiResponse } from 'src/types/response';
