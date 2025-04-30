@@ -18,7 +18,8 @@ import { ItemReservationService } from './services/reservations.service';
 import { AdminService } from './services/admin.service';
 import { AdminController } from './controllers/admin.controller';
 import { MailerService } from './services/mailer.service';
-
+import { TagService } from './services/tags.service';
+import { TagController } from './controllers/tags.controller';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -33,7 +34,8 @@ import { MailerService } from './services/mailer.service';
     ViewsController,
     BookingController,
     ItemReservationsController,
-    AdminController
+    AdminController,
+    TagController,
     
   ], // Controller imports go here
   providers: [
@@ -45,7 +47,8 @@ import { MailerService } from './services/mailer.service';
     MailerService,
     BookingService,
     ItemReservationService,
-    AdminService
+    AdminService,
+    TagService,
   ], // Services are used to handle business logic and data access
 })
 
@@ -57,6 +60,8 @@ export class AppModule implements NestModule {
       // MailerController,
       BookingController,
       ItemReservationsController,
-      AdminController,);
+      AdminController,
+      TagController,
+      );
   }
 }
