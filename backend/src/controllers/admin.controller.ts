@@ -7,8 +7,10 @@ import {
   Patch,
   Req,
 } from '@nestjs/common';
+import { User } from '@supabase/supabase-js';
 import { AdminService } from 'src/services/admin.service';
 import { CustomRequest } from 'src/types/request.type';
+import { ApiResponse, UserWithRole } from 'src/types/response';
 
 @Controller('admin')
 export class AdminController {
@@ -51,26 +53,67 @@ export class AdminController {
   async getUserRole(@Req() req: CustomRequest, @Param('id') userId: string) {
     return this.AdminsService.getUserRoleById(req, userId);
   }
-  /**
-   * Update user status
-   * @param req Custom Reqest with Supabase Client
-   * @param userId UUID of user
-   * @param body { status: string }
-   * @returns { message:string, data: AdminUserRow }
-   */ // POST /admin/users/:id/status
-  @Patch('users/:id/status')
+ 
+  // Update a Users status(Flexible)
+  // admin/users/status
+  @Patch('users/status')
   async updateUserStatus(
     @Req() req: CustomRequest,
-    @Param('id') userId: string,
-    @Body() body: { status: string },
+    @Body() body: { status: 'approved' | 'rejected' | 'deactivated' | 'active', userId: string },
   ) {
-    if (body.status !== 'approved' && body.status !== 'rejected') {
-      throw new BadRequestException('Status must be "approved" or "rejected".');
+    if (!body.userId || typeof body.userId !== 'string') {
+      throw new BadRequestException('Body must contain a "userId" string property');
+    }
+    if (!body.status || typeof body.status !== 'string') {
+      throw new BadRequestException('Body must contain a "status" string property');
     }
     return this.AdminsService.updateUserStatus(
       req,
-      userId,
-      body.status as 'approved' | 'rejected',
+      body.userId,
+      body.status,
     );
   }
+
+  /**
+   * Update a user's role to anything(Only Head-Admin)
+   * @param req  CustomRequest with Supabase client
+   * @param body { role: string, userId: string }
+   * @returns { message: string, data: UserWithRole }
+   */
+  @Patch('users/role')
+  async updateAnyRole(
+    @Req() req: CustomRequest,
+    @Body() body: { role: string, userId: string },
+  ): Promise<ApiResponse<UserWithRole>> {
+    if (!body.userId || typeof body.userId !== 'string') {
+      throw new BadRequestException('Body must contain a "userId" string property');
+    }
+    if (!body.role || typeof body.role !== 'string') {
+      throw new BadRequestException('Body must contain a "role" string property');
+    }
+    return this.AdminsService.updateUserRole(req, body.userId, body.role);
+  }
+
+  /**
+ * Promote a User to Admin
+ */
+@Patch('users/:id/promote-to-admin')
+async promoteUserToAdmin(
+  @Req() req: CustomRequest,
+  @Param('id') userId: string,
+) {
+  return this.AdminsService.promoteUserToAdmin(req, userId);
+}
+
+/**
+ * Approve Unapproved user to regular User
+ */
+@Patch('users/:id/approve')
+async approveUserToUser(
+  @Req() req: CustomRequest,
+  @Param('id') userId: string,
+) {
+  return this.AdminsService.approveUserToUser(req, userId);
+}
+
 }
