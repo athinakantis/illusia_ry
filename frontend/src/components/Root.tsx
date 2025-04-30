@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import Header from './Header/Header';
 import Footer from './Footer';
-import { Snackbar } from './Snackbar';
 import { Box } from '@mui/material';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -70,7 +69,6 @@ function Root() {
         <Outlet />
       </main>
       <Footer />
-      <Snackbar />
     </Box>
   )
 }

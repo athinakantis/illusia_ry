@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { showNotification } from '../slices/notificationSlice';
 import {
   selectAllCategories,
   selectAllItems,
@@ -45,6 +44,7 @@ import {
   today,
 } from '@internationalized/date';
 import { Item } from '../types/types';
+import { showCustomSnackbar } from './CustomSnackbar';
 
 function Items() {
   const items = useAppSelector(selectAllItems);
@@ -76,16 +76,14 @@ function Items() {
     }
   }, []);
 
+
+
   const addToCart = (item: Item, quantity: number = 1) => {
     // need to fetch the bookings and reservations first in order for this to work properly
 
     if (range?.start === undefined) {
-      dispatch(
-        showNotification({
-          message: 'Select dates before adding to cart',
-          severity: 'warning',
-        }),
-      );
+
+      showCustomSnackbar('Select dates before adding to cart', 'warning');
       return;
     }
     // checks if there is any range selected
@@ -108,20 +106,12 @@ function Items() {
           end_date: range.end.toString(),
         }),
       );
-      dispatch(
-        showNotification({
-          message: 'Item added to cart',
-          severity: 'success',
-        }),
-      );
+
+      showCustomSnackbar('Item added to cart', 'success');
+
       // adds the item in case it is available
     } else {
-      dispatch(
-        showNotification({
-          message: checkAdditionToCart.message,
-          severity: checkAdditionToCart.severity,
-        }),
-      );
+      showCustomSnackbar(checkAdditionToCart.message, checkAdditionToCart.severity);
     }
   };
 
@@ -198,7 +188,9 @@ function Items() {
       const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
 
       if (diffInDays > 14) {
-        alert('You can only book a maximum of 14 days.');
+
+        showCustomSnackbar('You can only book a maximum of 14 days', 'warning');
+
         return;
       }
 
