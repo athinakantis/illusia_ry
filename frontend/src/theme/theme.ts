@@ -16,7 +16,7 @@ export const theme = {
     default: '#FFFFFF',
     lightgrey: 'lightgrey',
     verylightgrey: '#ededed',
-    grey03: '#A6A6A6'
+    grey03: '#A6A6A6',
   },
   text: {
     primary: '#1F0A29',
@@ -68,68 +68,80 @@ export const createAppTheme = () =>
         fontSize: 45,
         fontWeight: 500,
         fontFamily: 'Roboto Slab, sans-serif',
-        color: "#FFF"
+        color: '#FFF',
       },
       h2: {
         fontSize: '1.75rem',
         fontWeight: 500,
         fontFamily: 'Lato, sans-serif',
+        color: '#282828',
       },
       h3: {
         fontSize: '1.5rem',
         fontWeight: 500,
         fontFamily: 'Roboto Slab, sans-serif',
+        color: '#282828',
       },
       h4: {
         fontSize: '1.25rem',
         fontWeight: 500,
         fontFamily: 'Roboto Slab, sans-serif',
+        color: '#282828',
       },
       h5: {
         fontSize: '1rem',
         fontWeight: 500,
         fontFamily: 'Roboto Slab, sans-serif',
+        color: '#282828',
       },
       h6: {
         fontSize: '0.875rem',
         fontWeight: 500,
         fontFamily: 'Roboto Slab, sans-serif',
+        color: '#282828',
       },
       body1: {
         fontSize: 16,
         fontWeight: 400,
         fontFamily: 'Oxygen, sans-serif',
+        color: '#282828',
       },
       body2: {
         fontSize: '0.875rem',
         fontWeight: 400,
         fontFamily: 'Lato, sans-serif',
+        color: '#282828',
       },
       body3: {
         fontFamily: 'Lato, sans-serif',
         fontSize: 16,
         fontWeight: 300,
+        color: '#282828',
       },
       link: {
         fontSize: '1 rem',
         fontWeight: 500,
         fontFamily: 'Roboto, sans-serif',
         textTransform: 'uppercase',
+        color: '#282828',
       },
       heading_secondary: {
         fontSize: 40,
         fontFamily: 'Lato, sans-serif',
+        color: '#282828',
       },
       heading_secondary_bold: {
         fontSize: 36,
         fontWeight: 700,
-        fontFamily: 'Lato, sans-serif'
+        fontFamily: 'Lato, sans-serif',
+        color: '#282828',
       },
       subheading: {
         fontFamily: 'Lato, sans-serif',
         fontWeight: 400,
-        fontSize: 18
-      }
+        fontSize: 18,
+        color: '#282828',
+      },
     },
     shadows: [
       'none',
@@ -161,51 +173,59 @@ export const createAppTheme = () =>
     components: {
       MuiButton: {
         defaultProps: {
-          disableRipple: true
+          disableRipple: true,
         },
         styleOverrides: {
           root: {
-            variants: [{
-              props: {variant: 'rounded'},
-              style: {
-                height: 59,
-                borderRadius: '64px',
-                backgroundColor: '#282828',
-                fontFamily: 'Exo, sans-serif',
-                fontWeight: 600,
-                fontSize: 'clamp(14px, 2vw, 20px)',
-                color: '#FFF',
-                width: 'fit-content',
-                padding: '16px 24px',
-                '&:hover': { backgroundColor: '#464646'}
-              }, 
-            }, {
-              props: {variant: 'rounded', size: 'small'},
-              style: {
-                textTransform: 'capitalize',
-                height: 54,
-                width: '100%'
-              }
-            }]
-          } 
-        }
+            variants: [
+              {
+                props: { variant: 'rounded' },
+                style: {
+                  height: 59,
+                  borderRadius: '64px',
+                  backgroundColor: '#282828',
+                  fontFamily: 'Exo, sans-serif',
+                  fontWeight: 600,
+                  fontSize: 'clamp(14px, 2vw, 20px)',
+                  color: '#FFF',
+                  width: 'fit-content',
+                  padding: '16px 24px',
+                  '&:hover': { backgroundColor: '#464646' },
+                },
+              },
+              {
+                props: { variant: 'rounded', size: 'small' },
+                style: {
+                  textTransform: 'capitalize',
+                  height: 54,
+                  width: '100%',
+                },
+              },
+              {
+                props: { variant: 'contained', color: 'grey' },
+                style: {
+                  backgroundColor: '#282828',
+                  color: 'white',
+                },
+              },
+            ],
+          },
+        },
       },
       MuiTabs: {
         styleOverrides: {
-          root: {
-            
-          }
-        }
+          root: {},
+        },
       },
       MuiTab: {
         defaultProps: {
-          disableRipple: true
+          disableRipple: true,
         },
         styleOverrides: {
           root: {
-            fontSize: 20,            
+            fontSize: 20,
           },
-        }
-      }
-    }
+        },
+      },
+    },
   });
