@@ -23,6 +23,7 @@ import {
 	selectCart,
 	selectDateRange,
 } from '../slices/cartSlice';
+import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
 import { addBooking, fetchUserBookings } from '../slices/bookingsSlice';
 import { useAuth } from '../hooks/useAuth';
 import { Link } from 'react-router-dom';
@@ -320,7 +321,7 @@ function Cart() {
 							<Typography variant="body2">{totalItems}</Typography>
 						</Stack>
 						{!user && <Stack sx={{ border: '1px solid #E2E2E2', flexDirection: 'row', padding: '20px 24px', gap: '10px' }}>
-							<img style={{ width: 20, height: 20, fill: '#414141' }} src="/src/assets/Icon_info.svg" alt="" />
+							<InfoOutlineIcon />
 							<Typography variant='body1'>Log in to book items</Typography>
 						</Stack>}
 						<Button
