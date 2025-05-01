@@ -13,6 +13,7 @@ import UserBookings from '../components/User/UserBookings';
 import AdminDashboard from '../components/Admin/AdminDashboard';
 import AdminBookings from '../components/Admin/AdminBookings/AdminBookings';
 import Account from '../components/Account';
+import SingleBooking from '../components/Booking';
 
 export const router = createBrowserRouter([
   {
@@ -60,6 +61,9 @@ export const router = createBrowserRouter([
       {
         path: "/bookings",
         element: <UserBookings />
+      }, {
+        path: '/bookings/:booking_id',
+        element: <SingleBooking />
       },
       {
         path: "/admin/dashboard",

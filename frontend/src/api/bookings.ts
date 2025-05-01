@@ -1,4 +1,4 @@
-import { ApiResponse, Booking, BookingWithRes } from '../types/types';
+import { ApiResponse, Booking, BookingWithItems } from '../types/types';
 import { api } from './axios';
 
 export const bookingsApi = {
@@ -7,9 +7,10 @@ export const bookingsApi = {
         api.get('bookings',
             { headers: { 'Access-Control-Allow-Origin': '*' } }
         ),
-    /*getBookingbyId: (id: string): Promise<ApiResponse<Item>> => {
-        return api.get(`/items/${id}`)
-    },*/
+
+    getBooking: (id: string): Promise<ApiResponse<BookingWithItems>> => {
+        return api.get(`/bookings/${id}`)
+    },
 
     createBooking: async (newBooking: object) => {
 
@@ -22,7 +23,7 @@ export const bookingsApi = {
    */
   getUserBookings: (
     userId: string,
-  ): Promise<ApiResponse<BookingWithRes[]>> =>
+  ): Promise<ApiResponse<BookingWithItems>> =>
     api.get(`bookings/user/${userId}`, {
       headers: { 'Access-Control-Allow-Origin': '*' },
     }),
