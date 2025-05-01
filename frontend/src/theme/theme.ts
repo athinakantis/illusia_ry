@@ -208,7 +208,18 @@ export const createAppTheme = () =>
                   color: 'white',
                   '&:hover': { backgroundColor: '#3f3f3f' }
                 },
-              },
+              }, {
+                props: { variant: 'outlined_rounded' },
+                style: {
+                  border: '1px solid #E2E2E2',
+                  borderRadius: '100px',
+                  fontFamily: 'Lato, sans-serif',
+                  height: '40px',
+                  textTransform: 'capitalize',
+                  fontSize: 16,
+                  '&:hover': { backgroundColor: 'rgba(68, 25, 91, 0.04)'}
+                }
+              }
             ],
           },
         },
