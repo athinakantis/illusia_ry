@@ -319,6 +319,10 @@ function Cart() {
 							<Typography variant="body2">Total items</Typography>
 							<Typography variant="body2">{totalItems}</Typography>
 						</Stack>
+						{!user && <Stack sx={{ border: '1px solid #E2E2E2', flexDirection: 'row', padding: '20px 24px', gap: '10px' }}>
+							<img style={{ width: 20, height: 20, fill: '#414141' }} src="/src/assets/Icon_info.svg" alt="" />
+							<Typography variant='body1'>Log in to book items</Typography>
+						</Stack>}
 						<Button
 							sx={{
 								width: { xs: 'fit-content', md: '100%' },
