@@ -177,7 +177,7 @@ const AdminDashboard = () => {
           </Button>
           <Button
             component={Link}
-            to="/admin/bookings"
+            to="/admin/bookings?filter=pending"
             variant="contained"
             color="grey"
           >
