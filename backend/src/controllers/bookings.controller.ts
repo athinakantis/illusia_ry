@@ -69,4 +69,9 @@ export class BookingController {
   async deleteBooking(@Req() req: CustomRequest, @Param('id') id: string) {
     return this.bookingService.deleteBooking(req, id);
   }
+
+  @Get(`upcoming/:amount`)
+  async getUpcomingBookings(@Req() req: CustomRequest, @Param('amount') amount: string) {
+    return this.bookingService.getUpcomingBookings(req, amount)
+  }
 }

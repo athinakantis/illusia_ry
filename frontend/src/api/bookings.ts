@@ -1,4 +1,4 @@
-import { ApiResponse, Booking, BookingWithRes } from '../types/types';
+import { ApiResponse, Booking, BookingWithRes, UpcomingBooking } from '../types/types';
 import { api } from './axios';
 
 export const bookingsApi = {
@@ -31,5 +31,9 @@ export const bookingsApi = {
     },
     removeBooking: (id: string): Promise<ApiResponse<Booking>> => {
         return api.delete(`/bookings/${id}`)
+    },
+
+    getUpcomingBookings(amount: number = 3): Promise<ApiResponse<UpcomingBooking[]>> {
+        return api.get(`/bookings/upcoming/${amount}`)
     }
 };

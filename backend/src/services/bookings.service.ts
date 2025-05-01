@@ -1,12 +1,18 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Tables } from 'src/types/supabase';
 import { ApiResponse, BookingWithRes } from 'src/types/response';
 import { CustomRequest } from 'src/types/request.type';
+import { UpcomingBooking } from 'src/types/bookings';
 
 @Injectable()
 export class BookingService {
-  
-  async getBookings(req: CustomRequest): Promise<ApiResponse<Tables<'bookings'>[]>> {
+  async getBookings(
+    req: CustomRequest,
+  ): Promise<ApiResponse<Tables<'bookings'>[]>> {
     const supabase = req['supabase'];
 
     const { data, error } = await supabase
@@ -24,7 +30,10 @@ export class BookingService {
     };
   }
 
-  async getBookingById(req: CustomRequest, id: string): Promise<ApiResponse<Tables<'bookings'>>> {
+  async getBookingById(
+    req: CustomRequest,
+    id: string,
+  ): Promise<ApiResponse<Tables<'bookings'>>> {
     const supabase = req['supabase'];
 
     const { data, error } = await supabase
@@ -32,7 +41,7 @@ export class BookingService {
       .select('*')
       .eq('booking_id', id)
       .maybeSingle();
-      console.log("data", data);
+    console.log('data', data);
     if (error) {
       throw new BadRequestException(error.message);
     }
@@ -50,14 +59,22 @@ export class BookingService {
     };
   }
 
-  async createBooking(req: CustomRequest, payload: {
-    items: {
-      item_id: string;
-      start_date: string;
-      end_date: string;
-      quantity: number;
-    }[];
-  }): Promise<ApiResponse<{ booking_id: Tables<'bookings'>['booking_id']; reservations: Tables<'item_reservations'>[] }>> {
+  async createBooking(
+    req: CustomRequest,
+    payload: {
+      items: {
+        item_id: string;
+        start_date: string;
+        end_date: string;
+        quantity: number;
+      }[];
+    },
+  ): Promise<
+    ApiResponse<{
+      booking_id: Tables<'bookings'>['booking_id'];
+      reservations: Tables<'item_reservations'>[];
+    }>
+  > {
     const supabase = req['supabase'];
     const userId = req['user']?.id;
 
@@ -72,7 +89,7 @@ export class BookingService {
     }
 
     const booking_id = bookingData.booking_id;
-  
+
     const reservationRows = payload.items.map((item) => ({
       booking_id,
       item_id: item.item_id,
@@ -98,21 +115,27 @@ export class BookingService {
     };
   }
 
-  async createBookingWithItemsViaRpc(req: CustomRequest, payload: {
-    items: {
-      item_id: string;
-      start_date: string;
-      end_date: string;
-      quantity: number;
-    }[];
-  }): Promise<{ booking_id: string; status: string }> {
+  async createBookingWithItemsViaRpc(
+    req: CustomRequest,
+    payload: {
+      items: {
+        item_id: string;
+        start_date: string;
+        end_date: string;
+        quantity: number;
+      }[];
+    },
+  ): Promise<{ booking_id: string; status: string }> {
     const supabase = req['supabase'];
     const userId = req['user']?.id;
 
-    const { data, error } = await supabase.rpc('create_booking_with_reservations', {
-      _user_id: userId,
-      _items: payload.items,
-    });
+    const { data, error } = await supabase.rpc(
+      'create_booking_with_reservations',
+      {
+        _user_id: userId,
+        _items: payload.items,
+      },
+    );
 
     if (error) {
       throw new BadRequestException(error.message); // from @nestjs/common
@@ -120,7 +143,9 @@ export class BookingService {
     return data;
   }
 
-  async createEmptyBooking(req: CustomRequest): Promise<ApiResponse<Tables<'bookings'>>> {
+  async createEmptyBooking(
+    req: CustomRequest,
+  ): Promise<ApiResponse<Tables<'bookings'>>> {
     const supabase = req['supabase'];
     const userId = req['user']?.id;
 
@@ -140,8 +165,13 @@ export class BookingService {
     };
   }
 
-   // New method to review booking availability. Checks all items in the booking to see if they are available.
-   async reviewBookingAvailability(req: CustomRequest, bookingId: string): Promise<ApiResponse<{ booking_id: string; status: string; issues: string[] }>> {
+  // New method to review booking availability. Checks all items in the booking to see if they are available.
+  async reviewBookingAvailability(
+    req: CustomRequest,
+    bookingId: string,
+  ): Promise<
+    ApiResponse<{ booking_id: string; status: string; issues: string[] }>
+  > {
     const supabase = req['supabase'];
 
     const { data: reservations, error } = await supabase
@@ -153,7 +183,14 @@ export class BookingService {
       throw new BadRequestException(error.message);
     }
     if (!reservations || reservations.length === 0) {
-      return { message: 'No reservations found for booking', data: { booking_id: bookingId, status: 'fail', issues: ['No reservations found.'] } };
+      return {
+        message: 'No reservations found for booking',
+        data: {
+          booking_id: bookingId,
+          status: 'fail',
+          issues: ['No reservations found.'],
+        },
+      };
     }
 
     const issues: string[] = [];
@@ -168,7 +205,9 @@ export class BookingService {
         .single();
 
       if (stockErr || !totalStockData) {
-        issues.push(`Reservation ${id}: Item ${item_id}: could not fetch stock info`);
+        issues.push(
+          `Reservation ${id}: Item ${item_id}: could not fetch stock info`,
+        );
         continue;
       }
 
@@ -182,18 +221,22 @@ export class BookingService {
         .gte('end_date', start_date);
 
       if (overlapErr) {
-        issues.push(`Reservation ${id}: Item ${item_id}: error checking overlapping reservations`);
+        issues.push(
+          `Reservation ${id}: Item ${item_id}: error checking overlapping reservations`,
+        );
         continue;
       }
 
       const alreadyReserved: number = overlapping.reduce<number>(
         (sum: number, row: { quantity: number }) => sum + row.quantity,
-        0
+        0,
       );
       const available = totalStock - alreadyReserved;
 
       if (available < quantity) {
-        issues.push(`Reservation ${id}: Item ${item_id} only has ${available} left during ${start_date} - ${end_date}`);
+        issues.push(
+          `Reservation ${id}: Item ${item_id} only has ${available} left during ${start_date} - ${end_date}`,
+        );
       }
     }
 
@@ -219,58 +262,60 @@ export class BookingService {
     status: Tables<'bookings'>['status'],
   ): Promise<ApiResponse<Tables<'bookings'>>> {
     const supabase = req['supabase'];
- 
+
     if (!status) {
       throw new BadRequestException('Status value is required');
     }
- 
+
     const { data, error } = await supabase
       .from('bookings')
       .update({ status })
       .eq('booking_id', bookingId)
       .select()
       .maybeSingle();
-  
+
     if (!data) {
       throw new NotFoundException(`Booking ${bookingId} not found`);
     }
- 
+
     if (error) {
       throw new BadRequestException(error);
     }
- 
+
     return {
       message: `Booking ${bookingId} status updated to "${status}"`,
       data,
     };
   }
-  
-  async deleteBooking(req: CustomRequest, bookingId: string): Promise<ApiResponse<Tables<'bookings'>[]>> {
+
+  async deleteBooking(
+    req: CustomRequest,
+    bookingId: string,
+  ): Promise<ApiResponse<Tables<'bookings'>[]>> {
     const supabase = req['supabase'];
- 
+
     const { data, error } = await supabase
       .from('bookings')
       .delete()
       .eq('booking_id', bookingId)
       .select();
-      
+
     if (!data) {
       throw new NotFoundException(`Booking ${bookingId} not found`);
     }
     if (!data.length) {
       throw new NotFoundException(`Booking ${bookingId} not found`);
     }
-      console.log("error", error);
+    console.log('error', error);
     if (error) {
       throw new BadRequestException(error);
     }
- 
+
     return {
       message: 'Booking deleted successfully',
       data: data ?? [],
     };
-  }  
-
+  }
 
   /**
    * Retrieve all bookings for a given user, including their reservations.
@@ -281,8 +326,9 @@ export class BookingService {
     userId: string,
   ): Promise<ApiResponse<BookingWithRes[]>> {
     const supabase = req['supabase'];
-    const { data, error } = await supabase
-      .rpc('get_user_bookings', { p_user_id: userId });
+    const { data, error } = await supabase.rpc('get_user_bookings', {
+      p_user_id: userId,
+    });
 
     if (error) {
       throw new BadRequestException(error.message);
@@ -293,5 +339,37 @@ export class BookingService {
       data: data ?? [],
     };
   }
-  
+
+  /**
+   * Retrieve upcoming bookings of all statuses
+   */
+  async getUpcomingBookings(
+    req: CustomRequest,
+    amount: string,
+  ): Promise<ApiResponse<UpcomingBooking[]>> {
+    if (typeof +amount !== 'number')
+      throw new Error('Amount must be an integer');
+
+    // Get todays date as a string
+    const today = new Date().toISOString().slice(0, 10);
+
+    const supabase = req['supabase'];
+    const { data, error } = await supabase
+      .from('item_reservations')
+      .select(
+        `*, booking:booking_id (status, user_id,
+        user:user_id (display_name, email))`,
+      )
+      .gt('start_date', today)
+      .limit(+amount);
+
+    if (error) {
+      throw new BadRequestException(error.message);
+    }
+
+    return {
+      message: 'Successfully retrieved upcoming bookings!',
+      data: data,
+    };
+  }
 }

@@ -57,5 +57,6 @@ declare module '@mui/material/Button' {
 declare module '@mui/material/Button' {
   interface ButtonPropsVariantOverrides {
     rounded: true;
+    outlined_rounded: true;
   }
 }

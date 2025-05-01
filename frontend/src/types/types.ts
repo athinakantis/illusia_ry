@@ -1,3 +1,5 @@
+import { Database, Tables } from './supabase.type';
+
 export interface Item {
   item_id: string,
   category_id: string,
@@ -111,3 +113,9 @@ export interface DeleteBookingResponse {
   message: string;    // "Booking deleted successfully"
   data: Booking[];    // usually a one-element array with the deleted booking
 }
+
+export type UpcomingBooking = Tables<'item_reservations'> & {
+  booking: Tables<'bookings'> & {
+    user: Tables<'users'>;
+  };
+};
