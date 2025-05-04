@@ -13,7 +13,7 @@ import {
 /**
  * Valid role & status options reflected in `usersSlice` thunks
  */
-const ROLE_OPTIONS = ['Admin','Head Admin',"Unapproved", 'User'] as const; // “-” acts as a placeholder for “no role yet”
+const ROLE_OPTIONS = ['Admin', 'Head Admin', 'User'] as const; // “-” acts as a placeholder for “no role yet”
 const STATUS_OPTIONS = [
   'approved',
   'rejected',
@@ -38,7 +38,7 @@ const ManageUsers: React.FC = () => {
     dispatch(fetchAllUsersWithRole());
   }, [dispatch]);
 
-  const handleTabChange = (_: React.SyntheticEvent, value: any) => {
+  const handleTabChange = (_: React.SyntheticEvent, value: 'ALL' | 'PENDING' | 'ACTIVE' | 'DEACTIVATED') => {
     setFilter(value);
   };
 
@@ -80,22 +80,33 @@ const ManageUsers: React.FC = () => {
       headerName: 'User role',
       flex: 1,
       minWidth: 140,
-      renderCell: (params: GridRenderCellParams) => (
-        <Select
-          value={params.row.role_title ?? '-'}
-          size="small"
-          fullWidth
-          onChange={(e) =>
-            handleRoleChange(params.row.user_id, e.target.value as RoleOption)
-          }
-        >
-          {ROLE_OPTIONS.map((role) => (
-            <MenuItem key={role} value={role}>
-              {role}
-            </MenuItem>
-          ))}
-        </Select>
-      ),
+      renderCell: (params: GridRenderCellParams) => {
+        const currentRole = (params.row.role_title ?? 'Unapproved') as RoleOption | 'Unapproved';
+
+        return (
+          <Select
+            value={currentRole}
+            size="small"
+            fullWidth
+            onChange={(e) =>
+              handleRoleChange(params.row.user_id, e.target.value as RoleOption)
+            }
+          >
+            {/* Show “Unapproved” only when that’s the current value */}
+            {currentRole === 'Unapproved' && (
+              <MenuItem value="Unapproved" disabled>
+                Unapproved
+              </MenuItem>
+            )}
+
+            {ROLE_OPTIONS.map((role) => (
+              <MenuItem key={role} value={role}>
+                {role}
+              </MenuItem>
+            ))}
+          </Select>
+        );
+      },
     },
     {
       field: 'user_status',
@@ -163,6 +174,7 @@ const ManageUsers: React.FC = () => {
           autoHeight
           pageSizeOptions={[5, 10, 25]}
           disableRowSelectionOnClick
+          /* Couldnt get the Generic Datagrid to work with me so copied the CSS */
           sx={{
             // Header CSS
             '& .super-app-theme--header': {
