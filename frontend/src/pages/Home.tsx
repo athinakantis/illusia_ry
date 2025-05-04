@@ -5,7 +5,6 @@ import { fetchAllCategories, selectAllCategories } from '../slices/itemsSlice';
 import { Link } from 'react-router-dom';
 import { GridExpandMoreIcon } from '@mui/x-data-grid';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import { getAccessToken } from '../utility/getToken';
 
 
 function Home() {
@@ -28,7 +27,6 @@ function Home() {
 
   return (
     <Box id='home'>
-      <Button onClick={getAccessToken} variant='contained'>Get Access Token</Button>
       {/* Hero banner */}
       <Box component='section' id='hero-container'
         sx={{

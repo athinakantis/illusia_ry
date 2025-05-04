@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectAllCategories,
-  selectAllItems,
   selectVisibleItems,
 } from '../slices/itemsSlice';
 import {
