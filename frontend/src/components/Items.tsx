@@ -54,7 +54,7 @@ function Items() {
   const navigate = useNavigate();
 
   // eslint-disable-next-line
-  const [searchParams, _] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const reservations = useAppSelector(selectAllReservations);
   const now = today(getLocalTimeZone());
@@ -202,16 +202,18 @@ function Items() {
     <Box
       sx={{
         display: 'flex',
-        padding: 0,
+        pt: 2,
         pb: '8rem',
         gap: '32px',
+        flexDirection: { xs: 'column', md: 'row' },
+
       }}
     >
       {/* Side panel */}
       <Stack
         sx={{
           minWidth: 300,
-          maxWidth: 286,
+          maxWidth: { xs: '100%', md: 286 },
           gap: '30px',
         }}
       >
@@ -221,7 +223,9 @@ function Items() {
           label="Search our items"
           type="search"
           variant="outlined"
-          sx={{ width: '90%', mt: 1 }}
+          sx={{
+            width: { xs: '100%', md: '90%' }, mt: 1,
+          }}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -304,6 +308,9 @@ function Items() {
                 minHeight: 300,
                 boxShadow: 'none',
                 textDecoration: 'none',
+                flex: 1,
+                flexBasis: 230,
+                maxWidth: 300
               }}
             >
               <Box sx={{
