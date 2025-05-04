@@ -225,4 +225,13 @@ export const selectBookingsCount = (state: RootState) =>
 export const selectBookingsByUserId = (userId: string) => (state: RootState) =>
   state.bookings.bookings.filter((booking) => booking.user_id === userId);
 
+export const selectBookingDates = (booking_id: string) => (state: RootState) => {
+  const bookingWihId = state.bookings.userBookings.find((booking) => booking.booking_id === booking_id);
+
+  if (bookingWihId?.reservations)
+    return { start_date: bookingWihId?.reservations[0].start_date, end_date: bookingWihId?.reservations[0].end_date }
+  else return;
+}
+
+
 export default bookingsSlice.reducer;
