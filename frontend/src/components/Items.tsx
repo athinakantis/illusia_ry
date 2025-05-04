@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectAllCategories,
   selectAllItems,
+  selectVisibleItems,
 } from '../slices/itemsSlice';
 import {
   Button,
@@ -47,7 +48,7 @@ import { Item } from '../types/types';
 import { showCustomSnackbar } from './CustomSnackbar';
 
 function Items() {
-  const items = useAppSelector(selectAllItems);
+  const items = useAppSelector(selectVisibleItems);
   const categories = useAppSelector(selectAllCategories);
   const dispatch = useAppDispatch();
   const [offset, setOffset] = useState(0);

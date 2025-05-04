@@ -1,16 +1,20 @@
 import { ItemDataGrid } from '../ItemGrid/ItemDataGrid';
-import { selectAllItems } from '../../slices/itemsSlice';
-import { useAppSelector } from '../../store/hooks';
+import { fetchAllItemsAdmin, selectAllItems } from '../../slices/itemsSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useAuth } from '../../hooks/useAuth';
 import { Box, Button, Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 
 function Items() {
   const { role } = useAuth();
   const items = useAppSelector(selectAllItems);
   const navigate = useNavigate()
-console.log('Items', items)
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(fetchAllItemsAdmin());
+  }, [dispatch]);
   // Check if user is authorized
   if (!role?.includes('Admin') || !role) return
 
