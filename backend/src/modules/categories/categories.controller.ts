@@ -6,6 +6,7 @@ import {
     Patch,
     Post,
     Put,
+    Req,
   } from '@nestjs/common';
   import { CreateCategoryDto } from 'src/modules/categories/dto/create-category.dto'; 
   import { UpdateCategoryDto } from 'src/modules/categories/dto/update-category.dto';
@@ -21,14 +22,14 @@ import { CustomRequest } from 'src/types/request.type';
     @Post()
     create(
       @Body() dto: CreateCategoryDto,
-      req: CustomRequest,
+      @Req() req: CustomRequest,
     ) {
       return this.categoryService.create(dto,req);
     }
   
     @Put(':id')
     update(
-      req: CustomRequest,
+      @Req() req: CustomRequest,
       @Param('id') id: string,
       @Body() dto: UpdateCategoryDto,
     ) {
@@ -36,7 +37,7 @@ import { CustomRequest } from 'src/types/request.type';
     }
   
     @Delete(':id')
-    remove(@Param('id') id: string, req: CustomRequest) {
+    remove(@Param('id') id: string,@Req() req: CustomRequest) {
       return this.categoryService.remove(req,id);
     }
   
@@ -44,7 +45,7 @@ import { CustomRequest } from 'src/types/request.type';
     // /categories/items/:itemId/:categoryId   (assign)
     @Post('/items/:itemId/:categoryId')
     assignItem(
-      req: CustomRequest,
+      @Req() req: CustomRequest,
       @Param('itemId') itemId: string,
       @Param('categoryId') categoryId: string,
     ) {
@@ -53,7 +54,9 @@ import { CustomRequest } from 'src/types/request.type';
   
     // /categories/items/:itemId   (unlink)
     @Patch('/items/:itemId')
-    removeItemCategory(@Param('itemId') itemId: string,req: CustomRequest) {
+    removeItemCategory(
+      @Param('itemId') itemId: string,
+      @Req() req: CustomRequest) {
       return this.categoryService.replaceCategoryWithUncategorized(req,itemId);
     }
   }
