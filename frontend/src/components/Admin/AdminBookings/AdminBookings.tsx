@@ -41,6 +41,7 @@ import {
 } from "../../../slices/reservationsSlice";
 import CollapsibleDetail from "./CollapsibleDetail";
 import SnackBar from "../../../utility/SnackBar";
+import { useSearchParams } from 'react-router-dom';
 
 /**
  * Allowed status filters rendered as Tabs
@@ -52,9 +53,11 @@ const STATUS_FILTERS = [
   { label: "Rejected", value: "rejected" },
 ];
 
+const VALID_FILTERS = Array.from(STATUS_FILTERS.map(entry => entry.value))
+
+
 const AdminBookings = () => {
   const theme = useTheme();
-
   // ─── Redux selectors ──────────────────────────────────────────
   const dispatch = useAppDispatch();
   const users = useAppSelector(selectAllUsers)
@@ -63,6 +66,7 @@ const AdminBookings = () => {
   const error = useAppSelector(selectBookingsError);
   const items = useAppSelector(selectAllItems);
   const reservations = useAppSelector(selectAllReservations);
+  const [searchParams] = useSearchParams()
 
 
   // ─── Local state (active filter tab) ──────────────────────────
@@ -115,7 +119,7 @@ const AdminBookings = () => {
   };
 
   // ─── Side Effects ──────────────────────────────────
-  
+
   useEffect(() => {
     if (bookings.length === 0) dispatch(fetchAllBookings());
   }, [dispatch, bookings.length]);
@@ -129,6 +133,10 @@ const AdminBookings = () => {
   useEffect(() => {
     if (reservations.length === 0) dispatch(fetchAllReservations());
   }, [dispatch, reservations.length]);
+  useEffect(() => {
+    const search = searchParams.get('filter')
+    if (search && VALID_FILTERS.includes(search)) setFilter(search)
+  }, [])
 
   // ─── Memoised filtered list ───────────────────────────────────
   const filteredBookings = useMemo(() => {
@@ -137,11 +145,11 @@ const AdminBookings = () => {
   }, [bookings, filter]);
 
   // ─── Helper functions ────────────────────────────────────────
-  
+
   // Display name || email || uid for user
   const userName = (uid?: string) =>
     users.find((u) => u.user_id === uid)?.display_name || users.find((u) => u.user_id === uid)?.email || uid;
-  
+
   // Get item name by id
   const itemName = (iid: string) =>
     items.find((it) => it.item_id === iid)?.item_name || iid.slice(0, 6);
@@ -173,7 +181,7 @@ const AdminBookings = () => {
   // ─── Render ───────────────────────────────────────────────────
   return (
     <Container maxWidth="lg" sx={{ mt: 6 }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant='heading_secondary_bold' gutterBottom>
         Bookings
       </Typography>
 

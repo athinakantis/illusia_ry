@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Grid,
@@ -12,21 +12,21 @@ import {
   TableCell,
   TableBody,
   Stack,
-} from "@mui/material";
-import { useAuth } from "../../hooks/useAuth";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import {
-    buildBookingOverviews,
-    BookingOverview} from "../../utility/bookings";
-    import { supabase } from "../../config/supabase";
+} from '@mui/material';
+import { useAuth } from '../../hooks/useAuth';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { buildBookingOverviews, BookingOverview, computeDuration } from '../../utility/bookings';
+import { supabase } from '../../config/supabase';
 
 // ─── Thunk actions ──────────────────────────────────────────
-import { fetchAllItems } from "../../slices/itemsSlice";
-import { fetchAllBookings } from "../../slices/bookingsSlice";
-import { fetchAllUsersWithRole } from "../../slices/usersSlice";
-import { fetchAllReservations } from "../../slices/reservationsSlice";
-import { format, parseISO } from "date-fns";
-import { Link } from "react-router-dom";
+import { fetchAllItems } from '../../slices/itemsSlice';
+import { fetchAllBookings } from '../../slices/bookingsSlice';
+import { fetchAllUsersWithRole } from '../../slices/usersSlice';
+import { fetchAllReservations } from '../../slices/reservationsSlice';
+import { format, parseISO } from 'date-fns';
+import { Link } from 'react-router-dom';
+import { bookingsApi } from '../../api/bookings';
+import { UpcomingBooking } from '../../types/types';
 
 // ─── Re-usable stat card ────────────────────────────────────
 const StatCard: React.FC<{ label: string; value: number | string }> = ({
@@ -34,18 +34,31 @@ const StatCard: React.FC<{ label: string; value: number | string }> = ({
   value,
 }) => (
   <Paper
-    elevation={1}
-    sx={{ p: 3, border: "1px solid", borderColor: "divider", height: "100%" }}
+    elevation={0}
+    sx={{
+      p: 3,
+      border: '1px solid',
+      borderColor: 'divider',
+      height: '100%',
+      borderRadius: 0,
+    }}
   >
-    <Typography variant="subtitle1" color="text.secondary" fontSize={"1.1rem"}gutterBottom>
+    <Typography
+      variant="subtitle1"
+      color="text.secondary"
+      fontSize={'1.1rem'}
+      gutterBottom
+    >
       {label}
     </Typography>
-    <Typography variant="h4">{value}</Typography>
+    <Typography variant="heading_secondary_bold" lineHeight={1} fontSize={56}>
+      {value}
+    </Typography>
   </Paper>
 );
 
 // ── Main component ────────────────────────────────────────
- 
+
 const AdminDashboard = () => {
   const dispatch = useAppDispatch();
   const { user } = useAuth();
@@ -58,116 +71,154 @@ const AdminDashboard = () => {
     }[]
   >([]);
 
-// ─── Selectors ───────────────────────────────────────────────
+  // ─── Selectors ───────────────────────────────────────────────
   const users = useAppSelector((state) => state.users.users);
   const items = useAppSelector((state) => state.items.items);
   const bookings = useAppSelector((state) => state.bookings.bookings);
-  const reservations = useAppSelector((state) => state.reservations.reservations);
+  const reservations = useAppSelector(
+    (state) => state.reservations.reservations,
+  );
+  const [upcomingBookings, setUpcomingBookings] = useState<UpcomingBooking[]>([]);
 
   // ─── Side-Effects ────────────────────────────────────────────
-useEffect(() => {
+  useEffect(() => {
     if (users.length === 0) dispatch(fetchAllUsersWithRole());
     if (items.length === 0) dispatch(fetchAllItems());
     if (bookings.length === 0) dispatch(fetchAllBookings());
     if (reservations.length === 0) dispatch(fetchAllReservations());
-  }, [dispatch, users.length, items.length, bookings.length, reservations.length]);
+    if (upcomingBookings.length === 0)
+      bookingsApi
+        .getUpcomingBookings()
+        .then((result) => {
+          setUpcomingBookings(result.data)
+        });
+  }, [
+    dispatch,
+    users.length,
+    items.length,
+    bookings.length,
+    reservations.length,
+  ]);
 
-
-    // Fetch user activity from Supabase(temporary)
+  // Fetch user activity from Supabase(temporary)
   useEffect(() => {
     if (!supabase) return;
     (async () => {
       const { data, error } = await supabase
-        .from("user_activity_view_test")
-        .select("display_name, last_sign_in_at, confirmed_at")
-        .order("last_sign_in_at", { ascending: false });
+        .from('user_activity_view_test')
+        .select('display_name, last_sign_in_at, confirmed_at')
+        .order('last_sign_in_at', { ascending: false });
       if (error) {
-        console.error("Error fetching user activity:", error);
+        console.error('Error fetching user activity:', error);
       } else if (data) {
         setAuthActivities(data);
       }
     })();
   }, []);
-  
-    /* ────────── Memoized values ────────── */
-      // combine bookings + reservations + users
 
-      // inside your component:
-      const overviews: BookingOverview[] = useMemo(
-        () =>
-          buildBookingOverviews(bookings, reservations, users, items),
-        [bookings, reservations, users, items]
-      );
-    
+  /* ────────── Memoized values ────────── */
+  // combine bookings + reservations + users
+
+  // inside your component:
+  const overviews: BookingOverview[] = useMemo(
+    () => buildBookingOverviews(bookings, reservations, users, items),
+    [bookings, reservations, users, items],
+  );
+
   /* ────────── Render ────────── */
   return (
-    <Box p={4} maxWidth={1200} mx="auto">
-      <Typography variant="h4" gutterBottom>
-        Admin Dashboard
-      </Typography>
+    <Stack
+      p={4}
+      maxWidth={1000}
+      mx="auto"
+      sx={{
+        gap: '2rem',
+        '& .MuiPaper-root:has(table)': { borderBottom: 0 },
+      }}
+    >
+      <Box>
+        <Typography
+          variant="heading_secondary_bold"
+          fontSize={28}
+          mb={1}
+          component="h1"
+          gutterBottom
+        >
+          Admin Dashboard
+        </Typography>
 
-      {/* ───── Stats ───── */}
-      <Grid container spacing={6}>
-        <Grid size={{xs: 12, md: 4}} >
-          <StatCard label="Total users" value={users.length} />
+        {/* ───── Stats ───── */}
+        <Grid container spacing={6}>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <StatCard label="Total users" value={users.length} />
+          </Grid>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <StatCard label="Total bookings" value={bookings.length} />
+          </Grid>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <StatCard label="Inventory items" value={items.length} />
+          </Grid>
         </Grid>
-        <Grid  size={{xs: 12, md: 4}} >
-          <StatCard label="Total bookings" value={bookings.length} />
-        </Grid>
-        <Grid  size={{xs: 12, md: 4}} >
-          <StatCard label="Inventory items" value={items.length} />
-        </Grid>
-      </Grid>
+      </Box>
 
       {/* ───── Quick actions ───── */}
-      <Box mt={4} mb={3} textAlign="center">
-        <Typography variant="h5" gutterBottom>
+      <Box mt={4} mb={3}>
+        <Typography
+          component="p"
+          variant="heading_secondary_bold"
+          fontSize={20}
+          gutterBottom
+        >
           Quick Actions
         </Typography>
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={2}
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Button variant="contained" color="secondary">
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+          <Button variant="contained" color="grey">
             Add item
           </Button>
-          <Button component={Link} to="/admin/bookings" variant="contained" color="secondary">
+          <Button
+            component={Link}
+            to="/admin/bookings?filter=pending"
+            variant="contained"
+            color="grey"
+          >
             Approve bookings
           </Button>
-          <Button variant="contained" color="secondary">
+          <Button variant="contained" color="grey">
             Manage users
           </Button>
         </Stack>
       </Box>
 
-
       {/* ───── Bookings overview ───── */}
-      <Box p={2} mt={3}>
-        <Typography variant="h5" gutterBottom>
-          Bookings overview
+      <Box mt={3}>
+        <Typography
+          component="p"
+          variant="heading_secondary_bold"
+          fontSize={20}
+          gutterBottom
+        >
+          Upcoming bookings
         </Typography>
         <TableContainer component={Paper} variant="outlined">
           <Table size="small">
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Items</TableCell>
-                <TableCell>Duration</TableCell>
+                <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Status</TableCell>
+                <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Duration</TableCell>
                 <TableCell>Date range</TableCell>
+                <TableCell>View</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-                {/* Show only the first 3 bookings for now. Also it looks bad with a huge list of bookings */}
-              {overviews.slice(0, 3).map((overview) => (
-                <TableRow key={overview.booking_id}>
-                  <TableCell>{overview.userName}</TableCell>
-                  <TableCell>{overview.status}</TableCell>
-                  <TableCell>{overview.totalItems}</TableCell>
-                  <TableCell>{overview.duration} Days</TableCell>
-                  <TableCell>{overview.range}</TableCell>
+              {/* Show only the first 3 bookings for now. Also it looks bad with a huge list of bookings */}
+              {upcomingBookings.map((booking) => (
+                <TableRow key={booking.id}>
+                  <TableCell>{booking.booking.user.display_name}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{booking.booking.status}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{computeDuration(booking.start_date, booking.end_date)} Days</TableCell>
+                  <TableCell>{booking.start_date} - {booking.end_date}</TableCell>
+                  <TableCell><Link to={`/booking/${booking.booking_id}`}>Booking</Link></TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -177,12 +228,17 @@ useEffect(() => {
 
       {/* ───── Recent activity & Users/Roles ───── */}
       <Grid container spacing={4} mt={4} justifyContent="space-between">
-        <Grid size={{ xs: 10, md: 4.6, lg: 4 }}>
-          <Typography variant="h5" gutterBottom>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Typography
+            component="p"
+            variant="heading_secondary_bold"
+            fontSize={20}
+            gutterBottom
+          >
             Recent activity
           </Typography>
-          <TableContainer component={Paper} variant="outlined" sx={{ maxWidth: 500 }}>
-            <Table size="small">
+          <TableContainer component={Paper} variant="outlined">
+            <Table size="small" sx={{ width: '100%' }}>
               <TableHead>
                 <TableRow>
                   <TableCell>User</TableCell>
@@ -192,23 +248,24 @@ useEffect(() => {
               </TableHead>
               <TableBody>
                 {authActivities
-                  .filter((act) =>
-                    act.display_name &&
-                    act.last_sign_in_at != null &&
-                    act.confirmed_at != null
+                  .filter(
+                    (act) =>
+                      act.display_name &&
+                      act.last_sign_in_at != null &&
+                      act.confirmed_at != null,
                   )
                   .map((act) => (
                     <TableRow key={act.display_name + act.last_sign_in_at}>
                       <TableCell>{act.display_name}</TableCell>
                       <TableCell>
                         {act.last_sign_in_at
-                          ? format(parseISO(act.last_sign_in_at), "PPpp")
-                          : "—"}
+                          ? format(parseISO(act.last_sign_in_at), 'PPpp')
+                          : '—'}
                       </TableCell>
                       <TableCell>
                         {act.confirmed_at
-                          ? format(parseISO(act.confirmed_at), "PPpp")
-                          : "—"}
+                          ? format(parseISO(act.confirmed_at), 'PPpp')
+                          : '—'}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -217,11 +274,16 @@ useEffect(() => {
           </TableContainer>
         </Grid>
 
-        <Grid size={{ xs: 10, md: 4.6, lg: 4 }}>
-          <Typography variant="h5" gutterBottom>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Typography
+            component="p"
+            variant="heading_secondary_bold"
+            fontSize={20}
+            gutterBottom
+          >
             Users &amp; Roles
           </Typography>
-          <TableContainer component={Paper} variant="outlined" sx={{ maxWidth: 400 }}>
+          <TableContainer component={Paper} variant="outlined">
             <Table size="small">
               <TableHead>
                 <TableRow>
@@ -233,7 +295,7 @@ useEffect(() => {
                 {users.slice(0, 3).map((u) => (
                   <TableRow key={u.user_id}>
                     <TableCell>{u.display_name ?? u.email}</TableCell>
-                    <TableCell>{u.role_title ?? "—"}</TableCell>
+                    <TableCell>{u.role_title ?? '—'}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -241,7 +303,7 @@ useEffect(() => {
           </TableContainer>
         </Grid>
       </Grid>
-    </Box>
+    </Stack>
   );
 };
 
