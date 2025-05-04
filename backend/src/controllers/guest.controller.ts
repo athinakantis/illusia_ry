@@ -3,8 +3,10 @@ import {
   Get,
   Param,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { GuestService } from '../services/guest.service';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 
 // These routes are for users who are not logged in.
@@ -24,6 +26,12 @@ export class GuestController {
     return this.guestService.getItemsByCategories(formattedCategories);
   }
 
+  @Get('admin')
+  @UseGuards(AuthGuard('Admin',"Head Admin"))
+  async getItemsAdmin() {
+    return this.guestService.getItemsAdmin();
+  }
+
   @Get(':id')
   async getItemById(@Param('id') id: string) {
     console.log("Fetching item with ID:", id);
@@ -32,7 +40,7 @@ export class GuestController {
 
   @Get()
   async getItems() {
-    return this.guestService.getItems();
+    return this.guestService.getPublicItems();
   }
 
 }
