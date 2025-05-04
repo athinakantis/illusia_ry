@@ -10,7 +10,7 @@ function Items() {
   const { role } = useAuth();
   const items = useAppSelector(selectAllItems);
   const navigate = useNavigate()
-
+console.log('Items', items)
   // Check if user is authorized
   if (!role?.includes('Admin') || !role) return
 
