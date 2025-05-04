@@ -61,7 +61,6 @@ const StatCard: React.FC<{ label: string; value: number | string }> = ({
 
 const AdminDashboard = () => {
   const dispatch = useAppDispatch();
-  const { user } = useAuth();
 
   const [authActivities, setAuthActivities] = React.useState<
     {
@@ -92,13 +91,7 @@ const AdminDashboard = () => {
         .then((result) => {
           setUpcomingBookings(result.data)
         });
-  }, [
-    dispatch,
-    users.length,
-    items.length,
-    bookings.length,
-    reservations.length,
-  ]);
+  }, [dispatch, users.length, items.length, bookings.length, reservations.length, upcomingBookings.length]);
 
   // Fetch user activity from Supabase(temporary)
   useEffect(() => {
@@ -119,7 +112,6 @@ const AdminDashboard = () => {
   /* ────────── Memoized values ────────── */
   // combine bookings + reservations + users
 
-  // inside your component:
   const overviews: BookingOverview[] = useMemo(
     () => buildBookingOverviews(bookings, reservations, users, items),
     [bookings, reservations, users, items],
@@ -183,7 +175,7 @@ const AdminDashboard = () => {
           >
             Approve bookings
           </Button>
-          <Button variant="contained" color="grey">
+          <Button component={Link} to="/admin/users" variant="contained" color="grey">
             Manage users
           </Button>
         </Stack>
