@@ -8,7 +8,7 @@ import {
   import { Tables } from 'src/types/supabase';
   import { ApiResponse, UserWithRole } from 'src/types/response';
   import { AdminUserRow } from 'src/types/admin-user.type';
-  import { SupabaseService } from 'src/services/supabase.service';
+  import { SupabaseService } from 'src/modules/supabase/supabase.service';
 import { MailerService } from './mailer.service';
 import { SupabaseClient } from '@supabase/supabase-js';
 

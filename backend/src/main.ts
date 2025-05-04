@@ -4,15 +4,14 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
-  console.log('1');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-console.log('2');
+
   // Serve React static files
   app.useStaticAssets(join(__dirname, '..', 'frontend'));
   app.setBaseViewsDir(join(__dirname, '..', 'frontend'));
   //Ensures that invalid payloads are rejected with 404 error
   // Extra, unvalidated properties will be removed from the payload
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true })); 
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true,forbidNonWhitelisted: true })); 
 
   // Enable CORS for local React development
   app.enableCors({

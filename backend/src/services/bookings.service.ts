@@ -6,6 +6,7 @@ import {
 import { Tables } from 'src/types/supabase';
 import { ApiResponse, BookingWithRes } from 'src/types/response';
 import { CustomRequest } from 'src/types/request.type';
+import { BookingWithItems } from 'src/types/bookings';
 import { UpcomingBooking } from 'src/types/bookings';
 
 @Injectable()
@@ -36,26 +37,35 @@ export class BookingService {
   ): Promise<ApiResponse<Tables<'bookings'>>> {
     const supabase = req['supabase'];
 
-    const { data, error } = await supabase
+    const { data: bookingData, error: bookingError } = await supabase
       .from('bookings')
-      .select('*')
+      .select(`*`)
       .eq('booking_id', id)
-      .maybeSingle();
-    console.log('data', data);
-    if (error) {
-      throw new BadRequestException(error.message);
-    }
-    if (!data) {
-      throw new NotFoundException(`Booking ${id} not found`);
-    }
+      .single()
+    
+      if (bookingError) throw new BadRequestException(bookingError.message);
+      if (!bookingData) throw new NotFoundException(`Booking ${id} not found`);
 
-    if (error) {
-      throw new BadRequestException(error);
-    }
+    const { data: reservationData, error: reservationError } = await supabase
+      .from('item_reservations')
+      .select(`quantity, start_date, end_date, item:item_id (*)`)
+      .eq('booking_id', id)
+
+    if (reservationError) throw new BadRequestException(reservationError.message);
+    if (!reservationData) throw new NotFoundException(`No items found for booking ${id}`);
+
+    const formattedRes = reservationData.map(r => ({
+      ...r.item,
+      quantity: r.quantity,
+      start_date: r.start_date,
+      end_date: r.end_date
+    }));
+    
+    const bookingWithItems: BookingWithItems = {booking: bookingData, items: formattedRes }
 
     return {
       message: `Booking ${id} retrieved successfully`,
-      data,
+      data: bookingWithItems,
     };
   }
 
