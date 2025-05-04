@@ -34,7 +34,7 @@ export class BookingService {
   async getBookingById(
     req: CustomRequest,
     id: string,
-  ): Promise<ApiResponse<Tables<'bookings'>>> {
+  ): Promise<ApiResponse<BookingWithItems>> {
     const supabase = req['supabase'];
 
     const { data: bookingData, error: bookingError } = await supabase

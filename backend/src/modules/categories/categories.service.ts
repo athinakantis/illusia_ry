@@ -31,7 +31,19 @@ import { CustomRequest } from 'src/types/request.type';
         })
         .select('*')
         .maybeSingle();
-  
+        console.log('error', error)
+      if (error?.code === '42501') {
+        // permission error
+        throw new BadRequestException(
+          'You do not have permission to create a category',
+        );
+      }
+      if (error?.code === '23514') {
+        // check constraint violation
+        throw new BadRequestException(
+          'Category name must be at least 3 characters long',
+        );
+      }
       if (error?.code === '23505') {
         throw new BadRequestException(
           `Category "${dto.category_name}" already exists`,

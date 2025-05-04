@@ -7,7 +7,6 @@ import {
   Patch,
   Req,
 } from '@nestjs/common';
-import { User } from '@supabase/supabase-js';
 import { AdminService } from 'src/services/admin.service';
 import { CustomRequest } from 'src/types/request.type';
 import { ApiResponse, UserWithRole } from 'src/types/response';
