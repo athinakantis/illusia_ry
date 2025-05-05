@@ -10,6 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import { StyledDataGrid } from '../CustomComponents/StyledDataGrid';
 
+
 interface ItemDataGridProps {
   data: Item[];
 }
@@ -149,6 +150,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       ),
     },
   ];
+
 
   return (
     <Box sx={{ width: '100%', mt: 2 }}>

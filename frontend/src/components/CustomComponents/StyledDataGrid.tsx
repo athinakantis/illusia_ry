@@ -13,7 +13,20 @@ const defaultSx: SxProps<Theme> = {
     '& .MuiDataGrid-columnHeaderTitle': {
         fontSize: '0.8rem',
     },
-
+    // Header icons color
+    '& .MuiDataGrid-sortIcon': {
+        opacity: 1,
+        color: (theme) => theme.palette.text.primary,
+    },
+    '& .MuiDataGrid-sortIcon path': {
+        fill: (theme) => theme.palette.text.primary,
+    },
+    '& .MuiDataGrid-menuIcon path': {
+        fill: (theme) => theme.palette.text.primary,
+    },
+    '& .MuiDataGrid-columnSeparator .MuiDataGrid-iconSeparator rect': {
+        fill: (theme) => theme.palette.grey[300], // or your preferred light grey
+    },
     // Individual Cell CSS
     '& .MuiDataGrid-cell': {
         pl: 2,
