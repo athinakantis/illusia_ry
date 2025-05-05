@@ -7,7 +7,7 @@ import {
   Stack,
   Paper,
 } from '@mui/material';
-import { supabase } from '../config/supabase';
+import { supabase } from '../../../config/supabase';
 
 /** type helper */
 type Factor = Awaited<

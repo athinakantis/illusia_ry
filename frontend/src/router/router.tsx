@@ -12,7 +12,7 @@ import ItemDetail from '../components/User/ItemDetail';
 import UserBookings from '../components/User/UserBookings';
 import AdminDashboard from '../components/Admin/AdminDashboard';
 import AdminBookings from '../components/Admin/AdminBookings/AdminBookings';
-import Account from '../components/Account';
+import Account from '../components/User/Account/Account';
 import SingleBooking from '../components/Booking';
 import ManageUsers from '../components/Admin/ManageUsers';
 import PhoneLogin from '../components/Auth/PhoneLogin';
