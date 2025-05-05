@@ -8,23 +8,11 @@ import {
   Paper,
 } from '@mui/material';
 import { supabase } from '../config/supabase';
+import { Factor } from '@supabase/supabase-js';
 
-/** base MFA factor type (non‑null) */
-type BaseFactor = NonNullable<
-  Awaited<ReturnType<typeof supabase.auth.mfa.listFactors>>["data"]
->["all"][number];
-
-/** narrowed type for TOTP factors (includes the `totp` payload) */
-type TotpFactor = BaseFactor & {
-  factor_type: 'totp';
-  totp: {
-    qr_code: string;
-    secret: string;
-  };
-};
 
 const SecuritySettings = () => {
-  const [totpFactor, setTotpFactor] = useState<TotpFactor | null>(null);
+  const [totpFactor, setTotpFactor] = useState<Factor | null>(null);
   const [pending, setPending] = useState<{ id: string; qr: string; secret: string } | null>(null);
   const [code, setCode] = useState('');
   const [status, setStatus] = useState<string>();
@@ -33,27 +21,21 @@ const SecuritySettings = () => {
   useEffect(() => {
     (async () => {
       const { data, error } = await supabase.auth.mfa.listFactors();
-      console.log('listFactors() →', { data, error });
       if (error) return console.error(error);
-      const totp = (data?.all ?? []).find(
-        (f): f is TotpFactor => f.factor_type === 'totp' && f.status === 'verified',
-      ) ?? null;
+      const totp = (data?.totp ?? [])[0] ?? null; // totp array has at most one factor
       setTotpFactor(totp);
     })();
   }, []);
 
   /** enrol */
+/** enrol */
 const handleEnroll = async () => {
-    console.log('--- handleEnroll clicked ---');
     setStatus('Checking factors…');
   
     // 1) See if an unverified TOTP factor already exists
     const { data, error: listErr } = await supabase.auth.mfa.listFactors();
     if (listErr) return setStatus(listErr.message);
-    const existing = (data?.all ?? []).find(
-      (f): f is TotpFactor => f.factor_type === 'totp' && f.status === 'unverified',
-    );
-    console.log('existing', existing);
+    const existing = (data?.totp ?? []).find((f) => f.status === 'unverified');
     if (existing) {
       setPending({
         id: existing.id,
@@ -69,45 +51,25 @@ const handleEnroll = async () => {
       factorType: 'totp',
       friendlyName: `totp-${Date.now()}`, // unique name avoids collision
     });
-    console.log('enroll() →', { enrolled, error });
     if (error) return setStatus(error.message);
-    const enrolledTotp = enrolled 
+  
     setPending({
-      id: enrolledTotp.id,
-      qr: enrolledTotp.totp.qr_code,
-      secret: enrolledTotp.totp.secret,
+      id: enrolled.id,
+      qr: enrolled.totp.qr_code,
+      secret: enrolled.totp.secret,
     });
     setStatus('Scan the QR and enter the 6‑digit code');
   };
 
   /** verify */
   const handleVerify = async () => {
-    console.log('--- handleVerify ---', { pending, code });
     if (!pending || !code) return;
-    setStatus('Requesting challenge…');
-
-    // 1️⃣ create a challenge for the new factor
-    const { data: challenge, error: challErr } = await supabase.auth.mfa.challenge({
-      factorId: pending.id,
-    });
-    console.log('challenge() →', { challenge, challErr });
-    if (challErr) {
-      setStatus(challErr.message);
-      return;
-    }
-
-    // 2️⃣ verify the code using the challengeId
-    setStatus('Verifying code…');
+    setStatus('Verifying…');
     const { error } = await supabase.auth.mfa.verify({
       factorId: pending.id,
-      challengeId: challenge.id,
       code,
-    } );
-    console.log('verify() →', { error });
-    if (error) {
-      setStatus(error.message);
-      return;
-    }
+    } ); // casting to any avoids the outdated type that requires challengeId
+    if (error) return setStatus(error.message);
     setStatus('MFA enabled 🎉');
     window.location.reload();
   };
@@ -116,7 +78,6 @@ const handleEnroll = async () => {
   const handleDisable = async () => {
     if (!totpFactor) return;
     const { error } = await supabase.auth.mfa.unenroll({ factorId: totpFactor.id });
-    console.log('unenroll() →', { error });
     if (error) return setStatus(error.message);
     setStatus('MFA disabled');
     window.location.reload();
@@ -131,7 +92,7 @@ const handleEnroll = async () => {
       {/* ───────── NO FACTOR ENROLLED YET ───────── */}
       {!totpFactor && !pending && (
         <Button variant="contained" onClick={handleEnroll}>
-          Enable TOTP MFA
+          Enable TOTP MFA
         </Button>
       )}
 
@@ -158,10 +119,10 @@ const handleEnroll = async () => {
       {totpFactor && (
         <Box>
           <Typography sx={{ mb: 2 }}>
-            Authenticator-app MFA is <strong>enabled</strong>.
+            Authenticator‑app MFA is <strong>enabled</strong>.
           </Typography>
           <Button variant="outlined" color="error" onClick={handleDisable}>
-            Disable TOTP MFA
+            Disable TOTP MFA
           </Button>
         </Box>
       )}
