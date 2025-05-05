@@ -1,5 +1,3 @@
-
-
 import { useState } from 'react';
 import { supabase } from '../../../config/supabase';
 import {
@@ -11,6 +9,7 @@ import {
   DialogActions,
   CircularProgress,
 } from '@mui/material';
+import { accountApi } from '../../../api/account';
 
 export interface DeleteAccountProps {
   open: boolean;
@@ -24,15 +23,31 @@ export default function DeleteAccount({ open, onClose }: DeleteAccountProps) {
   const handleDelete = async () => {
     setLoading(true);
     setError(undefined);
-    // Delete the current user
-    const { error } = await supabase.auth.deleteUser();
-    setLoading(false);
-    if (error) {
-      setError(error.message);
-    } else {
-      // Optionally sign out or redirect
-      await supabase.auth.signOut();
-      window.location.href = '/'; 
+
+    // Retrieve current session to get the JWT
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !session?.access_token) {
+      setError('Failed to retrieve authentication token.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Call your custom backend endpoint
+      const res = await accountApi.deleteAccount();
+      const { status  } = res;
+      if (status !== 200) {
+        console.error('Error deleting account:', status);
+        setError( 'Account deletion failed.');
+      } else {
+        // On success, sign out and redirect
+        await supabase.auth.signOut();
+        window.location.href = '/';
+      }
+    } catch (err: any) {
+      setError(err.message || 'Account deletion failed.');
+    } finally {
+      setLoading(false);
     }
   };
 
