@@ -1,4 +1,4 @@
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 import { Box, IconButton, Typography } from '@mui/material';
 import { renderCellExpand } from './RenderCellExpand';
 import { Item } from '../../types/types';
@@ -8,6 +8,7 @@ import { formatDate } from '../../utility/formatDate';
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
+import { StyledDataGrid } from '../CustomComponents/StyledDataGrid';
 
 interface ItemDataGridProps {
   data: Item[];
@@ -18,13 +19,13 @@ const timeStampLength = 150;
 
 export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const handleDelete = (id: string) => {
     if (confirm('Are you sure you want to delete this item?')) {
       dispatch(deleteItem(id)).then(() => dispatch(fetchAllItems()));
     }
   };
-
-  const navigate = useNavigate();
 
   const columns: GridColDef[] = [
     {
@@ -36,12 +37,12 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       renderCell: renderCellExpand,
     },
     {
-      field: 'item_id',// ID of the item
-      headerClassName: 'super-app-theme--header',// Class to edit the Header CSS
+      field: 'item_id',
+      headerClassName: 'super-app-theme--header',
       headerAlign: 'left',
       headerName: 'ID',
-      width: uuidLength, // Adjust width as needed
-      renderCell: renderCellExpand,// Function to render the cell content with word wrapping
+      width: uuidLength,
+      renderCell: renderCellExpand,
     },
     {
       field: 'description',
@@ -50,7 +51,22 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       headerAlign: 'left',
       minWidth: 240,
       flex: 1,
-      renderCell: renderCellExpand,
+      renderCell: (params) => (
+        <Typography
+          variant="body2"
+          sx={{
+            whiteSpace: 'normal',
+            wordBreak: 'break-word',
+            overflowWrap: 'break-word',
+            lineHeight: 1.4,
+            width: '100%',
+            maxHeight: 80, // Optional
+            overflow: 'auto', // Optional
+          }}
+        >
+          {params.value}
+        </Typography>
+      ),
     },
     {
       field: 'image_path',
@@ -133,71 +149,17 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       ),
     },
   ];
+
   return (
-    <Box sx={{ height: '700px', width: '100%', mt: 2 }}>
-      <DataGrid
+    <Box sx={{ width: '100%', mt: 2 }}>
+      <StyledDataGrid
         rows={data}
         loading={data.length === 0}
         getRowId={(row) => row.item_id}
         columns={columns}
         pageSizeOptions={[10, 25, 50, 100]}
-        // getRowHeight={()=> "auto"}
-        rowHeight={70}
-        sx={{
-          '& .MuiDataGrid-row:first-of-type': {
-            mt: 1
-          },
-          // Header CSS
-          '& .super-app-theme--header': {
-            backgroundColor: 'primary.main',
-            color: 'text.light',
-            fontSize: '1.1rem',
-            fontFamily: 'Oxygen, sans-serif'
-          },
-          // Individual Cell CSS
-          '& .MuiDataGrid-cell': {
-            pl: 2,// padding left
-
-          },
-          // Footer CSS
-          '& .MuiDataGrid-footerContainer': {
-            backgroundColor: 'primary.main',
-          },
-          '& .MuiDataGrid-footerContainer :is(p, span, .MuiDataGrid-selectedRowCount)': {
-            color: 'background.default'
-          },
-          '& .MuiDataGrid-footerContainer :is(svg)': {
-            fill: 'white'
-          },
-          '& .MuiTablePagination-select': {
-            color: 'background.default'
-          },
-          // Hover CSS
-          '& .MuiDataGrid-row:hover': {
-            backgroundColor: 'background.verylightgrey',
-            transition: 'background-color 0.3s ease',
-          },
-          // Focus CSS
-          '& .MuiDataGrid-cell:focus': {
-            outline: 'none',
-          },
-          // Selected Row CSS
-          '& .MuiDataGrid-row.Mui-selected': {
-            outline: '2px solid #44195B',
-            outlineOffset: '-2px',
-          },
-          // Even Row CSS
-          '& .MuiDataGrid-row:nth-of-type(even)': {
-            backgroundColor: 'background.verylightgrey',
-          },
-          // Odd Row CSS
-          '& .MuiDataGrid-row:nth-of-type(odd)': {
-            backgroundColor: 'background.default',
-            // borderTop: '1px solid #7b1fa2',
-            // borderBottom: '1px solid #7b1fa2',
-            borderColor: 'secondary.main',
-          },
-        }}
+        getRowHeight={() => 'auto'}
+        disableRowSelectionOnClick
       />
     </Box>
   );
