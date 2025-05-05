@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Button,
   Card,
@@ -13,12 +12,16 @@ import { useAuth } from '../../../hooks/useAuth';
 import { useState } from 'react';
 import SecuritySettings from './SecuritySettings';
 import AddPhone from './AddPhone';
+import ChangeEmail from './ChangeEmail';
 import { CurrentUserAvatar } from '@/components/current-user-avatar'
+import DeleteAccount from './DeleteAccount';
 
 const Account = () => {
   const { user } = useAuth();
   const [tab, setTab] = useState(0); // 0 = Profile, 1 = Security
   const [showPhoneEditor, setShowPhoneEditor] = useState(false);
+  const [showEmailEditor, setShowEmailEditor] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   // ──────────────────────────────   Variables  ─────────────────────────────────────
 
   // Determine the display name
@@ -55,8 +58,6 @@ const Account = () => {
     );
   }
   // ──────────────────────────────   Main Render  ─────────────────────────────────────
-console.log("user", user);
-  console.log("user_metadata", user.user_metadata);
   return (
     <Box
       sx={{
@@ -91,18 +92,7 @@ console.log("user", user);
           {tab === 0 && (
             <>
               {/* Avatar */}
-              <CurrentUserAvatar />
-           {/*    <Avatar
-                alt={displayName}
-                src={user?.user_metadata.avatar_url}
-                sx={{
-                  width: 100,
-                  height: 100,
-                  margin: 'auto',
-                  marginBottom: 2,
-                }}
-              /> */}
-
+            <CurrentUserAvatar />
               {/* Full Name */}
               <Typography gutterBottom variant="h4" component="div">
                 {displayName}
@@ -112,6 +102,23 @@ console.log("user", user);
               <Typography variant="body1" color="text.primary">
                 {user?.email}
               </Typography>
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{ textTransform: 'none', mt: 1 }}
+                onClick={() => setShowEmailEditor(true)}
+              >
+                Change email
+              </Button>
+              {showEmailEditor && (
+                <ChangeEmail
+                  initialEmail={user?.email}
+                  onDone={() => {
+                    setShowEmailEditor(false);
+                   
+                  }}
+                />
+              )}
 
     
               {/* Phone section */}
@@ -169,13 +176,14 @@ console.log("user", user);
                   color="error"
                   size="small"
                   sx={{ textTransform: 'none' }}
-                  onClick={() => {
-                    // Placeholder for delete account action
-                    console.log('Delete account clicked');
-                  }}
+                  onClick={() => setShowDeleteDialog(true)}
                 >
                   Delete Account
                 </Button>
+                <DeleteAccount
+                  open={showDeleteDialog}
+                  onClose={() => setShowDeleteDialog(false)}
+                />
               </CardActions>
             </>
           )}

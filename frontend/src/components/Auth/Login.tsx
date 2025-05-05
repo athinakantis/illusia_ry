@@ -32,7 +32,7 @@ export const Login = () => {
               },
             },
           }}
-          providers={["google", "github"]}
+          providers={["google", "github","facebook"]}
           socialLayout="horizontal"
           view="sign_in"
         />
