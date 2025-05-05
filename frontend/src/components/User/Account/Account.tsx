@@ -13,6 +13,7 @@ import { useAuth } from '../../../hooks/useAuth';
 import { useState } from 'react';
 import SecuritySettings from './SecuritySettings';
 import AddPhone from './AddPhone';
+import { CurrentUserAvatar } from '@/components/current-user-avatar'
 
 const Account = () => {
   const { user } = useAuth();
@@ -90,7 +91,8 @@ console.log("user", user);
           {tab === 0 && (
             <>
               {/* Avatar */}
-              <Avatar
+              <CurrentUserAvatar />
+           {/*    <Avatar
                 alt={displayName}
                 src={user?.user_metadata.avatar_url}
                 sx={{
@@ -99,7 +101,7 @@ console.log("user", user);
                   margin: 'auto',
                   marginBottom: 2,
                 }}
-              />
+              /> */}
 
               {/* Full Name */}
               <Typography gutterBottom variant="h4" component="div">

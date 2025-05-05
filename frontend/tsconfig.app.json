@@ -8,15 +8,21 @@
     "skipLibCheck": true,
     "types": ["vitest"],
 
-    /* Bundler mode */
+    /* ---------- Bundler Mode ---------- */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
+    /* ---------- TailwindCSS alias & baseUrl T---------- */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    
 
-    /* Linting */
+     /* ---------------- linting ---------------- */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
