@@ -3,13 +3,5 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ],
-
-    /* ---------- ✨ NEW — alias for editors & tests ---------- */
-    "compilerOptions": {
-      "baseUrl": ".",
-      "paths": {
-        "@/*": ["src/*"]
-      }
-    }
+  ]
 }

@@ -7,13 +7,13 @@ import {
   Typography,
   Tabs,
   Tab,
+  Avatar,
 } from '@mui/material';
 import { useAuth } from '../../../hooks/useAuth';
 import { useState } from 'react';
 import SecuritySettings from './SecuritySettings';
 import AddPhone from './AddPhone';
 import ChangeEmail from './ChangeEmail';
-import { CurrentUserAvatar } from '@/components/current-user-avatar'
 import DeleteAccount from './DeleteAccount';
 
 const Account = () => {
@@ -92,7 +92,22 @@ const Account = () => {
           {tab === 0 && (
             <>
               {/* Avatar */}
-            <CurrentUserAvatar />
+              <Avatar
+                src={
+                  user?.user_metadata.avatar_url ||
+                  user?.app_metadata?.avatar_url ||
+                  ''
+                }
+                alt={displayName}
+                sx={{
+                  width: 100,
+                  height: 100,
+                  mx: 'auto',
+                  mb: 2,
+                  border: '2px solid',
+                  borderColor: 'primary.light',
+                }}
+              />
               {/* Full Name */}
               <Typography gutterBottom variant="h4" component="div">
                 {displayName}

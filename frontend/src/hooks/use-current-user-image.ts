@@ -1,5 +1,5 @@
 
-import { supabase } from '@/config/supabase'
+import { supabase } from "../config/supabase"
 import { useEffect, useState } from 'react'
 
 export const useCurrentUserImage = () => {

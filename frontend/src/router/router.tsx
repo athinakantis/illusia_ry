@@ -16,6 +16,7 @@ import Account from '../components/User/Account/Account';
 import SingleBooking from '../components/Booking';
 import ManageUsers from '../components/Admin/ManageUsers';
 import PhoneLogin from '../components/Auth/PhoneLogin';
+import TestPage from '../pages/Test';
 
 export const router = createBrowserRouter([
   {
@@ -86,9 +87,10 @@ export const router = createBrowserRouter([
       },
       {
         path: "/phone-login",
-        element: (
-          <PhoneLogin />
-        )
+        element: <PhoneLogin />
+      },{
+        path: "/token",
+        element: <TestPage />
       }
 
     ]
