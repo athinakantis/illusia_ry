@@ -8,8 +8,11 @@ import {
   Paper,
 } from '@mui/material';
 import { supabase } from '../config/supabase';
-import { Factor } from '@supabase/supabase-js';
 
+/** type helper */
+type Factor = Awaited<
+  ReturnType<typeof supabase.auth.mfa.listFactors>
+>["data"]["all"][number];
 
 const SecuritySettings = () => {
   const [totpFactor, setTotpFactor] = useState<Factor | null>(null);
@@ -28,48 +31,42 @@ const SecuritySettings = () => {
   }, []);
 
   /** enrol */
-/** enrol */
-const handleEnroll = async () => {
-    setStatus('Checking factors…');
-  
-    // 1) See if an unverified TOTP factor already exists
-    const { data, error: listErr } = await supabase.auth.mfa.listFactors();
-    if (listErr) return setStatus(listErr.message);
-    const existing = (data?.totp ?? []).find((f) => f.status === 'unverified');
-    if (existing) {
-      setPending({
-        id: existing.id,
-        qr: existing.totp.qr_code,
-        secret: existing.totp.secret,
-      });
-      setStatus('Scan the QR and enter the 6‑digit code');
-      return;
-    }
-  
-    // 2) Otherwise create a new one
-    const { data: enrolled, error } = await supabase.auth.mfa.enroll({
-      factorType: 'totp',
-      friendlyName: `totp-${Date.now()}`, // unique name avoids collision
-    });
+  const handleEnroll = async () => {
+    setStatus('Generating secret…');
+    const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp' });
     if (error) return setStatus(error.message);
-  
     setPending({
-      id: enrolled.id,
-      qr: enrolled.totp.qr_code,
-      secret: enrolled.totp.secret,
+      id: data.id,
+      qr: data.totp.qr_code,
+      secret: data.totp.secret,
     });
-    setStatus('Scan the QR and enter the 6‑digit code');
+    setStatus('Scan this QR in your authenticator app, then enter the 6‑digit code');
   };
 
   /** verify */
   const handleVerify = async () => {
     if (!pending || !code) return;
     setStatus('Verifying…');
+  
+    // 1) Ask Supabase to create a new challenge for this factor
+    const { data: challengeData, error: challengeErr } =
+      await supabase.auth.mfa.challenge({ factorId: pending.id });
+    if (challengeErr) {
+      setStatus(challengeErr.message);
+      return;
+    }
+  
+    // 2) Verify the 6‑digit code against the challenge we just received
     const { error } = await supabase.auth.mfa.verify({
       factorId: pending.id,
+      challengeId: challengeData.id, // ✅ real UUID, no more empty string
       code,
-    } ); // casting to any avoids the outdated type that requires challengeId
-    if (error) return setStatus(error.message);
+    });
+    if (error) {
+      setStatus(error.message);
+      return;
+    }
+  
     setStatus('MFA enabled 🎉');
     window.location.reload();
   };
