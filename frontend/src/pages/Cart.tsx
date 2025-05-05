@@ -22,6 +22,7 @@ import {
 	removeItemFromCart,
 	selectCart,
 	selectDateRange,
+	setDateRange,
 } from '../slices/cartSlice';
 import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
 import { addBooking, fetchUserBookings } from '../slices/bookingsSlice';
@@ -30,7 +31,10 @@ import { Link } from 'react-router-dom';
 import { showCustomSnackbar } from '../components/CustomSnackbar';
 import { store } from '../store/store';
 import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
+import { RangeValue } from '@react-types/shared';
+import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 
 function Cart() {
 	const dispatch = useAppDispatch();
@@ -38,16 +42,30 @@ function Cart() {
 	const { user } = useAuth();
 	const selectedDateRange = useAppSelector(selectDateRange);
 	const [editingDate, setEditingDate] = useState(false);
+	const [range, setRange] = useState<RangeValue<DateValue> | null>(null);
+	const now = today(getLocalTimeZone());
+
+	useEffect(() => {
+		updateRangeWithSelectedRange();
+	}, [selectedDateRange]);
+
+	const updateRangeWithSelectedRange = () => {
+		if (selectedDateRange.start_date && selectedDateRange.end_date) {
+			setRange({
+				start: parseDate(selectedDateRange.start_date),
+				end: parseDate(selectedDateRange.end_date),
+			});
+			// move to range in the DatePickjer
+		} else {
+			setRange(null);
+		}
+	}
 
 	// Calculate total quantity of all cart items
 	const totalItems = cart.reduce(
 		(total, item) => total + (item.quantity || 0),
 		0,
 	);
-
-	const handleToggle = () => {
-		setEditingDate((prev) => !prev); // Toggles between true/false
-	};
 
 	const createBookingFromCart = () => {
 		const itemsForBooking = cart.map((item) => {
@@ -67,6 +85,40 @@ function Cart() {
 	) => {
 		console.log('handle error');
 		(e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+	};
+
+	const handleToggle = () => {
+		setEditingDate((prev) => !prev); // Toggles between true/false
+	};
+
+	const handleCancelDateEdit = () => {
+		updateRangeWithSelectedRange();
+		handleToggle();
+	}
+
+	const handleCompleteDateEdit = () => {
+		if (editingDate === true) {
+			if (range) {
+				dispatch(setDateRange({ newStartDate: range.start.toString(), newEndDate: range.end.toString() }));
+				showCustomSnackbar('Date is updated', 'success');
+				handleToggle();
+			}
+		}
+	}
+
+	const handleDateChange = (newRange: RangeValue<DateValue> | null) => {
+		if (newRange) {
+			const startDate = new Date(newRange.start.toString());
+			const endDate = new Date(newRange.end.toString());
+			const diffInMs = endDate.getTime() - startDate.getTime();
+			const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+			if (diffInDays > 14) {
+				showCustomSnackbar('You can only book a maximum of 14 days', 'warning');
+				return;
+			}
+			setRange(newRange);
+		}
 	};
 
 	const handleIncrease = (item_id: string, quantity: number = 1) => {
@@ -90,9 +142,7 @@ function Cart() {
 						end_date: end_date,
 					}),
 				);
-
 				showCustomSnackbar('Item added to cart', 'success');
-
 				// adds the item in case it is available
 			} else {
 				showCustomSnackbar(
@@ -108,14 +158,12 @@ function Cart() {
 		const resultAction = await dispatch(addBooking(newBookingData));
 		if (!user) {
 			showCustomSnackbar('Only registered users can make a booking', 'error');
-
 			return;
 		}
 		if (addBooking.rejected.match(resultAction)) {
 			showCustomSnackbar(resultAction.payload ?? 'unknown error', 'error');
 		} else {
 			showCustomSnackbar('Booking created', 'success');
-
 			dispatch(emptyCart());
 			dispatch(fetchUserBookings(user.id));
 		}
@@ -292,29 +340,73 @@ function Cart() {
 						</Typography>
 						<Stack direction={'row'} justifyContent={'space-between'}>
 							<Typography variant="body2">Dates</Typography>
-							<Typography variant="body2">
-								{!editingDate
-									? ` ${selectedDateRange.start_date} - ${selectedDateRange.end_date} `
-									: 'I am still working on it'}
-							</Typography>
+							{!editingDate ?
+								<Typography variant="body2">
+									{selectedDateRange.start_date} - {selectedDateRange.end_date}
+								</Typography>
+								: <Provider theme={defaultTheme} colorScheme="light" maxWidth={270}>
+									<DateRangePicker
+										labelPosition="side"
+										labelAlign="end"
+										width={270}
+										aria-label="Select dates"
+										value={range}
+										minValue={now}
+										onChange={handleDateChange}
+										isRequired
+										maxVisibleMonths={1}
+									/>
+								</Provider>}
 						</Stack>
-						<Stack direction={'row'} justifyContent={'right'}>
-							<Button
-								variant="text"
-								color="primary"
-								sx={{
-									textDecoration: 'underline',
-									textTransform: 'none', // Keep original casing
-									padding: 0, // Remove extra space
-									minWidth: 0, // Optional: tighter layout
-									fontWeight: 'normal', // Optional: make it look like regular link text
-								}}
-								onClick={handleToggle}
-							>
-								{!editingDate
-									? 'Change the booking dates'
-									: 'Confirm new dates'}
-							</Button>
+						<Stack direction={'row'} justifyContent={'right'} spacing={1}>
+							{!editingDate ?
+								<Button
+									variant="text"
+									color="primary"
+									sx={{
+										textDecoration: 'underline',
+										textTransform: 'none', // Keep original casing
+										padding: 0, // Remove extra space
+										minWidth: 0, // Optional: tighter layout
+										fontWeight: 'normal', // Optional: make it look like regular link text
+									}}
+									onClick={handleToggle}
+								>
+									Change the booking dates
+								</Button>
+								:
+								<>
+									<Button
+										variant="text"
+										color="primary"
+										sx={{
+											textDecoration: 'underline',
+											textTransform: 'none', // Keep original casing
+											padding: 0, // Remove extra space
+											minWidth: 0, // Optional: tighter layout
+											fontWeight: 'normal', // Optional: make it look like regular link text
+										}}
+										onClick={handleCompleteDateEdit}
+									>
+										Confirm new dates
+									</Button>
+
+									<Button
+										variant="text"
+										color="primary"
+										sx={{
+											textDecoration: 'underline',
+											textTransform: 'none', // Keep original casing
+											padding: 0, // Remove extra space
+											minWidth: 0, // Optional: tighter layout
+											fontWeight: 'normal', // Optional: make it look like regular link text
+										}}
+										onClick={handleCancelDateEdit}
+									>
+										Cancel
+									</Button>
+								</>
+							}
 						</Stack>
 						<Stack direction={'row'} justifyContent={'space-between'}>
 							<Typography variant="body2">Total items</Typography>
@@ -333,6 +425,7 @@ function Cart() {
 							variant="rounded"
 							size="small"
 							onClick={handleAddBooking}
+							disabled={false}
 						>
 							Book items
 						</Button>
