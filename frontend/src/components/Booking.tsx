@@ -15,7 +15,7 @@ function SingleBooking() {
       navigate('/bookings');
     }
   }, [booking_id, navigate]);
-
+console.log(booking_id)
   useEffect(() => {
     if (!booking_id) return;
     if (!booking_selector) dispatch(fetchBooking(booking_id));

@@ -3,15 +3,19 @@ import {
   Box,
   Button,
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
   Typography,
+  Tabs,
+  Tab,
 } from '@mui/material';
 import { useAuth } from '../hooks/useAuth';
+import { useState } from 'react';
+import SecuritySettings from './SecuritySettings';
 
 const Account = () => {
   const { user } = useAuth();
+  const [tab, setTab] = useState(0); // 0 = Profile, 1 = Security
   // ──────────────────────────────   Variables  ─────────────────────────────────────
 
   // Determine the display name
@@ -58,6 +62,17 @@ const Account = () => {
       }}
     >
       <Card sx={{ maxWidth: 500, width: '100%', p: 3 }}>
+        <Tabs
+          value={tab}
+          onChange={(_, v) => setTab(v)}
+          textColor="primary"
+          indicatorColor="primary"
+          centered
+          sx={{ mb: 2 }}
+        >
+          <Tab label="Profile" />
+          <Tab label="Security" />
+        </Tabs>
         <CardContent
           sx={{
             display: 'flex',
@@ -66,54 +81,59 @@ const Account = () => {
             gap: 1,
           }}
         >
-          {/* Avatar */}
-          <Avatar
-            alt={displayName}
-            src={user?.user_metadata.avatar_url}
-            sx={{ width: 100, height: 100, margin: 'auto', marginBottom: 2 }}
-          />
+          {tab === 0 && (
+            <>
+              {/* Avatar */}
+              <Avatar
+                alt={displayName}
+                src={user?.user_metadata.avatar_url}
+                sx={{ width: 100, height: 100, margin: 'auto', marginBottom: 2 }}
+              />
 
-          {/* Full Name */}
-          <Typography gutterBottom variant="h4" component="div">
-            {displayName}
-          </Typography>
+              {/* Full Name */}
+              <Typography gutterBottom variant="h4" component="div">
+                {displayName}
+              </Typography>
 
-          {/* Email */}
-          <Typography variant="body1" color="text.primary">
-            {user?.email}
-          </Typography>
+              {/* Email */}
+              <Typography variant="body1" color="text.primary">
+                {user?.email}
+              </Typography>
 
-          {/* Phone */}
-          {hasPhoneNumber && (
-            <Typography variant="body2" color="text.secondary">
-              {user?.user_metadata.phone}
-            </Typography>
+              {/* Phone */}
+              {hasPhoneNumber && (
+                <Typography variant="body2" color="text.secondary">
+                  {user?.user_metadata.phone}
+                </Typography>
+              )}
+              <Typography variant="body3" color="text.primary">
+                Account created on {new Date(user?.created_at).toLocaleDateString()}
+              </Typography>
+              {/* Card Actions */}
+                <CardActions
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: 2,
+                    mt: 2,
+                  }}
+                >
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                    sx={{ textTransform: 'none' }}
+                    onClick={() => {
+                      // Placeholder for delete account action
+                      console.log('Delete account clicked');
+                    }}
+                  >
+                    Delete Account
+                  </Button>
+                </CardActions>
+            </>
           )}
-          <Typography variant="body3" color="text.primary">
-            Account created on {new Date(user?.created_at).toLocaleDateString()}
-          </Typography>
-          {/* Card Actions */}
-            <CardActions
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                gap: 2,
-                mt: 2,
-              }}
-            >
-              <Button
-                variant="outlined"
-                color="error"
-                size="small"
-                sx={{ textTransform: 'none' }}
-                onClick={() => {
-                  // Placeholder for delete account action
-                  console.log('Delete account clicked');
-                }}
-              >
-                Delete Account
-              </Button>
-            </CardActions>
+          {tab === 1 && <SecuritySettings />}
         </CardContent>
       </Card>
     </Box>
