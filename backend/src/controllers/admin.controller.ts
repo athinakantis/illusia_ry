@@ -84,6 +84,7 @@ export class AdminController {
     @Req() req: CustomRequest,
     @Body() body: { role: string, userId: string },
   ): Promise<ApiResponse<UserWithRole>> {
+    console.log('Body:', body);
     if (!body.userId || typeof body.userId !== 'string') {
       throw new BadRequestException('Body must contain a "userId" string property');
     }

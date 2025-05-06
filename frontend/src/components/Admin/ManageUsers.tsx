@@ -9,6 +9,7 @@ import {
   updateUserRole,
   updateUserStatus,
 } from '../../slices/usersSlice';
+import { showCustomSnackbar } from '../CustomSnackbar';
 
 /**
  * Valid role & status options reflected in `usersSlice` thunks
@@ -45,15 +46,39 @@ const ManageUsers: React.FC = () => {
   /**
    * When an admin changes the user's role
    */
-  const handleRoleChange = (userId: string, role: RoleOption) => {
-    dispatch(updateUserRole({ userId, role }));
+  const handleRoleChange = async (userId: string, role: RoleOption) => {
+    try {
+      await dispatch(updateUserRole({ userId, role })).unwrap();
+      showCustomSnackbar('User role updated', 'success');
+    } catch (err: unknown) {
+      if(err instanceof Error) {
+        console.error('Error updating user role:', err.message);
+        showCustomSnackbar(err.message || 'Failed to update user role', 'error');
+      }else{
+        console.error('Error updating user role:', err);
+        showCustomSnackbar(`Failed to update user role: ${err}`, 'error');
+
+      }
+
+    }
   };
 
   /**
    * When an admin changes the user's status
    */
-  const handleStatusChange = (userId: string, status: StatusOption) => {
-    dispatch(updateUserStatus({ userId, status }));
+  const handleStatusChange = async (userId: string, status: StatusOption) => {
+    try {
+      await dispatch(updateUserStatus({ userId, status })).unwrap();
+      showCustomSnackbar('User status updated', 'success');
+    } catch (err: unknown ){
+      if(err instanceof Error) {
+        console.error('Error updating user status:', err.message);
+        showCustomSnackbar(err.message || 'Failed to update user status', 'error');
+      }else{
+        console.error('Error updating user status:', err);
+        showCustomSnackbar(`Failed to update user status: ${err}`, 'error');
+      }
+    }
   };
 
   /**
@@ -172,7 +197,7 @@ const ManageUsers: React.FC = () => {
           columns={columns}
           getRowId={(row) => row.user_id}
           autoHeight
-          pageSizeOptions={[5, 10, 25]}
+          pageSizeOptions={[5, 10, 25,50, 100]}
           disableRowSelectionOnClick
           /* Couldnt get the Generic Datagrid to work with me so copied the CSS */
           sx={{
