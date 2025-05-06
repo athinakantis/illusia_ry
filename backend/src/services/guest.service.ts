@@ -20,9 +20,12 @@ export class GuestService {
 
   }
 
-  async getItems(): Promise<ApiResponse<Tables<'items'>[]>> {
+  async getPublicItems(): Promise<ApiResponse<Tables<'items'>[]>> {
     try {
-      const { data, error } = await this._supabase.from('items').select('*');
+      const { data, error } = await this._supabase
+      .from('items')
+      .select('*')
+      .eq("visible", true)
 
       if (error) {
         console.error('Error retrieving items: ', error);
@@ -34,7 +37,7 @@ export class GuestService {
         data: data || [],
       };
     } catch (err) {
-      console.error('Unexpected error in getItems:', err);
+      console.error('Unexpected error in getPublicItems:', err);
       throw err;
     }
   }
@@ -100,6 +103,19 @@ export class GuestService {
     }; 
     } catch (err) {
       console.error('Unexpected error in getItemById:', err);
+      throw err;
+    }
+  }
+// Fetches all items including those that are not visible
+  async getItemsAdmin(): Promise<ApiResponse<Tables<'items'>[]>> {
+    try {
+      const { data, error } = await this._supabase
+        .from('items')
+        .select('*');
+      if (error) throw error;
+      return { message: 'All items retrieved', data: data || [] };
+    } catch (err) {
+      console.error('Error in getItemsAdmin:', err);
       throw err;
     }
   }
