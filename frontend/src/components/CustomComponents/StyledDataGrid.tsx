@@ -2,7 +2,7 @@ import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { SxProps, Theme } from '@mui/material';
 
 const defaultSx: SxProps<Theme> = {
-    '& .MuiDataGrid-row:first-of-type': { mt: 1 },
+    '& .MuiDataGrid-row:first-of-type': { mt: 0 },
     // Header CSS
     '& .super-app-theme--header': {
         backgroundColor: 'background.verylightgrey',
@@ -30,7 +30,9 @@ const defaultSx: SxProps<Theme> = {
     // Individual Cell CSS
     '& .MuiDataGrid-cell': {
         pl: 2,
-        py: 1
+        py: 1,
+        display: 'flex',
+        alignItems: 'center' // Centers text vertically
     },
     // Footer CSS
     '& .MuiDataGrid-footerContainer': {

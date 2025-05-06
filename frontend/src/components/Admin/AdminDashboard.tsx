@@ -27,6 +27,9 @@ import { format, parseISO } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { bookingsApi } from '../../api/bookings';
 import { UpcomingBooking } from '../../types/types';
+// - Additions for StyledDataGrid
+import { StyledDataGrid } from '../CustomComponents/StyledDataGrid';
+import { GridColDef } from '@mui/x-data-grid';
 
 // ─── Re-usable stat card ────────────────────────────────────
 const StatCard: React.FC<{ label: string; value: number | string }> = ({
@@ -80,6 +83,7 @@ const AdminDashboard = () => {
   );
   const [upcomingBookings, setUpcomingBookings] = useState<UpcomingBooking[]>([]);
 
+
   // ─── Side-Effects ────────────────────────────────────────────
   useEffect(() => {
     if (users.length === 0) dispatch(fetchAllUsersWithRole());
@@ -124,6 +128,7 @@ const AdminDashboard = () => {
     () => buildBookingOverviews(bookings, reservations, users, items),
     [bookings, reservations, users, items],
   );
+  console.log("upcomingBookings:", upcomingBookings);
 
   /* ────────── Render ────────── */
   return (
@@ -199,7 +204,7 @@ const AdminDashboard = () => {
         >
           Upcoming bookings
         </Typography>
-        <TableContainer component={Paper} variant="outlined">
+        {/* <TableContainer component={Paper} variant="outlined">
           <Table size="small">
             <TableHead>
               <TableRow>
@@ -211,7 +216,6 @@ const AdminDashboard = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* Show only the first 3 bookings for now. Also it looks bad with a huge list of bookings */}
               {upcomingBookings.map((booking) => (
                 <TableRow key={booking.id}>
                   <TableCell>{booking.booking.user.display_name}</TableCell>
@@ -223,7 +227,40 @@ const AdminDashboard = () => {
               ))}
             </TableBody>
           </Table>
-        </TableContainer>
+        </TableContainer> */}
+        <StyledDataGrid
+          style={{ width: '100%' }}
+
+          hideFooter
+          disableColumnResize rows={upcomingBookings.map((booking) => ({
+            id: booking.booking_id, // Used internally by DataGrid
+            name: booking.booking.user.display_name,
+            status: booking.booking.status,
+            duration: `${computeDuration(booking.start_date, booking.end_date)} Days`,
+            dateRange: `${booking.start_date} - ${booking.end_date}`,
+            view: `/booking/${booking.booking_id}`,
+          }))}
+          columns={[
+            { field: 'name', headerName: 'Name', flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'status', headerName: 'Status', flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'duration', headerName: 'Duration', flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'dateRange', headerName: 'Date Range', flex: 1, headerClassName: 'super-app-theme--header' },
+            {
+              field: 'view',
+              headerName: 'Actions',
+              width: 100,
+              renderCell: (params) => (
+                <Link to={params.value} style={{ textDecoration: 'none', color: 'blue' }}>
+                  Booking
+                </Link>
+              ),
+              headerClassName: 'super-app-theme--header',
+            },
+          ]}
+          pageSizeOptions={[5, 10, 25]}
+          rowHeight={50}
+          disableRowSelectionOnClick
+        />
       </Box>
 
       {/* ───── Recent activity & Users/Roles ───── */}
