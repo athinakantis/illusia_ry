@@ -10,6 +10,7 @@ import {
   updateUserStatus,
 } from '../../slices/usersSlice';
 import { showCustomSnackbar } from '../CustomSnackbar';
+import { useAuth } from '../../hooks/useAuth';
 
 /**
  * Valid role & status options reflected in `usersSlice` thunks
@@ -27,8 +28,11 @@ type StatusOption = typeof STATUS_OPTIONS[number];
 const ManageUsers: React.FC = () => {
   const dispatch = useAppDispatch();
   const users = useAppSelector(selectAllUsers);
+  console.log(users)
   const loading = useAppSelector(selectUserLoading);
-
+const {role} = useAuth()
+console.log("role", role)
+const currentUserRole = useAppSelector
   // Tab filter state
   const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'ACTIVE' | 'DEACTIVATED'>('ALL');
 

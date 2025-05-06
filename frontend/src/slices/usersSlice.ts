@@ -187,5 +187,5 @@ export const selectAllUsers = (state: RootState) => state.users.users;
 export const selectAUser = (state: RootState) => state.users.user;
 export const selectUserLoading = (state: RootState) => state.users.loading;
 export const selectUserError = (state: RootState) => state.users.error;
-
+export const CurrentUser = (state: RootState) => state.users.user;
 export default usersSlice.reducer;

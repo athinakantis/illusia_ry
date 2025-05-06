@@ -1,3 +1,5 @@
+import { Role } from "../context/AuthProvider";
+
 export interface User {
   user_id: string;
   display_name: string;
@@ -13,8 +15,14 @@ export interface UsersState {
   error: string | null;
   loading: boolean;
 }
-
+export type fetchUserRole = {
+  data: {
+    role: Role;
+  }
+  message: string;
+  error?: string| undefined;
+}
 export interface userApiResponse {
   message: string;
-  data: User[];
+  data: User[]| 
 }
