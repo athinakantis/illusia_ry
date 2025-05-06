@@ -1,3 +1,4 @@
+import React from 'react';
 import { GridColDef } from '@mui/x-data-grid';
 import { Box, IconButton, Typography } from '@mui/material';
 import { renderCellExpand } from './RenderCellExpand';
@@ -9,7 +10,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import { StyledDataGrid } from '../CustomComponents/StyledDataGrid';
-
 
 interface ItemDataGridProps {
   data: Item[];
@@ -61,8 +61,8 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
             overflowWrap: 'break-word',
             lineHeight: 1.4,
             width: '100%',
-            maxHeight: 80, // Optional
-            overflow: 'auto', // Optional
+            maxHeight: 80,
+            overflow: 'auto',
           }}
         >
           {params.value}
@@ -151,16 +151,15 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
     },
   ];
 
-
   return (
-    <Box sx={{ width: '100%', mt: 2 }}>
+    <Box sx={{ width: '100%', mt: 2, height: 700 }}>
       <StyledDataGrid
         rows={data}
         loading={data.length === 0}
         getRowId={(row) => row.item_id}
         columns={columns}
         pageSizeOptions={[10, 25, 50, 100]}
-        getRowHeight={() => 'auto'}
+        rowHeight={70}
         disableRowSelectionOnClick
       />
     </Box>
