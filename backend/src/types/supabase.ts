@@ -231,6 +231,7 @@ export type Database = {
           item_name: string
           location: string
           quantity: number
+          visible: boolean
         }
         Insert: {
           category_id: string
@@ -241,6 +242,7 @@ export type Database = {
           item_name: string
           location: string
           quantity: number
+          visible?: boolean
         }
         Update: {
           category_id?: string
@@ -251,6 +253,7 @@ export type Database = {
           item_name?: string
           location?: string
           quantity?: number
+          visible?: boolean
         }
         Relationships: [
           {
@@ -579,6 +582,16 @@ export type Database = {
       custom_access_token_hook: {
         Args: { event: Json }
         Returns: Json
+      }
+      get_latest_refresh_token: {
+        Args:
+          | { p_user_id: string }
+          | { p_user_id: string }
+          | { p_user_id: string }
+        Returns: {
+          token: string
+          parent: string
+        }[]
       }
       get_user_bookings: {
         Args: { p_user_id: string }
