@@ -22,7 +22,8 @@ export type fetchUserRole = {
   message: string;
   error?: string| undefined;
 }
+
 export interface userApiResponse {
   message: string;
-  data: User[]| 
+  data: User[];
 }

@@ -15,24 +15,25 @@ import { useAuth } from '../../hooks/useAuth';
 /**
  * Valid role & status options reflected in `usersSlice` thunks
  */
-const ROLE_OPTIONS = ['Admin', 'Head Admin', 'User'] as const; // “-” acts as a placeholder for “no role yet”
+const HEAD_ADMIN_ROLE_OPTIONS = ['Admin', 'Head Admin', 'User', 'Unapproved'] as const;
+const ADMIN_ROLE_OPTIONS = ['User', 'Unapproved'] as const; 
 const STATUS_OPTIONS = [
   'approved',
   'rejected',
   'active',
   'deactivated',
 ] as const;
-type RoleOption = typeof ROLE_OPTIONS[number];
+type RoleOption = typeof HEAD_ADMIN_ROLE_OPTIONS[number] | typeof ADMIN_ROLE_OPTIONS[number]
 type StatusOption = typeof STATUS_OPTIONS[number];
 
 const ManageUsers: React.FC = () => {
   const dispatch = useAppDispatch();
   const users = useAppSelector(selectAllUsers);
-  console.log(users)
   const loading = useAppSelector(selectUserLoading);
-const {role} = useAuth()
-console.log("role", role)
-const currentUserRole = useAppSelector
+  const {role} = useAuth()
+  // const role = "Head Admin"; // Hardcoded for testing, replace with useAuth() hook
+  // const role = "Admin"; // Hardcoded for testing, replace with useAuth() hook
+
   // Tab filter state
   const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'ACTIVE' | 'DEACTIVATED'>('ALL');
 
@@ -111,26 +112,42 @@ const currentUserRole = useAppSelector
       minWidth: 140,
       renderCell: (params: GridRenderCellParams) => {
         const currentRole = (params.row.role_title ?? 'Unapproved') as RoleOption | 'Unapproved';
+        // Determine which options this user can assign
+        const options = role === 'Head Admin'
+          ? HEAD_ADMIN_ROLE_OPTIONS
+          : role === 'Admin'
+          ? ADMIN_ROLE_OPTIONS
+          : [];
+
+        // If nothing assignable or currentRole not in options, show plain text
+        if (options.length === 0 || !options.includes(currentRole as any)) {
+          return <Typography>{currentRole}</Typography>;
+        }
+
+        // Show Select with valid options; map 'Unapproved' to empty string so Select value is in options
+        const selectValue = options.includes(currentRole as any)
+          ? currentRole
+          : '';
 
         return (
           <Select
-            value={currentRole}
+            value={selectValue}
             size="small"
             fullWidth
             onChange={(e) =>
               handleRoleChange(params.row.user_id, e.target.value as RoleOption)
             }
+            renderValue={(selected) => selected || 'Unapproved'}
           >
-            {/* Show “Unapproved” only when that’s the current value */}
+            {/* If user is currently Unapproved, show it disabled */}
             {currentRole === 'Unapproved' && (
-              <MenuItem value="Unapproved" disabled>
+              <MenuItem value="" disabled>
                 Unapproved
               </MenuItem>
             )}
-
-            {ROLE_OPTIONS.map((role) => (
-              <MenuItem key={role} value={role}>
-                {role}
+            {options.map((opt) => (
+              <MenuItem key={opt} value={opt}>
+                {opt}
               </MenuItem>
             ))}
           </Select>
