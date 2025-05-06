@@ -22,7 +22,7 @@ import {
 	removeItemFromCart,
 	selectCart,
 	selectDateRange,
-	setDateRange,
+	setCartItems,
 } from '../slices/cartSlice';
 import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
 import { addBooking, fetchUserBookings } from '../slices/bookingsSlice';
@@ -35,30 +35,43 @@ import { useEffect, useState } from 'react';
 import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
 import { RangeValue } from '@react-types/shared';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
+import { ItemWithQuantity } from '../types/types';
 
 function Cart() {
 	const dispatch = useAppDispatch();
 	const { cart } = useAppSelector(selectCart);
 	const { user } = useAuth();
 	const selectedDateRange = useAppSelector(selectDateRange);
-	const [editingDate, setEditingDate] = useState(false);
-	const [range, setRange] = useState<RangeValue<DateValue> | null>(null);
+	const [editingCart, setEditingCart] = useState(false);
+	const [localCartRange, setLocalCartRange] = useState<RangeValue<DateValue> | null>(null);
 	const now = today(getLocalTimeZone());
+	const [qtyCheckErrors] = useState<Record<string, string>>({});
+	const [incorrectCart, setIncorrectCart] = useState(false);
+	const [localCart, setLocalCart] = useState<ItemWithQuantity[]>([]);
 
 	useEffect(() => {
 		updateRangeWithSelectedRange();
 	}, [selectedDateRange]);
 
+	useEffect(() => {
+		updateLocalCartWithCart();
+	}, [cart])
+
 	const updateRangeWithSelectedRange = () => {
 		if (selectedDateRange.start_date && selectedDateRange.end_date) {
-			setRange({
+			setLocalCartRange({
 				start: parseDate(selectedDateRange.start_date),
 				end: parseDate(selectedDateRange.end_date),
 			});
 			// move to range in the DatePickjer
 		} else {
-			setRange(null);
+			setLocalCartRange(null);
 		}
+	}
+
+	const updateLocalCartWithCart = () => {
+		setLocalCart(cart.map(item => ({ ...item })));
+		// fills local cart with cart from redux
 	}
 
 	// Calculate total quantity of all cart items
@@ -80,29 +93,55 @@ function Cart() {
 		return { user_id: user?.id, items: itemsForBooking };
 	};
 
-	const handleBrokenImg = (
-		e: React.SyntheticEvent<HTMLImageElement, Event>,
-	) => {
-		console.log('handle error');
-		(e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
-	};
-
-	const handleToggle = () => {
-		setEditingDate((prev) => !prev); // Toggles between true/false
-	};
+	const handleStartDateEdit = () => {
+		setEditingCart(true);
+	}
 
 	const handleCancelDateEdit = () => {
 		updateRangeWithSelectedRange();
-		handleToggle();
+		updateLocalCartWithCart();
+		setIncorrectCart(false);
+		setEditingCart(false);
+		// need to revert the changes of the items to initial state, using selected date and cart from redux
 	}
 
 	const handleCompleteDateEdit = () => {
-		if (editingDate === true) {
-			if (range) {
-				dispatch(setDateRange({ newStartDate: range.start.toString(), newEndDate: range.end.toString() }));
-				showCustomSnackbar('Date is updated', 'success');
-				handleToggle();
+		if (incorrectCart) {
+			showCustomSnackbar('Update the cart so no mistakes', 'warning');
+		} else {
+			if (localCartRange) {
+
+				dispatch(setCartItems({ newStartDate: localCartRange.start.toString(), newEndDate: localCartRange.end.toString(), cart: localCart.filter(item => item.quantity > 0) }));
+				// confirms all the changes in local cart to redux cart
+				showCustomSnackbar('Cart is updated', 'success');
+				setEditingCart(false);
 			}
+		}
+	}
+
+	const checkLocalCartForDates = (newRange: RangeValue<DateValue> | null = localCartRange) => {
+
+		Object.keys(qtyCheckErrors).forEach(key => {
+			delete qtyCheckErrors[key];
+		}); // emtying the errors array*/
+
+		if (newRange) {
+			localCart.forEach(item => {
+				const availabilityCheck = checkAvailabilityForItemOnDates(
+					item.item_id,
+					item.quantity, // is not updated fast enough
+					newRange.start.toString(),
+					newRange.end.toString(),
+					false
+				)(store.getState());
+
+				if (availabilityCheck.severity != 'success') {
+					qtyCheckErrors[item.item_id] = availabilityCheck.message;
+				}
+				// finish the check - if there is no success ,then there is a error
+			});
+			setIncorrectCart(Object.keys(qtyCheckErrors).length !== 0);
+
 		}
 	}
 
@@ -117,33 +156,65 @@ function Cart() {
 				showCustomSnackbar('You can only book a maximum of 14 days', 'warning');
 				return;
 			}
-			setRange(newRange);
+			setLocalCartRange(newRange);
+			checkLocalCartForDates(newRange);
 		}
 	};
 
-	const handleIncrease = (item_id: string, quantity: number = 1) => {
-		const { start_date, end_date } = selectedDateRange;
+	const handleRemove = (item_id: string, quantity: number = 1) => {
+		if (editingCart) {
+			setLocalCart(localCart.map(item => {
+				if (item.item_id == item_id) {
+					item.quantity -= quantity;
+				}
+				return item;
+			}))
+			checkLocalCartForDates();
+			// if the cart is being edited, the changes reflect only in local cart, not touching redux
+		} else {
+			dispatch(removeItemFromCart({
+				item_id: item_id,
+				quantityToRemove: quantity
+			}));
+		}
+	}
 
-		if (start_date && end_date) {
+	const handleIncrease = (item_id: string, quantity: number = 1) => {
+		if (localCartRange) {
+			const start_date = localCartRange.start.toString();
+			const end_date = localCartRange.end.toString();
+			const qtyInLocalCart = localCart.find(item => item.item_id === item_id)?.quantity ?? 0;
+
 			const checkAdditionToCart = checkAvailabilityForItemOnDates(
 				item_id,
-				quantity,
+				qtyInLocalCart + quantity, // only takes into account quantity in redux cart
 				start_date,
 				end_date,
+				false,
 			)(store.getState());
 			// checks if item can be added to cart
-
 			if (checkAdditionToCart.severity === 'success') {
-				dispatch(
-					addItemToCart({
-						item: cart.find((itemInCart) => itemInCart.item_id === item_id),
-						quantity: quantity,
-						start_date: start_date,
-						end_date: end_date,
-					}),
-				);
+				if (editingCart) {
+					setLocalCart(localCart.map(item => {
+						if (item.item_id == item_id) {
+							item.quantity += quantity;
+						}
+						return item;
+					}))
+					// if the cart is being edited, then only added to local cart
+				} else {
+					dispatch(
+						addItemToCart({
+							item: cart.find((itemInCart) => itemInCart.item_id === item_id),
+							quantity: quantity,
+							start_date: start_date,
+							end_date: end_date,
+						}),
+					);
+				}
 				showCustomSnackbar('Item added to cart', 'success');
 				// adds the item in case it is available
+
 			} else {
 				showCustomSnackbar(
 					checkAdditionToCart.message,
@@ -151,6 +222,13 @@ function Cart() {
 				);
 			}
 		}
+	};
+
+	const handleBrokenImg = (
+		e: React.SyntheticEvent<HTMLImageElement, Event>,
+	) => {
+		console.log('handle error');
+		(e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
 	};
 
 	const handleAddBooking = async () => {
@@ -200,7 +278,7 @@ function Cart() {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{cart.map((item) => (
+								{localCart.map((item) => (
 									<TableRow
 										key={item.item_id}
 										sx={{
@@ -221,6 +299,9 @@ function Cart() {
 												/>
 												<Stack sx={{ maxWidth: 186 }}>
 													<Typography>{item.item_name}</Typography>
+													{incorrectCart &&
+														<Typography color="error">{qtyCheckErrors[item.item_id]}</Typography>
+													}
 												</Stack>
 											</Stack>
 										</TableCell>
@@ -233,12 +314,7 @@ function Cart() {
 											>
 												<Button
 													onClick={() => {
-														dispatch(
-															removeItemFromCart({
-																item_id: item.item_id,
-																quantityToRemove: 1,
-															}),
-														);
+														handleRemove(item.item_id);
 													}}
 													variant="outlined"
 													sx={{
@@ -291,14 +367,9 @@ function Cart() {
 											<Button
 												sx={{ gap: '6px' }}
 												variant="outlined_rounded"
-												onClick={() =>
-													dispatch(
-														removeItemFromCart({
-															item_id: item.item_id,
-															quantityToRemove: item.quantity,
-														}),
-													)
-												}
+												onClick={() => {
+													handleRemove(item.item_id, item.quantity);
+												}}
 											>
 												Remove
 												<CloseIcon sx={{ fill: '#414141' }} />
@@ -340,7 +411,7 @@ function Cart() {
 						</Typography>
 						<Stack direction={'row'} justifyContent={'space-between'}>
 							<Typography variant="body2">Dates</Typography>
-							{!editingDate ?
+							{!editingCart ?
 								<Typography variant="body2">
 									{selectedDateRange.start_date} - {selectedDateRange.end_date}
 								</Typography>
@@ -350,7 +421,7 @@ function Cart() {
 										labelAlign="end"
 										width={270}
 										aria-label="Select dates"
-										value={range}
+										value={localCartRange}
 										minValue={now}
 										onChange={handleDateChange}
 										isRequired
@@ -359,7 +430,7 @@ function Cart() {
 								</Provider>}
 						</Stack>
 						<Stack direction={'row'} justifyContent={'right'} spacing={1}>
-							{!editingDate ?
+							{!editingCart ?
 								<Button
 									variant="text"
 									color="primary"
@@ -370,7 +441,7 @@ function Cart() {
 										minWidth: 0, // Optional: tighter layout
 										fontWeight: 'normal', // Optional: make it look like regular link text
 									}}
-									onClick={handleToggle}
+									onClick={handleStartDateEdit}
 								>
 									Change the booking dates
 								</Button>
@@ -425,7 +496,7 @@ function Cart() {
 							variant="rounded"
 							size="small"
 							onClick={handleAddBooking}
-							disabled={false}
+							disabled={editingCart}
 						>
 							Book items
 						</Button>

@@ -15,6 +15,13 @@ export const cartSlice = createSlice({
             state.selectedDateRange.start_date = action.payload.newStartDate;
             state.selectedDateRange.end_date = action.payload.newEndDate;
             localStorage.setItem('savedCart', JSON.stringify(state));
+            // mb not needed
+        },
+        setCartItems: (state, action) => {
+            state.cart = action.payload.cart;
+            state.selectedDateRange.start_date = action.payload.newStartDate;
+            state.selectedDateRange.end_date = action.payload.newEndDate;
+            localStorage.setItem('savedCart', JSON.stringify(state));
         },
         addItemToCart: (state, action) => {
             // Destructure new item
@@ -77,7 +84,8 @@ export const {
     removeItemFromCart,
     emptyCart,
     loadCartFromStorage,
-    setDateRange
+    setDateRange,
+    setCartItems
 } = cartSlice.actions;
 
 export const selectItemInCartById = (id: string) => (state: RootState) => {
@@ -85,36 +93,20 @@ export const selectItemInCartById = (id: string) => (state: RootState) => {
 };
 
 export const selectQtyForItemInCartByIdInDateRange =
-    (id: string, start_date: string, end_date: string) => (state: RootState) => {
+    (id: string) => (state: RootState) => {
         const itemInCartReservations = state.cart.cart.filter(
             (item) => item.item_id === id,
         );
 
         if (itemInCartReservations.length > 0) {
+            return itemInCartReservations[0].quantity;
             // if any of the instances of the items found in cart
-            if (
-                state.cart.selectedDateRange.start_date === start_date ||
-                state.cart.selectedDateRange.end_date === end_date
-            ) {
-                return itemInCartReservations[0].quantity; // item added for already existing time range
-            } else {
-                return -1; // item added for a new time range
-            }
         } else {
             return 0; // new item added to cart
         }
     };
 
-/*
-export const setDateRange = (newStartDate: string | null, newEndDate: string | null) => (state: RootState) => {
-state.cart.selectedDateRange.start_date = newStartDate;
-state.cart.selectedDateRange.end_date = newEndDate;
-
-}*/
-
 export const selectDateRange = (state: RootState) => {
-    console.log(state.cart.selectedDateRange);
-
     return state.cart.selectedDateRange;
 }
 
