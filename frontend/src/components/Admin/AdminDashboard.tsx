@@ -13,7 +13,6 @@ import {
   TableBody,
   Stack,
 } from '@mui/material';
-import { useAuth } from '../../hooks/useAuth';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { buildBookingOverviews, BookingOverview, computeDuration } from '../../utility/bookings';
 import { supabase } from '../../config/supabase';

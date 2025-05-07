@@ -20,6 +20,7 @@ import {
 import { showCustomSnackbar } from '../CustomSnackbar';
 import { useAuth } from '../../hooks/useAuth';
 
+
 const STATUS_OPTIONS = ['pending', 'approved', 'rejected', 'deactivated','active'] as const;
 const STATUS_LABELS: Record<typeof STATUS_OPTIONS[number], string> = {
   pending: 'Pending',
@@ -33,20 +34,57 @@ const ManageUsers: React.FC = () => {
   const dispatch = useAppDispatch();
   const users = useAppSelector(selectAllUsers);
   const loading = useAppSelector(selectUserLoading);
-  // const { role } = useAuth();
-const role = 'Admin'; // TODO: Replace with actual role from context
-// const role = 'Head Admin'; // TODO: Replace with actual role from context
+  const { role } = useAuth();
+
   const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'ACTIVE' | 'DEACTIVATED'>('ALL');
 
-  // Pull the complete user list (with roles) once on mount
+  // Fetch all users with role on component mount
   useEffect(() => {
     dispatch(fetchAllUsersWithRole());
-  }, [dispatch]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
+// ---------------------  Handlers  --------------------------------------------------------------
 
   const handleTabChange = (_: React.SyntheticEvent, value: 'ALL' | 'PENDING' | 'ACTIVE' | 'DEACTIVATED') => {
     setFilter(value);
   };
 
+  // Handle role change
+  const handleRoleChange = async (userId: string, role:'User' | 'Admin' | 'Head Admin') => {
+    try {
+      await dispatch(updateUserRole({ userId, role })).unwrap();
+      showCustomSnackbar('User role updated', 'success');
+      // Refresh the grid data without reloading the page
+    } catch (err: unknown) {
+      // Handle error
+      if (err instanceof Error) {
+        console.error('Error updating user role:', err.message);
+        showCustomSnackbar(err.message || 'Failed to update user role', 'error');
+      }else{
+        console.error('Error updating user role:', err);
+        showCustomSnackbar(`Failed to update user role: ${err}`, 'error');
+      }
+    }
+  };
+  // --------------------------------------------------------------------------------------------------------------
+  // Handle status change
+  const handleStatusChange = async (userId: string, status: 'approved' | 'rejected' | 'deactivated' | 'active') => {
+    try {
+      await dispatch(updateUserStatus({ userId, status })).unwrap();
+      showCustomSnackbar('User status updated', 'success');
+      // Refresh the grid data without reloading the page
+    } catch (err: unknown) {
+      // Handle error
+      if (err instanceof Error) {
+        console.error('Error updating user status:', err.message);
+        showCustomSnackbar(err.message || 'Failed to update user status', 'error');
+      }else{
+        console.error('Error updating user status:', err);
+        showCustomSnackbar(`Failed to update user status: ${err}`, 'error');
+      }
+    }
+  };
   // Filter rows based on status tab
   const filtered = users.filter((u) => {
     if (filter === 'ALL') return true;
@@ -67,6 +105,7 @@ const role = 'Admin'; // TODO: Replace with actual role from context
       flex: 1,
       minWidth: 180,
       renderCell: (params: GridRenderCellParams) => {
+       
         const currentRole = (params.row.role_title ?? 'Unapproved') as
           | 'Unapproved'
           | 'User'
@@ -79,25 +118,16 @@ const role = 'Admin'; // TODO: Replace with actual role from context
             <Select
               value={currentRole}
               size="small"
+              type="button"
               fullWidth
-              onChange={(e) =>
-                dispatch(
-                  updateUserRole({
-                    userId: params.row.user_id,
-                    role: e.target.value as 'User' | 'Admin' | 'Head Admin',
-                  })
-                )
-                  .unwrap()
-                  .then(() => showCustomSnackbar('Role updated', 'success'))
-                  .catch((err) =>
-                    showCustomSnackbar(err.message || 'Failed updating role', 'error')
-                  )
-              }
-              renderValue={(val) => (val)}
+              onChange={(e) => {
+                handleRoleChange(params.row.user_id, e.target.value as 'User' | 'Admin' | 'Head Admin')
+              }}
+              renderValue={val => val}
             >
               {/* Show “Unapproved” disabled option */}
               {currentRole === 'Unapproved' && (
-                <MenuItem value="" disabled>
+                <MenuItem value="Unapproved" disabled>
                   Unapproved
                 </MenuItem>
               )}
@@ -120,18 +150,13 @@ const role = 'Admin'; // TODO: Replace with actual role from context
             : [currentRole];
           return (
             <Select
+              type="button"
               value={currentRole}
               size="small"
               fullWidth
               disabled={currentRole !== 'Unapproved'}
               onChange={(e) => {
-                const next = e.target.value as 'User' | 'Admin' | 'Head Admin';
-                if (next !== currentRole) {
-                  dispatch(updateUserRole({ userId: params.row.user_id, role: next}))
-                    .unwrap()
-                    .then(() => showCustomSnackbar('Role updated', 'success'))
-                    .catch((err) => showCustomSnackbar(err.message || 'Failed updating role', 'error'));
-                }
+                handleRoleChange(params.row.user_id, e.target.value as 'User' | 'Admin' | 'Head Admin');
               }}
             >
               {options.map((opt) => (
@@ -142,9 +167,6 @@ const role = 'Admin'; // TODO: Replace with actual role from context
             </Select>
           );
         }
-
-        // Non-admins just see text
-        return <Typography>{currentRole}</Typography>;
       },
     },
 
@@ -159,17 +181,13 @@ const role = 'Admin'; // TODO: Replace with actual role from context
         if (role === 'Admin' || role === 'Head Admin') {
           return (
             <Select
+              type="button"
               value={status}
               size="small"
               fullWidth
-              onChange={(e) =>
-                dispatch(updateUserStatus({ userId: params.row.user_id, status: e.target.value as typeof STATUS_OPTIONS[number] }))
-                  .unwrap()
-                  .then(() => showCustomSnackbar('Status updated', 'success'))
-                  .catch((err) =>
-                    showCustomSnackbar(err.message || 'Failed updating status', 'error')
-                  )
-              }
+              onChange={(e) =>{
+                  handleStatusChange(params.row.user_id, e.target.value as 'approved' | 'rejected' | 'deactivated' | 'active');
+                }}
             >
               {STATUS_OPTIONS.map((opt) => (
                 <MenuItem key={opt} value={opt}>
@@ -198,6 +216,7 @@ const role = 'Admin'; // TODO: Replace with actual role from context
         <Tab value="ACTIVE" label="Active" />
         <Tab value="DEACTIVATED" label="Deactivated" />
       </Tabs>
+    
 
       {/* Data grid */}
       <Box sx={{ height: 500, width: '100%', mt: 2 }}>

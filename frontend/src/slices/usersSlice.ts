@@ -136,10 +136,7 @@ export const usersSlice = createSlice({
       state.error = 'Could not fetch users with roles';
     });
 
-    builder.addCase(updateUserStatus.pending, (state) => {
-      state.loading = true;
-      state.status = 'loading';
-    });
+   
     builder.addCase(updateUserStatus.fulfilled, (state, action) => {
       state.loading = false;
       state.status = 'succeeded';
@@ -159,10 +156,7 @@ export const usersSlice = createSlice({
       state.status = 'failed';
       state.error = 'Could not update user status';
     });
-    builder.addCase(updateUserRole.pending, (state) => {
-      state.loading = true;
-      state.status = 'loading';
-    });
+  
     builder.addCase(updateUserRole.fulfilled, (state, action) => {
       state.loading = false;
       state.status = 'succeeded';

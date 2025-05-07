@@ -20,6 +20,7 @@ function Root() {
     if (reservations.length < 1) {
       dispatch(fetchFutureReservations());
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /*
@@ -45,6 +46,7 @@ function Root() {
     if (cart.length < savedCart.cart.length) {
       dispatch(loadCartFromStorage(savedCart));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
