@@ -5,18 +5,13 @@ import {
   Paper,
   Typography,
   Button,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
   Stack,
 } from '@mui/material';
-import { useAuth } from '../../hooks/useAuth';
+// import { useAuth } from '../../hooks/useAuth';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { buildBookingOverviews, BookingOverview, computeDuration } from '../../utility/bookings';
 import { supabase } from '../../config/supabase';
+import { Link as MuiLink } from '@mui/material';
 
 // ─── Thunk actions ──────────────────────────────────────────
 import { fetchAllItems } from '../../slices/itemsSlice';
@@ -64,7 +59,7 @@ const StatCard: React.FC<{ label: string; value: number | string }> = ({
 
 const AdminDashboard = () => {
   const dispatch = useAppDispatch();
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
   const [authActivities, setAuthActivities] = React.useState<
     {
@@ -124,10 +119,10 @@ const AdminDashboard = () => {
   // combine bookings + reservations + users
 
   // inside your component:
-  const overviews: BookingOverview[] = useMemo(
-    () => buildBookingOverviews(bookings, reservations, users, items),
-    [bookings, reservations, users, items],
-  );
+  // const overviews: BookingOverview[] = useMemo(
+  //   () => buildBookingOverviews(bookings, reservations, users, items),
+  //   [bookings, reservations, users, items],
+  // );
   // console.log("Overviews" + overviews);
   // console.log("upcomingBookings:", upcomingBookings);
 
@@ -178,24 +173,40 @@ const AdminDashboard = () => {
           Quick Actions
         </Typography>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-          <Button variant="contained" color="grey">
-            Add item
+          <Button variant="rounded"
+            sx={{
+              height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
+              pl: 4, pr: 4, textTransform: 'capitalize'
+            }}>
+            Add Item
           </Button>
+
+
+
+
           <Button
             component={Link}
             to="/admin/bookings?filter=pending"
-            variant="contained"
+            variant="rounded"
             color="grey"
-          >
+            sx={{
+              height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
+              pl: 4, pr: 4, textTransform: 'capitalize'
+            }}>
             Approve bookings
           </Button>
-          <Button variant="contained" color="grey">
+          <Button
+            variant="rounded" color="grey"
+            sx={{
+              height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
+              pl: 4, pr: 4, textTransform: 'capitalize'
+            }}>
             Manage users
           </Button>
         </Stack>
       </Box>
 
-      {/* ───── Bookings overview ───── */}
+      {/* ───── Upcoming bookings ───── */}
       <Box mt={3}>
         <Typography
           component="p"
@@ -205,37 +216,14 @@ const AdminDashboard = () => {
         >
           Upcoming bookings
         </Typography>
-        {/* <TableContainer component={Paper} variant="outlined">
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Status</TableCell>
-                <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Duration</TableCell>
-                <TableCell>Date range</TableCell>
-                <TableCell>View</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {upcomingBookings.map((booking) => (
-                <TableRow key={booking.id}>
-                  <TableCell>{booking.booking.user.display_name}</TableCell>
-                  <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{booking.booking.status}</TableCell>
-                  <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{computeDuration(booking.start_date, booking.end_date)} Days</TableCell>
-                  <TableCell>{booking.start_date} - {booking.end_date}</TableCell>
-                  <TableCell><Link to={`/booking/${booking.booking_id}`}>Booking</Link></TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer> */}
         <StyledDataGrid
           style={{ width: '100%' }}
           hideFooter
           disableColumnResize
-          slots={{ toolbar: null }}
-          getRowHeight={() => 'auto'}
+          // slots={{ toolbar: null }}
+          // getRowHeight={() => 'auto'}
           rowHeight={50}
+          // autoHeight
           disableRowSelectionOnClick
           rows={upcomingBookings.map((booking) => ({
             id: booking.booking_id, // Used internally by DataGrid
@@ -243,7 +231,7 @@ const AdminDashboard = () => {
             status: booking.booking.status,
             duration: `${computeDuration(booking.start_date, booking.end_date)} Days`,
             dateRange: `${booking.start_date} - ${booking.end_date}`,
-            view: `/booking/${booking.booking_id}`,
+            view: `/bookings/${booking.booking_id}`,
           }))}
           columns={[
             { field: 'name', headerName: 'Name', flex: 1, headerClassName: 'super-app-theme--header' },
@@ -253,11 +241,21 @@ const AdminDashboard = () => {
             {
               field: 'view',
               headerName: 'Actions',
-              width: 100,
+              flex: 1,
               renderCell: (params) => (
-                <Link to={params.value} style={{ textDecoration: 'none', color: 'blue' }}>
-                  Booking
-                </Link>
+                <MuiLink
+                  component={Link}
+                  to={params.value}
+                  sx={{
+                    textDecoration: 'none',
+                    color: 'secondary.main',
+                    '&:hover': {
+                      color: 'primary.light'
+                    }
+                  }}
+                >
+                  Show booking
+                </MuiLink>
               ),
               headerClassName: 'super-app-theme--header',
             },
@@ -345,7 +343,7 @@ const AdminDashboard = () => {
             hideFooter
             disableColumnResize
             autoHeight
-            style={{ display: 'flex', flexDirection: 'column' }}
+            // style={{ display: 'flex', flexDirection: 'column' }}
             rows={users
               .filter(u => u.user_id)
               .slice(0, 3)
