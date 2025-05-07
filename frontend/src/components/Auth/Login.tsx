@@ -3,7 +3,8 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "../../config/supabase";
 
-export const Login = () => {
+export const Login = ({ view }: { view: "sign_in" | "sign_up" }) => {
+ 
   return (
     <Box
       sx={{
@@ -34,7 +35,7 @@ export const Login = () => {
           }}
           providers={["google", "github","facebook"]}
           socialLayout="horizontal"
-          view="sign_in"
+          view={view}
         />
       </Paper>
     </Box>
