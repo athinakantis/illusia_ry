@@ -368,7 +368,7 @@ const AdminDashboard = () => {
           >
             Users &amp; Roles
           </Typography>
-          <TableContainer component={Paper} variant="outlined">
+          {/* <TableContainer component={Paper} variant="outlined">
             <Table size="small">
               <TableHead>
                 <TableRow>
@@ -385,7 +385,20 @@ const AdminDashboard = () => {
                 ))}
               </TableBody>
             </Table>
-          </TableContainer>
+          </TableContainer> */}
+          <StyledDataGrid
+            hideFooter
+            disableColumnResize
+            rows={users.slice(0, 3).map((u) => ({
+              id: u.user_id,
+              name: u.display_name ?? u.email,
+              role: u.role_title ?? '—',
+            }))}
+            columns={[
+              { field: 'name', headerName: 'User', flex: 1, headerClassName: 'super-app-theme--header' },
+              { field: 'role', headerName: 'Role', flex: 1, headerClassName: 'super-app-theme--header' },
+            ]}
+          />
         </Grid>
       </Grid>
     </Stack>
