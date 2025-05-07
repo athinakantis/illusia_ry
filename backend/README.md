@@ -384,6 +384,98 @@ If no issues:
   - `400 Bad Request` – body missing `reservationIds`, not all rows deleted  
   - `404 Not Found` – booking not found or reservations don’t belong to booking
 
+## Authentication & Authorization
+
+We use a combination of **middleware** (to verify the Supabase JWT) and a reusable **AuthGuard** (to enforce role‑based access), along with a `@CurrentUser()` decorator to access the decoded token payload in controllers.
+
+### AuthGuard
+
+The `AuthGuard` factory creates a NestJS guard that checks for one or more allowed roles:
+
+```ts
+// src/guards/auth.guard.ts
+
+/** Accept one or more allowed roles */
+export function AuthGuard(...requiredRoles: string[]): Type<CanActivate> {
+  @Injectable()
+  class RoleGuard implements CanActivate {
+    async canActivate(context: ExecutionContext): Promise<boolean> {
+      const req:CustomRequest = context.switchToHttp().getRequest();
+      const auth = req.headers['authorization'];
+      if (!auth || !auth.startsWith('Bearer ')) {
+        throw new UnauthorizedException('Missing auth token');
+      }
+
+      const token = auth.slice(7);
+      let payload: JwtPayload;
+      try {
+        // Add the SUPABASE_JWT_SECRET to your environment variables
+        if (!process.env.SUPABASE_JWT_SECRET) {
+          throw new Error('JWT secret is not defined');
+        }
+        payload = verify(token, process.env.SUPABASE_JWT_SECRET!) as JwtPayload;
+      } catch(err) {
+          if (err instanceof Error) {
+              console.error('Token verification error:', err.message);
+            }
+            throw new UnauthorizedException('Invalid token');
+      }
+
+      // allow any of the required roles
+      const userRole = payload.app_metadata?.role;
+      if (!userRole || !requiredRoles.includes(userRole)) {
+        throw new ForbiddenException(
+          `Requires role: ${requiredRoles.join(' or ')}, but user has role ${userRole}`
+        );
+      }
+
+      // attach user info if you like
+        req.user = payload;
+      return true;
+    }
+  }
+
+  return mixin(RoleGuard);
+}
+```
+
+### `@CurrentUser()` decorator
+
+A parameter decorator to extract the `user` payload from the request:
+
+```ts
+// src/decorators/current-user.decorator.ts
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+
+export const CurrentUser = createParamDecorator(
+  (_data: unknown, ctx: ExecutionContext) => {
+    const req = ctx.switchToHttp().getRequest();
+    return req.user;
+  },
+);
+```
+
+### Example usage in a controller
+
+```ts
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../guards/auth.guard';
+import { CurrentUser } from '../decorators/current-user.decorator';
+
+@Controller('items')
+export class ItemsController {
+  @Get('admin')
+  @UseGuards(AuthGuard('Admin', 'Head Admin'))
+  getAllItemsForAdmin(@CurrentUser() user: any) {
+    console.log('Authenticated admin:', user);
+    // Service call...
+  }
+}
+```
+
+- **Public endpoints** remain protected by the Supabase JWT middleware but do not require specific roles.
+- **Admin endpoints** use `@UseGuards(AuthGuard(...))` to restrict by role.
+
 ## Deployment
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.

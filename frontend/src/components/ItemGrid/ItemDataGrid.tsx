@@ -1,23 +1,25 @@
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Box, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Typography, Select, MenuItem } from '@mui/material';
 import { renderCellExpand } from './RenderCellExpand';
 import { Item } from '../../types/types';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { deleteItem, fetchAllItems } from '../../slices/itemsSlice';
+import { updateItemVisibility } from '../../slices/itemsSlice';
 import { formatDate } from '../../utility/formatDate';
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
+import { selectAllCategories } from '../../slices/itemsSlice';
+import { getCategoryName } from '../../utility/getCategoryName';
 
 interface ItemDataGridProps {
   data: Item[];
 }
-
-const uuidLength = 230;
 const timeStampLength = 150;
 
 export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
   const dispatch = useAppDispatch();
+  const categories = useAppSelector(selectAllCategories);
   const handleDelete = (id: string) => {
     if (confirm('Are you sure you want to delete this item?')) {
       dispatch(deleteItem(id)).then(() => dispatch(fetchAllItems()));
@@ -28,20 +30,23 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
 
   const columns: GridColDef[] = [
     {
+      field: 'item_id',
+      headerClassName: 'super-app-theme--header',
+      headerAlign: 'left',
+      headerName: 'ID',
+      width: 100,
+      renderCell: (params) => (
+        
+        String(params.value).slice(0, 8)
+      ),
+    },
+    {
       field: 'item_name',
       headerClassName: 'super-app-theme--header',
       headerAlign: 'left',
       headerName: 'Name',
       minWidth: 150,
       renderCell: renderCellExpand,
-    },
-    {
-      field: 'item_id',// ID of the item
-      headerClassName: 'super-app-theme--header',// Class to edit the Header CSS
-      headerAlign: 'left',
-      headerName: 'ID',
-      width: uuidLength, // Adjust width as needed
-      renderCell: renderCellExpand,// Function to render the cell content with word wrapping
     },
     {
       field: 'description',
@@ -53,12 +58,29 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       renderCell: renderCellExpand,
     },
     {
-      field: 'image_path',
+      field: 'visible',
       headerClassName: 'super-app-theme--header',
-      headerName: 'Image Path',
+      headerName: 'Visibility',
       headerAlign: 'left',
-      minWidth: 240,
-      renderCell: renderCellExpand,
+      width: 120,
+      renderCell: (params) => (
+        <Select
+          value={params.row.visible ? 'Visible' : 'Hidden'}
+          size="small"
+          onChange={(e) => {
+            const newVisible = e.target.value === 'Visible';
+            if (newVisible !== params.row.visible) {
+              dispatch(
+                updateItemVisibility({ id: params.row.item_id, visible: newVisible })
+              );
+            }
+          }}
+          sx={{ fontSize: '0.85rem' }}
+        >
+          <MenuItem value="Visible">Visible</MenuItem>
+          <MenuItem value="Hidden">Hidden</MenuItem>
+        </Select>
+      ),
     },
     {
       field: 'location',
@@ -71,7 +93,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
     {
       field: 'quantity',
       headerClassName: 'super-app-theme--header',
-      headerName: 'Pcs',
+      headerName: 'Qty',
       headerAlign: 'left',
       type: 'number',
       width: 50,
@@ -82,8 +104,10 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       headerClassName: 'super-app-theme--header',
       headerName: 'Category',
       headerAlign: 'left',
-      minWidth: uuidLength,
-      renderCell: renderCellExpand,
+      minWidth: 150,
+      renderCell: (params) => (
+        getCategoryName(categories, params.value)
+        ),
     },
     {
       field: 'created_at',

@@ -11,6 +11,18 @@ export const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
+        setDateRange: (state, action) => {
+            state.selectedDateRange.start_date = action.payload.newStartDate;
+            state.selectedDateRange.end_date = action.payload.newEndDate;
+            localStorage.setItem('savedCart', JSON.stringify(state));
+            // mb not needed
+        },
+        setCartItems: (state, action) => {
+            state.cart = action.payload.cart;
+            state.selectedDateRange.start_date = action.payload.newStartDate;
+            state.selectedDateRange.end_date = action.payload.newEndDate;
+            localStorage.setItem('savedCart', JSON.stringify(state));
+        },
         addItemToCart: (state, action) => {
             // Destructure new item
             const { item, quantity, start_date, end_date } = action.payload;
@@ -20,7 +32,7 @@ export const cartSlice = createSlice({
             if (itemAlreadyInCart !== -1) {
                 state.cart[itemAlreadyInCart].quantity += quantity;
             } else {
-                const newItem = {...item, ['quantity']: quantity}
+                const newItem = { ...item, ['quantity']: quantity }
                 state.cart.push(newItem);
             }
             state.selectedDateRange = { start_date, end_date };
@@ -72,6 +84,8 @@ export const {
     removeItemFromCart,
     emptyCart,
     loadCartFromStorage,
+    setDateRange,
+    setCartItems
 } = cartSlice.actions;
 
 export const selectItemInCartById = (id: string) => (state: RootState) => {
@@ -79,56 +93,21 @@ export const selectItemInCartById = (id: string) => (state: RootState) => {
 };
 
 export const selectQtyForItemInCartByIdInDateRange =
-    (id: string, start_date: string, end_date: string) => (state: RootState) => {
+    (id: string) => (state: RootState) => {
         const itemInCartReservations = state.cart.cart.filter(
             (item) => item.item_id === id,
         );
 
         if (itemInCartReservations.length > 0) {
+            return itemInCartReservations[0].quantity;
             // if any of the instances of the items found in cart
-            if (
-                state.cart.selectedDateRange.start_date === start_date ||
-                state.cart.selectedDateRange.end_date === end_date
-            ) {
-                return itemInCartReservations[0].quantity; // item added for already existing time range
-            } else {
-                return -1; // item added for a new time range
-            }
         } else {
             return 0; // new item added to cart
         }
     };
 
-export const setDateRange = (newStartDate: string | null, newEndDate: string | null) => (state: RootState) => {
-    state.cart.selectedDateRange.start_date = newStartDate;
-    state.cart.selectedDateRange.end_date = newEndDate;
-
-}
-
-
-
 export const selectDateRange = (state: RootState) => {
     return state.cart.selectedDateRange;
 }
-/*
-export const selectQtyForItemInCartByIdInDateRange2 = (id: string, start_date: string, end_date: string) => (state: RootState) => {
-    const itemInCartReservations: LocalReservation[] = state.cart.cart.filter((item) => item.item_id === id);
-
-    if (itemInCartReservations.length > 0) {
-        // if any of the instances of the items found in cart
-
-        if ((itemInCartReservations[0].start_date === start_date) || (itemInCartReservations[0].end_date === end_date)) {
-            // item added for already existing time range
-            return itemInCartReservations[0].quantity;
-        } else {
-            // item added fora new time range
-            return -1;
-        }
-        // console.log(getOverlappingRange(parseDate(itemInCartReservations[0].start_date), parseDate(itemInCartReservations[0].end_date), parseDate(start_date), parseDate(end_date)));
-    } else {
-        // new item added to cart
-        return 0;
-    }
-}*/
 
 export default cartSlice.reducer;

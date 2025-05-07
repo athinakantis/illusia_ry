@@ -11,29 +11,7 @@ export class ItemService {
     private readonly supabaseService: SupabaseService
   ) {}
 
-  async getItems(req: CustomRequest): Promise<ApiResponse<Tables<'items'>[]>> {
-    const supabase = req['supabase'];
-    try {
-      const { data, error } = await supabase
-      .from('items')
-      .select('*');
-
-      if (error) {
-        console.error('Error retrieving items: ', error);
-        throw error;
-      }
-
-      return {
-        message: 'Items retrieved successfully',
-        data : data || [],
-      };
-    } catch (err) {
-      console.error('Unexpected error in getItems:', err);
-      throw err;
-    }
-  }
-
-  async addItem(req: CustomRequest, item: Tables<'items'>): Promise<ApiResponse<Tables<'items'>>> {
+  async addItem(req: CustomRequest, item: Partial<Tables<'items'>>): Promise<ApiResponse<Tables<'items'>>> {
 
 const supabase = req['supabase'];
 
@@ -44,6 +22,7 @@ const supabase = req['supabase'];
       location,
       quantity,
       category_id,
+      visible,
     } = item;
 
     try {
@@ -57,6 +36,7 @@ const supabase = req['supabase'];
           location,
           quantity,
           category_id,
+          visible: visible ?? true
           // Assuming created_at and item_id are handled by the database
         })
         .select() // Select the newly created item to return it
@@ -100,7 +80,7 @@ const supabase = req['supabase'];
   ): Promise<ApiResponse<Tables<'items'>>> {
     const supabase = req['supabase'];
 
-    const { item_name, description, image_path, location, quantity, category_id } = item;
+    const { item_name, description, image_path, location, quantity, category_id, visible } = item;
 
     const { data, error } = await supabase
       .from('items')
@@ -111,6 +91,7 @@ const supabase = req['supabase'];
         location,
         quantity,
         category_id,
+        visible,
       })
       .eq('item_id', itemId)
       .select()
