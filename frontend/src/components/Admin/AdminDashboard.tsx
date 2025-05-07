@@ -233,6 +233,10 @@ const AdminDashboard = () => {
           style={{ width: '100%' }}
           hideFooter
           disableColumnResize
+          slots={{ toolbar: null }}
+          getRowHeight={() => 'auto'}
+          rowHeight={50}
+          disableRowSelectionOnClick
           rows={upcomingBookings.map((booking) => ({
             id: booking.booking_id, // Used internally by DataGrid
             name: booking.booking.user.display_name,
@@ -259,12 +263,11 @@ const AdminDashboard = () => {
             },
           ]}
           pageSizeOptions={[5, 10, 25]}
-          rowHeight={50}
-          disableRowSelectionOnClick
+
         />
       </Box>
 
-      {/* ───── Recent activity & Users/Roles ───── */}
+      {/* ───── Recent activity ───── */}
       <Grid container spacing={4} mt={4} justifyContent="space-between">
         <Grid size={{ xs: 12, md: 6 }}>
           <Typography
@@ -279,21 +282,25 @@ const AdminDashboard = () => {
           <StyledDataGrid
             hideFooter
             disableColumnResize
-            rows={authActivities.filter(
-              (act) =>
+            autoHeight
+            // slots={{ toolbar: null }}
+            // getRowHeight={() => 'auto'}
+            rows={authActivities
+              .filter(act =>
                 act.display_name &&
                 act.last_sign_in_at != null &&
                 act.confirmed_at != null,
-            ).map((act) => ({
-              id: act.display_name + act.last_sign_in_at,
-              name: act.display_name,
-              lastSignIn: act.last_sign_in_at
-                ? format(parseISO(act.last_sign_in_at), 'PPpp')
-                : '—',
-              confirmed: act.confirmed_at
-                ? format(parseISO(act.confirmed_at), 'PPpp')
-                : '—',
-            }))}
+              )
+              .map((act) => ({
+                id: act.display_name + act.last_sign_in_at,
+                name: act.display_name,
+                lastSignIn: act.last_sign_in_at
+                  ? format(parseISO(act.last_sign_in_at), 'PPpp')
+                  : '—',
+                confirmed: act.confirmed_at
+                  ? format(parseISO(act.confirmed_at), 'PPpp')
+                  : '—',
+              }))}
             columns={[
               { field: 'name', headerName: 'User', flex: 1, headerClassName: 'super-app-theme--header' },
               {
@@ -322,43 +329,9 @@ const AdminDashboard = () => {
               },
             ]}
           />
-          {/* <TableContainer component={Paper} variant="outlined">
-            <Table size="small" sx={{ width: '100%' }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>User</TableCell>
-                  <TableCell>Last sign-in</TableCell>
-                  <TableCell>Confirmed</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {authActivities
-                  .filter(
-                    (act) =>
-                      act.display_name &&
-                      act.last_sign_in_at != null &&
-                      act.confirmed_at != null,
-                  )
-                  .map((act) => (
-                    <TableRow key={act.display_name + act.last_sign_in_at}>
-                      <TableCell>{act.display_name}</TableCell>
-                      <TableCell>
-                        {act.last_sign_in_at
-                          ? format(parseISO(act.last_sign_in_at), 'PPpp')
-                          : '—'}
-                      </TableCell>
-                      <TableCell>
-                        {act.confirmed_at
-                          ? format(parseISO(act.confirmed_at), 'PPpp')
-                          : '—'}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer> */}
         </Grid>
 
+        {/* ───── Users & Roles ───── */}
         <Grid size={{ xs: 12, md: 6 }}>
           <Typography
             component="p"
@@ -368,32 +341,19 @@ const AdminDashboard = () => {
           >
             Users &amp; Roles
           </Typography>
-          {/* <TableContainer component={Paper} variant="outlined">
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>User</TableCell>
-                  <TableCell>Role</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {users.slice(0, 3).map((u) => (
-                  <TableRow key={u.user_id}>
-                    <TableCell>{u.display_name ?? u.email}</TableCell>
-                    <TableCell>{u.role_title ?? '—'}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer> */}
           <StyledDataGrid
             hideFooter
             disableColumnResize
-            rows={users.slice(0, 3).map((u) => ({
-              id: u.user_id,
-              name: u.display_name ?? u.email,
-              role: u.role_title ?? '—',
-            }))}
+            autoHeight
+            style={{ display: 'flex', flexDirection: 'column' }}
+            rows={users
+              .filter(u => u.user_id)
+              .slice(0, 3)
+              .map((u) => ({
+                id: u.user_id,
+                name: u.display_name ?? u.email,
+                role: u.role_title ?? '—',
+              }))}
             columns={[
               { field: 'name', headerName: 'User', flex: 1, headerClassName: 'super-app-theme--header' },
               { field: 'role', headerName: 'Role', flex: 1, headerClassName: 'super-app-theme--header' },
