@@ -9,7 +9,8 @@ import {
 } from '@mui/material';
 // import { useAuth } from '../../hooks/useAuth';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { buildBookingOverviews, BookingOverview, computeDuration } from '../../utility/bookings';
+import { computeDuration } from '../../utility/bookings';
+// import { buildBookingOverviews, BookingOverview } from '../../utility/bookings';
 import { supabase } from '../../config/supabase';
 import { Link as MuiLink } from '@mui/material';
 
