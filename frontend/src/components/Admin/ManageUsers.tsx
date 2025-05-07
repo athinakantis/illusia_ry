@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, Tab, Box, Typography, Select, MenuItem, CircularProgress } from '@mui/material';
+import {
+  Tabs,
+  Tab,
+  Box,
+  Typography,
+  Select,
+  MenuItem,
+  CircularProgress,
+} from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
@@ -12,34 +20,24 @@ import {
 import { showCustomSnackbar } from '../CustomSnackbar';
 import { useAuth } from '../../hooks/useAuth';
 
-/**
- * Valid role & status options reflected in `usersSlice` thunks
- */
-const HEAD_ADMIN_ROLE_OPTIONS = ['Admin', 'Head Admin', 'User', 'Unapproved'] as const;
-const ADMIN_ROLE_OPTIONS = ['User', 'Unapproved'] as const; 
-const STATUS_OPTIONS = [
-  'approved',
-  'rejected',
-  'active',
-  'deactivated',
-] as const;
-type RoleOption = typeof HEAD_ADMIN_ROLE_OPTIONS[number] | typeof ADMIN_ROLE_OPTIONS[number]
-type StatusOption = typeof STATUS_OPTIONS[number];
+const STATUS_OPTIONS = ['pending', 'approved', 'rejected', 'deactivated'] as const;
+const STATUS_LABELS: Record<typeof STATUS_OPTIONS[number], string> = {
+  pending: 'Pending',
+  approved: 'Approved',
+  rejected: 'Rejected',
+  deactivated: 'Deactivated',
+};
 
 const ManageUsers: React.FC = () => {
   const dispatch = useAppDispatch();
   const users = useAppSelector(selectAllUsers);
   const loading = useAppSelector(selectUserLoading);
-  const {role} = useAuth()
-  // const role = "Head Admin"; // Hardcoded for testing, replace with useAuth() hook
-  // const role = "Admin"; // Hardcoded for testing, replace with useAuth() hook
-
-  // Tab filter state
+  // const { role } = useAuth();
+// const role = 'Admin'; // TODO: Replace with actual role from context
+const role = 'Head Admin'; // TODO: Replace with actual role from context
   const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'ACTIVE' | 'DEACTIVATED'>('ALL');
 
-  /**
-   * Pull the complete user list (with roles) once on mount
-   */
+  // Pull the complete user list (with roles) once on mount
   useEffect(() => {
     dispatch(fetchAllUsersWithRole());
   }, [dispatch]);
@@ -48,143 +46,139 @@ const ManageUsers: React.FC = () => {
     setFilter(value);
   };
 
-  /**
-   * When an admin changes the user's role
-   */
-  const handleRoleChange = async (userId: string, role: RoleOption) => {
-    try {
-      await dispatch(updateUserRole({ userId, role })).unwrap();
-      showCustomSnackbar('User role updated', 'success');
-    } catch (err: unknown) {
-      if(err instanceof Error) {
-        console.error('Error updating user role:', err.message);
-        showCustomSnackbar(err.message || 'Failed to update user role', 'error');
-      }else{
-        console.error('Error updating user role:', err);
-        showCustomSnackbar(`Failed to update user role: ${err}`, 'error');
-
-      }
-
-    }
-  };
-
-  /**
-   * When an admin changes the user's status
-   */
-  const handleStatusChange = async (userId: string, status: StatusOption) => {
-    try {
-      await dispatch(updateUserStatus({ userId, status })).unwrap();
-      showCustomSnackbar('User status updated', 'success');
-    } catch (err: unknown ){
-      if(err instanceof Error) {
-        console.error('Error updating user status:', err.message);
-        showCustomSnackbar(err.message || 'Failed to update user status', 'error');
-      }else{
-        console.error('Error updating user status:', err);
-        showCustomSnackbar(`Failed to update user status: ${err}`, 'error');
-      }
-    }
-  };
-
-  /**
-   * Apply the current tab filter
-   */
-  const filteredUsers = users.filter((u) => {
-    switch (filter) {
-      case 'PENDING':
-        return u.user_status === 'pending'
-      case 'ACTIVE':
-        return u.user_status === 'active';
-      case 'DEACTIVATED':
-        return u.user_status === 'deactivated';
-      default:
-        return true;
-    }
+  // Filter rows based on status tab
+  const filtered = users.filter((u) => {
+    if (filter === 'ALL') return true;
+    if (filter === 'PENDING') return u.user_status === 'Pending';
+    if (filter === 'ACTIVE') return u.user_status === 'Approved';
+    if (filter === 'DEACTIVATED') return u.user_status === 'Deactivated';
+    return true;
   });
 
+  // Define columns for DataGrid
   const columns: GridColDef[] = [
-    { field: 'display_name', headerName: 'Name', flex: 1, minWidth: 140 },
-    { field: 'email', headerName: 'Email', flex: 1, minWidth: 220 },
+    { field: 'display_name', headerName: 'Name', flex: 1, minWidth: 150 },
+    { field: 'email', headerName: 'Email', flex: 1, minWidth: 200 },
+
     {
       field: 'role_title',
       headerName: 'User role',
       flex: 1,
-      minWidth: 140,
+      minWidth: 180,
       renderCell: (params: GridRenderCellParams) => {
-        const currentRole = (params.row.role_title ?? 'Unapproved') as RoleOption | 'Unapproved';
-        // Determine which options this user can assign
-        const options = role === 'Head Admin'
-          ? HEAD_ADMIN_ROLE_OPTIONS
-          : role === 'Admin'
-          ? ADMIN_ROLE_OPTIONS
-          : [];
+        const currentRole = (params.row.role_title ?? 'Unapproved') as
+          | 'Unapproved'
+          | 'User'
+          | 'Admin'
+          | 'Head Admin';
 
-        // If nothing assignable or currentRole not in options, show plain text
-        if (options.length === 0 || !options.includes(currentRole as any)) {
-          return <Typography>{currentRole}</Typography>;
+        // Head Admin: full control
+        if (role === 'Head Admin') {
+          return (
+            <Select
+              value={currentRole}
+              size="small"
+              fullWidth
+              onChange={(e) =>
+                dispatch(
+                  updateUserRole({
+                    userId: params.row.user_id,
+                    role: e.target.value as any,
+                  })
+                )
+                  .unwrap()
+                  .then(() => showCustomSnackbar('Role updated', 'success'))
+                  .catch((err) =>
+                    showCustomSnackbar(err.message || 'Failed updating role', 'error')
+                  )
+              }
+              renderValue={(val) => (val === '' ? 'Unapproved' : val)}
+            >
+              {/* Show “Unapproved” disabled option */}
+              {currentRole === 'Unapproved' && (
+                <MenuItem value="" disabled>
+                  Unapproved
+                </MenuItem>
+              )}
+              {['User', 'Admin', 'Head Admin'].map((opt) => (
+                <MenuItem key={opt} value={opt}>
+                  {opt}
+                </MenuItem>
+              ))}
+            </Select>
+          );
         }
 
-        // Show Select with valid options; map 'Unapproved' to empty string so Select value is in options
-        const selectValue = options.includes(currentRole as any)
-          ? currentRole
-          : '';
+        // Admin: show a Select that always displays currentRole,
+        // and only allows promoting Unapproved → User
+        if (role === 'Admin') {
+          // Build options: always include currentRole (disabled),
+          // and if Unapproved, include 'User' as actionable.
+          const options = currentRole === 'Unapproved'
+            ? ['Unapproved', 'User']
+            : [currentRole];
+          return (
+            <Select
+              value={currentRole}
+              size="small"
+              fullWidth
+              onChange={(e) => {
+                const next = e.target.value as string;
+                if (next !== currentRole) {
+                  dispatch(updateUserRole({ userId: params.row.user_id, role: next as any }))
+                    .unwrap()
+                    .then(() => showCustomSnackbar('Role updated', 'success'))
+                    .catch((err) => showCustomSnackbar(err.message || 'Failed updating role', 'error'));
+                }
+              }}
+            >
+              {options.map((opt) => (
+                <MenuItem key={opt} value={opt} disabled={opt === currentRole}>
+                  {opt}
+                </MenuItem>
+              ))}
+            </Select>
+          );
+        }
 
-        return (
-          <Select
-            value={selectValue}
-            size="small"
-            fullWidth
-            onChange={(e) =>
-              handleRoleChange(params.row.user_id, e.target.value as RoleOption)
-            }
-            renderValue={(selected) => selected || 'Unapproved'}
-          >
-            {/* If user is currently Unapproved, show it disabled */}
-            {currentRole === 'Unapproved' && (
-              <MenuItem value="" disabled>
-                Unapproved
-              </MenuItem>
-            )}
-            {options.map((opt) => (
-              <MenuItem key={opt} value={opt}>
-                {opt}
-              </MenuItem>
-            ))}
-          </Select>
-        );
+        // Non-admins just see text
+        return <Typography>{currentRole}</Typography>;
       },
     },
+
     {
       field: 'user_status',
       headerName: 'Status',
       flex: 1,
-      minWidth: 140,
+      minWidth: 160,
       renderCell: (params: GridRenderCellParams) => {
-        const currentStatus = (params.row.user_status ?? 'pending') as StatusOption | 'pending';
-
-        return (
-          <Select
-            value={currentStatus}
-            size="small"
-            fullWidth
-            onChange={(e) =>
-              handleStatusChange(params.row.user_id, e.target.value as StatusOption)
-            }
-          >
-            {/* Show current status if it’s “pending” (disabled so it can’t be picked) */}
-            {currentStatus === 'pending' && (
-              <MenuItem value="pending" disabled>
-                Pending
-              </MenuItem>
-            )}
-
-            {STATUS_OPTIONS.map((status) => (
-              <MenuItem key={status} value={status}>
-                {status.charAt(0).toUpperCase() + status.slice(1)}
-              </MenuItem>
-            ))}
-          </Select>
-        );
+        const status = params.row.user_status as typeof STATUS_OPTIONS[number];
+        // Only Admins and Head Admins can change status
+        if (role === 'Admin' || role === 'Head Admin') {
+          return (
+            <Select
+              value={status}
+              size="small"
+              fullWidth
+              onChange={(e) =>
+                dispatch(updateUserStatus({ userId: params.row.user_id, status: e.target.value as any }))
+                  .unwrap()
+                  .then(() => showCustomSnackbar('Status updated', 'success'))
+                  .catch((err) =>
+                    showCustomSnackbar(err.message || 'Failed updating status', 'error')
+                  )
+              }
+            >
+              {STATUS_OPTIONS.map((opt) => (
+                <MenuItem key={opt} value={opt}>
+                  {STATUS_LABELS[opt]}
+                </MenuItem>
+              ))}
+            </Select>
+          );
+        }
+        // other roles see text only
+        return <Typography>{STATUS_LABELS[status]}</Typography>;
       },
     },
   ];
@@ -196,13 +190,7 @@ const ManageUsers: React.FC = () => {
       </Typography>
 
       {/* Filter tabs */}
-      <Tabs
-        value={filter}
-        onChange={handleTabChange}
-        textColor="primary"
-        indicatorColor="primary"
-        sx={{ mb: 2 }}
-      >
+      <Tabs value={filter} onChange={handleTabChange} textColor="primary" indicatorColor="primary" sx={{ mb: 2 }}>
         <Tab value="ALL" label="All" />
         <Tab value="PENDING" label="Pending Approvals" />
         <Tab value="ACTIVE" label="Active" />
@@ -210,61 +198,30 @@ const ManageUsers: React.FC = () => {
       </Tabs>
 
       {/* Data grid */}
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <DataGrid
-          rows={filteredUsers}
-          columns={columns}
-          getRowId={(row) => row.user_id}
-          autoHeight
-          pageSizeOptions={[5, 10, 25,50, 100]}
-          disableRowSelectionOnClick
-          /* Couldnt get the Generic Datagrid to work with me so copied the CSS */
-          sx={{
-            // Header CSS
-            '& .super-app-theme--header': {
-                backgroundColor: 'secondary.light',
-                color: 'text.light',
-                fontSize: '1.1rem',
-            },
-            // Individual Cell CSS
-            '& .MuiDataGrid-cell': {
-                pl: 2,// padding left
-
-            },
-            // Footer CSS
-            '& .MuiDataGrid-footerContainer': {
-                backgroundColor: 'secondary.light',
-
-            },
-            // Hover CSS
-            '& .MuiDataGrid-row:hover': {
-                backgroundColor: 'background.lightgrey',
-                transition: 'background-color 0.3s ease',
-            },
-            // Focus CSS
-            '& .MuiDataGrid-cell:focus': {
-                outline: 'none',
-            },
-            // Selected Row CSS
-            '& .MuiDataGrid-row.Mui-selected': {
-                outline: '2px solid #7b1fa2',
-                outlineOffset: '-2px',
-            },
-            // Even Row CSS
-            '& .MuiDataGrid-row:nth-of-type(even)': {
-                backgroundColor: 'background.lightgrey',
-            },
-            // Odd Row CSS
-            '& .MuiDataGrid-row:nth-of-type(odd)': {
-                backgroundColor: 'background.default',
-                border: '1px solid',
-                borderColor: 'secondary.main',
-            },
-        }}
-        />
-      )}
+      <Box sx={{ height: 500, width: '100%', mt: 2 }}>
+        {loading ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          <DataGrid
+            rows={filtered}
+            getRowId={(row) => row.user_id}
+            columns={columns}
+            initialState={{
+              pagination: { paginationModel: { pageSize: 10, page: 0 } },
+            }}
+            pageSizeOptions={[5, 10, 20]}
+          />
+        )}
+      </Box>
     </Box>
   );
 };

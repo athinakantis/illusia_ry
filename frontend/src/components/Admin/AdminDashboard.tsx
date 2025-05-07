@@ -210,7 +210,7 @@ const AdminDashboard = () => {
                   <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{booking.booking.status}</TableCell>
                   <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{computeDuration(booking.start_date, booking.end_date)} Days</TableCell>
                   <TableCell>{booking.start_date} - {booking.end_date}</TableCell>
-                  <TableCell><Link to={`/booking/${booking.booking_id}`}>Booking</Link></TableCell>
+                  <TableCell><Link to={`/bookings/${booking.booking_id}`}>Booking</Link></TableCell>
                 </TableRow>
               ))}
             </TableBody>
