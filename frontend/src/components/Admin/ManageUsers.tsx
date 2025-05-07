@@ -20,12 +20,13 @@ import {
 import { showCustomSnackbar } from '../CustomSnackbar';
 import { useAuth } from '../../hooks/useAuth';
 
-const STATUS_OPTIONS = ['pending', 'approved', 'rejected', 'deactivated'] as const;
+const STATUS_OPTIONS = ['pending', 'approved', 'rejected', 'deactivated','active'] as const;
 const STATUS_LABELS: Record<typeof STATUS_OPTIONS[number], string> = {
   pending: 'Pending',
   approved: 'Approved',
   rejected: 'Rejected',
   deactivated: 'Deactivated',
+  active: 'Active',
 };
 
 const ManageUsers: React.FC = () => {
@@ -33,8 +34,8 @@ const ManageUsers: React.FC = () => {
   const users = useAppSelector(selectAllUsers);
   const loading = useAppSelector(selectUserLoading);
   // const { role } = useAuth();
-// const role = 'Admin'; // TODO: Replace with actual role from context
-const role = 'Head Admin'; // TODO: Replace with actual role from context
+const role = 'Admin'; // TODO: Replace with actual role from context
+// const role = 'Head Admin'; // TODO: Replace with actual role from context
   const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'ACTIVE' | 'DEACTIVATED'>('ALL');
 
   // Pull the complete user list (with roles) once on mount
@@ -83,7 +84,7 @@ const role = 'Head Admin'; // TODO: Replace with actual role from context
                 dispatch(
                   updateUserRole({
                     userId: params.row.user_id,
-                    role: e.target.value as any,
+                    role: e.target.value as 'User' | 'Admin' | 'Head Admin',
                   })
                 )
                   .unwrap()
@@ -92,7 +93,7 @@ const role = 'Head Admin'; // TODO: Replace with actual role from context
                     showCustomSnackbar(err.message || 'Failed updating role', 'error')
                   )
               }
-              renderValue={(val) => (val === '' ? 'Unapproved' : val)}
+              renderValue={(val) => (val)}
             >
               {/* Show “Unapproved” disabled option */}
               {currentRole === 'Unapproved' && (
@@ -122,10 +123,11 @@ const role = 'Head Admin'; // TODO: Replace with actual role from context
               value={currentRole}
               size="small"
               fullWidth
+              disabled={currentRole !== 'Unapproved'}
               onChange={(e) => {
-                const next = e.target.value as string;
+                const next = e.target.value as 'User' | 'Admin' | 'Head Admin';
                 if (next !== currentRole) {
-                  dispatch(updateUserRole({ userId: params.row.user_id, role: next as any }))
+                  dispatch(updateUserRole({ userId: params.row.user_id, role: next}))
                     .unwrap()
                     .then(() => showCustomSnackbar('Role updated', 'success'))
                     .catch((err) => showCustomSnackbar(err.message || 'Failed updating role', 'error'));
@@ -161,7 +163,7 @@ const role = 'Head Admin'; // TODO: Replace with actual role from context
               size="small"
               fullWidth
               onChange={(e) =>
-                dispatch(updateUserStatus({ userId: params.row.user_id, status: e.target.value as any }))
+                dispatch(updateUserStatus({ userId: params.row.user_id, status: e.target.value as typeof STATUS_OPTIONS[number] }))
                   .unwrap()
                   .then(() => showCustomSnackbar('Status updated', 'success'))
                   .catch((err) =>
