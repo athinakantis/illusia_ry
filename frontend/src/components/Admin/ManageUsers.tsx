@@ -52,16 +52,20 @@ const ManageUsers: React.FC = () => {
 
   // Handle role change
   const handleRoleChange = async (userId: string, role:'User' | 'Admin' | 'Head Admin') => {
+    let changedUser = users.find((u) => u.user_id === userId);
     try {
       await dispatch(updateUserRole({ userId, role })).unwrap();
-      showCustomSnackbar('User role updated', 'success');
+      // Find the user by ID to get their display name
+      changedUser = users.find((u) => u.user_id === userId);
+      const name = changedUser?.display_name ?? 'User';
+      showCustomSnackbar(`${name}'s role changed to ${role}`, 'success');
       // Refresh the grid data without reloading the page
     } catch (err: unknown) {
       // Handle error
       if (err instanceof Error) {
         console.error('Error updating user role:', err.message);
-        showCustomSnackbar(err.message || 'Failed to update user role', 'error');
-      }else{
+        showCustomSnackbar(`${changedUser?.display_name ?? 'User'}: ${err.message}`, 'error');
+      } else {
         console.error('Error updating user role:', err);
         showCustomSnackbar(`Failed to update user role: ${err}`, 'error');
       }
@@ -70,27 +74,34 @@ const ManageUsers: React.FC = () => {
   // --------------------------------------------------------------------------------------------------------------
   // Handle status change
   const handleStatusChange = async (userId: string, status: 'approved' | 'rejected' | 'deactivated' | 'active') => {
+    let changedUser = users.find((u) => u.user_id === userId);
     try {
       await dispatch(updateUserStatus({ userId, status })).unwrap();
-      showCustomSnackbar('User status updated', 'success');
+      // Find the user by ID to get their display name
+      changedUser = users.find((u) => u.user_id === userId);
+      const name = changedUser?.display_name ?? `User: ${userId}`;
+      showCustomSnackbar(`${name}'s status changed to ${STATUS_LABELS[status]}`, 'success');
       // Refresh the grid data without reloading the page
     } catch (err: unknown) {
       // Handle error
       if (err instanceof Error) {
         console.error('Error updating user status:', err.message);
-        showCustomSnackbar(err.message || 'Failed to update user status', 'error');
-      }else{
+        showCustomSnackbar(`${changedUser?.display_name ?? `User ${userId}}`}: ${err.message}`, 'error');
+      } else {
         console.error('Error updating user status:', err);
         showCustomSnackbar(`Failed to update user status: ${err}`, 'error');
       }
     }
   };
   // Filter rows based on status tab
+  // Here we can change what each tab shows
   const filtered = users.filter((u) => {
     if (filter === 'ALL') return true;
-    if (filter === 'PENDING') return u.user_status === 'Pending';
-    if (filter === 'ACTIVE') return u.user_status === 'Approved';
-    if (filter === 'DEACTIVATED') return u.user_status === 'Deactivated';
+    // Lists pending users
+    if (filter === 'PENDING') return u.user_status === 'pending';
+    // Lists all active users(we need to figure out our database structure)
+    if (filter === 'ACTIVE') return u.user_status === 'active'|| u.user_status === 'approved'; 
+    if (filter === 'DEACTIVATED') return u.user_status === 'deactivated';
     return true;
   });
 
