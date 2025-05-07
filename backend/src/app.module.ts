@@ -23,6 +23,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { TagModule } from './modules/tags/tags.module';
 import { CategoryController } from './modules/categories/categories.controller';
 import { AccountModule } from './modules/account/account.module';
+import { AccountController } from './modules/account/account.controller';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -69,7 +70,7 @@ export class AppModule implements NestModule {
       AdminController,
       TagController,
       CategoryController,
-      AccountModule
+      AccountController
       );
   }
 }
