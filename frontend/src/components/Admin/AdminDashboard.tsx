@@ -29,7 +29,7 @@ import { bookingsApi } from '../../api/bookings';
 import { UpcomingBooking } from '../../types/types';
 // - Additions for StyledDataGrid
 import { StyledDataGrid } from '../CustomComponents/StyledDataGrid';
-import { GridColDef } from '@mui/x-data-grid';
+// import { GridColDef } from '@mui/x-data-grid';
 
 // ─── Re-usable stat card ────────────────────────────────────
 const StatCard: React.FC<{ label: string; value: number | string }> = ({
@@ -128,7 +128,8 @@ const AdminDashboard = () => {
     () => buildBookingOverviews(bookings, reservations, users, items),
     [bookings, reservations, users, items],
   );
-  console.log("upcomingBookings:", upcomingBookings);
+  // console.log("Overviews" + overviews);
+  // console.log("upcomingBookings:", upcomingBookings);
 
   /* ────────── Render ────────── */
   return (
@@ -230,9 +231,9 @@ const AdminDashboard = () => {
         </TableContainer> */}
         <StyledDataGrid
           style={{ width: '100%' }}
-
           hideFooter
-          disableColumnResize rows={upcomingBookings.map((booking) => ({
+          disableColumnResize
+          rows={upcomingBookings.map((booking) => ({
             id: booking.booking_id, // Used internally by DataGrid
             name: booking.booking.user.display_name,
             status: booking.booking.status,
@@ -274,7 +275,54 @@ const AdminDashboard = () => {
           >
             Recent activity
           </Typography>
-          <TableContainer component={Paper} variant="outlined">
+          {/* User, Last sign-in, Confirmed */}
+          <StyledDataGrid
+            hideFooter
+            disableColumnResize
+            rows={authActivities.filter(
+              (act) =>
+                act.display_name &&
+                act.last_sign_in_at != null &&
+                act.confirmed_at != null,
+            ).map((act) => ({
+              id: act.display_name + act.last_sign_in_at,
+              name: act.display_name,
+              lastSignIn: act.last_sign_in_at
+                ? format(parseISO(act.last_sign_in_at), 'PPpp')
+                : '—',
+              confirmed: act.confirmed_at
+                ? format(parseISO(act.confirmed_at), 'PPpp')
+                : '—',
+            }))}
+            columns={[
+              { field: 'name', headerName: 'User', flex: 1, headerClassName: 'super-app-theme--header' },
+              {
+                field: 'lastSignIn', headerName: 'Last sign-in', flex: 1, headerClassName: 'super-app-theme--header',
+                renderCell: (params) => (
+                  <div style={{
+                    whiteSpace: 'normal',
+                    lineHeight: '20px',
+                    padding: '8px 0'
+                  }}>
+                    {params.value}
+                  </div>
+                )
+              },
+              {
+                field: 'confirmed', headerName: 'Confirmed', flex: 1, headerClassName: 'super-app-theme--header',
+                renderCell: (params) => (
+                  <div style={{
+                    whiteSpace: 'normal',
+                    lineHeight: '20px',
+                    padding: '8px 0'
+                  }}>
+                    {params.value}
+                  </div>
+                )
+              },
+            ]}
+          />
+          {/* <TableContainer component={Paper} variant="outlined">
             <Table size="small" sx={{ width: '100%' }}>
               <TableHead>
                 <TableRow>
@@ -308,7 +356,7 @@ const AdminDashboard = () => {
                   ))}
               </TableBody>
             </Table>
-          </TableContainer>
+          </TableContainer> */}
         </Grid>
 
         <Grid size={{ xs: 12, md: 6 }}>
