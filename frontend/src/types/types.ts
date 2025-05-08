@@ -9,6 +9,7 @@ export interface Item {
   location: string;
   quantity: number;
   created_at: string;
+  visible?: boolean;
 }
 
 export interface ItemState {
@@ -34,6 +35,7 @@ export interface FormData {
   category_id: string; // Assuming this holds the ID, maybe from a select input
   location: string;
   quantity: number;
+  visible?: boolean;
   // Add other relevant fields from your 'items' table if needed
 }
 

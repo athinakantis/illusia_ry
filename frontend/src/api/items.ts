@@ -2,13 +2,18 @@ import { TablesInsert } from '../types/supabase.type';
 import { ApiResponse, Item } from '../types/types';
 import { api } from './axios';
 
-export type CreateItemPayload = Omit<TablesInsert<'items'>, 'item_id' | 'created_at' | 'user_id'> & { image_path?: string | null };
+export type CreateItemPayload = Omit<TablesInsert<'items'>, 'item_id' | 'created_at' | 'user_id'> & { image_path?: string | null, visible?: boolean };
 
 export const itemsApi = {
     getAllItems: (): Promise<ApiResponse<Item[]>> =>
         api.get('items',
             { headers: { 'Access-Control-Allow-Origin': '*' } }
         ),
+
+    getAllItemsAdmin: (): Promise<ApiResponse<Item[]>> =>
+        api.get('items/admin', {
+            headers: { 'Access-Control-Allow-Origin': '*' }
+        }),
 
     getItembyId: (id: string): Promise<ApiResponse<Item>> => {
         return api.get(`/items/${id}`)
@@ -25,4 +30,3 @@ export const itemsApi = {
         return api.delete(`/items/${id}`)
     }
 };
-

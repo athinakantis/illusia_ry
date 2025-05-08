@@ -9,6 +9,7 @@ export const checkAvailabilityForItemOnDates = (
     quantity: number,
     start_date: string,
     end_date: string,
+    includeCart: boolean = true
 ) =>
     createSelector(
         [
@@ -18,17 +19,17 @@ export const checkAvailabilityForItemOnDates = (
                 start_date,
                 end_date,
             ),
-            selectQtyForItemInCartByIdInDateRange(item_id, start_date, end_date),
+            selectQtyForItemInCartByIdInDateRange(item_id),
         ],
         (item, itemQtyInReservatios, itemQtyInCart): Result => {
 
             const overallItemQty = (item?.quantity ? item.quantity : 0);
-            const availableQuantityOfItem = overallItemQty - itemQtyInCart - itemQtyInReservatios;
+            const availableQuantityOfItem = overallItemQty - itemQtyInReservatios - (includeCart ? itemQtyInCart : 0);
 
-            if (overallItemQty === itemQtyInCart)
+            if ((includeCart) && (overallItemQty === itemQtyInCart))
                 return { severity: 'warning', message: 'Max quantity of the item is already in cart' };
 
-            if (availableQuantityOfItem === 0) {
+            if (includeCart && availableQuantityOfItem === 0) {
                 if (itemQtyInCart === 0) return { severity: 'warning', message: "Item is not available for selected dates" };
                 else return { severity: 'warning', message: "Max quantity of the item for the dates is already in cart" };
 
@@ -41,7 +42,7 @@ export const checkAvailabilityForItemOnDates = (
                 ? { severity: 'success', data: true }
                 : {
                     severity: 'warning',
-                    message: `Not enough of item available for selected dates. Only available ${availableQuantityOfItem}`,
+                    message: `Not enough of item available for selected dates. Only available ${overallItemQty - itemQtyInReservatios}`,
                 };
         },
 

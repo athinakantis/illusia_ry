@@ -1,4 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
+import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 import { Item, ItemState } from '../types/types';
 import { CreateItemPayload, itemsApi } from '../api/items';
 import { RootState } from '../store/store';
@@ -17,6 +18,13 @@ export const fetchAllItems = createAsyncThunk(
   'items/fetchAllItems',
   async () => {
     const response = await itemsApi.getAllItems();
+    return response;
+  }
+);
+export const fetchAllItemsAdmin = createAsyncThunk(
+  'items/fetchAllItemsAdmin',
+  async () => {
+    const response = await itemsApi.getAllItemsAdmin();
     return response;
   }
 );
@@ -62,6 +70,14 @@ export const updateItem = createAsyncThunk(
   }
 );
 
+export const updateItemVisibility = createAsyncThunk(
+  'items/updateItemVisibility',
+  async ({ id, visible }: { id: string; visible: boolean }) => {
+    const response = await itemsApi.updateItem(id, { visible });
+    return response;
+  }
+);
+
 export const itemsSlice = createSlice({
   name: 'items',
   initialState,
@@ -78,6 +94,17 @@ export const itemsSlice = createSlice({
       state.loading = false
       state.error = 'Could not fetch items'
     })
+    builder.addCase(fetchAllItemsAdmin.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchAllItemsAdmin.fulfilled, (state, action) => {
+      state.loading = false;
+      state.items = action.payload.data;
+    });
+    builder.addCase(fetchAllItemsAdmin.rejected, (state) => {
+      state.loading = false;
+      state.error = 'Could not fetch admin items';
+    });
     builder.addCase(fetchAllCategories.pending, (state) => {
       state.loading = true
     })
@@ -120,6 +147,17 @@ export const itemsSlice = createSlice({
         }
       }
     })
+    // ─── toggle visibility ─────────────────────────────────────────────
+    builder.addCase(updateItemVisibility.fulfilled, (state, action) => {
+      const updatedItem = action.payload?.data;
+      if (updatedItem) {
+        const idx = state.items.findIndex((it) => it.item_id === updatedItem.item_id);
+        if (idx !== -1) state.items[idx] = updatedItem;
+        if (state.item && state.item.item_id === updatedItem.item_id) {
+          state.item = updatedItem;
+        }
+      }
+    });
   }
 })
 
@@ -129,6 +167,10 @@ export const selectAllCategories = (state: RootState) => state.items.categories
 export const selectAllItems = (state: RootState) => {
   return state.items.items;
 }
+export const selectVisibleItems = createSelector(
+  selectAllItems,
+  (items) => items.filter((i) => i.visible),
+);
 
 export const selectItemById = (id: string) => (state: RootState) => {
   return state.items.items.find((item) => item.item_id === id);
