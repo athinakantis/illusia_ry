@@ -56,7 +56,7 @@ function Items() {
   const [offset, setOffset] = useState(0);
   const navigate = useNavigate();
 
-  // eslint-disable-next-line
+
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const reservations = useAppSelector(selectAllReservations);
@@ -68,6 +68,7 @@ function Items() {
     if (reservations.length < 1) {
       dispatch(fetchFutureReservations());
     }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -77,6 +78,7 @@ function Items() {
         end: parseDate(selectedDateRange.end_date),
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 

@@ -1,4 +1,5 @@
 import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import { Link } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
 import { useState } from 'react';
@@ -79,6 +80,10 @@ const PersonMenu = () => {
       >
         <MenuItem component={Link} to="/bookings" onClick={handleMenuClose}>
           My bookings
+        </MenuItem>
+        <MenuItem component={Link} to="/admin/dashboard" onClick={handleMenuClose}>
+          <DashboardIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" /> 
+          Dashboard
         </MenuItem>
         <MenuItem
           sx={{ height: '100%' }}

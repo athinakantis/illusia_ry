@@ -19,6 +19,7 @@ function SingleBooking() {
   useEffect(() => {
     if (!booking_id) return;
     if (!booking_selector) dispatch(fetchBooking(booking_id));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   if (!booking_selector) return (

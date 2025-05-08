@@ -46,7 +46,7 @@ export const fetchUserWithRoleById = createAsyncThunk<User, string>(
   },
 );
 
-export const updateUserStatus = createAsyncThunk<User, {userId: string; status: 'approved' | 'rejected'}>(
+export const updateUserStatus = createAsyncThunk<User, {userId: string; status: 'approved' | 'rejected' | 'deactivated' | 'active'}>(
   'users/updateUserStatus',
   async ({ userId, status }) => {
     const response = await usersApi.updateUserStatus(userId, status);
@@ -56,6 +56,18 @@ export const updateUserStatus = createAsyncThunk<User, {userId: string; status: 
     
     const data = response.data;
 
+    return Array.isArray(data) ? data[0] : data;
+  },
+);
+
+export const updateUserRole = createAsyncThunk<User, {userId: string; role: 'Admin' | 'User' | 'Head Admin'}>(
+  'users/updateUserRole',
+  async ({ userId, role }) => {
+    const response = await usersApi.updateUserRole(userId, role);
+    if (!response.data) {
+      throw new Error('Empty response from server');
+    }
+    const data = response.data;
     return Array.isArray(data) ? data[0] : data;
   },
 );
@@ -124,10 +136,7 @@ export const usersSlice = createSlice({
       state.error = 'Could not fetch users with roles';
     });
 
-    builder.addCase(updateUserStatus.pending, (state) => {
-      state.loading = true;
-      state.status = 'loading';
-    });
+   
     builder.addCase(updateUserStatus.fulfilled, (state, action) => {
       state.loading = false;
       state.status = 'succeeded';
@@ -146,6 +155,24 @@ export const usersSlice = createSlice({
       state.loading = false;
       state.status = 'failed';
       state.error = 'Could not update user status';
+    });
+  
+    builder.addCase(updateUserRole.fulfilled, (state, action) => {
+      state.loading = false;
+      state.status = 'succeeded';
+      const updatedUser: User = action.payload;
+      const idx = state.users.findIndex((u) => u.user_id === updatedUser.user_id);
+      if (idx !== -1) {
+        state.users[idx] = updatedUser;
+      }
+      if (state.user && state.user.user_id === updatedUser.user_id) {
+        state.user = updatedUser;
+      }
+    });
+    builder.addCase(updateUserRole.rejected, (state) => {
+      state.loading = false;
+      state.status = 'failed';
+      state.error = 'Could not update user role';
     });
   },
 });

@@ -40,7 +40,7 @@ import {
   selectAllReservations,
 } from "../../../slices/reservationsSlice";
 import CollapsibleDetail from "./CollapsibleDetail";
-import SnackBar from "../../../utility/SnackBar";
+import { CustomSnackbar } from "../../CustomSnackbar";
 import { useSearchParams } from 'react-router-dom';
 
 /**
@@ -95,27 +95,26 @@ const AdminBookings = () => {
     setMenuBookingId(null);
   };
 
-  // ─── Snackbar state ─────────────────────────────────────────
-  const [snackOpen, setSnackOpen] = useState(false);
-  const [snackMsg, setSnackMsg] = useState('');
-  const [snackSeverity, setSnackSeverity] = useState<'success' | 'error'>('success');
-
   // Placeholder mutations
   const approveBooking = () => {
     if (!menuBookingId) return;
     dispatch(updateBookingStatus({ id: menuBookingId, status: "approved" }));
     handleMenuClose();
-    setSnackMsg('Booking approved');
-    setSnackSeverity('success');
-    setSnackOpen(true);
+    CustomSnackbar({
+      message: 'Booking approved',
+      variant: 'success',
+      onClose:() => {},
+    });
   };
   const rejectBooking = () => {
     if (!menuBookingId) return;
     dispatch(updateBookingStatus({ id: menuBookingId, status: "rejected" }));
     handleMenuClose();
-    setSnackMsg('Booking rejected');
-    setSnackSeverity('error');
-    setSnackOpen(true);
+    CustomSnackbar({
+      message: 'Booking rejected',
+      variant: 'error',
+      onClose: () => {}})
+
   };
 
   // ─── Side Effects ──────────────────────────────────
@@ -136,6 +135,7 @@ const AdminBookings = () => {
   useEffect(() => {
     const search = searchParams.get('filter')
     if (search && VALID_FILTERS.includes(search)) setFilter(search)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ─── Memoised filtered list ───────────────────────────────────
@@ -306,13 +306,7 @@ const AdminBookings = () => {
         </Menu>
       </Paper>
 
-      <SnackBar
-        open={snackOpen}
-        message={snackMsg}
-        severity={snackSeverity}
-        duration={3500}
-        onClose={() => setSnackOpen(false)}
-      />
+      
     </Container>
   );
 };

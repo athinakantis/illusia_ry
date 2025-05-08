@@ -92,13 +92,7 @@ const AdminDashboard = () => {
         .then((result) => {
           setUpcomingBookings(result.data)
         });
-  }, [
-    dispatch,
-    users.length,
-    items.length,
-    bookings.length,
-    reservations.length,
-  ]);
+  }, [dispatch, users.length, items.length, bookings.length, reservations.length, upcomingBookings.length]);
 
   // Fetch user activity from Supabase(temporary)
   useEffect(() => {
@@ -197,7 +191,7 @@ const AdminDashboard = () => {
             Approve bookings
           </Button>
           <Button
-            variant="rounded" color="grey"
+            component={Link} to="/admin/users" variant="rounded" color="grey"
             sx={{
               height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
               pl: 4, pr: 4, textTransform: 'capitalize'
