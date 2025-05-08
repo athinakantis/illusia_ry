@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { verify } from 'jsonwebtoken';
 import type { JwtPayload } from 'jsonwebtoken';
-import { CustomRequest } from 'src/types/request.type';
+import { CustomRequest } from '../types/request.type';
 
 /** Accept one or more allowed roles */
 export function AuthGuard(...requiredRoles: string[]): Type<CanActivate> {
