@@ -186,7 +186,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
         initialState={{
           pagination: { paginationModel: { pageSize: 10, page: 0 } },
           sorting: {
-            sortModel: [{ field: 'name', sort: 'desc' }],
+            sortModel: [{ field: 'item_name', sort: 'desc' }],
             
           },
         }}
