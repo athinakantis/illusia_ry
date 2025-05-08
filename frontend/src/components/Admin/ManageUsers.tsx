@@ -21,7 +21,7 @@ import { showCustomSnackbar } from '../CustomSnackbar';
 import { useAuth } from '../../hooks/useAuth';
 
 
-const STATUS_OPTIONS = ['pending', 'approved', 'rejected', 'deactivated','active'] as const;
+const STATUS_OPTIONS = ['pending', 'approved', 'rejected', 'deactivated', 'active'] as const;
 const STATUS_LABELS: Record<typeof STATUS_OPTIONS[number], string> = {
   pending: 'Pending',
   approved: 'Approved',
@@ -41,9 +41,8 @@ const ManageUsers: React.FC = () => {
   // Fetch all users with role on component mount
   useEffect(() => {
     dispatch(fetchAllUsersWithRole());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
 // ---------------------  Handlers  --------------------------------------------------------------
 
   const handleTabChange = (_: React.SyntheticEvent, value: 'ALL' | 'PENDING' | 'ACTIVE' | 'DEACTIVATED') => {
@@ -116,7 +115,7 @@ const ManageUsers: React.FC = () => {
       flex: 1,
       minWidth: 180,
       renderCell: (params: GridRenderCellParams) => {
-       
+
         const currentRole = (params.row.role_title ?? 'Unapproved') as
           | 'Unapproved'
           | 'User'
@@ -164,7 +163,7 @@ const ManageUsers: React.FC = () => {
               type="button"
               value={currentRole}
               size="small"
-              fullWidth
+              sx={{ width: 150 }}
               disabled={currentRole !== 'Unapproved'}
               onChange={(e) => {
                 handleRoleChange(params.row.user_id, e.target.value as 'User' | 'Admin' | 'Head Admin');
@@ -195,10 +194,10 @@ const ManageUsers: React.FC = () => {
               type="button"
               value={status}
               size="small"
-              fullWidth
-              onChange={(e) =>{
-                  handleStatusChange(params.row.user_id, e.target.value as 'approved' | 'rejected' | 'deactivated' | 'active');
-                }}
+              sx={{ width: 150 }}
+              onChange={(e) => {
+                handleStatusChange(params.row.user_id, e.target.value as 'approved' | 'rejected' | 'deactivated' | 'active');
+              }}
             >
               {STATUS_OPTIONS.map((opt) => (
                 <MenuItem key={opt} value={opt}>
@@ -215,7 +214,8 @@ const ManageUsers: React.FC = () => {
   ];
 
   return (
-    <Box className="container" sx={{ mt: 4 }}>
+    <Box className="container" sx={{ mt: 4, maxWidth: 1200, mx: 'auto' }}>
+      <Typography component='h1' variant='heading_secondary_bold' mb={4} gutterBottom>
       <Typography variant="h4" gutterBottom>
         Manage Users
       </Typography>
@@ -227,7 +227,6 @@ const ManageUsers: React.FC = () => {
         <Tab value="ACTIVE" label="Active" />
         <Tab value="DEACTIVATED" label="Deactivated" />
       </Tabs>
-    
 
       {/* Data grid */}
       <Box sx={{ height: 500, width: '100%', mt: 2 }}>
