@@ -27,7 +27,7 @@ import {
 import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
 import { addBooking, fetchUserBookings } from '../slices/bookingsSlice';
 import { useAuth } from '../hooks/useAuth';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { showCustomSnackbar } from '../components/CustomSnackbar';
 import { store } from '../store/store';
 import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
@@ -48,6 +48,7 @@ function Cart() {
 	const [qtyCheckErrors] = useState<Record<string, string>>({});
 	const [incorrectCart, setIncorrectCart] = useState(false);
 	const [localCart, setLocalCart] = useState<ItemWithQuantity[]>([]);
+	const navigate = useNavigate()
 
 	useEffect(() => {
 		updateRangeWithSelectedRange();
@@ -227,7 +228,6 @@ function Cart() {
 	const handleBrokenImg = (
 		e: React.SyntheticEvent<HTMLImageElement, Event>,
 	) => {
-		console.log('handle error');
 		(e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
 	};
 
@@ -241,9 +241,12 @@ function Cart() {
 		if (addBooking.rejected.match(resultAction)) {
 			showCustomSnackbar(resultAction.payload ?? 'unknown error', 'error');
 		} else {
-			showCustomSnackbar('Booking created', 'success');
+			showCustomSnackbar('Your booking has been created!', 'success');
 			dispatch(emptyCart());
 			dispatch(fetchUserBookings(user.id));
+
+			// Navigate to new booking
+			navigate(`/bookings/${resultAction.payload.booking_id}`)
 		}
 	};
 
