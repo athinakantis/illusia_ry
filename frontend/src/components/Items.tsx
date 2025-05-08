@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectAllCategories,
+  selectItemsLoading,
   selectVisibleItems,
 } from '../slices/itemsSlice';
 import {
@@ -45,9 +46,11 @@ import {
 } from '@internationalized/date';
 import { Item } from '../types/types';
 import { showCustomSnackbar } from './CustomSnackbar';
+import Spinner from './Spinner';
 
 function Items() {
   const items = useAppSelector(selectVisibleItems);
+  const itemsLoading = useAppSelector(selectItemsLoading);
   const categories = useAppSelector(selectAllCategories);
   const dispatch = useAppDispatch();
   const [offset, setOffset] = useState(0);
@@ -75,7 +78,6 @@ function Items() {
       });
     }
   }, []);
-
 
 
   const addToCart = (item: Item, quantity: number = 1) => {
@@ -290,82 +292,99 @@ function Items() {
           },
         }}
       >
-        <Stack
-          direction={'row'}
-          flexWrap={'wrap'}
-          gap={3}
-          justifySelf={'center'}
-          padding={'none'}
-          textAlign={'start'}
-        >
-          {filteredItems.slice(offset, offset + 8).map((item) => (
-            <Card
-              component={Link}
-              to={`/items/${item.item_id}`}
-              key={item.item_id}
-              sx={{
-                width: 280,
-                minHeight: 300,
-                boxShadow: 'none',
-                textDecoration: 'none',
-                flex: 1,
-                flexBasis: 230,
-                maxWidth: 300
-              }}
-            >
-              <Box sx={{
-                height: 300,
-                borderRadius: '14px',
-                bgcolor: 'background.lightgrey',
-                overflow: 'hidden',
-                '&:hover img': { scale: 1.03 }
-              }}>
-                <CardMedia
-                  component="img"
-                  image={item.image_path || '/src/assets/broken_img.png'}
-                  onError={handleBrokenImg}
-                  sx={{
-                    height: '100%',
-                    transition: 'scale 200ms'
-                  }}
-                />
-              </Box>
-              <CardContent
-                sx={{
-                  padding: '0.5rem 0',
-                  mb: '1rem',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Box
-                  sx={{ width: '80%', alignItems: 'center', display: 'flex' }}
-                >
-                  <Typography variant="body1" sx={{ width: '70%' }}>
-                    {item.item_name}
-                  </Typography>
-                </Box>
 
-                <CardActions
-                  sx={{ padding: 0, justifySelf: 'end', width: 'fit-content' }}
+        {itemsLoading ?
+          <Box sx={{ margin: '0 auto' }}>
+            <Spinner />
+          </Box>
+          :
+          <>
+            {filteredItems.length > 0 ?
+              <>
+                <Stack
+                  direction={'row'}
+                  flexWrap={'wrap'}
+                  gap={3}
+                  justifySelf={'center'}
+                  padding={'none'}
+                  textAlign={'start'}
                 >
-                  <Button
-                    sx={{ padding: '3px', minWidth: 'fit-content' }}
-                    onClick={(e) => {
-                      // Stop add-to-cart btn from navigating elsewhere
-                      e.preventDefault();
-                      e.stopPropagation();
-                      addToCart(item);
-                    }}
-                  >
-                    <AddCircleOutlineOutlinedIcon />
-                  </Button>
-                </CardActions>
-              </CardContent>
-            </Card>
-          ))}
-        </Stack>
-        <Pagination items={filteredItems} setOffset={setOffset} />
+                  {filteredItems.slice(offset, offset + 8).map((item) => (
+                    <Card
+                      component={Link}
+                      to={`/items/${item.item_id}`}
+                      key={item.item_id}
+                      sx={{
+                        width: 280,
+                        minHeight: 300,
+                        boxShadow: 'none',
+                        textDecoration: 'none',
+                        flex: 1,
+                        flexBasis: 230,
+                        maxWidth: 300
+                      }}
+                    >
+                      <Box sx={{
+                        height: 300,
+                        borderRadius: '14px',
+                        bgcolor: 'background.lightgrey',
+                        overflow: 'hidden',
+                        '&:hover img': { scale: 1.03 }
+                      }}>
+                        <CardMedia
+                          component="img"
+                          image={item.image_path || '/src/assets/broken_img.png'}
+                          onError={handleBrokenImg}
+                          sx={{
+                            height: '100%',
+                            transition: 'scale 200ms'
+                          }}
+                        />
+                      </Box>
+                      <CardContent
+                        sx={{
+                          padding: '0.5rem 0',
+                          mb: '1rem',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <Box
+                          sx={{ width: '80%', alignItems: 'center', display: 'flex' }}
+                        >
+                          <Typography variant="body1" sx={{ width: '70%' }}>
+                            {item.item_name}
+                          </Typography>
+                        </Box>
+
+                        <CardActions
+                          sx={{ padding: 0, justifySelf: 'end', width: 'fit-content' }}
+                        >
+                          <Button
+                            sx={{ padding: '3px', minWidth: 'fit-content' }}
+                            onClick={(e) => {
+                              // Stop add-to-cart btn from navigating elsewhere
+                              e.preventDefault();
+                              e.stopPropagation();
+                              addToCart(item);
+                            }}
+                          >
+                            <AddCircleOutlineOutlinedIcon />
+                          </Button>
+                        </CardActions>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Stack>
+                <Pagination items={filteredItems} setOffset={setOffset} />
+              </> :
+              <Box sx={{ height: 300, justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Typography variant='heading_secondary_bold' fontSize={24}>No items found!</Typography>
+                <Typography>Try updating categories to explore our collection</Typography>
+              </Box>
+            }
+          </>
+        }
       </Box>
     </Box>
   );

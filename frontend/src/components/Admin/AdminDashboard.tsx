@@ -5,18 +5,14 @@ import {
   Paper,
   Typography,
   Button,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
   Stack,
 } from '@mui/material';
-import { useAuth } from '../../hooks/useAuth';
+// import { useAuth } from '../../hooks/useAuth';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { buildBookingOverviews, BookingOverview, computeDuration } from '../../utility/bookings';
+import { computeDuration } from '../../utility/bookings';
+// import { buildBookingOverviews, BookingOverview } from '../../utility/bookings';
 import { supabase } from '../../config/supabase';
+import { Link as MuiLink } from '@mui/material';
 
 // ─── Thunk actions ──────────────────────────────────────────
 import { fetchAllItems } from '../../slices/itemsSlice';
@@ -27,6 +23,9 @@ import { format, parseISO } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { bookingsApi } from '../../api/bookings';
 import { UpcomingBooking } from '../../types/types';
+// - Additions for StyledDataGrid
+import { StyledDataGrid } from '../CustomComponents/StyledDataGrid';
+// import { GridColDef } from '@mui/x-data-grid';
 
 // ─── Re-usable stat card ────────────────────────────────────
 const StatCard: React.FC<{ label: string; value: number | string }> = ({
@@ -61,6 +60,7 @@ const StatCard: React.FC<{ label: string; value: number | string }> = ({
 
 const AdminDashboard = () => {
   const dispatch = useAppDispatch();
+  // const { user } = useAuth();
 
   const [authActivities, setAuthActivities] = React.useState<
     {
@@ -78,6 +78,7 @@ const AdminDashboard = () => {
     (state) => state.reservations.reservations,
   );
   const [upcomingBookings, setUpcomingBookings] = useState<UpcomingBooking[]>([]);
+
 
   // ─── Side-Effects ────────────────────────────────────────────
   useEffect(() => {
@@ -112,10 +113,13 @@ const AdminDashboard = () => {
   /* ────────── Memoized values ────────── */
   // combine bookings + reservations + users
 
-  const overviews: BookingOverview[] = useMemo(
-    () => buildBookingOverviews(bookings, reservations, users, items),
-    [bookings, reservations, users, items],
-  );
+  // inside your component:
+  // const overviews: BookingOverview[] = useMemo(
+  //   () => buildBookingOverviews(bookings, reservations, users, items),
+  //   [bookings, reservations, users, items],
+  // );
+  // console.log("Overviews" + overviews);
+  // console.log("upcomingBookings:", upcomingBookings);
 
   /* ────────── Render ────────── */
   return (
@@ -164,24 +168,40 @@ const AdminDashboard = () => {
           Quick Actions
         </Typography>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-          <Button variant="contained" color="grey">
-            Add item
+          <Button variant="rounded"
+            sx={{
+              height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
+              pl: 4, pr: 4, textTransform: 'capitalize'
+            }}>
+            Add Item
           </Button>
+
+
+
+
           <Button
             component={Link}
             to="/admin/bookings?filter=pending"
-            variant="contained"
+            variant="rounded"
             color="grey"
-          >
+            sx={{
+              height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
+              pl: 4, pr: 4, textTransform: 'capitalize'
+            }}>
             Approve bookings
           </Button>
-          <Button component={Link} to="/admin/users" variant="contained" color="grey">
+          <Button
+            variant="rounded" color="grey"
+            sx={{
+              height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
+              pl: 4, pr: 4, textTransform: 'capitalize'
+            }}>
             Manage users
           </Button>
         </Stack>
       </Box>
 
-      {/* ───── Bookings overview ───── */}
+      {/* ───── Upcoming bookings ───── */}
       <Box mt={3}>
         <Typography
           component="p"
@@ -191,34 +211,56 @@ const AdminDashboard = () => {
         >
           Upcoming bookings
         </Typography>
-        <TableContainer component={Paper} variant="outlined">
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Status</TableCell>
-                <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Duration</TableCell>
-                <TableCell>Date range</TableCell>
-                <TableCell>View</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {/* Show only the first 3 bookings for now. Also it looks bad with a huge list of bookings */}
-              {upcomingBookings.map((booking) => (
-                <TableRow key={booking.id}>
-                  <TableCell>{booking.booking.user.display_name}</TableCell>
-                  <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{booking.booking.status}</TableCell>
-                  <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{computeDuration(booking.start_date, booking.end_date)} Days</TableCell>
-                  <TableCell>{booking.start_date} - {booking.end_date}</TableCell>
-                  <TableCell><Link to={`/booking/${booking.booking_id}`}>Booking</Link></TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <StyledDataGrid
+          style={{ width: '100%' }}
+          hideFooter
+          disableColumnResize
+          // slots={{ toolbar: null }}
+          // getRowHeight={() => 'auto'}
+          rowHeight={50}
+          // autoHeight
+          disableRowSelectionOnClick
+          rows={upcomingBookings.map((booking) => ({
+            id: booking.booking_id, // Used internally by DataGrid
+            name: booking.booking.user.display_name,
+            status: booking.booking.status,
+            duration: `${computeDuration(booking.start_date, booking.end_date)} Days`,
+            dateRange: `${booking.start_date} - ${booking.end_date}`,
+            view: `/bookings/${booking.booking_id}`,
+          }))}
+          columns={[
+            { field: 'name', headerName: 'Name', flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'status', headerName: 'Status', flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'duration', headerName: 'Duration', flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'dateRange', headerName: 'Date Range', flex: 1, headerClassName: 'super-app-theme--header' },
+            {
+              field: 'view',
+              headerName: 'Actions',
+              flex: 1,
+              renderCell: (params) => (
+                <MuiLink
+                  component={Link}
+                  to={params.value}
+                  sx={{
+                    textDecoration: 'none',
+                    color: 'secondary.main',
+                    '&:hover': {
+                      color: 'primary.light'
+                    }
+                  }}
+                >
+                  Show booking
+                </MuiLink>
+              ),
+              headerClassName: 'super-app-theme--header',
+            },
+          ]}
+          pageSizeOptions={[5, 10, 25]}
+
+        />
       </Box>
 
-      {/* ───── Recent activity & Users/Roles ───── */}
+      {/* ───── Recent activity ───── */}
       <Grid container spacing={4} mt={4} justifyContent="space-between">
         <Grid size={{ xs: 12, md: 6 }}>
           <Typography
@@ -229,43 +271,60 @@ const AdminDashboard = () => {
           >
             Recent activity
           </Typography>
-          <TableContainer component={Paper} variant="outlined">
-            <Table size="small" sx={{ width: '100%' }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>User</TableCell>
-                  <TableCell>Last sign-in</TableCell>
-                  <TableCell>Confirmed</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {authActivities
-                  .filter(
-                    (act) =>
-                      act.display_name &&
-                      act.last_sign_in_at != null &&
-                      act.confirmed_at != null,
-                  )
-                  .map((act) => (
-                    <TableRow key={act.display_name + act.last_sign_in_at}>
-                      <TableCell>{act.display_name}</TableCell>
-                      <TableCell>
-                        {act.last_sign_in_at
-                          ? format(parseISO(act.last_sign_in_at), 'PPpp')
-                          : '—'}
-                      </TableCell>
-                      <TableCell>
-                        {act.confirmed_at
-                          ? format(parseISO(act.confirmed_at), 'PPpp')
-                          : '—'}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          {/* User, Last sign-in, Confirmed */}
+          <StyledDataGrid
+            hideFooter
+            disableColumnResize
+            autoHeight
+            // slots={{ toolbar: null }}
+            // getRowHeight={() => 'auto'}
+            rows={authActivities
+              .filter(act =>
+                act.display_name &&
+                act.last_sign_in_at != null &&
+                act.confirmed_at != null,
+              )
+              .map((act) => ({
+                id: act.display_name + act.last_sign_in_at,
+                name: act.display_name,
+                lastSignIn: act.last_sign_in_at
+                  ? format(parseISO(act.last_sign_in_at), 'PPpp')
+                  : '—',
+                confirmed: act.confirmed_at
+                  ? format(parseISO(act.confirmed_at), 'PPpp')
+                  : '—',
+              }))}
+            columns={[
+              { field: 'name', headerName: 'User', flex: 1, headerClassName: 'super-app-theme--header' },
+              {
+                field: 'lastSignIn', headerName: 'Last sign-in', flex: 1, headerClassName: 'super-app-theme--header',
+                renderCell: (params) => (
+                  <div style={{
+                    whiteSpace: 'normal',
+                    lineHeight: '20px',
+                    padding: '8px 0'
+                  }}>
+                    {params.value}
+                  </div>
+                )
+              },
+              {
+                field: 'confirmed', headerName: 'Confirmed', flex: 1, headerClassName: 'super-app-theme--header',
+                renderCell: (params) => (
+                  <div style={{
+                    whiteSpace: 'normal',
+                    lineHeight: '20px',
+                    padding: '8px 0'
+                  }}>
+                    {params.value}
+                  </div>
+                )
+              },
+            ]}
+          />
         </Grid>
 
+        {/* ───── Users & Roles ───── */}
         <Grid size={{ xs: 12, md: 6 }}>
           <Typography
             component="p"
@@ -275,24 +334,24 @@ const AdminDashboard = () => {
           >
             Users &amp; Roles
           </Typography>
-          <TableContainer component={Paper} variant="outlined">
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>User</TableCell>
-                  <TableCell>Role</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {users.slice(0, 3).map((u) => (
-                  <TableRow key={u.user_id}>
-                    <TableCell>{u.display_name ?? u.email}</TableCell>
-                    <TableCell>{u.role_title ?? '—'}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <StyledDataGrid
+            hideFooter
+            disableColumnResize
+            autoHeight
+            // style={{ display: 'flex', flexDirection: 'column' }}
+            rows={users
+              .filter(u => u.user_id)
+              .slice(0, 3)
+              .map((u) => ({
+                id: u.user_id,
+                name: u.display_name ?? u.email,
+                role: u.role_title ?? '—',
+              }))}
+            columns={[
+              { field: 'name', headerName: 'User', flex: 1, headerClassName: 'super-app-theme--header' },
+              { field: 'role', headerName: 'Role', flex: 1, headerClassName: 'super-app-theme--header' },
+            ]}
+          />
         </Grid>
       </Grid>
     </Stack>
