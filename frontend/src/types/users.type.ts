@@ -16,5 +16,9 @@ export interface UsersState {
 
 export interface userApiResponse {
   message: string;
-  data: User[];
+  data: User[]
+}
+export interface singleUserApiResponse {
+  message: string;
+  data: User
 }

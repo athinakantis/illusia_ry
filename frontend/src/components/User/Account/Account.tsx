@@ -7,20 +7,21 @@ import {
   Typography,
   Tabs,
   Tab,
-  Avatar,
   useTheme,
 } from '@mui/material';
 import { IconButton, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { showCustomSnackbar } from '../components/CustomSnackbar';
-import { accountApi } from '../api/account';
-import { useAuth } from '../hooks/useAuth';
+import { showCustomSnackbar } from '../../CustomSnackbar';
+import { accountApi } from '../../../api/account';
+import { useAuth } from '../../../hooks/useAuth';
 import { useState } from 'react';
-import SecuritySettings from '../components/User/Account/SecuritySettings';
-import AddPhone from '../components/User/Account/AddPhone';
-import ChangeEmail from '../components/User/Account/ChangeEmail';
-import DeleteAccount from '../components/User/Account/DeleteAccount';
+import SecuritySettings from './SecuritySettings';
+import AddPhone from './AddPhone';
+import ChangeEmail from './ChangeEmail';
+import DeleteAccount from './DeleteAccount';
 import { Link } from 'react-router-dom';
+import UploadAvatar from './UploadAvatar';
+import { useCurrentUserName } from '../../../hooks/use-current-user-name';
 
 const Account = () => {
     const theme = useTheme()
@@ -31,7 +32,6 @@ const Account = () => {
   const [showEmailEditor, setShowEmailEditor] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [editingName, setEditingName] = useState(false);
-
 
   const handleNameChange = async () => {
     try {
@@ -46,10 +46,8 @@ const Account = () => {
   // ──────────────────────────────   Variables  ─────────────────────────────────────
 
   // Determine the display name
-  const displayName =
-    user?.user_metadata.full_name || user?.user_metadata.name || 'User';
-
-    const [nameInput, setNameInput] = useState(displayName);
+  const name = useCurrentUserName();
+  const [nameInput, setNameInput] = useState(name);
   // Resolve the current phone number from any location Supabase might store it
   const phoneNumber =
     user?.phone ||
@@ -73,6 +71,7 @@ const Account = () => {
           pb: 12,
         }}
       >
+        {/*                    Message and links if user is not signed in                     */}
         <Box sx={{ textAlign: 'center' }}>
           <Typography variant="h4" component="div" sx={{ mb: 2 }}>
             You are either not logged in or you don't have an account yet.
@@ -133,24 +132,12 @@ const Account = () => {
             {/*                          Profile Tab                        */}
           {tab === 0 && (
             <>
-              {/*                        Avatar                            */}
-              <Avatar
-                src={
-                  user?.user_metadata.avatar_url ||
-                  user?.app_metadata?.avatar_url ||
-                  ''
-                }
-                alt={displayName}
-                sx={{
-                  width: 100,
-                  height: 100,
-                  mx: 'auto',
-                  mb: 2,
-                  border: '2px solid',
-                  borderColor: 'primary.light',
-                }}
-              />
+              {/*                      Avatar Component                      */}
+            <Box sx={{ margin: '0 auto', mt: 2 }}>
+              <UploadAvatar  />
+              </Box>
               {/*                       Editing Name                          */}
+              
               {editingName ? (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <TextField
@@ -172,7 +159,7 @@ const Account = () => {
               ) : (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Typography gutterBottom variant="h4">
-                    {displayName}
+                    {name}
                   </Typography>
                   <IconButton size="small" onClick={() => setEditingName(true)}>
                     <EditIcon fontSize="small" />

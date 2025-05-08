@@ -1,21 +1,26 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import { Avatar, Box, IconButton, CircularProgress, Typography } from '@mui/material';
+import { Avatar, Box, IconButton, CircularProgress, Typography, Skeleton } from '@mui/material';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { supabase } from '../../../config/supabase';
+import { useAuth } from '../../../hooks/useAuth';
+import { useCurrentUserImage } from '../../../hooks/use-current-user-image';
+// UploadAvatar now manages its own avatar URL state and user fetching.
 
-interface UploadAvatarProps {
-  userId: string;
-  currentUrl?: string | null;
-  onUpload?: (url: string) => void;
-}
-
-export const UploadAvatar: React.FC<UploadAvatarProps> = ({ userId, currentUrl, onUpload }) => {
+export const UploadAvatar: React.FC = () => {
   const [uploading, setUploading] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(currentUrl || null);
+  const { user } = useAuth();
+  const userId = user?.id;
+  const initialUrl = useCurrentUserImage();
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    setAvatarUrl(currentUrl || null);
-  }, [currentUrl]);
+    setAvatarUrl(initialUrl || null);
+  }, [initialUrl]);
+
+  if (!userId) {
+    console.error('You must be logged in to upload an avatar');
+    return null;
+  }
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -45,35 +50,59 @@ export const UploadAvatar: React.FC<UploadAvatarProps> = ({ userId, currentUrl, 
       .getPublicUrl(filePath);
 
     setAvatarUrl(publicUrl);
-    onUpload?.(publicUrl);
+
+    // Persist to users table
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ profile_image_url: publicUrl })
+      .eq('user_id', userId);
+    if (updateError) {
+      console.error('Error updating user avatar URL in users table:', updateError.message);
+    }
+
     setUploading(false);
   };
-
+  // If image is still loading, show skeleton
+  if (avatarUrl === undefined) {
+    return <Skeleton variant="circular" width={200} height={200} />;
+  }
   return (
     <Box display="flex" alignItems="center" flexDirection="column">
-      <Avatar
-        src={avatarUrl || undefined}
-        alt="User avatar"
-        sx={{ width: 100, height: 100, mb: 1 }}
-      />
-      <label htmlFor="avatar-upload-input">
-        <input
-          style={{ display: 'none' }}
-          id="avatar-upload-input"
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          disabled={uploading}
+      <Box position="relative" display="inline-flex" sx={{ mb: 2 }}>
+        <Avatar
+          src={avatarUrl || undefined}
+          alt="User avatar"
+          sx={{
+            width: 200,
+            height: 200,
+            border: '2px solid',
+            borderColor: 'primary.light',
+            boxShadow: 2
+          }}
         />
         <IconButton
+          component="label"
+          htmlFor="avatar-upload-input"
+          sx={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            bgcolor: 'background.paper'
+          }}
           color="primary"
-          aria-label="upload avatar"
-          component="span"
           disabled={uploading}
         >
+          <input
+            hidden
+            id="avatar-upload-input"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            disabled={uploading}
+          />
           <PhotoCamera />
         </IconButton>
-      </label>
+      </Box>
       {uploading && <CircularProgress size={24} />}
       <Typography variant="caption" color="textSecondary">
         {uploading ? 'Uploading...' : 'Change avatar'}

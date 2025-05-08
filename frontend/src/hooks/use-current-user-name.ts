@@ -1,19 +1,20 @@
-import { supabase } from "../config/supabase"
 import { useEffect, useState } from 'react'
+import { useAuth } from "./useAuth"
+import { usersApi } from "../api/users"
+
 
 export const useCurrentUserName = () => {
   const [name, setName] = useState<string | null>(null)
-
+  const { session } = useAuth()
   useEffect(() => {
     const fetchProfileName = async () => {
-      const { data, error } = await supabase.auth.getSession()
-      if (error) {
-        console.error(error)
-      }
-
-      const u = data.session?.user
+      if (!session) return null
+     const { data: userData} = await usersApi.getUserById(session?.user.id)
+     const display_name = userData?.display_name
+      const u = session?.user
 
       const candidate =
+        display_name ||
         u?.user_metadata.full_name ||
         u?.user_metadata.name ||
         u?.app_metadata?.full_name ||
@@ -23,7 +24,7 @@ export const useCurrentUserName = () => {
     }
 
     fetchProfileName()
-  }, [])
+  }, [session])
 
   return name || '?'
 }
