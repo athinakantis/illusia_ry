@@ -41,6 +41,7 @@ const UserBookings = () => {
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const [wantsToCancel, setWantsToCancel] = useState<BookingWithRes | null>(null);
+  const NON_CANCELLABLE = ['rejected', 'cancelled']
 
   /* ─────────────────── handlers ─────────────────── */
   const handleCancel = (booking: BookingWithRes) => {
@@ -164,7 +165,7 @@ const UserBookings = () => {
                         // Only allow dates that are after todays date to be cancelled
                         // And booking that haven't been cancelled
                         booking.reservations[0].start_date >
-                        new Date().toLocaleDateString().slice(0, 10) && booking.status !== 'cancelled'
+                        new Date().toLocaleDateString().slice(0, 10) && !NON_CANCELLABLE.includes(booking.status)
                         && (
                           <Tooltip title="Cancel booking">
                             <IconButton
