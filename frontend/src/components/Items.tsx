@@ -293,7 +293,10 @@ function Items() {
         }}
       >
 
-        {itemsLoading ? <Spinner />
+        {itemsLoading ?
+          <Box sx={{ margin: '0 auto' }}>
+            <Spinner />
+          </Box>
           :
           <>
             {filteredItems.length > 0 ?
