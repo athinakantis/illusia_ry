@@ -191,7 +191,7 @@ const AdminDashboard = () => {
             Approve bookings
           </Button>
           <Button
-            variant="rounded" color="grey"
+            component={Link} to="/admin/users" variant="rounded" color="grey"
             sx={{
               height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
               pl: 4, pr: 4, textTransform: 'capitalize'

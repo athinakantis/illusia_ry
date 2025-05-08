@@ -43,15 +43,14 @@ const ManageUsers: React.FC = () => {
     dispatch(fetchAllUsersWithRole());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // ---------------------  Handlers  --------------------------------------------------------------
+// ---------------------  Handlers  --------------------------------------------------------------
 
   const handleTabChange = (_: React.SyntheticEvent, value: 'ALL' | 'PENDING' | 'ACTIVE' | 'DEACTIVATED') => {
     setFilter(value);
   };
 
   // Handle role change
-  const handleRoleChange = async (userId: string, role: 'User' | 'Admin' | 'Head Admin') => {
+  const handleRoleChange = async (userId: string, role:'User' | 'Admin' | 'Head Admin') => {
     let changedUser = users.find((u) => u.user_id === userId);
     try {
       await dispatch(updateUserRole({ userId, role })).unwrap();
@@ -100,7 +99,7 @@ const ManageUsers: React.FC = () => {
     // Lists pending users
     if (filter === 'PENDING') return u.user_status === 'pending';
     // Lists all active users(we need to figure out our database structure)
-    if (filter === 'ACTIVE') return u.user_status === 'active' || u.user_status === 'approved';
+    if (filter === 'ACTIVE') return u.user_status === 'active'|| u.user_status === 'approved'; 
     if (filter === 'DEACTIVATED') return u.user_status === 'deactivated';
     return true;
   });
@@ -217,6 +216,7 @@ const ManageUsers: React.FC = () => {
   return (
     <Box className="container" sx={{ mt: 4, maxWidth: 1200, mx: 'auto' }}>
       <Typography component='h1' variant='heading_secondary_bold' mb={4} gutterBottom>
+      <Typography variant="h4" gutterBottom>
         Manage Users
       </Typography>
 
@@ -227,7 +227,6 @@ const ManageUsers: React.FC = () => {
         <Tab value="ACTIVE" label="Active" />
         <Tab value="DEACTIVATED" label="Deactivated" />
       </Tabs>
-
 
       {/* Data grid */}
       <Box sx={{ height: 500, width: '100%', mt: 2 }}>
