@@ -30,6 +30,7 @@ function Items() {
     if (cart.length < savedCart.cart.length) {
       dispatch(loadCartFromStorage(savedCart));
     }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 

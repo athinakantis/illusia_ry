@@ -1,5 +1,5 @@
 import { api } from "./axios"
-import { singleUserApiResponse, userApiResponse } from "../types/users.type"
+import { fetchUserRole, singleUserApiResponse, userApiResponse } from "../types/users.type"
 
 export const usersApi = {
     getAllUsers: (): Promise<userApiResponse> =>
@@ -9,7 +9,7 @@ export const usersApi = {
     getUserById: (id: string): Promise<singleUserApiResponse> => {
         return api.get(`admin/user/${id}`)
     },
-    getUserWithRoleById: (id: string): Promise<userApiResponse> => {
+    getUserWithRoleById: (id: string): Promise<fetchUserRole> => {
         return api.get(`admin/user/${id}/role`)
     },
     getUsersWithRole: (): Promise<userApiResponse> => {

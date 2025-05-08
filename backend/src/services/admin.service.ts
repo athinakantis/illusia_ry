@@ -353,7 +353,8 @@ import { SupabaseClient } from '@supabase/supabase-js';
     userId: string,
     roleTitle: string,
   ): Promise<ApiResponse<UserWithRole>> {
-    await this.assertHeadAdmin(req);
+    // This is a quick fix but we should probably change the calls to use other functions for upgrading roles
+    await this.assertAdmin(req);
 
     const supabase = req['supabase'];
 
@@ -368,7 +369,6 @@ import { SupabaseClient } from '@supabase/supabase-js';
         .update({ role_id: roleId })
         .eq('user_id', userId)
         .select('user_id'); // returning so we know how many were affected
-        console.log(`Updated rows: ${JSON.stringify(updatedRows)}`);
 
     if (updateErr) {
       throw new BadRequestException(updateErr.message);
