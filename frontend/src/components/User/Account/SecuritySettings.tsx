@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { supabase } from '../../../config/supabase';
 
+
 /** type helper */
 type Factor = Awaited<
   ReturnType<typeof supabase.auth.mfa.listFactors>
@@ -29,7 +30,16 @@ const SecuritySettings = () => {
       setTotpFactor(totp);
     })();
   }, []);
-
+  /** cancel setup */
+  async function handleCancelSetup(factorId: string) {
+    const { error } = await supabase.auth.mfa.unenroll({ factorId });
+    if (error) {
+      setStatus('Could not cancel setup: ' + error.message);
+    } else {
+      setStatus('MFA setup canceled.');
+      setPending(null);
+    }
+  }
   /** enrol */
   const handleEnroll = async () => {
     setStatus('Generating secret…');
@@ -59,7 +69,7 @@ const SecuritySettings = () => {
     // 2) Verify the 6‑digit code against the challenge we just received
     const { error } = await supabase.auth.mfa.verify({
       factorId: pending.id,
-      challengeId: challengeData.id, // ✅ real UUID, no more empty string
+      challengeId: challengeData.id,
       code,
     });
     if (error) {
@@ -71,14 +81,45 @@ const SecuritySettings = () => {
     window.location.reload();
   };
 
-  /** disable */
-  const handleDisable = async () => {
-    if (!totpFactor) return;
-    const { error } = await supabase.auth.mfa.unenroll({ factorId: totpFactor.id });
-    if (error) return setStatus(error.message);
-    setStatus('MFA disabled');
-    window.location.reload();
-  };
+  // Remove handleDisable, use handleUnenroll for AAL2 challenge-based unenroll
+
+  // Handles the full AAL2 challenge flow for disabling MFA
+  async function handleUnenroll(factorId: string) {
+    // 1) challenge
+    const { data: ch, error: chErr } = await supabase.auth.mfa.challenge({ factorId });
+    if (chErr) {
+      setStatus(chErr.message || 'Challenge error');
+      return;
+    }
+
+    // 2) prompt user for code...
+    const code = prompt('Enter the 6‑digit code from your authenticator app');
+    if (!code) return;
+
+    // 3) verify
+    const { error: vErr } = await supabase.auth.mfa.verify({
+      factorId,
+      challengeId: ch.id,
+      code,
+    });
+    if (vErr) {
+      setStatus(vErr.message || 'Verification failed');
+      return;
+    }
+
+    // 4) now unenroll
+    const { error: uErr } = await supabase.auth.mfa.unenroll({ factorId });
+    if (uErr) {
+      setStatus(uErr.message || 'Unenroll failed');
+      return;
+    }
+    setStatus('MFA factor removed');
+    setTotpFactor(null);
+    setPending(null);
+    setCode('');
+
+    console.log('MFA factor removed. Your session is still AAL2 until you reload or log out.');
+  }
 
   return (
     <Paper sx={{ p: 4, maxWidth: 450, m: 'auto' }}>
@@ -89,7 +130,7 @@ const SecuritySettings = () => {
       {/* ───────── NO FACTOR ENROLLED YET ───────── */}
       {!totpFactor && !pending && (
         <Button variant="contained" onClick={handleEnroll}>
-          Enable TOTP MFA
+          Enable TOTP MFA
         </Button>
       )}
 
@@ -98,18 +139,31 @@ const SecuritySettings = () => {
         <Stack spacing={2}>
           <Box sx={{ textAlign: 'center' }}>
             {/* Supabase returns an SVG string – embed directly */}
-            <div dangerouslySetInnerHTML={{ __html: pending.qr }} />
+            <img
+              src={pending.qr}
+              alt="QR code for TOTP MFA"
+              style={{ width: '250px', height: '250px', marginBottom: '1rem', margin: '0 auto' }}
+            />
+            
             <Typography variant="caption">Secret: {pending.secret}</Typography>
           </Box>
           <TextField
-            label="6‑digit code"
+            label="6-digit code"
             value={code}
             onChange={(e) => setCode(e.target.value)}
           />
           <Button variant="contained" onClick={handleVerify}>
             Verify &amp; Activate
           </Button>
+        <Button
+            variant="outlined"
+            color="error"
+            onClick={() => handleCancelSetup(pending.id)}
+          >
+            Cancel setup
+          </Button>
         </Stack>
+        
       )}
 
       {/* ───────── FACTOR ALREADY ENROLLED ───────── */}
@@ -118,8 +172,12 @@ const SecuritySettings = () => {
           <Typography sx={{ mb: 2 }}>
             Authenticator‑app MFA is <strong>enabled</strong>.
           </Typography>
-          <Button variant="outlined" color="error" onClick={handleDisable}>
-            Disable TOTP MFA
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => handleUnenroll(totpFactor.id)}
+          >
+            Disable TOTP MFA
           </Button>
         </Box>
       )}

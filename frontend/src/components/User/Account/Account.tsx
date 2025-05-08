@@ -14,40 +14,25 @@ import EditIcon from '@mui/icons-material/Edit';
 import { showCustomSnackbar } from '../../CustomSnackbar';
 import { accountApi } from '../../../api/account';
 import { useAuth } from '../../../hooks/useAuth';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SecuritySettings from './SecuritySettings';
 import AddPhone from './AddPhone';
 import ChangeEmail from './ChangeEmail';
 import DeleteAccount from './DeleteAccount';
 import { Link } from 'react-router-dom';
 import UploadAvatar from './UploadAvatar';
-import { useCurrentUserName } from '../../../hooks/use-current-user-name';
+import { usersApi } from '../../../api/users';
 
 const Account = () => {
-    const theme = useTheme()
-    const pallete = theme.palette
-  const { user } = useAuth();
-  const [tab, setTab] = useState(0); // 0 = Profile, 1 = Security
-  const [showPhoneEditor, setShowPhoneEditor] = useState(false);
-  const [showEmailEditor, setShowEmailEditor] = useState(false);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [editingName, setEditingName] = useState(false);
+   // ──────────────────────────────   Variables  ───────────────────────────────────────────
+   const theme = useTheme()
+   const pallete = theme.palette
+   const { user } = useAuth();
 
-  const handleNameChange = async () => {
-    try {
-      await accountApi.updateName(nameInput);
-      showCustomSnackbar(`You're name has been updated to ${nameInput}.`, 'success');
-      setEditingName(false);
-    } catch (error) {
-      console.error('Error updating name:', error);
-      showCustomSnackbar('Error updating name', 'error');
-    }
-  };
-  // ──────────────────────────────   Variables  ─────────────────────────────────────
+  // Local state for name and input
+  const [name, setName] = useState('');
+  const [nameInput, setNameInput] = useState('');
 
-  // Determine the display name
-  const name = useCurrentUserName();
-  const [nameInput, setNameInput] = useState(name);
   // Resolve the current phone number from any location Supabase might store it
   const phoneNumber =
     user?.phone ||
@@ -57,6 +42,39 @@ const Account = () => {
 
   const hasPhoneNumber = phoneNumber !== '';
 
+  
+  // ──────────────────────────────   State  ─────────────────────────────────────────
+  const [tab, setTab] = useState(0); // 0 = Profile, 1 = Security
+  const [showPhoneEditor, setShowPhoneEditor] = useState(false);
+  const [showEmailEditor, setShowEmailEditor] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+
+  // ──────────────────────────────   Effects  ───────────────────────────────────────────
+  useEffect(() => {
+    (async () => {
+      if (!user) return;
+      const { data } = await usersApi.getUserById(user.id);
+      const dbName = data?.display_name;
+      const initial = dbName ?? user.user_metadata.full_name ?? user.email?.split('@')[0] ?? '';
+      setName(initial);
+      setNameInput(initial);
+    })();
+  }, [user]);
+  
+ // ──────────────────────────────   Handlers  ───────────────────────────────────────────
+  const handleNameChange = async () => {
+    try {
+      await accountApi.updateName(nameInput);
+      setName(nameInput);
+      showCustomSnackbar(`You're name has been updated to ${nameInput}.`, 'success');
+      setEditingName(false);
+    } catch (error) {
+      console.error('Error updating name:', error);
+      showCustomSnackbar('Error updating name', 'error');
+    }
+  };
+ 
   // ──────────────────────────────   Conditial Renders  ─────────────────────────────────────
   // Check if user is logged in
   if (!user) {
@@ -91,7 +109,7 @@ const Account = () => {
       </Box>
     );
   }
-  // ──────────────────────────────   Main Render  ─────────────────────────────────────
+  // ──────────────────────────────   Main Render  ────────────────────────────────────────────
   return (
     <Box
       sx={{
@@ -216,9 +234,11 @@ const Account = () => {
                   Add phone number
                 </Button>
               )}
-
+  {console.log(hasPhoneNumber,",", phoneNumber)}
               {showPhoneEditor && (
+              
                 <AddPhone
+                
                   initialPhone={
                     hasPhoneNumber ? phoneNumber : undefined
                   }

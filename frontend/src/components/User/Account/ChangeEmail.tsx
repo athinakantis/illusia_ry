@@ -53,7 +53,9 @@ export default function ChangeEmail({
     setLoading(true);
     setStatus('Sending confirmation email…');
     // Call Supabase to update the email
-    const { data, error } = await supabase.auth.updateUser({ email });
+    const { data, error } = await supabase.auth.updateUser({ email },
+      { redirectTo: `${window.location.origin}/auth/callback` } 
+    );
     console.log('Supabase updateUser response:', { data, error });
     setLoading(false);
     if (error) {
