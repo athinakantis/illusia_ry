@@ -87,8 +87,8 @@ export const itemsSlice = createSlice({
       state.loading = true
     })
     builder.addCase(fetchAllItems.fulfilled, (state, action) => {
-      state.loading = false
       state.items = action.payload.data;
+      //state.loading = false
     })
     builder.addCase(fetchAllItems.rejected, (state) => {
       state.loading = false
@@ -98,12 +98,12 @@ export const itemsSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(fetchAllItemsAdmin.fulfilled, (state, action) => {
-      state.loading = false;
       state.items = action.payload.data;
+      state.loading = false;
     });
     builder.addCase(fetchAllItemsAdmin.rejected, (state) => {
-      state.loading = false;
       state.error = 'Could not fetch admin items';
+      state.loading = false;
     });
     builder.addCase(fetchAllCategories.pending, (state) => {
       state.loading = true
@@ -113,8 +113,8 @@ export const itemsSlice = createSlice({
       state.categories = action.payload.data
     })
     builder.addCase(fetchAllCategories.rejected, (state) => {
-      state.loading = false
       state.error = 'Could not fetch items'
+      state.loading = false
     })
     builder.addCase(fetchItemById.pending, (state) => {
       state.loading = true
@@ -129,7 +129,6 @@ export const itemsSlice = createSlice({
       }
     })
     builder.addCase(createItem.fulfilled, (state, action) => {
-
       state.items.push(action.payload.data);
     })
     builder.addCase(deleteItem.fulfilled, (state, action) => {
@@ -171,6 +170,8 @@ export const selectVisibleItems = createSelector(
   selectAllItems,
   (items) => items.filter((i) => i.visible),
 );
+
+export const selectItemsLoading = (state: RootState) => state.items.loading
 
 export const selectItemById = (id: string) => (state: RootState) => {
   return state.items.items.find((item) => item.item_id === id);
