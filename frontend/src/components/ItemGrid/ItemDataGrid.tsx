@@ -1,7 +1,6 @@
 import React from 'react';
+import { Box, IconButton, MenuItem, Select, Typography } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import { Box, IconButton, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { renderCellExpand } from './RenderCellExpand';
 import { Item } from '../../types/types';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -48,15 +47,6 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       headerAlign: 'left',
       headerName: 'Name',
       minWidth: 150,
-      renderCell: renderCellExpand,
-    },
-    {
-
-      field: 'item_id',
-      headerClassName: 'super-app-theme--header',
-      headerAlign: 'left',
-      headerName: 'ID',
-      width: uuidLength,
       renderCell: renderCellExpand,
     },
     {
