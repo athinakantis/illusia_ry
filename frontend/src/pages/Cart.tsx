@@ -11,6 +11,7 @@ import {
 	TableHead,
 	TableRow,
 	Typography,
+	Link as MUILink
 } from '@mui/material';
 import RemoveIcon from '@mui/icons-material/Remove';
 import CloseIcon from '@mui/icons-material/Close';
@@ -291,22 +292,24 @@ function Cart() {
 										}}
 									>
 										<TableCell>
-											<Stack direction={'row'} sx={{ gap: '21px' }}>
-												<CardMedia
-													component="img"
-													image={
-														item.image_path || '/src/assets/broken_img.png'
-													}
-													onError={handleBrokenImg}
-													style={{ width: 78, borderRadius: 14 }}
-												/>
-												<Stack sx={{ maxWidth: 186 }}>
-													<Typography>{item.item_name}</Typography>
-													{incorrectCart &&
-														<Typography color="error">{qtyCheckErrors[item.item_id]}</Typography>
-													}
+											<MUILink href={`/items/${item.item_id}`} sx={{ textDecoration: 'none' }}>
+												<Stack direction={'row'} sx={{ gap: '21px' }}>
+													<CardMedia
+														component="img"
+														image={
+															item.image_path || '/src/assets/broken_img.png'
+														}
+														onError={handleBrokenImg}
+														style={{ width: 78, borderRadius: 14 }}
+													/>
+													<Stack sx={{ maxWidth: 186 }}>
+														<Typography>{item.item_name}</Typography>
+														{incorrectCart &&
+															<Typography color="error">{qtyCheckErrors[item.item_id]}</Typography>
+														}
+													</Stack>
 												</Stack>
-											</Stack>
+											</MUILink>
 										</TableCell>
 										<TableCell align="center">
 											<ButtonGroup
