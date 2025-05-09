@@ -77,12 +77,12 @@ export const fetchUserBookings = createAsyncThunk<
 /**
  * Change the status of a booking
  * @param id - The ID of the booking to change
- * @param status - The new status to set for the booking(either "approved" or "rejected")
+ * @param status - The new status to set for the booking(either "approved", "rejected" or "cancelled")
  * @returns A promise that resolves to the updated booking
  */
 export const updateBookingStatus = createAsyncThunk<
   Booking,
-  { id: string; status: 'approved' | 'rejected' },
+  { id: string; status: 'approved' | 'rejected' | 'cancelled'},
   { rejectValue: string }
 >(
   'bookings/updateBookingStatus',
@@ -106,13 +106,13 @@ export const updateBookingStatus = createAsyncThunk<
 );
 
 export const addBooking = createAsyncThunk<
-  Booking,
+  { booking_id: string; status: string },
   object,
   { rejectValue: string }
 >('bookings/rpc', async (newBooking, { rejectWithValue }) => {
   try {
     const response = await bookingsApi.createBooking(newBooking);
-    return response.data;
+    return response;
   } catch (error: unknown) {
     if (axios.isAxiosError<{ message: string }>(error)) {
       return rejectWithValue(error.response?.data?.message ?? 'Network error');
@@ -156,17 +156,16 @@ export const bookingsSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(fetchUserBookings.fulfilled, (state, action) => {
-      state.loading = false;
       state.userBookings = action.payload;
-    });
-    builder.addCase(fetchUserBookings.rejected, (state, action) => {
       state.loading = false;
-      state.error = action.payload ?? 'Could not fetch user bookings';
+    });
+    builder.addCase(fetchUserBookings.rejected, (state) => {
+      state.error = 'Could not fetch user bookings';
+      state.loading = false;
     });
 
-    builder.addCase(addBooking.fulfilled, (state, action) => {
+    builder.addCase(addBooking.fulfilled, (state) => {
       localStorage.removeItem('savedCart');
-      state.bookings.push(action.payload);
       state.loading = false;
     });
     builder.addCase(addBooking.rejected, (state, action) => {

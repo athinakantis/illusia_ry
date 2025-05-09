@@ -11,6 +11,7 @@ import {
 	TableHead,
 	TableRow,
 	Typography,
+	Link as MUILink
 } from '@mui/material';
 import RemoveIcon from '@mui/icons-material/Remove';
 import CloseIcon from '@mui/icons-material/Close';
@@ -27,7 +28,7 @@ import {
 import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
 import { addBooking, fetchUserBookings } from '../slices/bookingsSlice';
 import { useAuth } from '../hooks/useAuth';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { showCustomSnackbar } from '../components/CustomSnackbar';
 import { store } from '../store/store';
 import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
@@ -48,6 +49,7 @@ function Cart() {
 	const [qtyCheckErrors] = useState<Record<string, string>>({});
 	const [incorrectCart, setIncorrectCart] = useState(false);
 	const [localCart, setLocalCart] = useState<ItemWithQuantity[]>([]);
+	const navigate = useNavigate()
 
 	useEffect(() => {
 		updateRangeWithSelectedRange();
@@ -227,7 +229,6 @@ function Cart() {
 	const handleBrokenImg = (
 		e: React.SyntheticEvent<HTMLImageElement, Event>,
 	) => {
-		console.log('handle error');
 		(e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
 	};
 
@@ -241,9 +242,12 @@ function Cart() {
 		if (addBooking.rejected.match(resultAction)) {
 			showCustomSnackbar(resultAction.payload ?? 'unknown error', 'error');
 		} else {
-			showCustomSnackbar('Booking created', 'success');
+			showCustomSnackbar('Your booking has been created!', 'success');
 			dispatch(emptyCart());
 			dispatch(fetchUserBookings(user.id));
+
+			// Navigate to new booking
+			navigate(`/bookings/${resultAction.payload.booking_id}`)
 		}
 	};
 
@@ -288,22 +292,24 @@ function Cart() {
 										}}
 									>
 										<TableCell>
-											<Stack direction={'row'} sx={{ gap: '21px' }}>
-												<CardMedia
-													component="img"
-													image={
-														item.image_path || '/src/assets/broken_img.png'
-													}
-													onError={handleBrokenImg}
-													style={{ width: 78, borderRadius: 14 }}
-												/>
-												<Stack sx={{ maxWidth: 186 }}>
-													<Typography>{item.item_name}</Typography>
-													{incorrectCart &&
-														<Typography color="error">{qtyCheckErrors[item.item_id]}</Typography>
-													}
+											<MUILink href={`/items/${item.item_id}`} sx={{ textDecoration: 'none' }}>
+												<Stack direction={'row'} sx={{ gap: '21px' }}>
+													<CardMedia
+														component="img"
+														image={
+															item.image_path || '/src/assets/broken_img.png'
+														}
+														onError={handleBrokenImg}
+														style={{ width: 78, borderRadius: 14 }}
+													/>
+													<Stack sx={{ maxWidth: 186 }}>
+														<Typography>{item.item_name}</Typography>
+														{incorrectCart &&
+															<Typography color="error">{qtyCheckErrors[item.item_id]}</Typography>
+														}
+													</Stack>
 												</Stack>
-											</Stack>
+											</MUILink>
 										</TableCell>
 										<TableCell align="center">
 											<ButtonGroup

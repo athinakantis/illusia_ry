@@ -12,10 +12,8 @@ export const bookingsApi = {
         return api.get(`/bookings/${id}`)
     },
 
-    createBooking: async (newBooking: object) => {
-
-        const response = await api.post('bookings/rpc', newBooking)
-        return response;
+    createBooking: async (newBooking: object): Promise<{ booking_id: string; status: string }> => {
+        return api.post('bookings/rpc', newBooking)
     },
 
     /**
@@ -23,11 +21,11 @@ export const bookingsApi = {
    */
   getUserBookings: (
     userId: string,
-  ): Promise<ApiResponse<BookingWithItems>> =>
+  ): Promise<ApiResponse<Booking[]>> =>
     api.get(`bookings/user/${userId}`, {
       headers: { 'Access-Control-Allow-Origin': '*' },
     }),
-    updateBookingStatus: (id: string, status: "approved" | "rejected"): Promise<ApiResponse<Booking>> => {
+    updateBookingStatus: (id: string, status: "approved" | "rejected" | "cancelled"): Promise<ApiResponse<Booking>> => {
         return api.patch(`/bookings/${id}`, { status })
     },
     removeBooking: (id: string): Promise<ApiResponse<Booking>> => {

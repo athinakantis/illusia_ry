@@ -121,7 +121,7 @@ const SingleItem = () => {
           <CardMedia
             component="img"
             onError={handleBrokenImg}
-            image={item?.image_path
+            image={item?.image_path ?? '/src/assets/broken_img.png'
             }
             alt={item?.item_name}
             sx={{
