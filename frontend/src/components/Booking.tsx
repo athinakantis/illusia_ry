@@ -34,6 +34,7 @@ function SingleBooking() {
   const booking_selector = useAppSelector(selectBooking);
   const loading = useAppSelector(selectBookingsLoading);
   const [wantsToCancel, setWantsToCancel] = useState(false)
+  const NON_CANCELLABLE = ['cancelled', 'rejected']
 
   /* ─────────────────── handlers ─────────────────── */
   const handleCancel = (booking_id: string) => {
@@ -126,10 +127,10 @@ function SingleBooking() {
         </TableContainer>
         {
           // Only allow dates that are after todays date to be cancelled
-          // And booking that haven't been cancelled
+          // And booking that haven't been cancelled or rejected
           items[0].start_date >
           new Date().toLocaleDateString().slice(0, 10) &&
-          booking.status !== 'cancelled' && (
+          !NON_CANCELLABLE.includes(booking.status) && (
             <Button
               onClick={() => setWantsToCancel(true)}
               size="small"
