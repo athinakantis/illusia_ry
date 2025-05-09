@@ -183,6 +183,13 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
         getRowId={(row) => row.item_id}
         columns={columns}
         pageSizeOptions={[10, 25, 50, 100]}
+        initialState={{
+          pagination: { paginationModel: { pageSize: 10, page: 0 } },
+          sorting: {
+            sortModel: [{ field: 'item_name', sort: "asc" }],
+            
+          },
+        }}
         rowHeight={70}
         disableRowSelectionOnClick
       />
