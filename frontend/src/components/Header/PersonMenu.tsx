@@ -1,5 +1,8 @@
 import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { Link } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
 import { useState } from 'react';
@@ -67,18 +70,19 @@ const PersonMenu = () => {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         sx={{
           '& .MuiMenuItem-root': {
-            py: '10px',
+            py: '10px', gap: '7px',
             borderBottom: '1px solid #e2e2e2',
           },
           '& .MuiList-root': { pt: 0 },
           '& .MuiPaper-root': {
             boxShadow: 'none',
             border: '1px solid #e2e2e2',
-            width: 300,
+            width: 200,
           },
         }}
       >
         <MenuItem component={Link} to="/bookings" onClick={handleMenuClose}>
+          <CalendarMonthRoundedIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
           My bookings
         </MenuItem>
         <MenuItem component={Link} to="/admin/dashboard" onClick={handleMenuClose}>
@@ -91,9 +95,11 @@ const PersonMenu = () => {
           to="/account"
           onClick={handleMenuClose}
         >
+          <AccountCircleRoundedIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
           My account
         </MenuItem>
         <MenuItem disableRipple sx={{ pl: 2, pr: 2 }} onClick={signOut}>
+          <LogoutRoundedIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
           Log out
         </MenuItem>
         {/* language buttons */}
