@@ -4,11 +4,13 @@ import { Link } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
 import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 
 const PersonMenu = () => {
   // ─── profile menu state ──────────────────────────────────────────────
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { signOut } = useAuth();
+  const { i18n } = useTranslation();
   const menuOpen = Boolean(anchorEl);
   const handleMenuOpen = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -103,6 +105,7 @@ const PersonMenu = () => {
             size="small"
             color="primary"
             sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
+            onClick={() => { i18n.changeLanguage('en'); handleMenuClose(); }}
           >
             En
           </Button>
@@ -111,6 +114,7 @@ const PersonMenu = () => {
             size="small"
             color="primary"
             sx={{ padding: '4px 10px', minWidth: 'fit-content' }}
+            onClick={() => { i18n.changeLanguage('fi'); handleMenuClose(); }}
           >
             Fin
           </Button>
