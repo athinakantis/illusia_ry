@@ -214,9 +214,9 @@ const ManageUsers: React.FC = () => {
   ];
 
   return (
-    <Box className="container" sx={{ mt: 4, maxWidth: 1200, mx: 'auto' }}>
+    <Box className="container" sx={{ mt: 4, maxWidth: 1200, mx: 'auto', px: { xs: 1, md: 2 } }}>
       <Typography component='h1' variant='heading_secondary_bold' mb={4} gutterBottom></Typography>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="heading_secondary_bold" gutterBottom>
         Manage Users
       </Typography>
 

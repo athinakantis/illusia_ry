@@ -177,7 +177,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
   
       const { data, error } = await supabase
         .from('users')
-        .select('user_id, display_name, email, user_status')
+        .select('user_id, display_name, email, user_status, profile_image_url')
         .eq('user_id', userId)
         .maybeSingle();
   
@@ -429,7 +429,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
       .from('users')
       .update({ user_status: status })
       .eq('user_id', userId)
-      .select('user_id, display_name, email, user_status')
+      .select('user_id, display_name, email, user_status, profile_image_url')
       .maybeSingle();
 
     if (updateErr) {

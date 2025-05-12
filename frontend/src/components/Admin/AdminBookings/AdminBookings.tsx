@@ -40,8 +40,8 @@ import {
   selectAllReservations,
 } from "../../../slices/reservationsSlice";
 import CollapsibleDetail from "./CollapsibleDetail";
-import { CustomSnackbar } from "../../CustomSnackbar";
 import { useSearchParams } from 'react-router-dom';
+import { showCustomSnackbar } from '../../CustomSnackbar';
 
 /**
  * Allowed status filters rendered as Tabs
@@ -98,22 +98,22 @@ const AdminBookings = () => {
   // Placeholder mutations
   const approveBooking = () => {
     if (!menuBookingId) return;
+    console.log(menuBookingId)
     dispatch(updateBookingStatus({ id: menuBookingId, status: "approved" }));
     handleMenuClose();
-    CustomSnackbar({
-      message: 'Booking approved',
-      variant: 'success',
-      onClose:() => {},
-    });
+    showCustomSnackbar(
+      'Booking approved',
+      'success'
+    );
   };
   const rejectBooking = () => {
     if (!menuBookingId) return;
     dispatch(updateBookingStatus({ id: menuBookingId, status: "rejected" }));
     handleMenuClose();
-    CustomSnackbar({
-      message: 'Booking rejected',
-      variant: 'error',
-      onClose: () => {}})
+    showCustomSnackbar(
+      'Booking rejected',
+      'error',
+    )
 
   };
 
@@ -122,7 +122,6 @@ const AdminBookings = () => {
   useEffect(() => {
     if (bookings.length === 0) dispatch(fetchAllBookings());
   }, [dispatch, bookings.length]);
-
   useEffect(() => {
     if (users.length === 0) dispatch(fetchAllUsers());
   }, [dispatch, users.length]);
@@ -135,7 +134,7 @@ const AdminBookings = () => {
   useEffect(() => {
     const search = searchParams.get('filter')
     if (search && VALID_FILTERS.includes(search)) setFilter(search)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ─── Memoised filtered list ───────────────────────────────────
@@ -164,12 +163,12 @@ const AdminBookings = () => {
     reservations.filter((r) => r.booking_id === bid);
 
   // ─── Loading/Error states ─────────────────────────────────────
-  if (loading)
-    return (
-      <Container sx={{ textAlign: "center", mt: 4 }}>
-        <Spinner />
-      </Container>
-    );
+
+  if (loading) return (
+    <Container sx={{ textAlign: "center", mt: 4, display: 'flex', justifyContent: 'center' }}>
+      <Spinner />
+    </Container>
+  );
 
   if (error)
     return (
@@ -305,8 +304,6 @@ const AdminBookings = () => {
           <MenuItem onClick={rejectBooking}>Reject</MenuItem>
         </Menu>
       </Paper>
-
-      
     </Container>
   );
 };

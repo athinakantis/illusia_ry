@@ -22,6 +22,9 @@ import { TagController } from './modules/tags/tags.controller';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { TagModule } from './modules/tags/tags.module';
 import { CategoryController } from './modules/categories/categories.controller';
+import { NotificationsController } from './controllers/notifications.controller';
+import { NotificationsService } from './services/notifications.service';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -41,6 +44,7 @@ import { CategoryController } from './modules/categories/categories.controller';
     BookingController,
     ItemReservationsController,
     AdminController,
+    NotificationsController,
     
   ], // Controller imports go here
   providers: [
@@ -53,6 +57,7 @@ import { CategoryController } from './modules/categories/categories.controller';
     BookingService,
     ItemReservationService,
     AdminService,
+    NotificationsService,
   ], // Services are used to handle business logic and data access
 })
 
@@ -66,7 +71,8 @@ export class AppModule implements NestModule {
       ItemReservationsController,
       AdminController,
       TagController,
-      CategoryController
+      CategoryController,
+      NotificationsController
       );
   }
 }

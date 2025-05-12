@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Booking, BookingsState } from '../types/types';
+import { Booking, BookingsState, BookingWithItems } from '../types/types';
 import { RootState } from '../store/store';
 import { bookingsApi } from '../api/bookings';
 import axios from 'axios';
@@ -58,16 +58,17 @@ export const deleteBooking = createAsyncThunk<
  * @returns A promise that resolves to an array of bookings with reservations
  */
 export const fetchUserBookings = createAsyncThunk<
-  Booking[],
+  BookingWithItems[],
   string,
   { rejectValue: string }
 >('bookings/fetchUserBookings', async (userId, { rejectWithValue }) => {
   try {
-    const { data, error, message } = await bookingsApi.getUserBookings(userId);
-    if (error) return rejectWithValue(message);
-    return data;
+    const response = await bookingsApi.getUserBookings(userId);
+    if (response.error) {
+      return rejectWithValue(response.message);
+    }
+    return Array.isArray(response.data) ? response.data : [];
   } catch (error: unknown) {
-    // now error is unknown, so we narrow it:
     if (axios.isAxiosError<{ message: string }>(error)) {
       return rejectWithValue(error.response?.data?.message ?? 'Network error');
     }
@@ -226,10 +227,10 @@ export const selectBookingsByUserId = (userId: string) => (state: RootState) =>
   state.bookings.bookings.filter((booking) => booking.user_id === userId);
 
 export const selectBookingDates = (booking_id: string) => (state: RootState) => {
-  const bookingWihId = state.bookings.userBookings.find((booking) => booking.booking_id === booking_id);
+  const bookingWithId = state.bookings.userBookings.find((booking) => booking.booking.booking_id === booking_id);
 
-  if (bookingWihId?.reservations)
-    return { start_date: bookingWihId?.reservations[0].start_date, end_date: bookingWihId?.reservations[0].end_date }
+  if (bookingWithId?.items)
+    return { start_date: bookingWithId?.items[0].start_date, end_date: bookingWithId?.items[0].end_date }
   else return;
 }
 

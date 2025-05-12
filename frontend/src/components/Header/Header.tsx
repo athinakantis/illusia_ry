@@ -15,24 +15,33 @@ import Logout from '../Auth/LoginOutBtn';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PersonMenu from './PersonMenu';
 import { Item } from '../../types/types';
 import { selectCart } from '../../slices/cartSlice';
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import NotificationsMenu from './NotificationMenu';
+import { useAuth } from '../../hooks/useAuth';
+import { fetchUserNotifications, selectUserNotifications } from '../../slices/notificationSlice';
 
 const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cart } = useAppSelector(selectCart)
-
+  const { user } = useAuth()
+  const userNotifications = useAppSelector(selectUserNotifications)
+  const dispatch = useAppDispatch()
   // Calculate total quantity of all cart items
   const totalItems = cart.reduce((total: number, item: Item) => total + (item.quantity || 0), 0)
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  useEffect(() => {
+    if (user && userNotifications.length < 1) dispatch(fetchUserNotifications(user.id))
+  }, [])
 
   const navigationLinks = [
     { text: 'Home', path: '/' },
@@ -135,8 +144,7 @@ const Header = () => {
             p: '6px 8px'
           }
         }}>
-
-          <PersonMenu />
+          {user && <NotificationsMenu />}
           <Link to='/cart' aria-label="Go to cart" style={{ position: 'relative' }}>
             <ShoppingBagIcon />
             {totalItems > 0 &&
@@ -160,6 +168,7 @@ const Header = () => {
               }} />
             }
           </Link>
+          <PersonMenu />
           <Logout />
         </Box>
       </Toolbar>

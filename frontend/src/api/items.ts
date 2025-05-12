@@ -1,4 +1,4 @@
-import { TablesInsert } from '../types/supabase.type';
+import { TablesInsert } from '../types/supabase';
 import { ApiResponse, Item } from '../types/types';
 import { api } from './axios';
 

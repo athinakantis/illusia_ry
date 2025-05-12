@@ -82,7 +82,7 @@ const PersonMenu = () => {
           My bookings
         </MenuItem>
         <MenuItem component={Link} to="/admin/dashboard" onClick={handleMenuClose}>
-          <DashboardIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" /> 
+          <DashboardIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
           Dashboard
         </MenuItem>
         <MenuItem

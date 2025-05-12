@@ -56,7 +56,7 @@ export interface Booking {
 
 export interface BookingsState {
   bookings: Booking[];
-  userBookings: Booking[];
+  userBookings: BookingWithItems[];
   booking: BookingWithItems | null;
   error: null | string;
   loading: boolean;
@@ -125,3 +125,45 @@ export type UpcomingBooking = Tables<'item_reservations'> & {
     user: Tables<'users'>;
   };
 };
+
+
+export type NotificationsType = BookingNotifications | UserManagementNotifications
+
+export type BookingNotifications = 'NEW BOOKING' | 'BOOKING_REJECTED' | 'BOOKING_APPROVED' 
+export type UserManagementNotifications = 'NEW_USER'
+
+export interface NotificationState {
+  userNotifications: Array<Tables['notifications']>
+  adminNotifications: Array<Tables['notifications']>
+  loading: boolean,
+  error: null | string
+}
+
+
+// NOTIFICATIONS
+// Metadata types
+export type BookingMetaData = {
+  booking_id: string
+}
+export type BookingApprovedMetadata = {
+  booking_id: number;
+};
+
+export type BookingRejectedMetadata = {
+  booking_id: number; 
+  reason?: string;
+};
+
+export type Notification =
+  | {
+      type: 'BOOKING_APPROVED';
+      metadata: BookingApprovedMetadata;
+    }
+  | {
+      type: 'BOOKING_REJECTED';
+      metadata: BookingRejectedMetadata;
+    }
+  | {
+      type: string;
+      metadata: JSON; // fallback for unknown types
+    };
