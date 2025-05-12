@@ -10,10 +10,8 @@
     "type-check": "tsc --noEmit",
     "preview": "vite preview",
     "test": "vitest",
-    "extract:i18n": "i18next 'src/**/*.{js,jsx,ts,tsx}' --config i18next-parser.config.ts",
-    "i18n:check": "translation-check --config i18next-parser.config.ts",
-    "i18n:check:all": "translation-check --config i18next-parser.config.ts --all",
-    "i18n:check:missing": "translation-check --config i18next-parser.config.ts --missing",
+    "extract:i18n": "i18next 'src/**/*.{js,jsx,ts,tsx}' --config i18next-parser.config.js",
+    "i18n:all": "npm run extract:i18n && npm run translate:fi",
     "translate:fi": "node scripts/google-translate.cjs"
   },
   "dependencies": {
