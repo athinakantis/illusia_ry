@@ -1,4 +1,20 @@
 {
+  "nav": {
+    "home": "Home",
+    "items": "Items",
+    "contact": "Contact",
+    "bookings": "Bookings"
+  },
+  "header": {
+    "logoMain": "ILLUSIA",
+    "logoSecondary": "STORE"
+  },
+  "person": {
+    "myBookings": "My bookings",
+    "dashboard": "Dashboard",
+    "myAccount": "My account",
+    "logOut": "Log out"
+  },
   "home": {
     "heroTitle": "Home for live-action role-playing games props",
     "heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat",
@@ -15,6 +31,6 @@
     "answer3": "We see the approval of our users as a guarantee that the items which have been lent will be returned after a maximum of 2 weeks."
   },
   "button": {
-    "test": ""
+    "test": "Test Button"
   }
 }

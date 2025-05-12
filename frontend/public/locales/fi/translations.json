@@ -1,4 +1,20 @@
 {
+  "nav": {
+    "home": "Etusivu",
+    "items": "Tuotteet",
+    "contact": "Ota yhteyttä",
+    "bookings": "Varaukset"
+  },
+  "header": {
+    "logoMain": "ILLUSIA",
+    "logoSecondary": "KAUPPA"
+  },
+  "person": {
+    "myBookings": "Minun varaukset",
+    "dashboard": "Hallintapaneeli",
+    "myAccount": "Oma tili",
+    "logOut": "Kirjaudu ulos"
+  },
   "home": {
     "heroTitle": "Live action -roolipelien rekvisiittakoti",
     "heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ahdistelussa ei ole nyt mitään hienostelua. Nyt artikkelin kirjoittaja on nero, joka on tyyny. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nyt ahdistetussa feugiatissa ei ole fringillaa.",
@@ -15,6 +31,6 @@
     "answer3": "Käyttäjiemme hyväksyntä takaa meille, että lainatut esineet palautetaan viimeistään kahden viikon kuluessa."
   },
   "button": {
-    "test": ""
+    "test": "Testa painike"
   }
 }

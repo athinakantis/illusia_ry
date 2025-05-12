@@ -2,5 +2,29 @@
   "button.save": "Save",
   "label.username": "Username",
   "alert.welcome": "Welcome to Illusia Ry Storage Solutions!",
-  "button.test": "Test Button"
+  "{item": {
+    "text}": "{item.text}"
+  },
+  "header.logoMain": "ILLUSIA",
+  "header.logoSecondary": "STORE",
+  "{link.defaultValue}": "{link.defaultValue}",
+  "person.myBookings": "My bookings",
+  "person.dashboard": "Dashboard",
+  "person.myAccount": "My account",
+  "person.logOut": "Log out",
+  "home.heroTitle": "Home for live-action role-playing games props",
+  "home.heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat",
+  "home.categoriesTitle": "View Our Range Of Categories",
+  "home.categoriesDescription": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.",
+  "home.askQuestion": "Ask a question",
+  "faq.question1": "When will my booking be approved?",
+  "faq.answer1": "We look through bookings as soon as we can. Bookings are usually approved within the span of 2-3 days. If you've waited longer than 5 days, send us an email",
+  "faq.question2": "How long can I book items for?",
+  "faq.answer2": "One booking can be a maximum duration of two weeks",
+  "faq.question3": "Why do I have to be approved before booking items?",
+  "faq.answer3": "We see the approval of our users as a guarantee that the items which have been lent will be returned after a maximum of 2 weeks.",
+  "button.test": "",
+  "{link": {
+    "defaultValue}": "{link.defaultValue}"
+  }
 }

@@ -14,7 +14,7 @@ i18n
     fallbackLng: 'en',
     ns: ['translations'],
     defaultNS: 'translations',
-    debug: true,
+    debug: false,
     saveMissing: true,
     missingKeyHandler: (lngs, ns, key) => {
       console.warn(`Missing translation key: ${key} in namespace: ${ns} for languages: ${lngs}`);
