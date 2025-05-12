@@ -2,14 +2,16 @@
 export default {
     contextSeparator: '_',
     // Key separator used in your translation keys
-  
+
     createOldCatalogs: true,
     // Save the \_old files
   
     defaultNamespace: 'translations',
     // Default namespace used in your i18next config
   
-    defaultValue: '',
+    defaultValue: ( key:string, fallbackValue:string) => fallbackValue ?? key,
+    transSupportBasicHtmlNodes: true,
+    transKeepBasicHtmlNodesFor: ['strong', 'em'],
     // Default value to give to keys with no value
     // You may also specify a function accepting the locale, namespace, key, and value as arguments
   
@@ -78,7 +80,7 @@ export default {
     failOnWarnings: false,
     // Exit with an exit code of 1 on warnings
   
-    failOnUpdate: false,
+    failOnUpdate: true,
     // Exit with an exit code of 1 when translations are updated (for CI purpose)
   
     customValueTemplate: null,

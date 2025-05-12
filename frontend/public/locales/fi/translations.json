@@ -1,6 +1,20 @@
 {
-    "button.save": "Tallenna",
-    "label.username": "Käyttäjätunnus",
-    "alert.welcome": "Tervetuloa Illusia Ry:n varastoratkaisuihin!",
-    "button.test": "Testipainike"
+  "home": {
+    "heroTitle": "Koti live-action-roolipelien rekvisiitta",
+    "heroDescription": "Lorem erittäin porkkanat, tomaattitutkinnon suorittanut kehittäjä. Ei Fringilla nyt työntekijää Feugiatissa. Nyt tomaattikehittäjän kirjoittaja, joka on tyyny. Lorem erittäin porkkanat, tomaattitutkinnon suorittanut kehittäjä. Ei fringillaa nyt työntekijä EU: ssa",
+    "categoriesTitle": "Katso kategoriamme valikoima",
+    "categoriesDescription": "Lorem erittäin porkkanat, vety perustutkinto -kehittäjä, mutta halkaisijan siirtymän suorituskyvyn kehittäjät Laoreet -kipuun.",
+    "askQuestion": "Esittää kysymys"
+  },
+  "faq": {
+    "question1": "Milloin varaukseni hyväksytään?",
+    "answer1": "Tarkastelemme varauksia niin pian kuin mahdollista. Varaukset hyväksytään yleensä 2-3 päivän kuluessa. Jos olet odottanut yli 5 päivää, lähetä meille sähköpostia",
+    "question2": "Kuinka kauan voin varata tuotteita?",
+    "answer2": "Yksi varaus voi olla enintään kahden viikon kesto",
+    "question3": "Miksi minun on hyväksyttävä ennen esineiden varaamista?",
+    "answer3": "Näemme käyttäjien hyväksynnän takuiksi siitä, että paastonsa tuotteet palautetaan korkeintaan 2 viikon kuluttua."
+  },
+  "button": {
+    "test": "testata"
   }
+}
