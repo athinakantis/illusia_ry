@@ -9,7 +9,7 @@ import {
   import { ApiResponse, UserWithRole } from 'src/types/response';
   import { AdminUserRow } from 'src/types/admin-user.type';
   import { SupabaseService } from 'src/modules/supabase/supabase.service';
-import { MailerService } from './mailer.service';
+import { MailerService } from '../mailer/mailer.service';
 import { SupabaseClient } from '@supabase/supabase-js';
 
   @Injectable()

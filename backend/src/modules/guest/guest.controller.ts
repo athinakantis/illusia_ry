@@ -5,7 +5,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { GuestService } from '../services/guest.service';
+import { GuestService } from './guest.service';
 import { AuthGuard } from 'src/guards/auth.guard';
 
 

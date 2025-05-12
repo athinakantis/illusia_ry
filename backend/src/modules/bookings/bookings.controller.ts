@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Body, Post, Req, Patch, Delete } from '@nestjs/common';
 import { CreateBookingDto } from 'src/dto/create-booking.dto';
-import { BookingService } from 'src/services/bookings.service';
+import { BookingService } from 'src/modules/bookings/bookings.service';
 import { CustomRequest } from 'src/types/request.type';
 
 @Controller('bookings')
