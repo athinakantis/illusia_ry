@@ -1,20 +1,20 @@
 {
   "home": {
-    "heroTitle": "Koti live-action-roolipelien rekvisiitta",
-    "heroDescription": "Lorem erittäin porkkanat, tomaattitutkinnon suorittanut kehittäjä. Ei Fringilla nyt työntekijää Feugiatissa. Nyt tomaattikehittäjän kirjoittaja, joka on tyyny. Lorem erittäin porkkanat, tomaattitutkinnon suorittanut kehittäjä. Ei fringillaa nyt työntekijä EU: ssa",
-    "categoriesTitle": "Katso kategoriamme valikoima",
-    "categoriesDescription": "Lorem erittäin porkkanat, vety perustutkinto -kehittäjä, mutta halkaisijan siirtymän suorituskyvyn kehittäjät Laoreet -kipuun.",
-    "askQuestion": "Esittää kysymys"
+    "heroTitle": "This is a testHome for live-action role-playing games props",
+    "heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat",
+    "categoriesTitle": "View Our Range Of Categories",
+    "categoriesDescription": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.",
+    "askQuestion": "Ask a question"
   },
   "faq": {
-    "question1": "Milloin varaukseni hyväksytään?",
-    "answer1": "Tarkastelemme varauksia niin pian kuin mahdollista. Varaukset hyväksytään yleensä 2-3 päivän kuluessa. Jos olet odottanut yli 5 päivää, lähetä meille sähköpostia",
-    "question2": "Kuinka kauan voin varata tuotteita?",
-    "answer2": "Yksi varaus voi olla enintään kahden viikon kesto",
-    "question3": "Miksi minun on hyväksyttävä ennen esineiden varaamista?",
-    "answer3": "Näemme käyttäjien hyväksynnän takuiksi siitä, että paastonsa tuotteet palautetaan korkeintaan 2 viikon kuluttua."
+    "question1": "When will my booking be approved?",
+    "answer1": "We look through bookings as soon as we can. Bookings are usually approved within the span of 2-3 days. If you've waited longer than 5 days, send us an email",
+    "question2": "How long can I book items for?",
+    "answer2": "One booking can be a maximum duration of two weeks",
+    "question3": "Why do I have to be approved before booking items?",
+    "answer3": "We see the approval of our users as a guarantee that the items which have been lent will be returned after a maximum of 2 weeks."
   },
   "button": {
-    "test": "testata"
+    "test": ""
   }
 }

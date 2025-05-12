@@ -38,7 +38,7 @@ function Home() {
           sx={{ width: 'clamp(150px, 85vw, 797px)', textAlign: 'center', height: '100%', display: 'flex', gap: '35px', margin: 'auto', justifyContent: 'center', flexDirection: 'column' }}>
 
           <Typography variant='h1'>
-            <Trans i18nKey="home.heroTitle">This is a testHome for live-action role-playing games props</Trans>
+            <Trans i18nKey="home.heroTitle">Home for live-action role-playing games props</Trans>
           </Typography>
           <Typography variant='body3' color='text.main'>
             <Trans i18nKey="home.heroDescription">
