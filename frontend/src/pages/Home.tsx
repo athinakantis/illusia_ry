@@ -5,12 +5,12 @@ import { fetchAllCategories, selectAllCategories } from '../slices/itemsSlice';
 import { Link } from 'react-router-dom';
 import { GridExpandMoreIcon } from '@mui/x-data-grid';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import { Trans, useTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
 
 function Home() {
   const categories = useAppSelector(selectAllCategories)
   const dispatch = useAppDispatch()
-  const { t } = useTranslation();
+
 
   useEffect(() => {
     if (categories.length < 1) {
