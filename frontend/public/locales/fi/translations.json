@@ -29,8 +29,5 @@
     "answer2": "Yhden varauksen kesto voi olla enintään kaksi viikkoa",
     "question3": "Miksi minun on saatava hyväksyntä ennen kuin voin varata tuotteita?",
     "answer3": "Käyttäjiemme hyväksyntä takaa meille, että lainatut esineet palautetaan viimeistään kahden viikon kuluessa."
-  },
-  "button": {
-    "test": "Testa painike"
   }
 }
