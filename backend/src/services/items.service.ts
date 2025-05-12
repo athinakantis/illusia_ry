@@ -4,16 +4,15 @@ import { Tables } from 'src/types/supabase';
 import { CustomRequest } from 'src/types/request.type';
 import { ApiResponse } from 'src/types/response';
 
-
 @Injectable()
 export class ItemService {
-  constructor(
-    private readonly supabaseService: SupabaseService
-  ) {}
+  constructor(private readonly supabaseService: SupabaseService) {}
 
-  async addItem(req: CustomRequest, item: Partial<Tables<'items'>>): Promise<ApiResponse<Tables<'items'>>> {
-
-const supabase = req['supabase'];
+  async addItem(
+    req: CustomRequest,
+    item: Partial<Tables<'items'>>,
+  ): Promise<ApiResponse<Tables<'items'>>> {
+    const supabase = req['supabase'];
 
     const {
       item_name,
@@ -25,6 +24,13 @@ const supabase = req['supabase'];
       visible,
     } = item;
 
+    // Ensure image_path is always an array (optional, for safety)
+    const imagePathArray = Array.isArray(image_path)
+      ? image_path
+      : image_path
+        ? [image_path]
+        : [];
+
     try {
       // Insert the new item into the database
       const { data, error } = await supabase
@@ -32,11 +38,11 @@ const supabase = req['supabase'];
         .insert({
           item_name,
           description,
-          image_path,
+          image_path: imagePathArray,
           location,
           quantity,
           category_id,
-          visible: visible ?? true
+          visible: visible ?? true,
           // Assuming created_at and item_id are handled by the database
         })
         .select() // Select the newly created item to return it
@@ -71,16 +77,22 @@ const supabase = req['supabase'];
     }
   }
 
-
-
   async updateItem(
     req: CustomRequest,
     itemId: string,
-    item: Partial<Tables<'items'>>
+    item: Partial<Tables<'items'>>,
   ): Promise<ApiResponse<Tables<'items'>>> {
     const supabase = req['supabase'];
 
-    const { item_name, description, image_path, location, quantity, category_id, visible } = item;
+    const {
+      item_name,
+      description,
+      image_path,
+      location,
+      quantity,
+      category_id,
+      visible,
+    } = item;
 
     const { data, error } = await supabase
       .from('items')

@@ -121,8 +121,9 @@ const SingleItem = () => {
           <CardMedia
             component="img"
             onError={handleBrokenImg}
-            image={item?.image_path
-            }
+            // image={item?.image_path
+            // }
+            image={Array.isArray(item.image_path) ? item.image_path[0] : item.image_path}
             alt={item?.item_name}
             sx={{
               width: 400,
