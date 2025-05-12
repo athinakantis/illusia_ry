@@ -2,14 +2,19 @@
 export default {
     contextSeparator: '_',
     // Key separator used in your translation keys
-
-    createOldCatalogs: false,
+  
+    createOldCatalogs: true,
     // Save the \_old files
   
     defaultNamespace: 'translations',
     // Default namespace used in your i18next config
   
-    defaultValue: (lng, ns, key, fallbackValue) => fallbackValue ?? key,
+    defaultValue: (lng: string, ns: string, key: string, fallbackValue: string) => {
+      if (lng === 'en') {
+        return fallbackValue ?? key;
+      }
+      return '';
+    },
     transSupportBasicHtmlNodes: true,
     transKeepBasicHtmlNodesFor: ['strong', 'em'],
     // Default value to give to keys with no value
@@ -74,7 +79,7 @@ export default {
     sort: false,
     // Whether or not to sort the catalog. Can also be a [compareFunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters)
   
-    verbose: true,
+    verbose: false,
     // Display info about the parsing including some stats
   
     failOnWarnings: false,

@@ -2,6 +2,18 @@ const fs = require('fs');
 const path = require('path');
 const { translate } = require('@vitalets/google-translate-api');
 
+// Load existing Finnish translations for caching
+const fiPath = path.resolve('public/locales/fi/translations.json');
+let existingFiCatalog = {};
+if (fs.existsSync(fiPath)) {
+  try {
+    existingFiCatalog = JSON.parse(fs.readFileSync(fiPath, 'utf8'));
+  } catch (e) {
+    console.warn('Could not parse existing Finnish catalog, starting fresh.');
+    existingFiCatalog = {};
+  }
+}
+
 async function autoTranslate() {
   // 1. Load your English catalog
   const enPath = path.resolve('public/locales/en/translations.json');
@@ -11,22 +23,23 @@ async function autoTranslate() {
   const fiCatalog = {};
 
   for (const [namespace, entries] of Object.entries(enCatalog)) {
+    // Initialize namespace cache
+    const namespaceCache = existingFiCatalog[namespace] || {};
     fiCatalog[namespace] = {};
     for (const [key, value] of Object.entries(entries)) {
-      // Skip untranslated or empty defaults if desired
-      const textToTranslate = value || key;
-      // 3. Translate to Finnish
-      /*  
-         translate(text, { to: 'fi' })
-         returns a promise resolving to { text: 'tallenna', from: { language: { iso: 'en' } } }
-      */
-      const res = await translate(textToTranslate, { to: 'fi' });
-      fiCatalog[namespace][key] = res.text;
+      // Use cached translation if available
+      if (namespaceCache[key]) {
+        fiCatalog[namespace][key] = namespaceCache[key];
+      } else {
+        // Translate English text to Finnish
+        const textToTranslate = value;
+        const res = await translate(textToTranslate, { to: 'fi' });
+        fiCatalog[namespace][key] = res.text;
+      }
     }
   }
 
   // 4. Write the Finnish JSON
-  const fiPath = path.resolve('public/locales/fi/translations.json');
   fs.writeFileSync(fiPath, JSON.stringify(fiCatalog, null, 2), 'utf8');
   console.log('✅ Finnish translations updated!');
 }

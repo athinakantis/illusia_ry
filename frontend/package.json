@@ -10,15 +10,17 @@
     "type-check": "tsc --noEmit",
     "preview": "vite preview",
     "test": "vitest",
-    "extract:i18n": "i18next 'src/**/*.{js,jsx,ts,tsx}' --config i18next-parser.config.js",
+    "extract:i18n": "i18next 'src/**/*.{js,jsx,ts,tsx}' --config i18next-parser.config.ts ",
     "i18n:all": "npm run extract:i18n && npm run translate:fi",
-    "translate:fi": "node scripts/google-translate.cjs"
+    "translate:fi": "node scripts/google-translate.cjs",
+    "google-translate": "node scripts/real-google-translate.js"
   },
   "dependencies": {
     "@adobe/react-spectrum": "^3.41.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fontsource/roboto": "^5.2.5",
+    "@google-cloud/translate": "^9.0.1",
     "@internationalized/date": "^3.8.0",
     "@mui/icons-material": "^7.0.0",
     "@mui/material": "^7.0.0",
