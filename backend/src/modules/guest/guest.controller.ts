@@ -6,8 +6,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { GuestService } from './guest.service';
-import { AuthGuard } from 'src/guards/auth.guard';
-
+import { AuthGuard } from 'src/guards/role.guard';
 
 // These routes are for users who are not logged in.
 @Controller('items')

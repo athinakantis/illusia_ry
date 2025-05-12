@@ -18,12 +18,13 @@ import { ViewsModule } from '../views/view.module';
 import { ItemReservationsModule } from '../reservations/reservations.module';
 import { MailerModule } from '../mailer/mailer.module';
 import { ItemModule } from '../item/item.module';
+import { SystemLogsModule } from '../system_logs/system_logs.module';
+import { SystemLogsController } from '../system_logs/system_logs.controller';
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    // Import other modules here if needed
     CategoriesModule,
     TagModule,
     AdminModule,
@@ -32,17 +33,15 @@ import { ItemModule } from '../item/item.module';
     ItemReservationsModule,
     MailerModule,
     ItemModule,
-   
+    SystemLogsModule,    
+    // Import other modules here if needed
   ],
   controllers: [
     AppController,
-
-    
-  ], // Controller imports go here
+  ],
   providers: [
     AppService,
-
-  ], // Services are used to handle business logic and data access
+  ],
 })
 
 export class AppModule implements NestModule {
@@ -55,7 +54,9 @@ export class AppModule implements NestModule {
       ItemReservationsController,
       AdminController,
       TagController,
-      CategoryController
+      CategoryController,
+      SystemLogsController,
+      // Add other controllers that need authentication here
       );
   }
 }
