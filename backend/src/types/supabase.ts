@@ -97,14 +97,14 @@ export type Database = {
           category_name?: string | null;
           created_at?: string | null;
           description?: string | null;
-          image_path?: string | null;
+          image_path?: string[] | null;
         };
         Update: {
           category_id?: string;
           category_name?: string | null;
           created_at?: string | null;
           description?: string | null;
-          image_path?: string | null;
+          image_path?: string[] | null;
         };
         Relationships: [];
       };

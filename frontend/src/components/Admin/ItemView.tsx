@@ -27,6 +27,8 @@ import { ImPencil2 } from 'react-icons/im';
 import { CiTrash } from 'react-icons/ci';
 import Spinner from '../Spinner';
 import { useAuth } from '../../hooks/useAuth';
+import Slider from "react-slick";
+
 
 const SingleItem = () => {
   const { itemId } = useParams<{ itemId: string }>();
