@@ -1,5 +1,6 @@
 // utils/bookings.ts
 import { parseISO, differenceInDays } from 'date-fns';
+import { UpcomingBooking } from '../types/types';
 
 /*----------- Types ----------------*/
 export interface Reservation {
@@ -96,5 +97,16 @@ export function buildBookingOverviews(
       status: b.status,
       createdAt: b.created_at,
     };
+  });
+}
+
+export function filterUniqueBookings(bookings: UpcomingBooking[]): UpcomingBooking[] {
+  const seen = new Set<string>();
+  return bookings.filter((booking) => {
+    if (seen.has(booking.booking_id)) {
+      return false;
+    }
+    seen.add(booking.booking_id);
+    return true;
   });
 }

@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 // import { useAuth } from '../../hooks/useAuth';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { computeDuration } from '../../utility/bookings';
+import { computeDuration, filterUniqueBookings } from '../../utility/bookings';
 // import { buildBookingOverviews, BookingOverview } from '../../utility/bookings';
 import { supabase } from '../../config/supabase';
 import { Link as MuiLink } from '@mui/material';
@@ -90,7 +90,7 @@ const AdminDashboard = () => {
       bookingsApi
         .getUpcomingBookings()
         .then((result) => {
-          setUpcomingBookings(result.data)
+          setUpcomingBookings(filterUniqueBookings(result.data).slice(0, 3))
         });
   }, [dispatch, users.length, items.length, bookings.length, reservations.length, upcomingBookings.length]);
 
