@@ -13,9 +13,14 @@ export const UploadAvatar: React.FC = () => {
   const initialUrl = useCurrentUserImage();
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
-  useEffect(() => {
-    setAvatarUrl(initialUrl || null);
-  }, [initialUrl]);
+useEffect(() => {
+  if (initialUrl) {
+    // Bust cache on initial load
+    setAvatarUrl(`${initialUrl}?updated_at=${Date.now()}`);
+  } else {
+    setAvatarUrl(null);
+  }
+}, [initialUrl]);
 
   if (!userId) {
     console.error('You must be logged in to upload an avatar');
@@ -23,19 +28,23 @@ export const UploadAvatar: React.FC = () => {
   }
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    console.log('⚙️ handleFileChange called, files:', e.target.files);
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
+    console.log('⚙️ Starting upload for file:', file);
 
     const fileExt = file.name.split('.').pop();
     const fileName = `${userId}.${fileExt}`;
     const filePath = `${userId}/${fileName}`;
+    console.log('⚙️ Generated filePath:', filePath);
 
     // upload to Supabase Storage
     const { error: uploadError } = await supabase
       .storage
       .from('avatars')
       .upload(filePath, file, { upsert: true });
+    console.log('⚙️ Upload response – error:', uploadError);
 
     if (uploadError) {
       console.error('Error uploading avatar:', uploadError.message);
@@ -48,18 +57,32 @@ export const UploadAvatar: React.FC = () => {
       .storage
       .from('avatars')
       .getPublicUrl(filePath);
+    console.log('⚙️ Retrieved publicUrl:', publicUrl);
 
-    setAvatarUrl(publicUrl);
+    // Bust browser cache by appending a timestamp query param
+    const publicUrlWithTimestamp = `${publicUrl}?updated_at=${Date.now()}`;
+    setAvatarUrl(publicUrlWithTimestamp);
+    console.log('⚙️ Set avatarUrlWithTimestamp:', publicUrlWithTimestamp);
 
     // Persist to users table
-    const { error: updateError } = await supabase
+    console.log('⚙️ Persisting avatar URL to users table:', publicUrl);
+    const {data, error: updateError } = await supabase
       .from('users')
       .update({ profile_image_url: publicUrl })
-      .eq('user_id', userId);
-    if (updateError) {
-      console.error('Error updating user avatar URL in users table:', updateError.message);
+      .eq('user_id', userId)
+      .select('profile_image_url')
+      .single();
+    if (data) {
+      console.log('User avatar URL updated in users table:', data.profile_image_url);
+      console.log('⚙️ update response data:', data);
+      // No need to setAvatarUrl here; keep using the timestamped URL.
+    } else {
+      console.error('Error updating user avatar URL in users table:', updateError?.message);
+      console.log('⚙️ update response error:', updateError);
     }
-
+    
+    
+    console.log('⚙️ handleFileChange complete.');
     setUploading(false);
   };
   // If image is still loading, show skeleton
