@@ -339,7 +339,8 @@ function Items() {
                           onError={handleBrokenImg}
                           sx={{
                             height: '100%',
-                            transition: 'scale 200ms'
+                            transition: 'scale 200ms',
+                            backgroundColor: 'background.verylightgrey'
                           }}
                         />
                       </Box>

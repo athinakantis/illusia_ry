@@ -176,15 +176,23 @@ const SingleItem = () => {
         </Button>
       </Box>
 
-      <Grid
-        container
-        spacing={4}
-        justifyContent="center"
-      // alignItems="flex-start"
-      // sx={{ maxWidth: { xs: '100%', md: 900 }, mx: 'auto' }}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
+          maxWidth: 1200,
+          margin: '0 auto',
+          justifyContent: 'center',
+          gap: 4
+        }}
       >
         {/* Left Column: Image */}
-        <Grid item xs={12} sm={6} md={6} sx={{ maxWidth: 400, width: '100%' }}>
+        <Box
+          sx={{
+            width: { xs: '100%', sm: '50%' },
+            maxWidth: 500
+          }}
+        >
           <Box
             sx={{
               width: '100%',
@@ -192,8 +200,9 @@ const SingleItem = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              // position: 'sticky',
-              top: 20
+              position: 'sticky',
+              top: 20,
+              height: 'fit-content'
             }}
           >
             {item && Array.isArray(item.image_path) && item.image_path.some(imgUrl => typeof imgUrl === 'string' && imgUrl.trim() !== '') ? (
@@ -224,7 +233,7 @@ const SingleItem = () => {
                           alt={`${item.item_name} image ${idx + 1}`}
                           sx={{
                             width: '100%',
-                            maxWidth: 400,
+                            maxWidth: '100%',
                             maxHeight: 400,
                             objectFit: 'cover',
                             borderRadius: 2,
@@ -241,22 +250,27 @@ const SingleItem = () => {
                 component="img"
                 sx={{
                   width: '100%',
-                  maxWidth: 400,
+                  maxWidth: '100%',
                   maxHeight: 400,
-                  height: 400,
+                  // height: 200,
                   objectFit: 'cover',
                   borderRadius: 2,
-                  bgcolor: 'background.lightgrey',
+                  bgcolor: 'background.verylightgrey',
                 }}
                 src={'/src/assets/broken_img.png'}
                 alt={item?.item_name || 'Item'}
               />
             )}
           </Box>
-        </Grid>
+        </Box>
 
         {/* Right Column: Details */}
-        <Grid item xs={12} sm={6} md={6}>
+        <Box
+          sx={{
+            width: { xs: '100%', sm: '50%' },
+            maxWidth: 500
+          }}
+        >
           <Box sx={{ height: '100%' }}>
             <Typography variant="heading_secondary" gutterBottom component="h1">
               {item?.item_name}
@@ -387,8 +401,8 @@ const SingleItem = () => {
               </div>
             </Stack>
           </Box>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </Box>
   );
 };
