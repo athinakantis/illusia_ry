@@ -22,7 +22,52 @@ import { showCustomSnackbar } from '../CustomSnackbar';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 
+// Custom arrow components
+const NextArrow = (props: any) => {
+  const { onClick } = props;
+  return (
+    <IconButton
+      onClick={onClick}
+      sx={{
+        position: 'absolute',
+        right: 10,
+        top: '50%',
+        transform: 'translateY(-50%)',
+        zIndex: 1,
+        bgcolor: 'rgba(255, 255, 255, 0.8)',
+        '&:hover': {
+          bgcolor: 'rgba(255, 255, 255, 0.9)',
+        },
+      }}
+    >
+      <ArrowForwardIos />
+    </IconButton>
+  );
+};
+
+const PrevArrow = (props: any) => {
+  const { onClick } = props;
+  return (
+    <IconButton
+      onClick={onClick}
+      sx={{
+        position: 'absolute',
+        left: 10,
+        top: '50%',
+        transform: 'translateY(-50%)',
+        zIndex: 1,
+        bgcolor: 'rgba(255, 255, 255, 0.8)',
+        '&:hover': {
+          bgcolor: 'rgba(255, 255, 255, 0.9)',
+        },
+      }}
+    >
+      <ArrowBackIos />
+    </IconButton>
+  );
+};
 
 const ItemDetail: React.FC = () => {
 
@@ -119,7 +164,9 @@ const ItemDetail: React.FC = () => {
               speed={500}
               slidesToShow={1}
               slidesToScroll={1}
-              arrows
+              arrows={item.image_path.length > 1}
+              nextArrow={<NextArrow />}
+              prevArrow={<PrevArrow />}
             >
               {item.image_path
                 .filter((imgUrl): imgUrl is string => typeof imgUrl === 'string')
@@ -149,7 +196,7 @@ const ItemDetail: React.FC = () => {
                 height: 'auto',
                 borderRadius: 2,
                 objectFit: 'cover',
-                boxShadow: 3,
+                boxShadow: 0,
               }}
               onError={handleBrokenImg}
               src={'/src/assets/broken_img.png'}
@@ -193,7 +240,7 @@ const ItemDetail: React.FC = () => {
                 isDisabled={(selectedDateRange.start_date != null)}
               />
             </Provider>
-
+            s
             <Stack
               direction="row"
               spacing={2}

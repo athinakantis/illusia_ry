@@ -21,15 +21,61 @@ import {
   MenuItem,
   SelectChangeEvent,
   Stack,
+  IconButton,
 } from '@mui/material';
 import { ImPencil2 } from 'react-icons/im';
 import { CiTrash } from 'react-icons/ci';
+import { ArrowBack, ArrowForward, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import Spinner from '../Spinner';
 import { useAuth } from '../../hooks/useAuth';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+// Add these custom arrow components before the SingleItem component
+const NextArrow = (props: any) => {
+  const { onClick } = props;
+  return (
+    <IconButton
+      onClick={onClick}
+      sx={{
+        position: 'absolute',
+        right: 10,
+        top: '50%',
+        transform: 'translateY(-50%)',
+        zIndex: 1,
+        bgcolor: 'rgba(255, 255, 255, 0.8)',
+        '&:hover': {
+          bgcolor: 'rgba(255, 255, 255, 0.9)',
+        },
+      }}
+    >
+      <ArrowForwardIos />
+    </IconButton>
+  );
+};
+
+const PrevArrow = (props: any) => {
+  const { onClick } = props;
+  return (
+    <IconButton
+      onClick={onClick}
+      sx={{
+        position: 'absolute',
+        left: 10,
+        top: '50%',
+        transform: 'translateY(-50%)',
+        zIndex: 1,
+        bgcolor: 'rgba(255, 255, 255, 0.8)',
+        '&:hover': {
+          bgcolor: 'rgba(255, 255, 255, 0.9)',
+        },
+      }}
+    >
+      <ArrowBackIos />
+    </IconButton>
+  );
+};
 
 const SingleItem = () => {
   const { itemId } = useParams<{ itemId: string }>();
@@ -107,186 +153,222 @@ const SingleItem = () => {
 
   return (
     <Box sx={{ p: 3, maxWidth: 1300, margin: 'auto' }}>
-      <Button
-        variant="outlined"
-        size="small"
-        component={Link}
-        to="/items"
-      >
-        Back
-      </Button>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start', px: 1, pb: 3 }}>
-        <Typography variant="heading_secondary" gutterBottom component="h1">
-          {item?.item_name}
-        </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, px: 1, pb: 3 }}>
+        <Button
+          component={Link}
+          to="/items"
+          startIcon={<ArrowBack />}
+          variant="text"
+          sx={{
+            color: 'text.secondary',
+            '&:hover': {
+              color: 'text.primary',
+              bgcolor: 'action.hover',
+            },
+          }}
+        >
+          Back
+        </Button>
       </Box>
 
-      <Grid container spacing={4} justifyContent={'center'}>
+      <Grid
+        container
+        spacing={4}
+        justifyContent="center"
+      // alignItems="flex-start"
+      // sx={{ maxWidth: { xs: '100%', md: 900 }, mx: 'auto' }}
+      >
         {/* Left Column: Image */}
-        <Grid item xs={12} sm={6}>
-          {item && Array.isArray(item.image_path) && item.image_path.length > 0 ? (
-            <Slider
-              dots={item.image_path.length > 1}
-              infinite={item.image_path.length > 1}
-              speed={500}
-              slidesToShow={1}
-              slidesToScroll={1}
-              arrows={item.image_path.length > 1}
-            >
-              {item.image_path
-                .filter((imgUrl): imgUrl is string => typeof imgUrl === 'string')
-                .map((imgUrl, idx) => (
-                  <Box key={idx}>
-                    <CardMedia
-                      component="img"
-                      onError={handleBrokenImg}
-                      image={imgUrl}
-                      alt={`${item.item_name} image ${idx + 1}`}
-                      sx={{
-                        width: '100%',
-                        maxWidth: 400,
-                        objectFit: 'contain',
-                        borderRadius: 2,
-                        bgcolor: 'background.lightgrey',
-                        margin: '0 auto',
-                      }}
-                    />
-                  </Box>
-                ))}
-            </Slider>
-          ) : item && Array.isArray(item.image_path) && item.image_path.length === 0 ? (
-            <Box>No images available</Box>
-          ) : null}
+        <Grid item xs={12} sm={6} md={6} sx={{ maxWidth: 400, width: '100%' }}>
+          <Box
+            sx={{
+              width: '100%',
+              minHeight: 400,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'sticky',
+              top: 20
+            }}
+          >
+            {item && Array.isArray(item.image_path) && item.image_path.length > 0 ? (
+              <Box sx={{ width: '100%' }}>
+                <Slider
+                  dots={item.image_path.length > 1}
+                  infinite={item.image_path.length > 1}
+                  speed={500}
+                  slidesToShow={1}
+                  slidesToScroll={1}
+                  arrows={item.image_path.length > 1}
+                  nextArrow={<NextArrow />}
+                  prevArrow={<PrevArrow />}
+                >
+                  {item.image_path
+                    .filter((imgUrl): imgUrl is string => typeof imgUrl === 'string')
+                    .map((imgUrl, idx) => (
+                      <div key={idx} style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100%'
+                      }}>
+                        <CardMedia
+                          component="img"
+                          onError={handleBrokenImg}
+                          image={imgUrl}
+                          alt={`${item.item_name} image ${idx + 1}`}
+                          sx={{
+                            width: '100%',
+                            maxWidth: 400,
+                            maxHeight: 400,
+                            objectFit: 'cover',
+                            borderRadius: 2,
+                            bgcolor: 'background.lightgrey',
+                            margin: '0 auto',
+                          }}
+                        />
+                      </div>
+                    ))}
+                </Slider>
+              </Box>
+            ) : item && Array.isArray(item.image_path) && item.image_path.length === 0 ? (
+              <Typography>No images available</Typography>
+            ) : null}
+          </Box>
         </Grid>
 
         {/* Right Column: Details */}
-        <Grid item xs={12} sm={6} md={4}>
-          <Stack sx={{ gap: 2, flex: 1 }}>
-            <Box >
-              <Typography variant="subtitle1" color="text.secondary">
-                Description
-              </Typography>
-              {isEditing && formData ? (
-                <TextField
-                  fullWidth
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                />
-              ) : (
-                <Typography variant="body1">
-                  {item?.description || '-'}
+        <Grid item xs={12} sm={6} md={6}>
+          <Box sx={{ height: '100%' }}>
+            <Typography variant="heading_secondary" gutterBottom component="h1">
+              {item?.item_name}
+            </Typography>
+            <Stack sx={{ gap: 2, flex: 1 }}>
+              <div>
+                <Typography variant="subtitle1" color="text.secondary">
+                  Description
                 </Typography>
-              )}
-            </Box>
-
-            <Box>
-              <Typography variant="subtitle1" color="text.secondary">
-                Location:
-              </Typography>
-              {isEditing && formData ? (
-                <TextField
-                  fullWidth
-                  name="location"
-                  value={formData.location}
-                  onChange={handleChange}
-                />
-              ) : (
-                <Typography variant="body1">{item?.location || '-'}</Typography>
-              )}
-            </Box>
-
-
-            <Box >
-              <Typography variant="subtitle1" color="text.secondary">
-                Quantity:
-              </Typography>
-              {isEditing && formData ? (
-                <TextField
-                  fullWidth
-                  name="quantity"
-                  type="number"
-                  InputProps={{ inputProps: { min: 1 } }}
-                  value={formData.quantity}
-                  onChange={handleChange}
-                />
-              ) : (
-                <Typography variant="body1">{item?.quantity ?? '-'}</Typography>
-              )}
-            </Box>
-
-
-            <Box >
-              <Typography variant="subtitle1" color="text.secondary">
-                Category:
-              </Typography>
-              {isEditing && formData ? (
-                <Select
-                  value={formData.category_id}
-                  label="Category"
-                  name='category_id'
-                  onChange={handleSelectChange}
-                >
-                  {categories.map((category) => (
-                    <MenuItem key={category.category_id} value={category.category_id}>
-                      {category.category_name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              ) : (
+                {isEditing && formData ? (
+                  <TextField
+                    fullWidth
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    multiline
+                    rows={4}
+                  />
+                ) : (
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-word',
+                      maxHeight: '200px',
+                      overflowY: 'auto'
+                    }}
+                  >
+                    {item?.description || '-'}
+                  </Typography>
+                )}
+              </div>
+              <div>
+                <Typography variant="subtitle1" color="text.secondary">
+                  Location:
+                </Typography>
+                {isEditing && formData ? (
+                  <TextField
+                    fullWidth
+                    name="location"
+                    value={formData.location}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <Typography variant="body1">{item?.location || '-'}</Typography>
+                )}
+              </div>
+              <div>
+                <Typography variant="subtitle1" color="text.secondary">
+                  Quantity:
+                </Typography>
+                {isEditing && formData ? (
+                  <TextField
+                    fullWidth
+                    name="quantity"
+                    type="number"
+                    InputProps={{ inputProps: { min: 1 } }}
+                    value={formData.quantity}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <Typography variant="body1">{item?.quantity ?? '-'}</Typography>
+                )}
+              </div>
+              <div>
+                <Typography variant="subtitle1" color="text.secondary">
+                  Category:
+                </Typography>
+                {isEditing && formData ? (
+                  <Select
+                    value={formData.category_id}
+                    label="Category"
+                    name='category_id'
+                    onChange={handleSelectChange}
+                  >
+                    {categories.map((category) => (
+                      <MenuItem key={category.category_id} value={category.category_id}>
+                        {category.category_name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                ) : (
+                  <Typography variant="body1" sx={{ wordBreak: 'break-all' }}>
+                    {itemCategory?.category_name || '-'}
+                  </Typography>
+                )}
+              </div>
+              <div>
+                <Typography variant="subtitle1" color="text.secondary">
+                  Item ID:
+                </Typography>
                 <Typography variant="body1" sx={{ wordBreak: 'break-all' }}>
-                  {itemCategory?.category_name || '-'}
+                  {item?.item_id || '-'}
                 </Typography>
-              )}
-            </Box>
-
-
-            <Box >
-              <Typography variant="subtitle1" color="text.secondary">
-                Item ID:
-              </Typography>
-              <Typography variant="body1" sx={{ wordBreak: 'break-all' }}>
-                {item?.item_id || '-'}
-              </Typography>
-            </Box>
-
-
-            <Box >
-              <Typography variant="subtitle1" color="text.secondary">
-                Created At:
-              </Typography>
-
-              <Typography variant="body1">
-                {item?.created_at ? formatDate(item.created_at) : '-'}
-              </Typography>
-            </Box>
-
-            <Box display="flex" gap={2}>
-              {isEditing ? (
-                <Button variant="contained" color="success" onClick={handleSave}>
-                  Save
-                </Button>
-              ) : (
-                <>
-                  <Button
-                    startIcon={<ImPencil2 />}
-                    variant="contained"
-                    color="primary"
-                    onClick={handleEdit}
-                  >
-                    Edit
+              </div>
+              <div>
+                <Typography variant="subtitle1" color="text.secondary">
+                  Created At:
+                </Typography>
+                <Typography variant="body1">
+                  {item?.created_at ? formatDate(item.created_at) : '-'}
+                </Typography>
+              </div>
+              <div style={{ display: 'flex', gap: 16 }}>
+                {isEditing ? (
+                  <Button variant="contained" color="success" onClick={handleSave}>
+                    Save
                   </Button>
-                  <Button
-                    startIcon={<CiTrash />}
-                    color="error"
-                    onClick={handleDelete}
-                  >
-                    Delete
-                  </Button>
-                </>
-              )}
-            </Box>
-          </Stack>
+                ) : (
+                  <>
+                    <Button
+                      startIcon={<ImPencil2 />}
+                      variant="contained"
+                      color="primary"
+                      onClick={handleEdit}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      startIcon={<CiTrash />}
+                      color="error"
+                      onClick={handleDelete}
+                    >
+                      Delete
+                    </Button>
+                  </>
+                )}
+              </div>
+            </Stack>
+          </Box>
         </Grid>
       </Grid>
     </Box>
