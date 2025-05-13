@@ -115,7 +115,7 @@ const ItemDetail: React.FC = () => {
           {item && Array.isArray(item.image_path) && item.image_path.length > 0 ? (
             <Slider
               dots
-              infinite
+              infinite={item.image_path.length > 1}
               speed={500}
               slidesToShow={1}
               slidesToScroll={1}

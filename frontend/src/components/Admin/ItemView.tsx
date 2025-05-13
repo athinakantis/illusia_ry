@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { formatDate } from '../../utility/formatDate';
 import {
@@ -15,7 +15,6 @@ import {
   Button,
   CardMedia,
   Grid,
-  Paper,
   Typography,
   TextField,
   Select,
@@ -107,32 +106,32 @@ const SingleItem = () => {
   console.log('item.image_path:', item?.image_path);
 
   return (
-    <Paper elevation={1} sx={{ p: 3, maxWidth: 1000, margin: 'auto', mt: 2 }}>
-      <Stack direction={'row'} justifyContent={'space-between'}>
+    <Box sx={{ p: 3, maxWidth: 1300, margin: 'auto' }}>
+      <Button
+        variant="outlined"
+        size="small"
+        component={Link}
+        to="/items"
+      >
+        Back
+      </Button>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', px: 1, pb: 3 }}>
         <Typography variant="heading_secondary" gutterBottom component="h1">
           {item?.item_name}
         </Typography>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={() => navigate(-1)}
-          sx={{ height: 'fit-content' }}
-        >
-          Back
-        </Button>
-      </Stack>
+      </Box>
 
-      <Grid container spacing={3}>
-        {/* Image Section */}
-        <Grid component={Box}>
+      <Grid container spacing={4} justifyContent={'center'}>
+        {/* Left Column: Image */}
+        <Grid item xs={12} sm={6}>
           {item && Array.isArray(item.image_path) && item.image_path.length > 0 ? (
             <Slider
-              dots
-              infinite
+              dots={item.image_path.length > 1}
+              infinite={item.image_path.length > 1}
               speed={500}
               slidesToShow={1}
               slidesToScroll={1}
-              arrows
+              arrows={item.image_path.length > 1}
             >
               {item.image_path
                 .filter((imgUrl): imgUrl is string => typeof imgUrl === 'string')
@@ -144,10 +143,12 @@ const SingleItem = () => {
                       image={imgUrl}
                       alt={`${item.item_name} image ${idx + 1}`}
                       sx={{
-                        width: 400,
+                        width: '100%',
+                        maxWidth: 400,
                         objectFit: 'contain',
                         borderRadius: 2,
                         bgcolor: 'background.lightgrey',
+                        margin: '0 auto',
                       }}
                     />
                   </Box>
@@ -158,135 +159,137 @@ const SingleItem = () => {
           ) : null}
         </Grid>
 
-        {/* Details Section */}
-        <Stack sx={{ gap: 2, flex: 1 }}>
-          <Box >
-            <Typography variant="subtitle1" color="text.secondary">
-              Description
-            </Typography>
-            {isEditing && formData ? (
-              <TextField
-                fullWidth
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-              />
-            ) : (
-              <Typography variant="body1">
-                {item?.description || '-'}
+        {/* Right Column: Details */}
+        <Grid item xs={12} sm={6} md={4}>
+          <Stack sx={{ gap: 2, flex: 1 }}>
+            <Box >
+              <Typography variant="subtitle1" color="text.secondary">
+                Description
               </Typography>
-            )}
-          </Box>
+              {isEditing && formData ? (
+                <TextField
+                  fullWidth
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                />
+              ) : (
+                <Typography variant="body1">
+                  {item?.description || '-'}
+                </Typography>
+              )}
+            </Box>
 
-          <Box>
-            <Typography variant="subtitle1" color="text.secondary">
-              Location:
-            </Typography>
-            {isEditing && formData ? (
-              <TextField
-                fullWidth
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-              />
-            ) : (
-              <Typography variant="body1">{item?.location || '-'}</Typography>
-            )}
-          </Box>
-
-
-          <Box >
-            <Typography variant="subtitle1" color="text.secondary">
-              Quantity:
-            </Typography>
-            {isEditing && formData ? (
-              <TextField
-                fullWidth
-                name="quantity"
-                type="number"
-                InputProps={{ inputProps: { min: 1 } }}
-                value={formData.quantity}
-                onChange={handleChange}
-              />
-            ) : (
-              <Typography variant="body1">{item?.quantity ?? '-'}</Typography>
-            )}
-          </Box>
+            <Box>
+              <Typography variant="subtitle1" color="text.secondary">
+                Location:
+              </Typography>
+              {isEditing && formData ? (
+                <TextField
+                  fullWidth
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                />
+              ) : (
+                <Typography variant="body1">{item?.location || '-'}</Typography>
+              )}
+            </Box>
 
 
-          <Box >
-            <Typography variant="subtitle1" color="text.secondary">
-              Category:
-            </Typography>
-            {isEditing && formData ? (
-              <Select
-                value={formData.category_id}
-                label="Category"
-                name='category_id'
-                onChange={handleSelectChange}
-              >
-                {categories.map((category) => (
-                  <MenuItem key={category.category_id} value={category.category_id}>
-                    {category.category_name}
-                  </MenuItem>
-                ))}
-              </Select>
-            ) : (
+            <Box >
+              <Typography variant="subtitle1" color="text.secondary">
+                Quantity:
+              </Typography>
+              {isEditing && formData ? (
+                <TextField
+                  fullWidth
+                  name="quantity"
+                  type="number"
+                  InputProps={{ inputProps: { min: 1 } }}
+                  value={formData.quantity}
+                  onChange={handleChange}
+                />
+              ) : (
+                <Typography variant="body1">{item?.quantity ?? '-'}</Typography>
+              )}
+            </Box>
+
+
+            <Box >
+              <Typography variant="subtitle1" color="text.secondary">
+                Category:
+              </Typography>
+              {isEditing && formData ? (
+                <Select
+                  value={formData.category_id}
+                  label="Category"
+                  name='category_id'
+                  onChange={handleSelectChange}
+                >
+                  {categories.map((category) => (
+                    <MenuItem key={category.category_id} value={category.category_id}>
+                      {category.category_name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              ) : (
+                <Typography variant="body1" sx={{ wordBreak: 'break-all' }}>
+                  {itemCategory?.category_name || '-'}
+                </Typography>
+              )}
+            </Box>
+
+
+            <Box >
+              <Typography variant="subtitle1" color="text.secondary">
+                Item ID:
+              </Typography>
               <Typography variant="body1" sx={{ wordBreak: 'break-all' }}>
-                {itemCategory?.category_name || '-'}
+                {item?.item_id || '-'}
               </Typography>
-            )}
-          </Box>
+            </Box>
 
 
-          <Box >
-            <Typography variant="subtitle1" color="text.secondary">
-              Item ID:
-            </Typography>
-            <Typography variant="body1" sx={{ wordBreak: 'break-all' }}>
-              {item?.item_id || '-'}
-            </Typography>
-          </Box>
+            <Box >
+              <Typography variant="subtitle1" color="text.secondary">
+                Created At:
+              </Typography>
 
+              <Typography variant="body1">
+                {item?.created_at ? formatDate(item.created_at) : '-'}
+              </Typography>
+            </Box>
 
-          <Box >
-            <Typography variant="subtitle1" color="text.secondary">
-              Created At:
-            </Typography>
-
-            <Typography variant="body1">
-              {item?.created_at ? formatDate(item.created_at) : '-'}
-            </Typography>
-          </Box>
-
-          <Box display="flex" gap={2}>
-            {isEditing ? (
-              <Button variant="contained" color="success" onClick={handleSave}>
-                Save
-              </Button>
-            ) : (
-              <>
-                <Button
-                  startIcon={<ImPencil2 />}
-                  variant="contained"
-                  color="primary"
-                  onClick={handleEdit}
-                >
-                  Edit
+            <Box display="flex" gap={2}>
+              {isEditing ? (
+                <Button variant="contained" color="success" onClick={handleSave}>
+                  Save
                 </Button>
-                <Button
-                  startIcon={<CiTrash />}
-                  color="error"
-                  onClick={handleDelete}
-                >
-                  Delete
-                </Button>
-              </>
-            )}
-          </Box>
-        </Stack>
+              ) : (
+                <>
+                  <Button
+                    startIcon={<ImPencil2 />}
+                    variant="contained"
+                    color="primary"
+                    onClick={handleEdit}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    startIcon={<CiTrash />}
+                    color="error"
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </Button>
+                </>
+              )}
+            </Box>
+          </Stack>
+        </Grid>
       </Grid>
-    </Paper>
+    </Box>
   );
 };
 
