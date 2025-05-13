@@ -237,7 +237,7 @@ export type Database = {
           category_id: string;
           created_at?: string | null;
           description?: string | null;
-          image_path?: string | null;
+          image_path?: string[] | null;
           item_id?: string;
           item_name: string;
           location: string;
@@ -248,7 +248,7 @@ export type Database = {
           category_id?: string;
           created_at?: string | null;
           description?: string | null;
-          image_path?: string | null;
+          image_path?: string[] | null;
           item_id?: string;
           item_name?: string;
           location?: string;
