@@ -27,14 +27,14 @@ import { Box, TextField, Typography } from '@mui/material';
 type CreateItemPayload = Omit<
     TablesInsert<'items'>,
     'item_id' | 'created_at' | 'user_id'
-> & { image_path?: string | null };
+> & { image_path?: string[] | null };
 
 const AdminAddProduct = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { role, user } = useAuth();
     const categories = useAppSelector(selectAllCategories);
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState<FormData>({
         item_name: '',
@@ -86,9 +86,9 @@ const AdminAddProduct = () => {
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
-            setSelectedFile(event.target.files[0]);
+            setSelectedFiles(Array.from(event.target.files));
         } else {
-            setSelectedFile(null);
+            setSelectedFiles([]);
         }
     };
 
@@ -103,47 +103,49 @@ const AdminAddProduct = () => {
         setIsLoading(true);
         showSnackbar('Uploading item...', 'info');
 
-        let imageUrl: string | null = null;
+        let imageUrls: string[] = [];
 
         if (!user) {
             return;
         }
 
         // --- Upload Logic ---
-        if (selectedFile) {
-            const fileExt = selectedFile.name.split('.').pop() ?? 'jpg'; // fallback to jpg
-            const category = formData.category_id; // Or fetch the category name
-            const filePath = `public/items/${category}/${selectedFile.name
-                }_${uuidv4()}.${fileExt}`;
+        if (selectedFiles.length > 0) {
+            const category = formData.category_id;
             const bucketName = 'items';
-            try {
-                const { error: uploadError } = await supabase.storage
-                    .from(bucketName)
-                    .upload(filePath, selectedFile, {
-                        cacheControl: '3600',
-                        upsert: false,
-                    });
+            for (const file of selectedFiles) {
+                const fileExt = file.name.split('.').pop() ?? 'jpg';
+                const filePath = `public/items/${category}/${file.name}_${uuidv4()}.${fileExt}`;
+                try {
+                    const { error: uploadError } = await supabase.storage
+                        .from(bucketName)
+                        .upload(filePath, file, {
+                            cacheControl: '3600',
+                            upsert: false,
+                        });
 
-                if (uploadError) {
-                    throw uploadError;
+                    if (uploadError) {
+                        throw uploadError;
+                    }
+
+                    // Get public URL after successful upload
+                    const { data: urlData } = supabase.storage
+                        .from(bucketName)
+                        .getPublicUrl(filePath);
+
+                    imageUrls.push(urlData?.publicUrl ?? filePath);
+                } catch (error) {
+                    console.error('Error uploading file:', error);
+                    showSnackbar('Failed to upload image. Please try again.', 'error');
+                    setIsLoading(false);
+                    return;
                 }
-
-                // Get public URL after successful upload
-                const { data: urlData } = supabase.storage
-                    .from(bucketName)
-                    .getPublicUrl(filePath);
-
-                imageUrl = urlData?.publicUrl ?? filePath; // Use public URL, fallback to path if needed
-            } catch (error) {
-                console.error('Error uploading file:', error);
-                showSnackbar('Failed to upload image. Please try again.', 'error');
-                return;
             }
         }
 
         const newItemData: CreateItemPayload = {
             ...formData,
-            image_path: imageUrl,
+            image_path: imageUrls,
         };
 
         try {
@@ -157,7 +159,7 @@ const AdminAddProduct = () => {
                 location: '',
                 quantity: 1,
             });
-            setSelectedFile(null);
+            setSelectedFiles([]);
         } catch (err) {
             console.error('Failed to save the item:', err);
             setIsLoading(false);
@@ -250,16 +252,19 @@ const AdminAddProduct = () => {
                         id="item_image"
                         name="item_image"
                         accept="image/*"
-                        onChange={(event) => {
-                            handleFileChange(event);
-                            setSelectedFile(
-                                event.target.files ? event.target.files[0] : null,
-                            );
-                        }}
+                        onChange={handleFileChange}
                         disabled={false}
                         multiple
                     />
                 </Button>
+                {selectedFiles.length > 0 && (
+                    <Box sx={{ mt: 1 }}>
+                        <Typography variant="body2">Selected files:</Typography>
+                        {selectedFiles.map((file, idx) => (
+                            <Typography variant="caption" key={idx}>{file.name}</Typography>
+                        ))}
+                    </Box>
+                )}
                 <Button
                     type="submit"
                     variant="contained"

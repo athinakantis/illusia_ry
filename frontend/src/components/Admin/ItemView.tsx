@@ -28,6 +28,8 @@ import { CiTrash } from 'react-icons/ci';
 import Spinner from '../Spinner';
 import { useAuth } from '../../hooks/useAuth';
 import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 
 const SingleItem = () => {
@@ -97,9 +99,12 @@ const SingleItem = () => {
     (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
   };
 
-  if (loading) {
+  if (!item || typeof item !== 'object' || !('image_path' in item)) {
     return <Spinner />;
   }
+
+  console.log("hello from ItemView");
+  console.log('item.image_path:', item?.image_path);
 
   return (
     <Paper elevation={1} sx={{ p: 3, maxWidth: 1000, margin: 'auto', mt: 2 }}>
@@ -120,20 +125,37 @@ const SingleItem = () => {
       <Grid container spacing={3}>
         {/* Image Section */}
         <Grid component={Box}>
-          <CardMedia
-            component="img"
-            onError={handleBrokenImg}
-            // image={item?.image_path
-            // }
-            image={Array.isArray(item.image_path) ? item.image_path[0] : item.image_path}
-            alt={item?.item_name}
-            sx={{
-              width: 400,
-              objectFit: 'contain',
-              borderRadius: 2,
-              bgcolor: 'background.lightgrey',
-            }}
-          />
+          {item && Array.isArray(item.image_path) && item.image_path.length > 0 ? (
+            <Slider
+              dots
+              infinite
+              speed={500}
+              slidesToShow={1}
+              slidesToScroll={1}
+              arrows
+            >
+              {item.image_path
+                .filter((imgUrl): imgUrl is string => typeof imgUrl === 'string')
+                .map((imgUrl, idx) => (
+                  <Box key={idx}>
+                    <CardMedia
+                      component="img"
+                      onError={handleBrokenImg}
+                      image={imgUrl}
+                      alt={`${item.item_name} image ${idx + 1}`}
+                      sx={{
+                        width: 400,
+                        objectFit: 'contain',
+                        borderRadius: 2,
+                        bgcolor: 'background.lightgrey',
+                      }}
+                    />
+                  </Box>
+                ))}
+            </Slider>
+          ) : item && Array.isArray(item.image_path) && item.image_path.length === 0 ? (
+            <Box>No images available</Box>
+          ) : null}
         </Grid>
 
         {/* Details Section */}

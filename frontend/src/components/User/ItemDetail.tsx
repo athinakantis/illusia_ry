@@ -19,6 +19,9 @@ import { checkAvailabilityForItemOnDates } from '../../selectors/availabilitySel
 import { addItemToCart, selectDateRange } from '../../slices/cartSlice';
 import { store } from '../../store/store';
 import { showCustomSnackbar } from '../CustomSnackbar';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 
 const ItemDetail: React.FC = () => {
@@ -109,19 +112,50 @@ const ItemDetail: React.FC = () => {
       <Grid container spacing={4} justifyContent={'center'}>
         {/* Left Column: Image */}
         <Grid size={{ xs: 12, sm: 6 }}>
-          <Box
-            component="img"
-            sx={{
-              width: '100%',
-              height: 'auto',
-              borderRadius: 2,
-              objectFit: 'cover',
-              boxShadow: 3, //
-            }}
-            onError={handleBrokenImg}
-            src={item?.image_path ?? '/src/assets/broken_img.png'}
-            alt={item?.item_name || 'Item'}
-          />
+          {item && Array.isArray(item.image_path) && item.image_path.length > 0 ? (
+            <Slider
+              dots
+              infinite
+              speed={500}
+              slidesToShow={1}
+              slidesToScroll={1}
+              arrows
+            >
+              {item.image_path
+                .filter((imgUrl): imgUrl is string => typeof imgUrl === 'string')
+                .map((imgUrl, idx) => (
+                  <Box key={idx}>
+                    <Box
+                      component="img"
+                      sx={{
+                        width: '100%',
+                        height: 'auto',
+                        borderRadius: 2,
+                        objectFit: 'cover',
+                        boxShadow: 3,
+                      }}
+                      onError={handleBrokenImg}
+                      src={imgUrl}
+                      alt={`${item.item_name} image ${idx + 1}`}
+                    />
+                  </Box>
+                ))}
+            </Slider>
+          ) : (
+            <Box
+              component="img"
+              sx={{
+                width: '100%',
+                height: 'auto',
+                borderRadius: 2,
+                objectFit: 'cover',
+                boxShadow: 3,
+              }}
+              onError={handleBrokenImg}
+              src={'/src/assets/broken_img.png'}
+              alt={item?.item_name || 'Item'}
+            />
+          )}
         </Grid>
 
         {/* Right Column: Details */}
