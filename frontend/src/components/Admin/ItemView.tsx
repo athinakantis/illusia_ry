@@ -160,13 +160,13 @@ const SingleItem = () => {
           startIcon={<ArrowBack />}
           variant="text"
           sx={{
-            color: 'text.secondary',
-            borderRadius: 10,
-            paddingLeft: 3,
-            paddingRight: 3,
+            backgroundColor: 'primary.black',
+            color: 'text.main',
+            borderRadius: 10, height: 40, paddingLeft: 3, paddingRight: 3,
+
             '&:hover': {
-              color: 'text.primary',
-              bgcolor: 'action.hover',
+              color: 'text.main',
+              bgcolor: 'primary.light',
               borderRadius: 10,
 
             },
@@ -376,7 +376,7 @@ const SingleItem = () => {
               </div>
               <div style={{ display: 'flex', gap: 16 }}>
                 {isEditing ? (
-                  <Button variant="contained" color="success" onClick={handleSave}>
+                  <Button variant="contained" color="primary" onClick={handleSave}>
                     Save
                   </Button>
                 ) : (
@@ -384,14 +384,28 @@ const SingleItem = () => {
                     <Button
                       startIcon={<ImPencil2 />}
                       variant="contained"
-                      color="primary"
+                      sx={{
+                        borderRadius: 10,
+                        height: 40,
+                        paddingLeft: 3,
+                        paddingRight: 3,
+                        bgcolor: 'primary.black',
+                        '&:hover': {
+                          color: 'text.main',
+                          bgcolor: 'primary.light',
+                          borderRadius: 10,
+                        },
+                      }}
+
                       onClick={handleEdit}
                     >
                       Edit
                     </Button>
                     <Button
                       startIcon={<CiTrash />}
+                      variant="outlined"
                       color="error"
+                      sx={{ borderRadius: 10, height: 40, paddingLeft: 3, paddingRight: 3 }}
                       onClick={handleDelete}
                     >
                       Delete

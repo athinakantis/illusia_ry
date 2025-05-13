@@ -151,15 +151,16 @@ const ItemDetail: React.FC = () => {
           startIcon={<ArrowBack />}
           variant="text"
           sx={{
-            color: 'text.secondary',
             borderRadius: 10,
+            height: 40,
             paddingLeft: 3,
             paddingRight: 3,
+            color: 'text.main',
+            bgcolor: 'primary.black',
             '&:hover': {
-              color: 'text.primary',
-              bgcolor: 'action.hover',
+              color: 'text.main',
+              bgcolor: 'primary.light',
               borderRadius: 10,
-
             },
           }}
         >
@@ -192,7 +193,7 @@ const ItemDetail: React.FC = () => {
                         maxHeight: 400,
                         objectFit: 'cover',
                         borderRadius: 2,
-                        bgcolor: 'background.lightgrey',
+                        bgcolor: 'background.verylightgrey',
                         margin: '0 auto',
                       }}
                       onError={handleBrokenImg}
@@ -214,6 +215,7 @@ const ItemDetail: React.FC = () => {
                 objectFit: 'cover',
                 borderRadius: 2,
                 boxShadow: 0,
+                bgcolor: 'background.verylightgrey',
               }}
               src={'/src/assets/broken_img.png'}
               alt={item?.item_name || 'Item'}
