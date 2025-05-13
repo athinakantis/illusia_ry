@@ -67,8 +67,7 @@ const AdminBookings = () => {
   const items = useAppSelector(selectAllItems);
   const reservations = useAppSelector(selectAllReservations);
   const [searchParams] = useSearchParams()
-console.log(bookings)
-console.log("res",reservations)
+
 
   // ─── Local state (active filter tab) ──────────────────────────
   const [filter, setFilter] = useState<string>("all");
