@@ -161,9 +161,14 @@ const SingleItem = () => {
           variant="text"
           sx={{
             color: 'text.secondary',
+            borderRadius: 10,
+            paddingLeft: 3,
+            paddingRight: 3,
             '&:hover': {
               color: 'text.primary',
               bgcolor: 'action.hover',
+              borderRadius: 10,
+
             },
           }}
         >
@@ -187,11 +192,11 @@ const SingleItem = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              position: 'sticky',
+              // position: 'sticky',
               top: 20
             }}
           >
-            {item && Array.isArray(item.image_path) && item.image_path.length > 0 ? (
+            {item && Array.isArray(item.image_path) && item.image_path.some(imgUrl => typeof imgUrl === 'string' && imgUrl.trim() !== '') ? (
               <Box sx={{ width: '100%' }}>
                 <Slider
                   dots={item.image_path.length > 1}
@@ -204,7 +209,7 @@ const SingleItem = () => {
                   prevArrow={<PrevArrow />}
                 >
                   {item.image_path
-                    .filter((imgUrl): imgUrl is string => typeof imgUrl === 'string')
+                    .filter((imgUrl): imgUrl is string => typeof imgUrl === 'string' && imgUrl.trim() !== '')
                     .map((imgUrl, idx) => (
                       <div key={idx} style={{
                         display: 'flex',
@@ -231,9 +236,22 @@ const SingleItem = () => {
                     ))}
                 </Slider>
               </Box>
-            ) : item && Array.isArray(item.image_path) && item.image_path.length === 0 ? (
-              <Typography>No images available</Typography>
-            ) : null}
+            ) : (
+              <Box
+                component="img"
+                sx={{
+                  width: '100%',
+                  maxWidth: 400,
+                  maxHeight: 400,
+                  height: 400,
+                  objectFit: 'cover',
+                  borderRadius: 2,
+                  bgcolor: 'background.lightgrey',
+                }}
+                src={'/src/assets/broken_img.png'}
+                alt={item?.item_name || 'Item'}
+              />
+            )}
           </Box>
         </Grid>
 

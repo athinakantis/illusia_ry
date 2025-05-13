@@ -22,7 +22,7 @@ import { showCustomSnackbar } from '../CustomSnackbar';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
+import { ArrowBack, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 
 // Custom arrow components
 const NextArrow = (props: any) => {
@@ -146,10 +146,22 @@ const ItemDetail: React.FC = () => {
     <Box sx={{ p: 3, maxWidth: 1300, margin: 'auto' }}>
       <Box sx={{ display: 'flex', justifyContent: 'flex-start', px: 1, pb: 3 }}>
         <Button
-          variant="outlined"
-          size="small"
           component={Link}
           to="/items"
+          startIcon={<ArrowBack />}
+          variant="text"
+          sx={{
+            color: 'text.secondary',
+            borderRadius: 10,
+            paddingLeft: 3,
+            paddingRight: 3,
+            '&:hover': {
+              color: 'text.primary',
+              bgcolor: 'action.hover',
+              borderRadius: 10,
+
+            },
+          }}
         >
           Back
         </Button>
@@ -157,7 +169,7 @@ const ItemDetail: React.FC = () => {
       <Grid container spacing={4} justifyContent={'center'}>
         {/* Left Column: Image */}
         <Grid size={{ xs: 12, sm: 6 }}>
-          {item && Array.isArray(item.image_path) && item.image_path.length > 0 ? (
+          {item && Array.isArray(item.image_path) && item.image_path.some(imgUrl => typeof imgUrl === 'string' && imgUrl.trim() !== '') ? (
             <Slider
               dots
               infinite={item.image_path.length > 1}
@@ -169,21 +181,24 @@ const ItemDetail: React.FC = () => {
               prevArrow={<PrevArrow />}
             >
               {item.image_path
-                .filter((imgUrl): imgUrl is string => typeof imgUrl === 'string')
+                .filter((imgUrl): imgUrl is string => typeof imgUrl === 'string' && imgUrl.trim() !== '')
                 .map((imgUrl, idx) => (
                   <Box key={idx}>
                     <Box
                       component="img"
                       sx={{
                         width: '100%',
-                        height: 'auto',
-                        borderRadius: 2,
+                        maxWidth: 400,
+                        maxHeight: 400,
                         objectFit: 'cover',
-                        boxShadow: 3,
+                        borderRadius: 2,
+                        bgcolor: 'background.lightgrey',
+                        margin: '0 auto',
                       }}
                       onError={handleBrokenImg}
                       src={imgUrl}
                       alt={`${item.item_name} image ${idx + 1}`}
+
                     />
                   </Box>
                 ))}
@@ -194,11 +209,12 @@ const ItemDetail: React.FC = () => {
               sx={{
                 width: '100%',
                 height: 'auto',
-                borderRadius: 2,
+                minHeight: 400,
+                maxHeight: 400,
                 objectFit: 'cover',
+                borderRadius: 2,
                 boxShadow: 0,
               }}
-              onError={handleBrokenImg}
               src={'/src/assets/broken_img.png'}
               alt={item?.item_name || 'Item'}
             />
@@ -240,7 +256,7 @@ const ItemDetail: React.FC = () => {
                 isDisabled={(selectedDateRange.start_date != null)}
               />
             </Provider>
-            s
+
             <Stack
               direction="row"
               spacing={2}
