@@ -41,22 +41,17 @@ const UserBookings = () => {
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const [wantsToCancel, setWantsToCancel] = useState<BookingWithRes | null>(null);
-  const NON_CANCELLABLE = ['rejected', 'cancelled']
 
   /* ─────────────────── handlers ─────────────────── */
   const handleCancel = (booking: BookingWithRes) => {
-    if (booking.status === 'pending') {
-      dispatch(deleteBooking(booking.booking_id));
-      showCustomSnackbar('Your booking was deleted!', 'info');
-    } else {
-      dispatch(updateBookingStatus({ id: booking.booking_id, status: 'cancelled' }))
-      showCustomSnackbar('Your booking was cancelled!', 'info');
-    }
+    dispatch(deleteBooking(booking.booking_id));
+    showCustomSnackbar('Your booking was deleted!', 'info');
+    setWantsToCancel(null);
 
-    setWantsToCancel(null)
+    // Refresh list shortly after mutation
     setTimeout(() => {
-      if (user) dispatch(fetchUserBookings(user?.id))
-    }, 10)
+      if (user) dispatch(fetchUserBookings(user.id));
+    }, 10);
   };
 
   /* ─────────────────── selectors ─────────────────── */
@@ -70,6 +65,22 @@ const UserBookings = () => {
     (a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
   );
+
+  // Add just after `const sortedBookings = …`
+  const isCancelable = (b: BookingWithRes) => {
+    if (b.status !== 'pending') return false;
+
+    // Use the earliest start_date in case reservations are unsorted
+    const earliestStart = Math.min(
+      ...b.reservations.map(r => new Date(r.start_date).getTime())
+    );
+
+    // Compare against today (00:00) so users can still cancel on the day before 00:00
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return earliestStart > today.getTime();
+  };
 
   /* ─────────────────── side-effects ─────────────────── */
   useEffect(() => {
@@ -161,25 +172,19 @@ const UserBookings = () => {
                                   : 'default'
                         }
                       />
-                      {
-                        // Only allow dates that are after todays date to be cancelled
-                        // And booking that haven't been cancelled
-                        booking.reservations[0].start_date >
-                        new Date().toLocaleDateString().slice(0, 10) && !NON_CANCELLABLE.includes(booking.status)
-                        && (
-                          <Tooltip title="Cancel booking">
-                            <IconButton
-                              onClick={(e) => {
-                                e.preventDefault()
-                                setWantsToCancel(booking)
-                              }}
-                              size="small"
-                            >
-                              <CloseIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                        )
-                      }
+                      {isCancelable(booking) && (
+                        <Tooltip title="Cancel booking">
+                          <IconButton
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setWantsToCancel(booking);
+                            }}
+                            size="small"
+                          >
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      )}
 
                     </Box>
                   </Stack>
