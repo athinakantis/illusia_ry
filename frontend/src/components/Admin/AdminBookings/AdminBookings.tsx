@@ -67,7 +67,8 @@ const AdminBookings = () => {
   const items = useAppSelector(selectAllItems);
   const reservations = useAppSelector(selectAllReservations);
   const [searchParams] = useSearchParams()
-
+console.log(bookings)
+console.log("res",reservations)
 
   // ─── Local state (active filter tab) ──────────────────────────
   const [filter, setFilter] = useState<string>("all");
@@ -140,9 +141,22 @@ const AdminBookings = () => {
 
   // ─── Memoised filtered list ───────────────────────────────────
   const filteredBookings = useMemo(() => {
-    if (filter === "all") return bookings;
-    return bookings.filter((b) => b.status === filter);
-  }, [bookings, filter]);
+    // apply status filter
+    const base =
+      filter === "all" ? bookings : bookings.filter((b) => b.status === filter);
+
+    // decorate with earliest start, then sort
+    return base
+      .map((b) => {
+        const res = reservations.filter((r) => r.booking_id === b.booking_id);
+        const earliestStart = Math.min(
+          ...res.map((r) => new Date(r.start_date).getTime())
+        );
+        return { booking: b, start: earliestStart };
+      })
+      .sort((a, b) => a.start - b.start)
+      .map((entry) => entry.booking);
+  }, [bookings, reservations, filter]);
 
   // ─── Helper functions ────────────────────────────────────────
 
@@ -208,7 +222,8 @@ const AdminBookings = () => {
             <TableRow>
               <TableCell />
               <TableCell>ID</TableCell>
-              <TableCell>Date</TableCell>
+              <TableCell>Created</TableCell>
+              <TableCell>Booking Dates</TableCell>
               <TableCell>Customer</TableCell>
               <TableCell align="center">Items</TableCell>
               <TableCell>Status</TableCell>
@@ -218,6 +233,13 @@ const AdminBookings = () => {
             {filteredBookings.map((b) => {
               const res = reservationsByBooking(b.booking_id);
               const itemsCount = res.reduce((sum, r) => sum + (r.quantity ?? 1), 0);
+              // derive overall date range for the booking
+              const earliestStart = Math.min(
+                ...res.map(r => new Date(r.start_date).getTime())
+              );
+              const latestEnd = Math.max(
+                ...res.map(r => new Date(r.end_date).getTime())
+              );
 
               return (
                 <React.Fragment key={b.booking_id}>
@@ -239,6 +261,11 @@ const AdminBookings = () => {
                       {b.booking_id.slice(0, 8)}
                     </TableCell>
                     <TableCell>{dayjs(b.created_at).format("DD.MM.YYYY")}</TableCell>
+                    <TableCell>
+                      {`${dayjs(earliestStart).format("DD.MM.YYYY")} - ${dayjs(
+                        latestEnd
+                      ).format("DD.MM.YYYY")}`}
+                    </TableCell>
                     <TableCell>{userName(b.user_id)}</TableCell>
                     <TableCell align="center">{itemsCount}</TableCell>
                     <TableCell sx={{ textTransform: "capitalize" }}>
@@ -266,7 +293,7 @@ const AdminBookings = () => {
 
                   {/* Collapsible detail */}
                   <TableRow>
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
                       <Collapse
                         in={expandedId === b.booking_id}
                         timeout="auto"
@@ -286,7 +313,7 @@ const AdminBookings = () => {
             })}
             {filteredBookings.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
+                <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
                   No bookings found for selected filter.
                 </TableCell>
               </TableRow>
