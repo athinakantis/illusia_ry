@@ -17,9 +17,11 @@ import { BookingModule } from '../bookings/bookings.module';
 import { ViewsModule } from '../views/view.module';
 import { ItemReservationsModule } from '../reservations/reservations.module';
 import { MailerModule } from '../mailer/mailer.module';
-import { ItemModule } from '../item/item.module';
+
 import { SystemLogsModule } from '../system_logs/system_logs.module';
 import { SystemLogsController } from '../system_logs/system_logs.controller';
+import { ItemModule } from '../item/item.module';
+import { GuestModule } from '../guest/guest.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -34,6 +36,8 @@ import { SystemLogsController } from '../system_logs/system_logs.controller';
     MailerModule,
     ItemModule,
     SystemLogsModule,    
+    GuestModule
+    
     // Import other modules here if needed
   ],
   controllers: [

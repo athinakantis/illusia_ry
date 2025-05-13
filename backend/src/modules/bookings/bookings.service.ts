@@ -146,7 +146,8 @@ export class BookingService {
         _items: payload.items,
       },
     );
-
+    console.log("data",data)
+    console.log("error",error)
     if (error) {
       throw new BadRequestException(error.message); // from @nestjs/common
     }
