@@ -41,7 +41,6 @@ const UserBookings = () => {
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const [wantsToCancel, setWantsToCancel] = useState<BookingWithRes | null>(null);
-  const NON_CANCELLABLE = ['rejected', 'cancelled']
 
   /* ─────────────────── handlers ─────────────────── */
   const handleCancel = (booking: BookingWithRes) => {
@@ -70,6 +69,25 @@ const UserBookings = () => {
     (a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
   );
+
+  /**
+   * A booking can be "touched" (button shown) when:
+   *   • status === "pending"   → user may DELETE the booking
+   *   • status === "approved"  → user may CANCEL it *if* start date is in the future
+   */
+  const canModify = (b: BookingWithRes) => {
+    // earliest start date across all reservations
+    const earliestStart = Math.min(
+      ...b.reservations.map(r => new Date(r.start_date).getTime())
+    );
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (b.status === 'pending') return true;                       // deletable
+    if (b.status === 'approved' && earliestStart > today.getTime())
+      return true;                                                 // cancellable
+    return false;
+  };
 
   /* ─────────────────── side-effects ─────────────────── */
   useEffect(() => {
@@ -161,25 +179,19 @@ const UserBookings = () => {
                                   : 'default'
                         }
                       />
-                      {
-                        // Only allow dates that are after todays date to be cancelled
-                        // And booking that haven't been cancelled
-                        booking.reservations[0].start_date >=
-                        new Date().toLocaleDateString().slice(0, 10) && !NON_CANCELLABLE.includes(booking.status)
-                        && (
-                          <Tooltip title="Cancel booking">
-                            <IconButton
-                              onClick={(e) => {
-                                e.preventDefault()
-                                setWantsToCancel(booking)
-                              }}
-                              size="small"
-                            >
-                              <CloseIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                        )
-                      }
+                      {canModify(booking) && (
+                        <Tooltip title={booking.status === 'approved' ? 'Cancel booking' : 'Delete booking'}>
+                          <IconButton
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setWantsToCancel(booking);
+                            }}
+                            size="small"
+                          >
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      )}
 
                     </Box>
                   </Stack>

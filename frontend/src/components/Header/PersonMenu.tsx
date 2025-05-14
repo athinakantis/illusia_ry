@@ -4,11 +4,13 @@ import { Link } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
 import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
+import { useTranslation, Trans } from 'react-i18next';
 
 const PersonMenu = () => {
   // ─── profile menu state ──────────────────────────────────────────────
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { signOut } = useAuth();
+  const { i18n } = useTranslation();
   const menuOpen = Boolean(anchorEl);
   const handleMenuOpen = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -79,11 +81,11 @@ const PersonMenu = () => {
         }}
       >
         <MenuItem component={Link} to="/bookings" onClick={handleMenuClose}>
-          My bookings
+          <Trans i18nKey="person.myBookings">My bookings</Trans>
         </MenuItem>
         <MenuItem component={Link} to="/admin/dashboard" onClick={handleMenuClose}>
           <DashboardIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" /> 
-          Dashboard
+          <Trans i18nKey="person.dashboard">Dashboard</Trans>
         </MenuItem>
         <MenuItem
           sx={{ height: '100%' }}
@@ -91,10 +93,10 @@ const PersonMenu = () => {
           to="/account"
           onClick={handleMenuClose}
         >
-          My account
+          <Trans i18nKey="person.myAccount">My account</Trans>
         </MenuItem>
         <MenuItem disableRipple sx={{ pl: 2, pr: 2 }} onClick={signOut}>
-          Log out
+          <Trans i18nKey="person.logOut">Log out</Trans>
         </MenuItem>
         {/* language buttons */}
         <Box sx={{ px: 1, pt: 1 }}>
@@ -103,6 +105,7 @@ const PersonMenu = () => {
             size="small"
             color="primary"
             sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
+            onClick={() => { i18n.changeLanguage('en'); handleMenuClose(); }}
           >
             En
           </Button>
@@ -111,6 +114,7 @@ const PersonMenu = () => {
             size="small"
             color="primary"
             sx={{ padding: '4px 10px', minWidth: 'fit-content' }}
+            onClick={() => { i18n.changeLanguage('fi'); handleMenuClose(); }}
           >
             Fin
           </Button>
