@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SystemLogsController } from './system_logs.controller';
-import { SystemLogsService } from './system_logs.controller';
+import { SystemLogsService } from './system_logs.service';
 import { SupabaseModule } from '../supabase/supabae.module';
 
 @Module({
