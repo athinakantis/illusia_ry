@@ -1,5 +1,5 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { SystemLogsService } from './system_logs.controller';
+import { SystemLogsService } from './system_logs.service';
 import { AuthGuard } from 'src/guards/role.guard';
 
 @Controller('system-logs')
