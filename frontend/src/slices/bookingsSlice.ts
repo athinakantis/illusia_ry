@@ -185,7 +185,7 @@ export const bookingsSlice = createSlice({
       if (index !== -1) {
         state.bookings[index] = updatedBooking;
       }
-
+      
       // Update the user bookings
       const idxUser = state.userBookings.findIndex(
         (b) => b.booking_id === updatedBooking.booking_id,
@@ -193,6 +193,7 @@ export const bookingsSlice = createSlice({
       if (idxUser !== -1) {
         state.userBookings[idxUser] = updatedBooking;
       }
+      state.loading = false;
     });
     builder.addCase(updateBookingStatus.rejected, (state, action) => {
       state.error = action.payload ?? 'Could not change booking status';
