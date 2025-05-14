@@ -234,12 +234,6 @@ import { SupabaseClient } from '@supabase/supabase-js';
         .eq('user_id', userId)
         .maybeSingle();
 
-        await this.supabaseService.logAction({
-          user_id: req.user.id,
-          action_type: 'PROMOTE_TO_ADMIN',
-          target_id: userId,
-          metadata: { updatedUser },
-        });
         
       if (fetchError) {
         throw new BadRequestException(fetchError.message);
@@ -289,12 +283,6 @@ import { SupabaseClient } from '@supabase/supabase-js';
         throw new BadRequestException(updateError.message);
       }
 
-      await this.supabaseService.logAction({
-        user_id: req.user.id,
-        action_type: 'APPROVE_USER_TO_USER',
-        target_id: userId,
-        metadata: { newRole: 'User' },
-      });
 
       // Fetch the updated user data to return(This will help with the redux store update)
       const { data: updatedUser, error: fetchError } = await supabase
@@ -378,13 +366,6 @@ import { SupabaseClient } from '@supabase/supabase-js';
       throw new NotFoundException(`Role mapping for user ${userId} not found`);
     }
 
-    // Log the change
-    await this.supabaseService.logAction({
-      user_id: req.user.id,
-      action_type: 'USER_ROLE_UPDATED',
-      target_id: userId,
-      metadata: { newRole: roleTitle },
-    });
 
     // Return the updated user with role
     const { data: updatedUser, error: fetchErr } = await supabase
@@ -416,6 +397,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
     userId: string,
     status: 'approved' | 'rejected' | 'deactivated' | 'active',
   ): Promise<ApiResponse<Tables<'users'>>> {
+   
     await this.assertAdmin(req);
 
     const allowed = ['approved', 'rejected', 'deactivated', 'active'];
@@ -439,32 +421,32 @@ import { SupabaseClient } from '@supabase/supabase-js';
       throw new NotFoundException(`User ${userId} not found`);
     }
 
-    // Log the change
-    await this.supabaseService.logAction({
-      user_id: req.user.id,
-      action_type: `USER_STATUS_${status.toUpperCase()}`,
-      target_id: userId,
-      metadata: { newStatus: status },
-    });
 
     // Notify the user
-    if (status === 'approved') {
-      await this.transporter.approveAccountEmail(updatedUser.email, updatedUser.display_name);
-    } else if (status === 'rejected') {
-      await this.transporter.sendEmail(
-        updatedUser.email,
-        'Account Rejected',
-        `Hello ${updatedUser.display_name}, your account has been rejected.`,
-      );
-    } else if (status === 'deactivated') {
-      await this.transporter.sendAccountDeactivatedEmail(updatedUser.email);
-    } else if (status === 'active') {
-      await this.transporter.sendEmail(
-        updatedUser.email,
-        'Account Reactivated',
-        `Hello ${updatedUser.display_name}, your account has been reactivated.`,
-      );
-    }
+    // Broken right now and needs to be fixed. The credentials expired and we need new ones.
+    // try {
+    //   if (status === 'approved') {
+    //     await this.transporter.approveAccountEmail(updatedUser.email, updatedUser.display_name);
+    //   } else if (status === 'rejected') {
+    //     await this.transporter.sendEmail(
+    //       updatedUser.email,
+    //       'Account Rejected',
+    //       `Hello ${updatedUser.display_name}, your account has been rejected.`,
+    //     );
+    //   } else if (status === 'deactivated') {
+    //     await this.transporter.sendAccountDeactivatedEmail(updatedUser.email);
+    //   } else if (status === 'active') {
+    //     await this.transporter.sendEmail(
+    //       updatedUser.email,
+    //       'Account Reactivated',
+    //       `Hello ${updatedUser.display_name}, your account has been reactivated.`,
+    //     );
+    //   }
+    // } catch (error) {
+    //   console.error('Error sending email:', error);
+    //   throw new BadRequestException('Error sending email');
+    // }
+   
 
     return {
       message: `User ${userId} status updated to "${status}"`,
