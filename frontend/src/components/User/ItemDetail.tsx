@@ -236,7 +236,7 @@ const ItemDetail: React.FC = () => {
               {item?.description || 'Description not available.'}
             </Typography>
 
-            <Typography variant="h6" component="div" sx={{ mt: 2 }}>
+            <Typography variant="subheading" component="div" sx={{ mt: 2 }}>
               Select dates
             </Typography>
             <Provider

@@ -241,5 +241,40 @@ export const createAppTheme = () =>
           },
         },
       },
+      MuiDialogTitle: {
+        styleOverrides: {
+          root: {
+            fontSize: 21,
+            fontWeight: 400,
+            fontFamily: 'Oxygen, sans-serif',
+            color: '#282828',
+            padding: 0,
+          }
+        }
+      },
+      MuiDialog: {
+        styleOverrides: {
+          root: {
+            '& .MuiBackdrop-root': {
+              backgroundColor: 'rgba(0,0,0,0.1)',
+              boxShadow: 'none', filter: 'none',
+              borderRadius: '3px', 
+            },
+            '& .MuiPaper-root': {
+              boxShadow: 'none', filter: 'none', padding: '2rem',
+              gap: '2rem', maxWidth: 440,
+            }
+
+          }
+        }
+      },
+      MuiDialogActions: {
+        styleOverrides: {
+          root: {
+            padding: 0,
+            justifyContent: 'start',
+          }
+        }
+      }
     },
   });
