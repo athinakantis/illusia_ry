@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { formatDate } from '../../utility/formatDate';
+import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
+import { formatDate } from '../../../../utility/formatDate';
 import {
   deleteItem,
   fetchAllCategories,
@@ -9,81 +9,36 @@ import {
   selectAllCategories,
   selectItemById,
   updateItem,
-} from '../../slices/itemsSlice';
+} from '../../../../slices/itemsSlice';
 import {
   Box,
   Button,
   CardMedia,
-  Grid,
   Typography,
   TextField,
   Select,
   MenuItem,
   SelectChangeEvent,
   Stack,
-  IconButton,
 } from '@mui/material';
 import { ImPencil2 } from 'react-icons/im';
 import { CiTrash } from 'react-icons/ci';
-import { ArrowBack, ArrowForward, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
-import Spinner from '../Spinner';
-import { useAuth } from '../../hooks/useAuth';
+import { ArrowBack } from '@mui/icons-material';
+import Spinner from '../../../Spinner';
+import { useAuth } from '../../../../hooks/useAuth';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-// Add these custom arrow components before the SingleItem component
-const NextArrow = (props: any) => {
-  const { onClick } = props;
-  return (
-    <IconButton
-      onClick={onClick}
-      sx={{
-        position: 'absolute',
-        right: 10,
-        top: '50%',
-        transform: 'translateY(-50%)',
-        zIndex: 1,
-        bgcolor: 'rgba(255, 255, 255, 0.8)',
-        '&:hover': {
-          bgcolor: 'rgba(255, 255, 255, 0.9)',
-        },
-      }}
-    >
-      <ArrowForwardIos />
-    </IconButton>
-  );
-};
-
-const PrevArrow = (props: any) => {
-  const { onClick } = props;
-  return (
-    <IconButton
-      onClick={onClick}
-      sx={{
-        position: 'absolute',
-        left: 10,
-        top: '50%',
-        transform: 'translateY(-50%)',
-        zIndex: 1,
-        bgcolor: 'rgba(255, 255, 255, 0.8)',
-        '&:hover': {
-          bgcolor: 'rgba(255, 255, 255, 0.9)',
-        },
-      }}
-    >
-      <ArrowBackIos />
-    </IconButton>
-  );
-};
+import { NextArrow, PrevArrow } from './Arrows';
 
 const SingleItem = () => {
+/* ———————————————————————  Constants  ——————————————————————————————— */
   const { itemId } = useParams<{ itemId: string }>();
   const item = useAppSelector(selectItemById(itemId ?? ''));
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<typeof item | ''>('');
   const dispatch = useAppDispatch();
-  const loading = useAppSelector((state) => state.items.loading);
   const navigate = useNavigate();
   const { role } = useAuth();
   const categories = useAppSelector(selectAllCategories);
@@ -91,7 +46,7 @@ const SingleItem = () => {
     (cat) => cat.category_id === item?.category_id,
   );
 
-
+/* ———————————————————————  Side-Effects  ——————————————————————————————— */
   useEffect(() => {
     if (!item) {
       dispatch(fetchItemById(itemId ?? ''));
@@ -109,7 +64,7 @@ const SingleItem = () => {
     if (role === undefined) return;
     if (role === null) navigate('/items');
   }, [role, navigate]);
-
+/* ———————————————————————— Handlers —————————————————————————————————————*/
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!formData) return;
     const { name, value } = e.target;
@@ -143,14 +98,17 @@ const SingleItem = () => {
   ) => {
     (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
   };
-
+/* —————————————————————————————— Conditional Renders ———————————————————————— */
   if (!item || typeof item !== 'object' || !('image_path' in item)) {
     return <Spinner />;
   }
 
-  console.log("hello from ItemView");
-  console.log('item.image_path:', item?.image_path);
-
+  if (item === null) {
+    return <div>Item not found</div>;
+  }
+  if (item === undefined) {
+    return <div>Item not found</div>;
+  }
   return (
     <Box sx={{ p: 3, maxWidth: 1300, margin: 'auto' }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, px: 1, pb: 3 }}>
