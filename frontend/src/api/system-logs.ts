@@ -57,6 +57,7 @@ async function fetch(params: SystemLogQuery = {}): Promise<PaginatedResponse> {
     '/system-logs',
     { params },
   );
+  console.log('system-logs response', data);
   return data;
 }
 
