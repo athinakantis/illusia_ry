@@ -18,23 +18,34 @@ import {
     MenuItem,
     Select,
     SelectChangeEvent,
+    IconButton,
+    Stack,
 } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import { ImCloudUpload } from 'react-icons/im';
 import { styled } from '@mui/material/styles';
 import { Box, TextField, Typography } from '@mui/material';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 type CreateItemPayload = Omit<
     TablesInsert<'items'>,
     'item_id' | 'created_at' | 'user_id'
-> & { image_path?: string | null };
+> & { image_path?: string[] | null };
+
+interface SelectedFile {
+    file: File;
+    preview: string;
+    isMain: boolean;
+}
 
 const AdminAddProduct = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { role, user } = useAuth();
     const categories = useAppSelector(selectAllCategories);
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [selectedFiles, setSelectedFiles] = useState<SelectedFile[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState<FormData>({
         item_name: '',
@@ -86,10 +97,31 @@ const AdminAddProduct = () => {
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
-            setSelectedFile(event.target.files[0]);
-        } else {
-            setSelectedFile(null);
+            const newFiles = Array.from(event.target.files).map(file => ({
+                file,
+                preview: URL.createObjectURL(file),
+                isMain: selectedFiles.length === 0 // First image is main by default
+            }));
+            setSelectedFiles(prev => [...prev, ...newFiles]);
         }
+    };
+
+    const handleSetMainImage = (index: number) => {
+        setSelectedFiles(prev => prev.map((file, i) => ({
+            ...file,
+            isMain: i === index
+        })));
+    };
+
+    const handleRemoveImage = (index: number) => {
+        setSelectedFiles(prev => {
+            const newFiles = prev.filter((_, i) => i !== index);
+            // If we removed the main image and there are other images, set the first one as main
+            if (prev[index].isMain && newFiles.length > 0) {
+                newFiles[0].isMain = true;
+            }
+            return newFiles;
+        });
     };
 
     const showSnackbar = (message: string, severity: AlertColor) => {
@@ -103,51 +135,57 @@ const AdminAddProduct = () => {
         setIsLoading(true);
         showSnackbar('Uploading item...', 'info');
 
-        let imageUrl: string | null = null;
+        let imageUrls: string[] = [];
 
         if (!user) {
             return;
         }
 
         // --- Upload Logic ---
-        if (selectedFile) {
-            const fileExt = selectedFile.name.split('.').pop() ?? 'jpg'; // fallback to jpg
-            const category = formData.category_id; // Or fetch the category name
-            const filePath = `public/items/${category}/${selectedFile.name
-                }_${uuidv4()}.${fileExt}`;
-            const bucketName = 'items';
+        if (selectedFiles.length > 0) {
             try {
-                const { error: uploadError } = await supabase.storage
-                    .from(bucketName)
-                    .upload(filePath, selectedFile, {
-                        cacheControl: '3600',
-                        upsert: false,
-                    });
+                // Sort files to ensure main image is first
+                const sortedFiles = [...selectedFiles].sort((a, b) => (b.isMain ? 1 : 0) - (a.isMain ? 1 : 0));
 
-                if (uploadError) {
-                    throw uploadError;
+                for (const selectedFile of sortedFiles) {
+                    const fileExt = selectedFile.file.name.split('.').pop() ?? 'jpg';
+                    const category = formData.category_id;
+                    const filePath = `public/items/${category}/${selectedFile.file.name}_${uuidv4()}.${fileExt}`;
+                    const bucketName = 'items';
+
+                    const { error: uploadError } = await supabase.storage
+                        .from(bucketName)
+                        .upload(filePath, selectedFile.file, {
+                            cacheControl: '3600',
+                            upsert: false,
+                        });
+
+                    if (uploadError) {
+                        throw uploadError;
+                    }
+
+                    const { data: urlData } = supabase.storage
+                        .from(bucketName)
+                        .getPublicUrl(filePath);
+
+                    if (urlData?.publicUrl) {
+                        imageUrls.push(urlData.publicUrl);
+                    }
                 }
-
-                // Get public URL after successful upload
-                const { data: urlData } = supabase.storage
-                    .from(bucketName)
-                    .getPublicUrl(filePath);
-
-                imageUrl = urlData?.publicUrl ?? filePath; // Use public URL, fallback to path if needed
             } catch (error) {
-                console.error('Error uploading file:', error);
-                showSnackbar('Failed to upload image. Please try again.', 'error');
+                console.error('Error uploading files:', error);
+                showSnackbar('Failed to upload images. Please try again.', 'error');
                 return;
             }
         }
 
         const newItemData: CreateItemPayload = {
             ...formData,
-            image_path: imageUrl,
+            image_path: imageUrls.length > 0 ? imageUrls : null,
         };
 
         try {
-            await dispatch(createItem(newItemData)).unwrap(); // unwrap to catch potential rejections
+            await dispatch(createItem(newItemData)).unwrap();
             setIsLoading(false);
             showSnackbar('Item added successfully!', 'success');
             setFormData({
@@ -157,7 +195,7 @@ const AdminAddProduct = () => {
                 location: '',
                 quantity: 1,
             });
-            setSelectedFile(null);
+            setSelectedFiles([]);
         } catch (err) {
             console.error('Failed to save the item:', err);
             setIsLoading(false);
@@ -165,6 +203,13 @@ const AdminAddProduct = () => {
             return;
         }
     };
+
+    // Cleanup preview URLs when component unmounts
+    useEffect(() => {
+        return () => {
+            selectedFiles.forEach(file => URL.revokeObjectURL(file.preview));
+        };
+    }, [selectedFiles]);
 
     return (
         <Box
@@ -232,8 +277,8 @@ const AdminAddProduct = () => {
                     ))}
                 </Select>
             </FormControl>
-            {/* Upload Button */}
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            {/* Image Upload Section */}
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Button
                     component="label"
                     role={'button'}
@@ -250,16 +295,64 @@ const AdminAddProduct = () => {
                         id="item_image"
                         name="item_image"
                         accept="image/*"
-                        onChange={(event) => {
-                            handleFileChange(event);
-                            setSelectedFile(
-                                event.target.files ? event.target.files[0] : null,
-                            );
-                        }}
-                        disabled={false}
+                        onChange={handleFileChange}
+                        disabled={isLoading}
                         multiple
                     />
                 </Button>
+
+                {/* Preview Section */}
+                {selectedFiles.length > 0 && (
+                    <Stack spacing={2}>
+                        <Typography variant="subtitle1">Selected Images:</Typography>
+                        {selectedFiles.map((file, index) => (
+                            <Box
+                                key={index}
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1,
+                                    p: 1,
+                                    border: '1px solid',
+                                    borderColor: 'divider',
+                                    borderRadius: 1,
+                                }}
+                            >
+                                <Box
+                                    component="img"
+                                    src={file.preview}
+                                    alt={`Preview ${index + 1}`}
+                                    sx={{
+                                        width: 60,
+                                        height: 60,
+                                        objectFit: 'cover',
+                                        borderRadius: 1,
+                                    }}
+                                />
+                                <Box sx={{ flexGrow: 1 }}>
+                                    <Typography variant="body2" noWrap>
+                                        {file.file.name}
+                                    </Typography>
+                                </Box>
+                                <IconButton
+                                    onClick={() => handleSetMainImage(index)}
+                                    color={file.isMain ? 'primary' : 'default'}
+                                    size="small"
+                                >
+                                    {file.isMain ? <StarIcon /> : <StarBorderIcon />}
+                                </IconButton>
+                                <IconButton
+                                    onClick={() => handleRemoveImage(index)}
+                                    color="error"
+                                    size="small"
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Box>
+                        ))}
+                    </Stack>
+                )}
+
                 <Button
                     type="submit"
                     variant="contained"
