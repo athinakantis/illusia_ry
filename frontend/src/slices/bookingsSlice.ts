@@ -178,13 +178,21 @@ export const bookingsSlice = createSlice({
     });
     builder.addCase(updateBookingStatus.fulfilled, (state, action) => {
       const updatedBooking = action.payload;
+      // Update the booking in the state
       const index = state.bookings.findIndex(
         (booking) => booking.booking_id === updatedBooking.booking_id,
       );
       if (index !== -1) {
         state.bookings[index] = updatedBooking;
       }
-      state.loading = false;
+
+      // Update the user bookings
+      const idxUser = state.userBookings.findIndex(
+        (b) => b.booking_id === updatedBooking.booking_id,
+      );
+      if (idxUser !== -1) {
+        state.userBookings[idxUser] = updatedBooking;
+      }
     });
     builder.addCase(updateBookingStatus.rejected, (state, action) => {
       state.error = action.payload ?? 'Could not change booking status';
@@ -199,6 +207,11 @@ export const bookingsSlice = createSlice({
       const deletedId = action.meta.arg; // id passed to the thunk
       state.bookings = state.bookings.filter(
         (booking) => booking.booking_id !== deletedId,
+      );
+
+      // Remove the booking from user bookings
+      state.userBookings = state.userBookings.filter(
+        (b) => b.booking_id !== deletedId,
       );
       state.loading = false;
     });

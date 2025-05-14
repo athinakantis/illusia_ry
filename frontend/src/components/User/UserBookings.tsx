@@ -48,6 +48,7 @@ const UserBookings = () => {
       dispatch(deleteBooking(booking.booking_id));
       showCustomSnackbar('Your booking was deleted!', 'info');
     } else {
+      console.log('Cancelling booking:', booking.booking_id);
       dispatch(updateBookingStatus({ id: booking.booking_id, status: 'cancelled' }))
       showCustomSnackbar('Your booking was cancelled!', 'info');
     }
