@@ -90,7 +90,6 @@ export class GuestService {
       .from('items')
       .select('*, categories!inner(category_name)')
       .in('categories.category_name', categories);
-      console.log(data)
 
     if (error) {
       console.error('Error retrieving item: ', error);

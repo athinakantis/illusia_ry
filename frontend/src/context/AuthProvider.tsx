@@ -38,7 +38,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const { data } = await usersApi.getUserWithRoleById(userId);
         setRole(data?.role as Role);
-        console.log('Context Role fetched:', data?.role);
       } catch (err) {
         console.error('Error loading role in AuthProvider:', err);
         setRole('Unapproved');

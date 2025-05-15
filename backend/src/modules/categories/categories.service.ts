@@ -31,7 +31,6 @@ import { CustomRequest } from 'src/types/request.type';
         })
         .select('*')
         .maybeSingle();
-        console.log('error', error)
       if (error?.code === '42501') {
         // permission error
         throw new BadRequestException(
