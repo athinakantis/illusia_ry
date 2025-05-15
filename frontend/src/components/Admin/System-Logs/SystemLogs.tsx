@@ -54,30 +54,7 @@ const SystemLogs: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 console.log('users', users);
 /* —————————————————— Fetches —————————————————————— */
-// Fetching everything in case we dont have it in the store
-useEffect(() => {
-    if(!users.length) {
-        dispatch(fetchAllUsersWithRole());
-    }
-}, [dispatch, users.length]);
 
-useEffect(() => {
-    if(!categories.length) {
-        dispatch(fetchAllCategories());
-    }
-}, [dispatch, categories.length]);
-
-useEffect(() => {
-    if(!reservations.length) {
-        dispatch(fetchAllReservations());
-    }
-}, [dispatch, reservations.length]);
-
-useEffect(() => {
-    if(!bookings.length) {
-        dispatch(fetchAllBookings());
-    }
-}, [dispatch, bookings.length]);
 
 const columns = useMemo(() => systemLogColumns, []);
 
