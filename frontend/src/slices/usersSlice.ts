@@ -184,7 +184,7 @@ export const selectUserError = (state: RootState) => state.users.error;
 
 /**
  * Selector that returns users with the Admin or Head Admin role.
- * Creates 
+ * Creates a memoized selector that filters for users with the Admin or Head Admin role.
  */
 export const selectAdmins = createSelector(
   (state: RootState) => state.users.users,
