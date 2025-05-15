@@ -1,11 +1,11 @@
-import { Controller, Get, Query, UseGuards, Logger } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards /*, Logger */ } from '@nestjs/common';
 import { SystemLogsService } from './system_logs.service';
 import { AuthGuard } from 'src/guards/role.guard';
 
 @Controller('system-logs')
 export class SystemLogsController {
   constructor(private readonly logsService: SystemLogsService) {}
-  private readonly logger = new Logger(SystemLogsController.name);
+  /* const logger = new Logger(SystemLogsController.name); */ // uncomment to enable logging
   private readonly allowedTableNames: string[] = [
     'users',
     "roles",
@@ -45,7 +45,8 @@ export class SystemLogsController {
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
-    this.logger.debug('GET /system-logs query', {
+    /*
+    logger.debug('GET /system-logs query', {
       limit,
       page,
       actionType,
@@ -55,6 +56,7 @@ export class SystemLogsController {
       from,
       to,
     });
+    */
     if (tableName && !this.allowedTableNames.includes(tableName)) {
       return {
         message: 'Invalid table name',
@@ -73,9 +75,9 @@ export class SystemLogsController {
       to,
     });
 
-    this.logger.debug(
-      `system-logs returned ${result.data?.length ?? 0} rows (total ${result.meta?.total ?? 'n/a'})`,
-    );
+    // this.logger.debug(
+    //   `system-logs returned ${result.data?.length ?? 0} rows (total ${result.meta?.total ?? 'n/a'})`,
+    // );
     return result;
   }
 }
