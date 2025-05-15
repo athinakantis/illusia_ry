@@ -16,7 +16,7 @@ import Account from '../components/Account';
 import SingleBooking from '../components/Booking';
 import ManageUsers from '../components/Admin/ManageUsers';
 import SystemLogsPage from '../pages/SystemLogs';
-import TestPage from '../../Test/Test';
+// import TestPage from '../../Test/Test';
 
 export const router = createBrowserRouter([
   {
@@ -88,10 +88,11 @@ export const router = createBrowserRouter([
         path: "/account",
         element: <Account />
       },
-      {
-        path: "/test",
-        element: <TestPage />
-      }
+      // Allows me to get tokens for backend testing
+      // {
+      //   path: "/token",
+      //   element: <TestPage />
+      // }
 
     ]
   },
