@@ -7,12 +7,20 @@ import {
   Snackbar,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
-import { DataGrid, GridPaginationModel } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridPaginationModel,
+  GridColDef,
+  GridRenderCellParams,
+  DataGridProps,
+} from '@mui/x-data-grid';
 import { DatePicker, Provider, defaultTheme } from '@adobe/react-spectrum';
 import { parseDate, type CalendarDate } from '@internationalized/date';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import {
   systemLogsApi,
   SystemLog,
@@ -21,6 +29,7 @@ import {
 import { useUserName } from '../../../hooks/useUserName';
 import { useItemLabel } from '../../../hooks/useItemLabel';
 import { useCategoryLabel } from '../../../hooks/useCategoryLabel';
+import { useUserNameForBooking } from '../../../hooks/useUserBookings';
 
 /* Label helpers that can safely call hooks inside DataGrid renderers */
 const UserLabelCell: React.FC<{ value: string | null }> = ({ value }) => {
@@ -38,6 +47,36 @@ const CategoryLabelCell: React.FC<{ value: string | null }> = ({ value }) => {
   return <Box sx={{ fontSize: 12 }}>{label}</Box>;
 };
 
+/**
+ * Renders a human-readable label for a booking target, with tooltip of the raw ID.
+ */
+const BookingLabelCell: React.FC<{ value: string }> = ({ value }) => {
+  const { name } = useUserNameForBooking(value);
+  return (
+    <Tooltip title={value}>
+      <Box sx={{ fontSize: 12 }}>{name}</Box>
+    </Tooltip>
+  );
+};
+
+/**
+ * Renders a human-readable label for an item reservation target,
+ * showing the reserved item's label with a tooltip of the reservation ID.
+ */
+const ReservationLabelCell: React.FC<{ value: string; metadata: any }> = ({ value, metadata }) => {
+  // metadata.item_id holds the ID of the reserved item
+  const itemName = useItemLabel(metadata.item_id);
+  return (
+    <Tooltip title={value}>
+      <Box sx={{ fontSize: 12, display: 'flex', alignItems: 'center' }}>
+        {itemName}
+        <Box component="span" sx={{ ml: 0.5 }}>reservation</Box>
+      </Box>
+    </Tooltip>
+  );
+};
+
+dayjs.extend(relativeTime)
 
 const TABLE_NAMES = [
     'users',
@@ -72,28 +111,65 @@ const SystemLogs: React.FC = () => {
         limit: 25,
         page: 1,
     });
+    const items = useAppSelector(selectAllItems);
+    const reservations = useAppSelector(selectAllReservations);
+    const bookings = useAppSelector(selectAllBookings);
+    const categories = useAppSelector(selectAllCategories);
     const users = useAppSelector(selectAllUsers);
   const [rows, setRows] = useState<SystemLog[]>([]);
   const [rowCount, setRowCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 console.log('users', users);
+/* —————————————————— Fetches —————————————————————— */
+// Fetching everything in case we dont have it in the store
 useEffect(() => {
     if(!users.length) {
         dispatch(fetchAllUsers());
     }
-})
-  /* ───────── column def ───────── */
-  const columns = useMemo(
+}, [dispatch, users.length]);
+useEffect(() => {
+    if(!items.length) {
+        dispatch(fetchAllItems());
+    }
+}, [dispatch, items.length]);
+useEffect(() => {
+    if(!categories.length) {
+        dispatch(fetchAllCategories());
+    }
+}, [dispatch, categories.length]);
+
+useEffect(() => {
+    if(!reservations.length) {
+        dispatch(fetchAllReservations());
+    }
+}, [dispatch, reservations.length]);
+
+useEffect(() => {
+    if(!bookings.length) {
+        dispatch(fetchAllBookings());
+    }
+}, [dispatch, bookings.length]);
+
+/* ─────────——————————— Column Definitions ————───────── */
+  const columns = useMemo<GridColDef<SystemLog>[]>(
     () => [
-      {
-        field: 'created_at',
-        headerName: 'When',
-        width: 170,
-        valueFormatter: ({ value }: { value: string }) =>
-          dayjs(value).format('DD-MM-YYYY HH:mm'),
-      },
+        /*——————————————— Created at ————————————————————*/
+        {
+            field: 'created_at',
+            headerName: 'When',
+            width: 170,
+            comparator: (v1: string, v2: string) =>
+              new Date(v1).getTime() - new Date(v2).getTime(),
+            renderCell: (params: GridRenderCellParams<SystemLog>) => (
+              <Tooltip title={dayjs(params.value).format('DD MMM YYYY, HH:mm')}>
+                <span>{dayjs(params.value).fromNow()}</span>
+              </Tooltip>
+            ),
+        },
+      /* ———————————————— Table Name —————————————————————*/
       { field: 'table_name', headerName: 'Table', width: 140 },
+      /* ———————————————— Action Type ———————————————————— */
       {
         field: 'action_type',
         headerName: 'Action',
@@ -112,12 +188,14 @@ useEffect(() => {
           );
         },
       },
+        /* ———————————————— User ID ——————————————————————— */
       {
         field: 'user_id',
         headerName: 'User',
         width: 220,
-        renderCell: ({ value }: any) => <UserLabelCell value={value} />,
+        renderCell: ({ value }) => <UserLabelCell value={value} />,
       },
+      /* ———————————————— Target ID ———————————————————————— */
       {
         field: 'target_id',
         headerName: 'Target',
@@ -126,22 +204,34 @@ useEffect(() => {
           const { value, row } = params;
           switch (row.table_name) {
             case 'items':
-            case 'item_tags':
+              return (
+                <Box sx={{ fontSize: 12 }}>
+                  {row.metadata?.item_name ?? value}
+                </Box>
+              );
             case 'item_reservations':
-              return <ItemLabelCell value={value} />;
+              return <ReservationLabelCell value={value} metadata={row.metadata} />;
             case 'categories':
               return <CategoryLabelCell value={value} />;
             case 'users':
             case 'user_roles':
               return <UserLabelCell value={value} />;
+            case 'bookings':
+              return (
+                <Box sx={{ fontSize: 12, display: 'flex', alignItems: 'center' }}>
+                  <BookingLabelCell value={value} />
+                  <Box component="span" sx={{ ml: 0.5 }}>{`'s booking`}</Box>
+                </Box>
+              );
             default:
               return <Box sx={{ fontSize: 12 }}>{value ?? '—'}</Box>;
           }
         },
       },
+      /* ———————————————— Metadata ———————————————————————— */
       {
         field: 'metadata',
-        headerName: 'Meta (JSON)',
+        headerName: 'Meta (JSON)',
         flex: 1,
         minWidth: 320,
         renderCell: (p: any) => (
@@ -168,11 +258,11 @@ useEffect(() => {
       setLoading(true);
       try {
         const res = await systemLogsApi.fetch(buildParams(p));
-        if (Array.isArray((res as any).data)) {
-          setRows((res as any).data);
-          setRowCount((res as any).meta.total ?? (res as any).data.length);
+        if (Array.isArray((res).data)) {
+          setRows((res).data);
+          setRowCount((res).meta.total ?? (res).data.length);
         } else {
-          setRows(res as any[]);
+          setRows(res as any);
           setRowCount((res as any).length ?? 0);
         }
       } catch (e: any) {
@@ -361,8 +451,13 @@ useEffect(() => {
 import { styled } from '@mui/material/styles';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { fetchAllUsers, selectAllUsers } from '../../../slices/usersSlice';
+import { fetchAllCategories, fetchAllItems, selectAllCategories, selectAllItems } from '../../../slices/itemsSlice';
+import { fetchAllReservations, selectAllReservations } from '../../../slices/reservationsSlice';
+import { fetchAllBookings, selectAllBookings } from '../../../slices/bookingsSlice';
 
-const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
+const StripedDataGrid = styled(
+  DataGrid as React.ComponentType<DataGridProps<SystemLog>>
+)(({ theme }) => ({
   '& .even': {
     backgroundColor: theme.palette.action.hover,
   },
