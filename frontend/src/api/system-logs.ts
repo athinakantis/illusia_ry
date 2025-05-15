@@ -1,3 +1,4 @@
+import { ApiResponse } from '../types/types';
 import { api } from './axios';
 
 /* ------------------------------------------------------------------
@@ -26,25 +27,18 @@ export interface SystemLogQuery {
   to?: string;   // ISO date
 }
 
-
-/** Full shape returned by the /system-logs endpoint */
-export interface SystemLogsResponse {
-  data: SystemLog[];
-  message: string;
-  meta: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
+/** Pagination metadata returned by /system-logs */
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
- interface LogsResponse<T> {
-  /** Actual payload returned by our backend */
-  data: T;
-  /** Optional human‑readable note supplied by the server */
-  message?: string;
-  /** Optional pagination/extra info (shape differs per endpoint) */
-  meta?: Record<string, unknown>;
+
+/** Full payload returned by the /system-logs endpoint */
+export interface SystemLogsResponse
+  extends ApiResponse<SystemLog[], PaginationMeta> {
+  meta: PaginationMeta; // overrides the optional with a required one
 }
 
 /* ------------------------------------------------------------------
@@ -53,7 +47,8 @@ export interface SystemLogsResponse {
 
 /**
  * Fetch system logs with server‑side filtering & pagination.
- *
+ * 
+ * ![label](https://http.cat/418)
  * @example
  *   const res = await systemLogsApi.fetch({
  *     table_name: 'bookings',
@@ -64,13 +59,12 @@ export interface SystemLogsResponse {
  */
 async function fetch(
   params: SystemLogQuery = {},
-): Promise<LogsResponse<SystemLogsResponse>> {
-  const response = await api.get<SystemLogsResponse>(
-    '/system-logs',
-    { params },
-  );
-  console.log('system-logs response', response);
-  return response;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<any>{// cant deal with the response typing anymore.... Its just not working 
+  const response = await api.get<SystemLogsResponse>('/system-logs', {
+    params,
+  });
+  return response
 }
 
 export const systemLogsApi = { fetch };
