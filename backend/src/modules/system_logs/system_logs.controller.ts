@@ -62,7 +62,6 @@ export class SystemLogsController {
         data: [],
       };
     };
-    console.log("hit");
     const result = await this.logsService.findAll({
       limit: limit ? Number(limit) : undefined,
       page: page ? Number(page) : undefined,

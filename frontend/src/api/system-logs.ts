@@ -26,15 +26,25 @@ export interface SystemLogQuery {
   to?: string;   // ISO date
 }
 
-/** Shape returned by the Nest controller */
-interface PaginatedResponse {
+
+/** Full shape returned by the /system-logs endpoint */
+export interface SystemLogsResponse {
   data: SystemLog[];
+  message: string;
   meta: {
     total: number;
     page: number;
     limit: number;
     totalPages: number;
   };
+}
+ interface LogsResponse<T> {
+  /** Actual payload returned by our backend */
+  data: T;
+  /** Optional human‑readable note supplied by the server */
+  message?: string;
+  /** Optional pagination/extra info (shape differs per endpoint) */
+  meta?: Record<string, unknown>;
 }
 
 /* ------------------------------------------------------------------
@@ -52,13 +62,15 @@ interface PaginatedResponse {
  *     page: 2,
  *   });
  */
-async function fetch(params: SystemLogQuery = {}): Promise<PaginatedResponse> {
-  const { data } = await api.get<PaginatedResponse>(
+async function fetch(
+  params: SystemLogQuery = {},
+): Promise<LogsResponse<SystemLogsResponse>> {
+  const response = await api.get<SystemLogsResponse>(
     '/system-logs',
     { params },
   );
-  console.log('system-logs response', data);
-  return data;
+  console.log('system-logs response', response);
+  return response;
 }
 
 export const systemLogsApi = { fetch };

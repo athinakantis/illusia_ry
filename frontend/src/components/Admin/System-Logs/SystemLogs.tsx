@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Box,
   Snackbar,
@@ -12,13 +12,9 @@ import {
   SystemLog,
   SystemLogQuery,
 } from '../../../api/system-logs';
-import { systemLogColumns } from './columns';
 import { FilterPanel } from './FilterPanel';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { fetchAllUsersWithRole, selectAdmins, selectAllUsers } from '../../../slices/usersSlice';
-import { fetchAllCategories,selectAllCategories} from '../../../slices/itemsSlice';
-import { fetchAllReservations, selectAllReservations } from '../../../slices/reservationsSlice';
-import { fetchAllBookings, selectAllBookings } from '../../../slices/bookingsSlice';
+import { useAppSelector } from '../../../store/hooks';
+import { selectAdmins } from '../../../slices/usersSlice';
 import { SystemLogsTable } from './SystemLogsTable';
 import { GridPaginationModel } from '@mui/x-data-grid';
 
@@ -36,43 +32,50 @@ function buildParams(q: SystemLogQuery): SystemLogQuery {
 }
 
 const SystemLogs: React.FC = () => {
-    const dispatch = useAppDispatch();
-    /* ───────── state ───────── */
-    const [query, setQuery] = useState<SystemLogQuery>({
-        limit: 25,
-        page: 1,
-    });
-    const reservations = useAppSelector(selectAllReservations);
-    const bookings = useAppSelector(selectAllBookings);
-    const categories = useAppSelector(selectAllCategories);
-    const users = useAppSelector(selectAllUsers);
-    const admins = useAppSelector(selectAdmins);
-    console.log('admins', admins);
+/* —————————─────────—— State —————————————───────── */
+
+  const [query, setQuery] = useState<SystemLogQuery>({
+    limit: 25,
+    page: 1,
+  });
+  const admins = useAppSelector(selectAdmins);
   const [rows, setRows] = useState<SystemLog[]>([]);
   const [rowCount, setRowCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-console.log('users', users);
-/* —————————————————— Fetches —————————————————————— */
 
 
-const columns = useMemo(() => systemLogColumns, []);
-
-/* ───────── fetch ───────── */
+/* ─────────————————————— Fetch —————————————————───────── */
 const fetchLogs = useCallback(
   async (p = query) => {
     setLoading(true);
     try {
       const res = await systemLogsApi.fetch(buildParams(p));
-      if (Array.isArray((res).data)) {
-        setRows((res).data);
-        setRowCount((res).meta.total ?? (res).data.length);
+
+      // Update the table rows
+      setRows(res.data as SystemLog[]);
+
+      // Always trust the server‑side numbers coming back in `meta`
+      const total = res.meta?.total ?? 0;
+      const serverPage = res.meta?.page ?? p.page ?? 1;
+      const serverLimit = res.meta?.limit ?? p.limit ?? 25;
+
+      setRowCount(total);
+
+      // Keep our local `query` in sync with what the API really used;
+      // this prevents the pagination controls from getting “stuck”
+      setQuery(prev => {
+        if (prev.page === serverPage && prev.limit === serverLimit) {
+          return prev;      // nothing changed – avoid needless re‑renders
+        }
+        return { ...prev, page: serverPage, limit: serverLimit };
+      });
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
       } else {
-        setRows(res as any);
-        setRowCount((res as any).length ?? 0);
+        setError('Failed to fetch logs');
       }
-    } catch (e: any) {
-      setError(e?.message ?? 'Failed to fetch logs');
     } finally {
       setLoading(false);
     }
