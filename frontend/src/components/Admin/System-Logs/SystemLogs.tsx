@@ -15,7 +15,7 @@ import {
 import { systemLogColumns } from './columns';
 import { FilterPanel } from './FilterPanel';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { fetchAllUsers, selectAllUsers } from '../../../slices/usersSlice';
+import { fetchAllUsersWithRole, selectAdmins, selectAllUsers } from '../../../slices/usersSlice';
 import { fetchAllCategories,selectAllCategories} from '../../../slices/itemsSlice';
 import { fetchAllReservations, selectAllReservations } from '../../../slices/reservationsSlice';
 import { fetchAllBookings, selectAllBookings } from '../../../slices/bookingsSlice';
@@ -46,6 +46,8 @@ const SystemLogs: React.FC = () => {
     const bookings = useAppSelector(selectAllBookings);
     const categories = useAppSelector(selectAllCategories);
     const users = useAppSelector(selectAllUsers);
+    const admins = useAppSelector(selectAdmins);
+    console.log('admins', admins);
   const [rows, setRows] = useState<SystemLog[]>([]);
   const [rowCount, setRowCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -55,7 +57,7 @@ console.log('users', users);
 // Fetching everything in case we dont have it in the store
 useEffect(() => {
     if(!users.length) {
-        dispatch(fetchAllUsers());
+        dispatch(fetchAllUsersWithRole());
     }
 }, [dispatch, users.length]);
 
@@ -138,7 +140,7 @@ return (
       System Logs
     </Typography>
 
-    <FilterPanel query={query} onChange={handleChange} onDateChange={pickDate} onApply={() => fetchLogs(query)} loading={loading} />
+    <FilterPanel query={query} onChange={handleChange} onDateChange={pickDate} onApply={() => fetchLogs(query)} loading={loading} admins={admins}/>
 
     <SystemLogsTable
       rows={rows}

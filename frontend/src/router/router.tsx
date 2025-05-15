@@ -15,7 +15,6 @@ import AdminBookings from '../components/Admin/AdminBookings/AdminBookings';
 import Account from '../components/Account';
 import SingleBooking from '../components/Booking';
 import ManageUsers from '../components/Admin/ManageUsers';
-import SystemLogs from '../components/Admin/System-Logs/SystemLogs';
 import SystemLogsPage from '../pages/SystemLogs';
 
 export const router = createBrowserRouter([

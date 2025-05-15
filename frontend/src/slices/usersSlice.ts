@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../store/store';
 import { User, UsersState } from '../types/users.type';
 import { usersApi } from '../api/users';
@@ -181,5 +181,16 @@ export const selectAllUsers = (state: RootState) => state.users.users;
 export const selectAUser = (state: RootState) => state.users.user;
 export const selectUserLoading = (state: RootState) => state.users.loading;
 export const selectUserError = (state: RootState) => state.users.error;
+
+/**
+ * Selector that returns users with the Admin or Head Admin role.
+ * Creates 
+ */
+export const selectAdmins = createSelector(
+  (state: RootState) => state.users.users,
+  (users) => users.filter(user =>
+    user.role_title === 'Admin' || user.role_title === 'Head Admin'
+  )
+);
 
 export default usersSlice.reducer;

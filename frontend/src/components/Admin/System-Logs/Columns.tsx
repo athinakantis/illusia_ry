@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Chip, Tooltip, Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
@@ -38,23 +37,29 @@ export const systemLogColumns: GridColDef<SystemLog>[] = [
     field: 'table_name',
     headerName: 'Table',
     width: 140,
-    renderCell: ({ value }: any) => TABLE_LABELS[value] || value,
+    renderCell: (params: GridRenderCellParams<SystemLog, string | undefined>) => {
+      const value = params.value ?? ''  // coalesce undefined → ''
+      return TABLE_LABELS[value] || value
+    },
   },
   /*——————————————— Action Type ————————————————————*/
   {
     field: 'action_type',
     headerName: 'Action',
     width: 110,
-    renderCell: (p: any) => {
-      const action = p.value as string;
-      const table = p.row.table_name as string;
+    renderCell: (params: GridRenderCellParams<SystemLog, string | undefined>) => {
+      const action = params.value ?? '';
+      const tableKey = params.row.table_name ?? '';
       const verbMap: Record<string, string> = {
         INSERT: 'Create',
         UPDATE: 'Change',
         DELETE: 'Delete',
         CREATE_ITEM: 'Create',
       };
-      const singular = SINGULAR_TABLE_LABELS[table] ?? TABLE_LABELS[table]?.replace(/s$/, '') ?? table;
+      const singular =
+        SINGULAR_TABLE_LABELS[tableKey] ??
+        TABLE_LABELS[tableKey]?.replace(/s$/, '') ??
+        tableKey;
       const actionLabel = `${verbMap[action] || action} ${singular}`;
       const commonSx = { textTransform: 'capitalize', fontWeight: 600 };
       if (action === 'UPDATE' || action === 'CREATE_ITEM') {
@@ -64,8 +69,8 @@ export const systemLogColumns: GridColDef<SystemLog>[] = [
             size="small"
             sx={{
               ...commonSx,
-              backgroundColor: (theme) => theme.palette.warning.light,
-              color: (theme) => theme.palette.warning.contrastText,
+              backgroundColor: (theme) => theme.palette.warning.dark,
+              color: (theme) => theme.palette.text.light,
             }}
           />
         );
@@ -89,24 +94,34 @@ export const systemLogColumns: GridColDef<SystemLog>[] = [
     field: 'user_id',
     headerName: 'User',
     width: 220,
-    renderCell: ({ value }) => <UserLabelCell value={value} />,
+    renderCell: (params: GridRenderCellParams<SystemLog, string | null | undefined>) => {
+      const userId = params.value ?? null;
+      return (
+        <Tooltip title={userId ?? ''}>
+          <Box sx={{ fontSize: 12 }}>
+            <UserLabelCell value={userId} />
+          </Box>
+        </Tooltip>
+      );
+    },
   },
   /*——————————————— Target ID ————————————————————*/
   {
     field: 'target_id',
     headerName: 'Target',
     width: 220,
-    renderCell: (params: any) => {
-      const { value, row } = params;
-      switch (row.table_name) {
+    renderCell: (params: GridRenderCellParams<SystemLog, string | undefined>) => {
+      const value = params.value ?? '';
+      const tableKey = params.row.table_name ?? '';
+      switch (tableKey) {
         case 'items':
           return (
             <Box sx={{ fontSize: 12 }}>
-              {row.metadata?.item_name ?? value}
+              {(params.row.metadata?.item_name ?? value) as React.ReactNode}
             </Box>
           );
         case 'item_reservations':
-          return <ReservationLabelCell value={value} metadata={row.metadata} />;
+          return <ReservationLabelCell value={value} metadata={params.row.metadata} />;
         case 'categories':
           return <CategoryLabelCell value={value} />;
         case 'users':
@@ -130,17 +145,20 @@ export const systemLogColumns: GridColDef<SystemLog>[] = [
     headerName: 'Details',
     flex: 1,
     minWidth: 320,
-    renderCell: (p: any) => (
-      <Accordion sx={{ width: '100%' }}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ p: 0, m: 0 }}>
-          <Typography variant="caption">View JSON</Typography>
-        </AccordionSummary>
-        <AccordionDetails sx={{ p: 1, maxHeight: 200, overflow: 'auto' }}>
-          <pre style={{ whiteSpace: 'pre-wrap', fontSize: 12 }}>
-            {JSON.stringify(p.value, null, 2)}
-          </pre>
-        </AccordionDetails>
-      </Accordion>
-    ),
+    renderCell: (params: GridRenderCellParams<SystemLog, SystemLog['metadata'] | undefined>) => {
+      const metadata = params.value ?? {};
+      return (
+        <Accordion sx={{ width: '100%' }}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ p: 0, m: 0 }}>
+            <Typography variant="caption">View JSON</Typography>
+          </AccordionSummary>
+          <AccordionDetails sx={{ p: 1, maxHeight: 200, overflow: 'auto' }}>
+            <pre style={{ whiteSpace: 'pre-wrap', fontSize: 12 }}>
+              {JSON.stringify(metadata, null, 2)}
+            </pre>
+          </AccordionDetails>
+        </Accordion>
+      );
+    },
   },
 ];

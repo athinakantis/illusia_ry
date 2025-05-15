@@ -4,6 +4,11 @@ import { useUserName } from '../../../hooks/useUserName';
 import { useCategoryLabel } from '../../../hooks/useCategoryLabel';
 import { useUserNameForBooking } from '../../../hooks/useUserBookings';
 import { useItemLabel } from '../../../hooks/useItemLabel';
+import { Database } from '../../../types/supabase.type';
+
+// Import your Supabase-generated types
+// Alias the row type for item_reservations
+type ReservationMetadata = Database['public']['Tables']['item_reservations']['Row'];
 
 /**
  * Renders a user’s display name.
@@ -21,8 +26,13 @@ export const CategoryLabelCell: React.FC<{ value: string | null }> = ({ value })
   return <Box sx={{ fontSize: 12 }}>{label}</Box>;
 };
 
+
 /**
- * Renders a human-readable label for a booking target, with tooltip of the raw ID.
+ * @description Renders a label for a booking target showing the reserved item name.
+ * 
+ * ![label](https://http.cat/302)
+ * 
+ * My little hidden art, right in the docs.
  */
 export const BookingLabelCell: React.FC<{ value: string }> = ({ value }) => {
   const { name } = useUserNameForBooking(value);
@@ -36,7 +46,7 @@ export const BookingLabelCell: React.FC<{ value: string }> = ({ value }) => {
 /**
  * Renders a label for a reservation target showing the reserved item name.
  */
-export const ReservationLabelCell: React.FC<{ value: string; metadata: any }> = ({ value, metadata }) => {
+export const ReservationLabelCell: React.FC<{ value: string; metadata: ReservationMetadata }> = ({ value, metadata }) => {
   const itemName = useItemLabel(metadata.item_id);
   return (
     <Tooltip title={value}>
