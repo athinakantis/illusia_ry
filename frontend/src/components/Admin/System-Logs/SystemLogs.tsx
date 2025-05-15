@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Button,
+  Chip,
   MenuItem,
   Paper,
   Snackbar,
@@ -9,6 +10,9 @@ import {
   TextField,
   Tooltip,
   Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 import {
   DataGrid,
@@ -21,6 +25,7 @@ import { DatePicker, Provider, defaultTheme } from '@adobe/react-spectrum';
 import { parseDate, type CalendarDate } from '@internationalized/date';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   systemLogsApi,
   SystemLog,
@@ -90,6 +95,18 @@ const TABLE_NAMES = [
     'item_reservations',
     'system_logs',
 ] as const;
+const TABLE_LABELS: Record<string, string> = {
+  users: 'Users',
+  user_roles: 'User Roles',
+  item_reservations: 'Item Reservations',
+  items: 'Items',
+  categories: 'Categories',
+  bookings: 'Bookings',
+  system_logs: 'System Logs',
+  roles: 'Roles',
+  tags: 'Tags',
+  item_tags: 'Item Tags',
+}
 
 const ACTION_TYPES = ['INSERT', 'UPDATE', 'DELETE'] as const;
 
@@ -128,11 +145,7 @@ useEffect(() => {
         dispatch(fetchAllUsers());
     }
 }, [dispatch, users.length]);
-useEffect(() => {
-    if(!items.length) {
-        dispatch(fetchAllItems());
-    }
-}, [dispatch, items.length]);
+
 useEffect(() => {
     if(!categories.length) {
         dispatch(fetchAllCategories());
@@ -168,23 +181,47 @@ useEffect(() => {
             ),
         },
       /* ———————————————— Table Name —————————————————————*/
-      { field: 'table_name', headerName: 'Table', width: 140 },
+    
+      {
+        field: 'table_name',
+        headerName: 'Table',
+        width: 140,
+        renderCell: ({ value }: any) => TABLE_LABELS[value] || value,
+      },
       /* ———————————————— Action Type ———————————————————— */
       {
         field: 'action_type',
         headerName: 'Action',
         width: 110,
         renderCell: (p: any) => {
-          const color =
-            p.value === 'INSERT'
-              ? 'success.main'
-              : p.value === 'DELETE'
-                ? 'error.main'
-                : 'warning.main';
+          const label = p.value?.toLowerCase();
+          const commonSx = { textTransform: 'capitalize', fontWeight: 600 };
+          // Render UPDATE and CREATE_ITEM in warning.light (lighter yellow)
+          if (p.value === 'UPDATE' || p.value === 'CREATE_ITEM') {
+            return (
+              <Chip
+                label={label}
+                size="small"
+                sx={{
+                  ...commonSx,
+                  backgroundColor: (theme) => theme.palette.warning.light,
+                  color: (theme) => theme.palette.text.primary
+                }}
+              />
+            );
+          }
+          const color:
+            'success' | 'warning' | 'error' =
+            p.value === 'INSERT' ? 'success'
+            : p.value === 'DELETE' ? 'error'
+            : 'warning';
           return (
-            <Box sx={{ color, fontWeight: 600, textTransform: 'capitalize' }}>
-              {p.value}
-            </Box>
+            <Chip
+              label={label}
+              color={color}
+              size="small"
+              sx={commonSx}
+            />
           );
         },
       },
@@ -231,21 +268,20 @@ useEffect(() => {
       /* ———————————————— Metadata ———————————————————————— */
       {
         field: 'metadata',
-        headerName: 'Meta (JSON)',
+        headerName: 'Details',
         flex: 1,
         minWidth: 320,
         renderCell: (p: any) => (
-          <Box
-            sx={{
-              fontSize: 12,
-              whiteSpace: 'pre-wrap',
-              maxHeight: 200,
-              overflow: 'auto',
-              width: '100%',
-            }}
-          >
-            {JSON.stringify(p.value, null, 2)}
-          </Box>
+          <Accordion sx={{ width: '100%' }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ p: 0, m: 0 }}>
+              <Typography variant="caption">View JSON</Typography>
+            </AccordionSummary>
+            <AccordionDetails sx={{ p: 1, maxHeight: 200, overflow: 'auto' }}>
+              <pre style={{ whiteSpace: 'pre-wrap', fontSize: 12 }}>
+                {JSON.stringify(p.value, null, 2)}
+              </pre>
+            </AccordionDetails>
+          </Accordion>
         ),
       },
     ],
@@ -460,6 +496,10 @@ const StripedDataGrid = styled(
 )(({ theme }) => ({
   '& .even': {
     backgroundColor: theme.palette.action.hover,
+  },
+  // Remove default focus ring on cells
+  '& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within': {
+    outline: 'none',
   },
 }));
 
