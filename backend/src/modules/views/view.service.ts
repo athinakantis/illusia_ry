@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Tables } from '../types/supabase';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { CustomRequest } from '../types/request.type';
-import { ApiResponse } from '../types/response';
+import { CustomRequest } from 'src/types/request.type';
+import { ApiResponse } from 'src/types/response';
+import { Tables } from 'src/types/supabase';
+
 
 @Injectable()
 export class ViewsService {

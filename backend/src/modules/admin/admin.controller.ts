@@ -7,7 +7,7 @@ import {
   Patch,
   Req,
 } from '@nestjs/common';
-import { AdminService } from 'src/services/admin.service';
+import { AdminService } from 'src/modules/admin/admin.service';
 import { CustomRequest } from 'src/types/request.type';
 import { ApiResponse, UserWithRole } from 'src/types/response';
 

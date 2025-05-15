@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query, Body, Post, Delete, Req, Patch } from "@nestjs/common";
-import { UpdateReservationDto } from "src/dto/updateReservations.dto";
-import { ItemReservationService } from "src/services/reservations.service";
+import { UpdateReservationDto } from "src/modules/reservations/dto/updateReservations.dto";
+import { ItemReservationService } from "src/modules/reservations/reservations.service";
 import { CustomRequest } from "src/types/request.type";
 
 @Controller('reservations')

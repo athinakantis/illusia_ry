@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Get } from '@nestjs/common';
-import { MailerService } from '../services/mailer.service';
+import { MailerService } from './mailer.service';
 import { SentMessageInfo } from 'nodemailer';
 
 @Controller('mailer')

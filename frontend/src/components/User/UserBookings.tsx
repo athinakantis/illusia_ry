@@ -44,13 +44,9 @@ const UserBookings = () => {
 
   /* ─────────────────── handlers ─────────────────── */
   const handleCancel = (booking: BookingWithRes) => {
-    if (booking.status === 'pending') {
-      dispatch(deleteBooking(booking.booking_id));
-      showCustomSnackbar('Your booking was deleted!', 'info');
-    } else {
-      dispatch(updateBookingStatus({ id: booking.booking_id, status: 'cancelled' }))
-      showCustomSnackbar('Your booking was cancelled!', 'info');
-    }
+    dispatch(deleteBooking(booking.booking_id));
+    showCustomSnackbar('Your booking was deleted!', 'info');
+    setWantsToCancel(null);
 
     setWantsToCancel(null)
   };

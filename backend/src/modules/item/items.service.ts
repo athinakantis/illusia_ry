@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SupabaseService } from '../modules/supabase/supabase.service';
+import { SupabaseService } from '../supabase/supabase.service';
 import { Tables } from 'src/types/supabase';
 import { CustomRequest } from 'src/types/request.type';
 import { ApiResponse } from 'src/types/response';
@@ -52,20 +52,6 @@ export class ItemService {
         console.error('Error adding item: ', error);
         throw error;
       }
-
-      // Log the action using the SupabaseService
-      // Make sure req.user.id is available from your AuthMiddleware
-      if (req.user?.id) {
-        await this.supabaseService.logAction({
-          user_id: req.user.id,
-          action_type: 'CREATE_ITEM',
-          target_id: data.item_id, // Use the ID of the newly created item
-          metadata: { item_name: data.item_name },
-        });
-      } else {
-        console.warn('User ID not found in request for logging action.');
-      }
-
       return {
         message: 'Item added successfully',
         data: data,
@@ -109,13 +95,6 @@ export class ItemService {
       .select()
       .single();
 
-    // Using the SupabaseService to log the action(Service Role Key)
-    await this.supabaseService.logAction({
-      user_id: req.user.id,
-      action_type: 'UPDATE_ITEM',
-      target_id: itemId,
-      metadata: { item_name: data.item_name },
-    });
 
     if (error) {
       console.error('Error updating item: ', error);
@@ -140,13 +119,6 @@ export class ItemService {
       .select()
       .single();
 
-    // Using the SupabaseService to log the action(Service Role Key)
-    await this.supabaseService.logAction({
-      user_id: req.user.id,
-      action_type: 'DELETE_ITEM',
-      target_id: itemId,
-      metadata: { item_name: data.item_name },
-    });
 
     if (error) {
       console.error('Error deleting item: ', error);
