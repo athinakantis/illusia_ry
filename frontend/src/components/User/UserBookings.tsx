@@ -53,9 +53,6 @@ const UserBookings = () => {
     }
 
     setWantsToCancel(null)
-    setTimeout(() => {
-      if (user) dispatch(fetchUserBookings(user?.id))
-    }, 10)
   };
 
   /* ─────────────────── selectors ─────────────────── */
