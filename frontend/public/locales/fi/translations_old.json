@@ -1,0 +1,30 @@
+{
+  "button.save": "Tallenna",
+  "label.username": "Käyttäjätunnus",
+  "alert.welcome": "Tervetuloa Illusia Ry:n varastoratkaisuihin!",
+  "{item": {
+    "text}": ""
+  },
+  "header.logoMain": "",
+  "header.logoSecondary": "",
+  "{link.defaultValue}": "",
+  "person.myBookings": "",
+  "person.dashboard": "",
+  "person.myAccount": "",
+  "person.logOut": "",
+  "home.heroTitle": "",
+  "home.heroDescription": "",
+  "home.categoriesTitle": "",
+  "home.categoriesDescription": "",
+  "home.askQuestion": "",
+  "faq.question1": "",
+  "faq.answer1": "",
+  "faq.question2": "",
+  "faq.answer2": "",
+  "faq.question3": "",
+  "faq.answer3": "",
+  "button.test": "Testipainike",
+  "{link": {
+    "defaultValue}": ""
+  }
+}

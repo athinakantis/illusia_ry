@@ -5,7 +5,7 @@ export interface Item {
   category_id: string;
   item_name: string;
   description?: string;
-  image_path: string;
+  image_path: string[];
   location: string;
   quantity: number;
   created_at: string;
@@ -20,7 +20,7 @@ export interface ItemState {
   categories: {
     category_id: string;
     category_name: string;
-    image_path: string;
+    image_path: string[];
   }[];
 }
 export interface ApiResponse<T> {
@@ -111,7 +111,10 @@ export type BookingWithRes = {
 
 export type BookingWithItems = {
   booking: Tables<'bookings'>;
-  items: Array<Partial<Tables<'items'>> & Pick<Reservation, 'quantity' | 'start_date' | 'end_date'>>
+  items: Array<
+    Partial<Tables<'items'>> &
+      Pick<Reservation, 'quantity' | 'start_date' | 'end_date'>
+  >;
 };
 
 /** Shape of the successful DELETE /bookings/:id response */

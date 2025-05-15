@@ -41,27 +41,32 @@ export class BookingService {
       .from('bookings')
       .select(`*`)
       .eq('booking_id', id)
-      .single()
-    
-      if (bookingError) throw new BadRequestException(bookingError.message);
-      if (!bookingData) throw new NotFoundException(`Booking ${id} not found`);
+      .single();
+
+    if (bookingError) throw new BadRequestException(bookingError.message);
+    if (!bookingData) throw new NotFoundException(`Booking ${id} not found`);
 
     const { data: reservationData, error: reservationError } = await supabase
       .from('item_reservations')
       .select(`quantity, start_date, end_date, item:item_id (*)`)
-      .eq('booking_id', id)
+      .eq('booking_id', id);
 
-    if (reservationError) throw new BadRequestException(reservationError.message);
-    if (!reservationData) throw new NotFoundException(`No items found for booking ${id}`);
+    if (reservationError)
+      throw new BadRequestException(reservationError.message);
+    if (!reservationData)
+      throw new NotFoundException(`No items found for booking ${id}`);
 
-    const formattedRes = reservationData.map(r => ({
+    const formattedRes = reservationData.map((r) => ({
       ...r.item,
       quantity: r.quantity,
       start_date: r.start_date,
-      end_date: r.end_date
+      end_date: r.end_date,
     }));
-    
-    const bookingWithItems: BookingWithItems = {booking: bookingData, items: formattedRes }
+
+    const bookingWithItems: BookingWithItems = {
+      booking: bookingData,
+      items: formattedRes,
+    };
 
     return {
       message: `Booking ${id} retrieved successfully`,
@@ -363,12 +368,12 @@ export class BookingService {
 
     const supabase = req['supabase'];
     const { data, error } = await supabase
-      .from('item_reservations')
+      .from('upcoming_bookings')
       .select(
         `*, booking:booking_id (status, user_id,
-        user:user_id (display_name, email))`,
+    user:user_id (display_name, email))`,
       )
-      .gt('start_date', today)
+      .order('start_date')
       .limit(+amount);
 
     if (error) {

@@ -68,7 +68,7 @@ function Items() {
     if (reservations.length < 1) {
       dispatch(fetchFutureReservations());
     }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -78,7 +78,7 @@ function Items() {
         end: parseDate(selectedDateRange.end_date),
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
@@ -335,11 +335,12 @@ function Items() {
                       }}>
                         <CardMedia
                           component="img"
-                          image={item.image_path || '/src/assets/broken_img.png'}
+                          image={Array.isArray(item.image_path) && item.image_path.length > 0 ? item.image_path[0] : '/src/assets/broken_img.png'}
                           onError={handleBrokenImg}
                           sx={{
                             height: '100%',
-                            transition: 'scale 200ms'
+                            transition: 'scale 200ms',
+                            backgroundColor: 'background.verylightgrey'
                           }}
                         />
                       </Box>

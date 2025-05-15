@@ -5,11 +5,12 @@ import { fetchAllCategories, selectAllCategories } from '../slices/itemsSlice';
 import { Link } from 'react-router-dom';
 import { GridExpandMoreIcon } from '@mui/x-data-grid';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-
+import { Trans } from 'react-i18next';
 
 function Home() {
   const categories = useAppSelector(selectAllCategories)
   const dispatch = useAppDispatch()
+
 
   useEffect(() => {
     if (categories.length < 1) {
@@ -36,8 +37,14 @@ function Home() {
         <Box
           sx={{ width: 'clamp(150px, 85vw, 797px)', textAlign: 'center', height: '100%', display: 'flex', gap: '35px', margin: 'auto', justifyContent: 'center', flexDirection: 'column' }}>
 
-          <Typography variant='h1'>Home for live-action role-playing games props</Typography>
-          <Typography variant='body3' color='text.main'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat</Typography>
+          <Typography variant='h1'>
+            <Trans i18nKey="home.heroTitle">Home for live-action role-playing games props</Trans>
+          </Typography>
+          <Typography variant='body3' color='text.main'>
+            <Trans i18nKey="home.heroDescription">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat
+            </Trans>
+          </Typography>
         </Box>
       </Box>
 
@@ -45,8 +52,14 @@ function Home() {
       {/* Category section */}
       <Box component='section'
         sx={{ maxWidth: 1240, minHeight: 690, margin: 'auto', textAlign: 'center', display: 'flex', flexDirection: 'column', my: '170px' }}>
-        <Typography variant='h2'>View Our Range Of Categories</Typography>
-        <Typography variant='body1' sx={{ width: 'clamp(150px, 80vw, 609px)', margin: '12px auto 68px' }}>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.</Typography>
+        <Typography variant='h2'>
+          <Trans i18nKey="home.categoriesTitle">View Our Range Of Categories</Trans>
+        </Typography>
+        <Typography variant='body1' sx={{ width: 'clamp(150px, 80vw, 609px)', margin: '12px auto 68px' }}>
+          <Trans i18nKey="home.categoriesDescription">
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.
+          </Trans>
+        </Typography>
 
         {/* Category Previews */}
         <Container
@@ -120,8 +133,8 @@ function Home() {
               <Typography variant='h3'
                 sx={{ fontWeight: 700, fontFamily: 'Oxygen, sans-serif', color: '#3D3D3D', mb: '14px' }}>Frequently Asked Questions</Typography>
               <Typography color='text.primary' variant='body3'>Before reaching out to us, see if you can find you're looking for in our FAQ</Typography>
-              <Button variant='rounded' endIcon={<ArrowForwardIosRoundedIcon />}
-                sx={{ mt: '32px' }}>Ask a question
+              <Button variant='rounded' endIcon={<ArrowForwardIosRoundedIcon />} sx={{ mt: '32px' }}>
+                <Trans i18nKey="home.askQuestion">Ask a question</Trans>
               </Button>
             </Box>
             <Box sx={{
@@ -136,10 +149,14 @@ function Home() {
                   aria-controls="panel1-content"
                   id="panel1-header"
                 >
-                  <Typography component="span">When will my booking be approved?</Typography>
+                  <Typography component="span">
+                    <Trans i18nKey="faq.question1">When will my booking be approved?</Trans>
+                  </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  We look through bookings as soon as we can. Bookings are usually approved within the span of 2-3 days. If you've waited longer than 5 days, send us an email
+                  <Trans i18nKey="faq.answer1">
+                    We look through bookings as soon as we can. Bookings are usually approved within the span of 2-3 days. If you've waited longer than 5 days, send us an email
+                  </Trans>
                 </AccordionDetails>
               </Accordion>
               <Accordion>
@@ -148,10 +165,14 @@ function Home() {
                   aria-controls="panel2-content"
                   id="panel2-header"
                 >
-                  <Typography component="span">How long can I book items for?</Typography>
+                  <Typography component="span">
+                    <Trans i18nKey="faq.question2">How long can I book items for?</Trans>
+                  </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  One booking can be a maximum duration of two weeks
+                  <Trans i18nKey="faq.answer2">
+                    One booking can be a maximum duration of two weeks
+                  </Trans>
                 </AccordionDetails>
               </Accordion>
               <Accordion>
@@ -160,10 +181,14 @@ function Home() {
                   aria-controls="panel3-content"
                   id="panel3-header"
                 >
-                  <Typography component="span">Why do I have to be approved before booking items?</Typography>
+                  <Typography component="span">
+                    <Trans i18nKey="faq.question3">Why do I have to be approved before booking items?</Trans>
+                  </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  We see the approval of our users as a guarantee that the items which have been lent will be returned after a maximum of 2 weeks.
+                  <Trans i18nKey="faq.answer3">
+                    We see the approval of our users as a guarantee that the items which have been lent will be returned after a maximum of 2 weeks.
+                  </Trans>
                 </AccordionDetails>
               </Accordion>
             </Box>

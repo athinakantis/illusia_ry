@@ -48,10 +48,7 @@ const UserBookings = () => {
     showCustomSnackbar('Your booking was deleted!', 'info');
     setWantsToCancel(null);
 
-    // Refresh list shortly after mutation
-    setTimeout(() => {
-      if (user) dispatch(fetchUserBookings(user.id));
-    }, 10);
+    setWantsToCancel(null)
   };
 
   /* ─────────────────── selectors ─────────────────── */
@@ -66,20 +63,23 @@ const UserBookings = () => {
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
   );
 
-  // Add just after `const sortedBookings = …`
-  const isCancelable = (b: BookingWithRes) => {
-    if (b.status !== 'pending') return false;
-
-    // Use the earliest start_date in case reservations are unsorted
+  /**
+   * A booking can be "touched" (button shown) when:
+   *   • status === "pending"   → user may DELETE the booking
+   *   • status === "approved"  → user may CANCEL it *if* start date is in the future
+   */
+  const canModify = (b: BookingWithRes) => {
+    // earliest start date across all reservations
     const earliestStart = Math.min(
       ...b.reservations.map(r => new Date(r.start_date).getTime())
     );
-
-    // Compare against today (00:00) so users can still cancel on the day before 00:00
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    return earliestStart > today.getTime();
+    if (b.status === 'pending') return true;                       // deletable
+    if (b.status === 'approved' && earliestStart > today.getTime())
+      return true;                                                 // cancellable
+    return false;
   };
 
   /* ─────────────────── side-effects ─────────────────── */
@@ -172,8 +172,8 @@ const UserBookings = () => {
                                   : 'default'
                         }
                       />
-                      {isCancelable(booking) && (
-                        <Tooltip title="Cancel booking">
+                      {canModify(booking) && (
+                        <Tooltip title={booking.status === 'approved' ? 'Cancel booking' : 'Delete booking'}>
                           <IconButton
                             onClick={(e) => {
                               e.preventDefault();
