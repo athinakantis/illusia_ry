@@ -6,6 +6,7 @@ export const theme = {
     light: '#9339C9',
     dark: '#1F0A29',
     neutral: '#2c2c2c',
+    black: '#2A2A2A',
   },
   secondary: {
     main: '#9537C7',
@@ -206,9 +207,10 @@ export const createAppTheme = () =>
                 style: {
                   backgroundColor: '#282828',
                   color: 'white',
-                  '&:hover': { backgroundColor: '#3f3f3f' }
+                  '&:hover': { backgroundColor: '#3f3f3f' },
                 },
-              }, {
+              },
+              {
                 props: { variant: 'outlined_rounded' },
                 style: {
                   border: '1px solid #E2E2E2',
@@ -217,9 +219,9 @@ export const createAppTheme = () =>
                   height: '40px',
                   textTransform: 'capitalize',
                   fontSize: 16,
-                  '&:hover': { backgroundColor: 'rgba(68, 25, 91, 0.04)'}
-                }
-              }
+                  '&:hover': { backgroundColor: 'rgba(68, 25, 91, 0.04)' },
+                },
+              },
             ],
           },
         },
