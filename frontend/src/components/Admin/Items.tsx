@@ -40,7 +40,12 @@ function Items() {
         <Box>
           <Button component={Link} variant='contained'
             onClick={() => navigate('/items/new')}
-            sx={{ fontSize: 20, px: 5 }}>Add</Button>
+            sx={{
+              bgcolor: 'primary.black',
+              borderRadius: 10,
+              fontSize: 16,
+              px: 5
+            }}>Add new item</Button>
         </Box>
         <ItemDataGrid data={items} />
       </Box>

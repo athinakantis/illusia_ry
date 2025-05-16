@@ -1,0 +1,33 @@
+{
+  "nav": {
+    "home": "Etusivu",
+    "items": "Tuotteet",
+    "contact": "Ota yhteyttä",
+    "bookings": "Varaukset"
+  },
+  "header": {
+    "logoMain": "ILLUSIA",
+    "logoSecondary": "KAUPPA"
+  },
+  "person": {
+    "myBookings": "Minun varaukset",
+    "dashboard": "Hallintapaneeli",
+    "myAccount": "Oma tili",
+    "logOut": "Kirjaudu ulos"
+  },
+  "home": {
+    "heroTitle": "Live action -roolipelien rekvisiittakoti",
+    "heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ahdistelussa ei ole nyt mitään hienostelua. Nyt artikkelin kirjoittaja on nero, joka on tyyny. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nyt ahdistetussa feugiatissa ei ole fringillaa.",
+    "categoriesTitle": "Tutustu kategoriavalikoimaamme",
+    "categoriesDescription": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.",
+    "askQuestion": "Kysy kysymys"
+  },
+  "faq": {
+    "question1": "Milloin varaukseni hyväksytään?",
+    "answer1": "Käymme varaukset läpi mahdollisimman pian. Varaukset hyväksytään yleensä 2–3 päivän kuluessa. Jos olet odottanut yli 5 päivää, lähetä meille sähköpostia.",
+    "question2": "Kuinka pitkäksi aikaa voin varata tuotteita?",
+    "answer2": "Yhden varauksen kesto voi olla enintään kaksi viikkoa",
+    "question3": "Miksi minun on saatava hyväksyntä ennen kuin voin varata tuotteita?",
+    "answer3": "Käyttäjiemme hyväksyntä takaa meille, että lainatut esineet palautetaan viimeistään kahden viikon kuluessa."
+  }
+}
