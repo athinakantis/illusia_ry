@@ -1,12 +1,12 @@
 import { api } from "./axios"
-import { fetchUserRole, userApiResponse } from "../types/users.type"
+import { fetchUserRole, singleUserApiResponse, userApiResponse } from "../types/users.type"
 
 export const usersApi = {
     getAllUsers: (): Promise<userApiResponse> =>
         api.get('admin/users',
             { headers: { 'Access-Control-Allow-Origin': '*' } }
         ),
-    getUserById: (id: string): Promise<userApiResponse> => {
+    getUserById: (id: string): Promise<singleUserApiResponse> => {
         return api.get(`admin/user/${id}`)
     },
     getUserWithRoleById: (id: string): Promise<fetchUserRole> => {

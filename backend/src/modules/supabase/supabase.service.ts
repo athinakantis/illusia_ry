@@ -41,5 +41,17 @@ export class SupabaseService {
       console.error('Failed to log system action:', error);
     }
   }
+  /**
+   * Delete a user by their Supabase Auth user ID.
+   * Uses the Admin API and requires the service_role key.
+   */
+  async deleteUserById(userId: string) {
+    const { data, error } = await this._supabase.auth.admin.deleteUser(userId);
+    if (error) {
+      console.error(`Failed to delete user ${userId}:`, error);
+      throw error;
+    }
+    return data;
+  }
 }
 

@@ -12,9 +12,12 @@ import ItemDetail from '../components/User/ItemDetail';
 import UserBookings from '../components/User/UserBookings';
 import AdminDashboard from '../components/Admin/AdminDashboard';
 import AdminBookings from '../components/Admin/AdminBookings/AdminBookings';
-import Account from '../components/Account';
+import Account from '../components/User/Account/Account';
 import SingleBooking from '../components/Booking';
 import ManageUsers from '../components/Admin/ManageUsers';
+import PhoneLogin from '../components/Auth/PhoneLogin';
+import AuthCallbackHandler from '../components/CallbackHandler';
+
 
 export const router = createBrowserRouter([
   {
@@ -26,11 +29,16 @@ export const router = createBrowserRouter([
         element: <Home />
       },
       {
+        path: "/auth/callback",
+        element: <AuthCallbackHandler />
+      },
+      {
         path: '/login',
         element: (
           <>
             <AuthRedirect />
             <LoginPage />
+           
           </>
         )
       },
@@ -82,6 +90,15 @@ export const router = createBrowserRouter([
         path: "/account",
         element: <Account />
       },
+      {
+        path: "/phone-login",
+        element: <PhoneLogin />
+      },
+      // Can we keep this in for now because every time i make an endpoint i have to recreate this file and put it in the router?
+      {
+        path: "/token",
+        element: <h1>Token</h1> // This is just a placeholder for the hidden token page
+      }
 
     ]
   },

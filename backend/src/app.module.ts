@@ -22,6 +22,8 @@ import { TagController } from './modules/tags/tags.controller';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { TagModule } from './modules/tags/tags.module';
 import { CategoryController } from './modules/categories/categories.controller';
+import { AccountModule } from './modules/account/account.module';
+import { AccountController } from './modules/account/account.controller';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -30,6 +32,7 @@ import { CategoryController } from './modules/categories/categories.controller';
     // Import other modules here if needed
     CategoriesModule,
     TagModule,
+    AccountModule,
     
   ],
   controllers: [
@@ -66,7 +69,8 @@ export class AppModule implements NestModule {
       ItemReservationsController,
       AdminController,
       TagController,
-      CategoryController
+      CategoryController,
+      AccountController
       );
   }
 }
