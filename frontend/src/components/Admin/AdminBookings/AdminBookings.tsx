@@ -40,7 +40,7 @@ import {
   selectAllReservations,
 } from "../../../slices/reservationsSlice";
 import CollapsibleDetail from "./CollapsibleDetail";
-import { CustomSnackbar } from "../../CustomSnackbar";
+import { useTranslatedSnackbar } from '../../CustomComponents/TranslatedSnackbar';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -60,6 +60,7 @@ const VALID_FILTERS = Array.from(STATUS_FILTERS.map(entry => entry.value))
 const AdminBookings = () => {
   const theme = useTheme();
   const { t } = useTranslation();
+  const { showSnackbar } = useTranslatedSnackbar();
   // ─── Redux selectors ──────────────────────────────────────────
   const dispatch = useAppDispatch();
   const users = useAppSelector(selectAllUsers)
@@ -102,21 +103,13 @@ const AdminBookings = () => {
     if (!menuBookingId) return;
     dispatch(updateBookingStatus({ id: menuBookingId, status: "approved" }));
     handleMenuClose();
-    CustomSnackbar({
-      message: 'Booking approved',
-      variant: 'success',
-      onClose:() => {},
-    });
+    showSnackbar('snackbar.bookingApproved', 'Booking approved', { variant: 'success' });
   };
   const rejectBooking = () => {
     if (!menuBookingId) return;
     dispatch(updateBookingStatus({ id: menuBookingId, status: "rejected" }));
     handleMenuClose();
-    CustomSnackbar({
-      message: 'Booking rejected',
-      variant: 'error',
-      onClose: () => {}})
-
+    showSnackbar('snackbar.bookingRejected', 'Booking rejected', { variant: 'error' });
   };
 
   // ─── Side Effects ──────────────────────────────────
