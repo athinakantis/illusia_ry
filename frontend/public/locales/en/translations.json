@@ -12,6 +12,13 @@
     "approve": "Approve",
     "reject": "Reject"
   },
+  "collapsibleDetail": {
+    "title": "Reservation items",
+    "item": "Item",
+    "start": "Start Date",
+    "end": "End Date",
+    "qty": "Quantity"
+  },
   "nav": {
     "home": "Home",
     "items": "Items",

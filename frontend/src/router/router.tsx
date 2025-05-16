@@ -15,6 +15,7 @@ import AdminBookings from '../components/Admin/AdminBookings/AdminBookings';
 import Account from '../components/Account';
 import SingleBooking from '../components/Booking';
 import ManageUsers from '../components/Admin/ManageUsers';
+import Test from '../pages/Test';
 
 export const router = createBrowserRouter([
   {
@@ -82,6 +83,10 @@ export const router = createBrowserRouter([
         path: "/account",
         element: <Account />
       },
+      {
+        path: "/test",
+        element: <Test />
+      }
 
     ]
   },

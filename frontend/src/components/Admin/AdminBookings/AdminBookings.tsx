@@ -350,7 +350,6 @@ const AdminBookings = () => {
         </Menu>
       </Paper>
 
-      
     </Container>
   );
 };

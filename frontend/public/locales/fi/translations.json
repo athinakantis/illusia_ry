@@ -12,6 +12,17 @@
     "approve": "Hyväksy",
     "reject": "Hylkää"
   },
+  "collapsibleDetail": {
+    "title": "Varauskohteet",
+    "item": "Tuote",
+    "start": "Alkupäivä",
+    "end": "Loppupäivä",
+    "qty": "Määrä"
+  },
+  "snackbar": {
+    "bookingDeleted": "Varaus poistettu",
+    "bookingCancelled": "Varaus peruttu"
+  },
   "nav": {
     "home": "Etusivu",
     "items": "Tuotteet",

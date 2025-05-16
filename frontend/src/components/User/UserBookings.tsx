@@ -34,7 +34,7 @@ import {
   selectUserBookings,
   updateBookingStatus,
 } from '../../slices/bookingsSlice';
-import { showCustomSnackbar } from '../CustomSnackbar';
+import { useTranslatedSnackbar } from '../CustomComponents/TranslatedSnackbar';
 import { useTranslation} from 'react-i18next';
 
 const UserBookings = () => {
@@ -48,10 +48,10 @@ const UserBookings = () => {
   const handleCancel = (booking: BookingWithRes) => {
     if (booking.status === 'pending') {
       dispatch(deleteBooking(booking.booking_id));
-      showCustomSnackbar('Your booking was deleted!', 'info');
+      showSnackbar('snackbar.bookingDeleted', 'Your booking was deleted!', { variant: 'info' });
     } else {
       dispatch(updateBookingStatus({ id: booking.booking_id, status: 'cancelled' }))
-      showCustomSnackbar('Your booking was cancelled!', 'info');
+      showSnackbar('snackbar.bookingCancelled', 'Your booking was cancelled!', { variant: 'info' });
     }
 
     setWantsToCancel(null)
@@ -98,6 +98,7 @@ const UserBookings = () => {
   );
 
   const { t } = useTranslation();
+  const { showSnackbar } = useTranslatedSnackbar();
 
   // Helper to fetch the first image url for an item
   const getItemImage = (id: string): string | undefined =>
