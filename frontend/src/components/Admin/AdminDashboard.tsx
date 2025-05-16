@@ -20,11 +20,13 @@ import { fetchAllBookings } from '../../slices/bookingsSlice';
 import { fetchAllUsersWithRole } from '../../slices/usersSlice';
 import { fetchAllReservations } from '../../slices/reservationsSlice';
 import { format, parseISO } from 'date-fns';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { bookingsApi } from '../../api/bookings';
 import { UpcomingBooking } from '../../types/types';
 // - Additions for StyledDataGrid
 import { StyledDataGrid } from '../CustomComponents/StyledDataGrid';
+import { useAuth } from '../../hooks/useAuth';
+import Spinner from '../Spinner';
 // import { GridColDef } from '@mui/x-data-grid';
 
 // ─── Re-usable stat card ────────────────────────────────────
@@ -59,8 +61,9 @@ const StatCard: React.FC<{ label: string; value: number | string }> = ({
 // ── Main component ────────────────────────────────────────
 
 const AdminDashboard = () => {
+  const { role } = useAuth();
+
   const dispatch = useAppDispatch();
-  // const { user } = useAuth();
 
   const [authActivities, setAuthActivities] = React.useState<
     {
@@ -110,6 +113,15 @@ const AdminDashboard = () => {
     })();
   }, []);
 
+  /* ————————————————— Conditional Renders ————————————————————————*/
+    // If we don’t know the role yet, render nothing (or a loader)
+    if (role === undefined) {
+      return <Spinner />;
+    }
+    // If not an Admin or Head Admin, redirect immediately
+    if (role !== 'Admin' && role !== 'Head Admin') {
+      return <Navigate to="/" replace />;
+    }
   /* ────────── Memoized values ────────── */
   // combine bookings + reservations + users
 

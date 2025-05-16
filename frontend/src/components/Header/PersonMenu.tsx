@@ -2,6 +2,8 @@ import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { Link } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useTranslation, Trans } from 'react-i18next';
@@ -9,7 +11,9 @@ import { useTranslation, Trans } from 'react-i18next';
 const PersonMenu = () => {
   // ─── profile menu state ──────────────────────────────────────────────
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { signOut } = useAuth();
+  const { signOut, role } = useAuth();
+  const isUser = role === 'User';
+  const isAdmin = role === 'Admin' || role === 'Head Admin';
   const { i18n } = useTranslation();
   const menuOpen = Boolean(anchorEl);
   const handleMenuOpen = (e: React.MouseEvent<HTMLElement>) => {
@@ -80,19 +84,25 @@ const PersonMenu = () => {
           },
         }}
       >
-        <MenuItem component={Link} to="/bookings" onClick={handleMenuClose}>
-          <Trans i18nKey="person.myBookings">My bookings</Trans>
-        </MenuItem>
-        <MenuItem component={Link} to="/admin/dashboard" onClick={handleMenuClose}>
-          <DashboardIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" /> 
-          <Trans i18nKey="person.dashboard">Dashboard</Trans>
-        </MenuItem>
+        {isUser || isAdmin && (
+          <MenuItem component={Link} to="/bookings" onClick={handleMenuClose}>
+            <CalendarTodayIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
+            <Trans i18nKey="person.myBookings">My bookings</Trans>
+          </MenuItem>
+        )}
+        {isAdmin && (
+          <MenuItem component={Link} to="/admin/dashboard" onClick={handleMenuClose}>
+            <DashboardIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" /> 
+            <Trans i18nKey="person.dashboard">Dashboard</Trans>
+          </MenuItem>
+        )}
         <MenuItem
           sx={{ height: '100%' }}
           component={Link}
           to="/account"
           onClick={handleMenuClose}
         >
+          <AccountCircleIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
           <Trans i18nKey="person.myAccount">My account</Trans>
         </MenuItem>
         <MenuItem disableRipple sx={{ pl: 2, pr: 2 }} onClick={signOut}>
