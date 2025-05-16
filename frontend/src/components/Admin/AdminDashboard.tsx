@@ -118,8 +118,7 @@ const AdminDashboard = () => {
   //   () => buildBookingOverviews(bookings, reservations, users, items),
   //   [bookings, reservations, users, items],
   // );
-  // console.log("Overviews" + overviews);
-  // console.log("upcomingBookings:", upcomingBookings);
+
 
   /* ────────── Render ────────── */
   return (

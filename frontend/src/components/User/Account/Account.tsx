@@ -234,7 +234,7 @@ const Account = () => {
                   Add phone number
                 </Button>
               )}
-  {console.log(hasPhoneNumber,",", phoneNumber)}
+
               {showPhoneEditor && (
               
                 <AddPhone

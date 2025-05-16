@@ -35,7 +35,6 @@ const ManageUsers: React.FC = () => {
   const users = useAppSelector(selectAllUsers);
   const loading = useAppSelector(selectUserLoading);
   const { role } = useAuth();
-  console.log('⚙️ ManageUsers role:', role); 
 
   const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'ACTIVE' | 'DEACTIVATED'>('ALL');
 

@@ -10,7 +10,6 @@ export const useCurrentUserImage = () => {
     const fetch = async () => {
       const uid = session?.user.id;
       if (!uid) {
-        console.log("No session or user id, setting image to null.");
         setImage(null);
         return;
       }
@@ -27,7 +26,6 @@ export const useCurrentUserImage = () => {
         setImage(null);
         return;
       }
-      console.log("Fetched users.profile_image_url:", users?.profile_image_url);
       // 3) fallback to metadata avatars if no custom image
       const chosen =
         users.profile_image_url

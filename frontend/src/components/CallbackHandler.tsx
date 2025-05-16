@@ -1,9 +1,8 @@
-// CallbackHandler.tsx
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../config/supabase';
 import { showCustomSnackbar } from '../components/CustomSnackbar';
-
+// This component handles the callback from when the user changes their email address
 export default function AuthCallbackHandler() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -14,7 +13,7 @@ export default function AuthCallbackHandler() {
     const a = params.get('access_token');
     const r = params.get('refresh_token');
     const m = params.get('message');
-    console.log('AuthCallbackHandler:', { a, r, m });
+   
     if (a && r) {
       supabase.auth.setSession({ access_token: a, refresh_token: r }).catch(console.error);  //  
     }

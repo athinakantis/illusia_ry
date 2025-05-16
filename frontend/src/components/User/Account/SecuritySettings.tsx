@@ -117,8 +117,8 @@ const SecuritySettings = () => {
     setTotpFactor(null);
     setPending(null);
     setCode('');
-
-    console.log('MFA factor removed. Your session is still AAL2 until you reload or log out.');
+    // reload the page to reflect the changes
+    window.location.reload();
   }
 
   return (

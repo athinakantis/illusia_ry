@@ -33,22 +33,23 @@ const AddPhone = ({
 
     // create challenge against the first verified TOTP factor
     const { data: factors } = await supabase.auth.mfa.listFactors();
-    console.log('Factors:', factors);
+
     const totp = factors?.all.find(f => f.factor_type === 'totp' && f.status === 'verified');
     if (!totp) return 'Need a verified TOTP factor to continue.';
 
     const { data: challenge } =
       await supabase.auth.mfa.challenge({ factorId: totp.id });
+    if (!challenge || !challenge.id) return 'Failed to create challenge.';
     const code = prompt('Enter 6-digit code from your Authenticator app');
     if (!code) return 'Cancelled.';
 
     const { error } = await supabase.auth.mfa.verify({
       factorId: totp.id,
+      // @
       challengeId: challenge.id,
       code,
     });
-    console.log('MFA verify response:', { error });
-    console.log( challenge)
+
     return error ? error.message : true;
   };
   /** Step 1 – send / change phone, trigger SMS */
