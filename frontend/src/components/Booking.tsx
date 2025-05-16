@@ -54,17 +54,14 @@ function SingleBooking() {
   }
 
 
-  useEffect(() => {
-    if (!booking_id) {
-      navigate('/bookings');
-    }
-  }, [booking_id, navigate]);
-
-  useEffect(() => {
-    if (!booking_id) return;
-    if (!booking_selector) dispatch(fetchBooking(booking_id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+useEffect(() => {
+  if (!booking_id) {
+    navigate('/bookings');
+    return;
+  }
+  // Always fetch fresh booking details when the ID changes
+  dispatch(fetchBooking(booking_id));
+}, [booking_id, dispatch, navigate]);
 
   if (loading)
     return (
