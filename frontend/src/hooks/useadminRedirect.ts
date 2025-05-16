@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './useAuth'; // adjust import path if useAuth lives elsewhere
 // Creatd this hook to redirect users based on their role
-// but it takes a second for role to be defined so its not working how I want.
+// but it takes a second for role to be defined so its not working how I want
 
 /**
  * Redirects user if their role is not in `allowedRoles`.
