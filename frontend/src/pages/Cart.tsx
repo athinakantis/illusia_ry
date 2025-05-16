@@ -297,7 +297,7 @@ function Cart() {
 													<CardMedia
 														component="img"
 														image={
-															item.image_path || '/src/assets/broken_img.png'
+															item.image_path?.[0] || '/src/assets/broken_img.png'
 														}
 														onError={handleBrokenImg}
 														style={{ width: 78, borderRadius: 14 }}

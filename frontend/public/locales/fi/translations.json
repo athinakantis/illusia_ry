@@ -1,4 +1,17 @@
 {
+  "adminBookings": {
+    "heading": "Varaukset",
+    "id": "Tunnus",
+    "created": "Luotu",
+    "bookingDates": "Varauspäivät",
+    "customer": "Asiakas",
+    "items": "Tuotteet",
+    "status": "Tila",
+    "awaiting": "Odottaa hyväksyntää",
+    "noResults": "Valitulle suodattimelle ei löytynyt varauksia.",
+    "approve": "Hyväksy",
+    "reject": "Hylkää"
+  },
   "nav": {
     "home": "Etusivu",
     "items": "Tuotteet",
@@ -14,6 +27,15 @@
     "dashboard": "Hallintapaneeli",
     "myAccount": "Oma tili",
     "logOut": "Kirjaudu ulos"
+  },
+  "userBookings": {
+    "heading": "Varauksesi",
+    "noBookings": "Ei varauksia vielä.",
+    "cancelTooltip": "Peruuta varaus",
+    "deleteTooltip": "Poista varaus",
+    "confirmCancel": "Haluatko varmasti peruuttaa varauksesi?",
+    "confirmYes": "Kyllä, olen varma",
+    "confirmNo": "Ei kiitos"
   },
   "home": {
     "heroTitle": "Live action -roolipelien rekvisiittakoti",

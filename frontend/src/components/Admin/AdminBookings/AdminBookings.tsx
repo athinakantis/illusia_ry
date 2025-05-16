@@ -42,6 +42,7 @@ import {
 import CollapsibleDetail from "./CollapsibleDetail";
 import { CustomSnackbar } from "../../CustomSnackbar";
 import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Allowed status filters rendered as Tabs
@@ -58,6 +59,7 @@ const VALID_FILTERS = Array.from(STATUS_FILTERS.map(entry => entry.value))
 
 const AdminBookings = () => {
   const theme = useTheme();
+  const { t } = useTranslation();
   // ─── Redux selectors ──────────────────────────────────────────
   const dispatch = useAppDispatch();
   const users = useAppSelector(selectAllUsers)
@@ -167,8 +169,10 @@ const AdminBookings = () => {
   const itemName = (iid: string) =>
     items.find((it) => it.item_id === iid)?.item_name || iid.slice(0, 6);
 
-  const itemImage = (iid: string) =>
-    items.find((it) => it.item_id === iid)?.image_path;
+  const itemImage = (iid: string) => {
+    const image = items.find((it) => it.item_id === iid)?.image_path;
+    return Array.isArray(image) ? image[0] : image;
+  };
   // Navigate to item page
   const itemLink = (iid: string) => `/items/manage/${iid}`;
 
@@ -194,8 +198,8 @@ const AdminBookings = () => {
   // ─── Render ───────────────────────────────────────────────────
   return (
     <Container maxWidth="lg" sx={{ mt: 6 }}>
-      <Typography variant='heading_secondary_bold' gutterBottom>
-        Bookings
+      <Typography variant="heading_secondary_bold" gutterBottom>
+        {t('adminBookings.heading', { defaultValue: 'Bookings' })}
       </Typography>
 
       {/* Filter Tabs */}
@@ -210,7 +214,11 @@ const AdminBookings = () => {
         }}
       >
         {STATUS_FILTERS.map(({ label, value }) => (
-          <Tab key={value} label={label} value={value} />
+          <Tab
+            key={value}
+            label={t(`adminBookings.tabs.${value}`, { defaultValue: label })}
+            value={value}
+          />
         ))}
       </Tabs>
 
@@ -220,12 +228,16 @@ const AdminBookings = () => {
           <TableHead sx={{ bgcolor: theme.palette.background.verylightgrey }}>
             <TableRow>
               <TableCell />
-              <TableCell>ID</TableCell>
-              <TableCell>Created</TableCell>
-              <TableCell>Booking Dates</TableCell>
-              <TableCell>Customer</TableCell>
-              <TableCell align="center">Items</TableCell>
-              <TableCell>Status</TableCell>
+              <TableCell>{t('adminBookings.id', { defaultValue: 'ID' })}</TableCell>
+              <TableCell>{t('adminBookings.created', { defaultValue: 'Created' })}</TableCell>
+              <TableCell>
+                {t('adminBookings.bookingDates', { defaultValue: 'Booking Dates' })}
+              </TableCell>
+              <TableCell>{t('adminBookings.customer', { defaultValue: 'Customer' })}</TableCell>
+              <TableCell align="center">
+                {t('adminBookings.items', { defaultValue: 'Items' })}
+              </TableCell>
+              <TableCell>{t('adminBookings.status', { defaultValue: 'Status' })}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -282,7 +294,7 @@ const AdminBookings = () => {
                             color: "text.primary",
                           }}
                         >
-                          Awaiting Approval
+                          {t('adminBookings.awaiting', { defaultValue: 'Awaiting Approval' })}
                         </Button>
                       ) : (
                         b.status
@@ -313,7 +325,9 @@ const AdminBookings = () => {
             {filteredBookings.length === 0 && (
               <TableRow>
                 <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
-                  No bookings found for selected filter.
+                  {t('adminBookings.noResults', {
+                    defaultValue: 'No bookings found for selected filter.',
+                  })}
                 </TableCell>
               </TableRow>
             )}
@@ -327,8 +341,12 @@ const AdminBookings = () => {
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           transformOrigin={{ vertical: "top", horizontal: "left" }}
         >
-          <MenuItem onClick={approveBooking}>Approve</MenuItem>
-          <MenuItem onClick={rejectBooking}>Reject</MenuItem>
+          <MenuItem onClick={approveBooking}>
+            {t('adminBookings.approve', { defaultValue: 'Approve' })}
+          </MenuItem>
+          <MenuItem onClick={rejectBooking}>
+            {t('adminBookings.reject', { defaultValue: 'Reject' })}
+          </MenuItem>
         </Menu>
       </Paper>
 

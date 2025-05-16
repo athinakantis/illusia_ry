@@ -1,4 +1,17 @@
 {
+  "adminBookings": {
+    "heading": "Bookings",
+    "id": "ID",
+    "created": "Created",
+    "bookingDates": "Booking Dates",
+    "customer": "Customer",
+    "items": "Items",
+    "status": "Status",
+    "awaiting": "Awaiting Approval",
+    "noResults": "No bookings found for selected filter.",
+    "approve": "Approve",
+    "reject": "Reject"
+  },
   "nav": {
     "home": "Home",
     "items": "Items",
@@ -14,6 +27,15 @@
     "dashboard": "Dashboard",
     "myAccount": "My account",
     "logOut": "Log out"
+  },
+  "userBookings": {
+    "heading": "Your Bookings",
+    "noBookings": "No bookings yet.",
+    "cancelTooltip": "Cancel booking",
+    "deleteTooltip": "Delete booking",
+    "confirmCancel": "Are you sure you want to cancel your booking?",
+    "confirmYes": "Yes, I'm sure",
+    "confirmNo": "No thanks"
   },
   "home": {
     "heroTitle": "Home for live-action role-playing games props",

@@ -19,7 +19,8 @@ import {
   DialogTitle,
   DialogActions,
   Button,
-  Link
+  Link,
+  Avatar,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -34,6 +35,7 @@ import {
   updateBookingStatus,
 } from '../../slices/bookingsSlice';
 import { showCustomSnackbar } from '../CustomSnackbar';
+import { useTranslation} from 'react-i18next';
 
 const UserBookings = () => {
   const { user } = useAuth();
@@ -95,6 +97,12 @@ const UserBookings = () => {
     (state: RootState) => state.items.items as Item[],
   );
 
+  const { t } = useTranslation();
+
+  // Helper to fetch the first image url for an item
+  const getItemImage = (id: string): string | undefined =>
+    items.find(i => i.item_id === id)?.image_path?.[0];
+
   /* ─────────────────── UI states ─────────────────── */
   if (loading)
     return (
@@ -120,11 +128,13 @@ const UserBookings = () => {
           gutterBottom
           sx={{ mb: 2 }}
         >
-          Your Bookings
+          {t('userBookings.heading', { defaultValue: 'Your Bookings' })}
         </Typography>
 
         {bookings.length === 0 ? (
-          <Typography>No bookings yet.</Typography>
+          <Typography>
+            {t('userBookings.noBookings', { defaultValue: 'No bookings yet.' })}
+          </Typography>
         ) : (
           <Stack spacing={4}>
             {sortedBookings.map((booking) => (
@@ -177,7 +187,13 @@ const UserBookings = () => {
                         }
                       />
                       {canModify(booking) && (
-                        <Tooltip title={booking.status === 'approved' ? 'Cancel booking' : 'Delete booking'}>
+                        <Tooltip
+                          title={
+                            booking.status === 'approved'
+                              ? t('userBookings.cancelTooltip', { defaultValue: 'Cancel booking' })
+                              : t('userBookings.deleteTooltip', { defaultValue: 'Delete booking' })
+                          }
+                        >
                           <IconButton
                             onClick={(e) => {
                               e.preventDefault();
@@ -205,6 +221,7 @@ const UserBookings = () => {
                     >
                       <TableHead>
                         <TableRow>
+                          <TableCell sx={{ width: 56 }} />
                           <TableCell align="left" sx={{ pl: 0 }}>
                             Item
                           </TableCell>
@@ -216,6 +233,14 @@ const UserBookings = () => {
                       <TableBody>
                         {booking.reservations.map((res) => (
                           <TableRow key={res.reservation_id}>
+                            <TableCell sx={{ width: 56 }}>
+                              <Avatar
+                                src={getItemImage(res.item_id)}
+                                alt={items.find((i) => i.item_id === res.item_id)?.item_name ?? res.item_id}
+                                variant="square"
+                                sx={{ width: 48, height: 48 }}
+                              />
+                            </TableCell>
                             <TableCell align="left" sx={{ pl: 0 }}>
                               {items.find((i) => i.item_id === res.item_id)
                                 ?.item_name ?? res.item_id}
@@ -246,13 +271,22 @@ const UserBookings = () => {
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            Are you sure you want to cancel your booking?
+            {t('userBookings.confirmCancel', {
+              defaultValue: 'Are you sure you want to cancel your booking?',
+            })}
           </DialogTitle>
           <DialogActions>
-            <Button variant='outlined' onClick={() => handleCancel(wantsToCancel)}>
-              Yes, I'm sure
+            <Button variant="outlined" onClick={() => handleCancel(wantsToCancel)}>
+              {t('userBookings.confirmYes', { defaultValue: "Yes, I'm sure" })}
             </Button>
-            <Button variant='contained' color='secondary' autoFocus onClick={() => setWantsToCancel(null)}>No thanks</Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              autoFocus
+              onClick={() => setWantsToCancel(null)}
+            >
+              {t('userBookings.confirmNo', { defaultValue: 'No thanks' })}
+            </Button>
           </DialogActions>
         </Dialog>
       }
