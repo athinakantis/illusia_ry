@@ -29,5 +29,33 @@
     "answer2": "One booking can be a maximum duration of two weeks",
     "question3": "Why do I have to be approved before booking items?",
     "answer3": "We see the approval of our users as a guarantee that the items which have been lent will be returned after a maximum of 2 weeks."
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "stats": {
+        "total_users": "Total users",
+        "total_bookings": "Total bookings",
+        "inventory_items": "Inventory items"
+      },
+      "quick_actions": "Quick actions",
+      "add_item": "Add item",
+      "view_bookings": "View bookings",
+      "manage_users": "Manage users",
+      "upcoming_bookings": "Upcoming bookings",
+      "recent_activity": "Recent activity",
+      "users_and_roles": "Users & Roles",
+      "show_booking": "Show booking",
+      "columns": {
+        "name": "Name",
+        "status": "Status",
+        "duration": "Duration",
+        "date_range": "Date Range",
+        "actions": "Actions",
+        "last_sign_in": "Last sign-in",
+        "confirmed": "Confirmed",
+        "role": "Role"
+      }
+    }
   }
 }
