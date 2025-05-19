@@ -1,11 +1,9 @@
 {
-  "snackbar": {
-    "bookingApproved": "Varaus hyväksytty",
-    "bookingRejected": "Varaus hylätty",
-    "bookingDeleted": "Varaus poistettu",
-    "bookingCancelled": "Varaus peruttu"
-  },
   "adminBookings": {
+    "snackbar": {
+      "bookingApproved": "",
+      "bookingRejected": ""
+    },
     "heading": "Varaukset",
     "tabs": {
       "all": "Kaikki",
@@ -46,6 +44,10 @@
     "dashboard": "Hallintapaneeli",
     "myAccount": "Oma tili",
     "logOut": "Kirjaudu ulos"
+  },
+  "snackbar": {
+    "bookingDeleted": "Varaus poistettu",
+    "bookingCancelled": "Varaus peruttu"
   },
   "userBookings": {
     "heading": "Varauksesi",
