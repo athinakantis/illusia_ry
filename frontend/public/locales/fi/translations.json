@@ -1,8 +1,8 @@
 {
   "adminBookings": {
     "snackbar": {
-      "bookingApproved": "",
-      "bookingRejected": ""
+      "bookingApproved": "Varaus hyväksytty",
+      "bookingRejected": "Varaus hylätty"
     },
     "heading": "Varaukset",
     "tabs": {
@@ -29,6 +29,12 @@
     "end": "Loppupäivä",
     "qty": "Määrä"
   },
+  "Bookings": {
+    "snackbar": {
+      "deleted": "Varaus poistettu",
+      "cancelled": "Varaus peruttu"
+    }
+  },
   "nav": {
     "home": "Etusivu",
     "items": "Tuotteet",
@@ -45,11 +51,11 @@
     "myAccount": "Oma tili",
     "logOut": "Kirjaudu ulos"
   },
-  "snackbar": {
-    "bookingDeleted": "Varaus poistettu",
-    "bookingCancelled": "Varaus peruttu"
-  },
   "userBookings": {
+    "snackbar": {
+      "bookingDeleted": "Varaus poistettu",
+      "bookingCancelled": "Varaus peruttu"
+    },
     "heading": "Varauksesi",
     "noBookings": "Ei varauksia vielä.",
     "bookingId": "Varausnumero",

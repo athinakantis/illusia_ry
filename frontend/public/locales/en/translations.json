@@ -29,6 +29,12 @@
     "end": "End Date",
     "qty": "Quantity"
   },
+  "Bookings": {
+    "snackbar": {
+      "deleted": "Your booking was deleted",
+      "cancelled": "Your booking was cancelled"
+    }
+  },
   "nav": {
     "home": "Home",
     "items": "Items",
@@ -45,11 +51,11 @@
     "myAccount": "My account",
     "logOut": "Log out"
   },
-  "snackbar": {
-    "bookingDeleted": "Your booking was deleted!",
-    "bookingCancelled": "Booking cancelled"
-  },
   "userBookings": {
+    "snackbar": {
+      "bookingDeleted": "Your booking was deleted!",
+      "bookingCancelled": "Booking cancelled"
+    },
     "heading": "Your Bookings",
     "noBookings": "No bookings yet.",
     "bookingId": "Booking ID",

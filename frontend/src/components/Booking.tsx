@@ -25,7 +25,9 @@ import {
   updateBookingStatus,
 } from '../slices/bookingsSlice';
 import Spinner from './Spinner';
-import { showCustomSnackbar } from './CustomSnackbar';
+
+import { useTranslatedSnackbar } from './CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
+import { useTranslation } from 'react-i18next';
 
 function SingleBooking() {
   const navigate = useNavigate();
@@ -35,16 +37,26 @@ function SingleBooking() {
   const loading = useAppSelector(selectBookingsLoading);
   const [wantsToCancel, setWantsToCancel] = useState(false)
   const NON_CANCELLABLE = ['cancelled', 'rejected']
+  const { showSnackbar } = useTranslatedSnackbar();
+  const { t } = useTranslation();
 
   /* ─────────────────── handlers ─────────────────── */
   const handleCancel = (booking_id: string) => {
     if (booking.status === 'pending') {
       dispatch(deleteBooking(booking_id));
-      showCustomSnackbar('Your booking was deleted!', 'info');
+      showSnackbar({
+        message: t('Bookings.snackbar.deleted', { defaultValue: 'Your booking was deleted' }),
+        variant: 'success',
+        autoHideDuration: 3000,
+      })
       setTimeout(() => navigate('/bookings'), 2000)
     } else {
       dispatch(updateBookingStatus({ id: booking.booking_id, status: 'cancelled' }))
-      showCustomSnackbar('Your booking was cancelled!', 'info');
+      showSnackbar({
+        message: t('Bookings.snackbar.cancelled', { defaultValue: 'Your booking was cancelled' }),
+        variant: 'info',
+        autoHideDuration: 3000,
+      })
     }
     setWantsToCancel(false)
   };

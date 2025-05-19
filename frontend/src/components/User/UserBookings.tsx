@@ -48,21 +48,18 @@ const UserBookings = () => {
   const handleCancel = (booking: BookingWithRes) => {
     if (booking.status === 'pending') {
       dispatch(deleteBooking(booking.booking_id));
-      showSnackbar('snackbar.bookingDeleted', {
-        defaultValue: t('snackbar.bookingDeleted', {
+      showSnackbar({
+        message: t('userBookings.snackbar.bookingDeleted', {
         defaultValue: 'Your booking was deleted!',
         }),
         variant: 'info',
       });
     } else {
       dispatch(updateBookingStatus({ id: booking.booking_id, status: 'cancelled' }))
-      showSnackbar('snackbar.bookingCancelled', {
-        // translate *now* so the string you pass is in the current language
-        defaultValue: t('snackbar.bookingCancelled', {
-          defaultValue: 'Booking cancelled',   // extractor sees this literal
+      showSnackbar({message: t('userBookings.snackbar.bookingCancelled', {
+          defaultValue: 'Booking cancelled',  
         }),
-        variant: 'info',
-        autoHideDuration: 4200,                // optional
+        variant: 'info',               
       });
     }
 
