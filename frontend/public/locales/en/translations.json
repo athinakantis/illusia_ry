@@ -7,6 +7,12 @@
   },
   "adminBookings": {
     "heading": "Bookings",
+    "tabs": {
+      "all": "All",
+      "pending": "Pending approval",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
     "id": "ID",
     "created": "Created",
     "bookingDates": "Booking Dates",
@@ -44,8 +50,14 @@
   "userBookings": {
     "heading": "Your Bookings",
     "noBookings": "No bookings yet.",
+    "bookingId": "Booking ID",
+    "created": "Created at",
     "cancelTooltip": "Cancel booking",
     "deleteTooltip": "Delete booking",
+    "item": "Item",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "quantity": "Quantity",
     "confirmCancel": "Are you sure you want to cancel your booking?",
     "confirmYes": "Yes, I'm sure",
     "confirmNo": "No thanks"

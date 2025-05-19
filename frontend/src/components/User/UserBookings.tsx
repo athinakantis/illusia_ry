@@ -167,11 +167,11 @@ const UserBookings = () => {
                   >
                     <Stack sx={{ gap: '2px' }}>
                       <Typography variant="subheading" fontWeight={600}>
-                        Booking&nbsp;ID:&nbsp;
+                      {t('userBookings.bookingId', { defaultValue: 'Booking ID' })}:
                         {booking.booking_id.slice(-12).toUpperCase()}
                       </Typography>
                       <Typography variant="body3" fontWeight={500} fontSize={14}>
-                        Created at {new Date(booking.created_at).toLocaleString()}
+                      {t('userBookings.created', { defaultValue: 'Created at' })} {new Date(booking.created_at).toLocaleString()}
                       </Typography>
                     </Stack>
 
@@ -232,20 +232,33 @@ const UserBookings = () => {
                         },
                       }}
                     >
+                      {/*——————————— Table Header —————————————*/}
                       <TableHead>
                         <TableRow>
                           <TableCell sx={{ width: 56 }} />
+                          {/*——————————— Item Name ————————————*/}
                           <TableCell align="left" sx={{ pl: 0 }}>
-                            Item
+                            {t('userBookings.item', { defaultValue: 'Item' })}
                           </TableCell>
-                          <TableCell>Start Date</TableCell>
-                          <TableCell>End Date</TableCell>
-                          <TableCell align="center">Quantity</TableCell>
+                          {/*——————————— Start Date ———————————*/}
+                          <TableCell>
+                            {t('userBookings.startDate', { defaultValue: 'Start Date' })}
+                          </TableCell>
+                          {/*——————————— End Date ——————————————*/}
+                          <TableCell>
+                            {t('userBookings.endDate', { defaultValue: 'End Date' })}
+                          </TableCell>
+                          {/*———————————— Quantity —————————————*/}
+                          <TableCell align="center">
+                            {t('userBookings.quantity', { defaultValue: 'Quantity' })}
+                          </TableCell>
                         </TableRow>
                       </TableHead>
+                      {/*——————————— Table Body ———————————*/}
                       <TableBody>
                         {booking.reservations.map((res) => (
                           <TableRow key={res.reservation_id}>
+                            {/*———————— Item Image —————————*/}
                             <TableCell sx={{ width: 56 }}>
                               <Avatar
                                 src={getItemImage(res.item_id)}
@@ -254,13 +267,16 @@ const UserBookings = () => {
                                 sx={{ width: 48, height: 48 }}
                               />
                             </TableCell>
+                            {/*————————— Item Name ——————————*/}
                             <TableCell align="left" sx={{ pl: 0 }}>
                               {items.find((i) => i.item_id === res.item_id)
                                 ?.item_name ?? res.item_id}
                             </TableCell>
+                            {/*—————————— Start Date ——————————*/}
                             <TableCell>
                               {new Date(res.start_date).toLocaleDateString()}
                             </TableCell>
+                            {/*—————————— End Date —————————————*/}
                             <TableCell>
                               {new Date(res.end_date).toLocaleDateString()}
                             </TableCell>
@@ -277,12 +293,14 @@ const UserBookings = () => {
         )}
       </Box>
       {wantsToCancel &&
+        // Dialog to confirm booking cancellation
         <Dialog
           open={wantsToCancel ? true : false}
           onClose={() => setWantsToCancel(null)}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
+          {/* Confirm Cancel */}
           <DialogTitle id="alert-dialog-title">
             {t('userBookings.confirmCancel', {
               defaultValue: 'Are you sure you want to cancel your booking?',

@@ -7,6 +7,12 @@
   },
   "adminBookings": {
     "heading": "Varaukset",
+    "tabs": {
+      "all": "",
+      "pending": "",
+      "approved": "",
+      "rejected": ""
+    },
     "id": "Tunnus",
     "created": "Luotu",
     "bookingDates": "Varauspäivät",
@@ -44,8 +50,14 @@
   "userBookings": {
     "heading": "Varauksesi",
     "noBookings": "Ei varauksia vielä.",
+    "bookingId": "",
+    "created": "",
     "cancelTooltip": "Peruuta varaus",
     "deleteTooltip": "Poista varaus",
+    "item": "",
+    "startDate": "",
+    "endDate": "",
+    "quantity": "",
     "confirmCancel": "Haluatko varmasti peruuttaa varauksesi?",
     "confirmYes": "Kyllä, olen varma",
     "confirmNo": "Ei kiitos"
