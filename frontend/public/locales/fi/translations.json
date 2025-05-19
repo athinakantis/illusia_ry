@@ -62,6 +62,9 @@
         "rejected": "Hylätty",
         "cancelled": "Peruutettu",
         "completed": "Valmis"
+      },
+      "duration": {
+        "days": "päivää"
       }
     }
   }

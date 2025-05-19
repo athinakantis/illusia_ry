@@ -30,6 +30,7 @@ import Spinner from '../Spinner';
 
 // - Translations
 import { Trans, useTranslation } from 'react-i18next';
+import { fi } from 'date-fns/locale';
 
 
 // ─── Re-usable stat card ────────────────────────────────────
@@ -67,7 +68,7 @@ const StatCard: React.FC<{ label: string; value: number | string }> = ({
 
 const AdminDashboard = () => {
   const { role } = useAuth();
-  const { t } = useTranslation(); const dispatch = useAppDispatch();
+  const { t, i18n } = useTranslation(); const dispatch = useAppDispatch();
 
   const [authActivities, setAuthActivities] = React.useState<
     {
@@ -116,6 +117,14 @@ const AdminDashboard = () => {
       }
     })();
   }, []);
+
+  // Helper function to format dates based on current language
+  const formatDate = (dateString: string) => {
+    const date = parseISO(dateString);
+    return format(date, 'PPpp', {
+      locale: i18n.language === 'fi' ? fi : undefined
+    });
+  };
 
   /* ————————————————— Conditional Renders ————————————————————————*/
   // If we don't know the role yet, render nothing (or a loader)
@@ -218,16 +227,13 @@ const AdminDashboard = () => {
           style={{ width: '100%' }}
           hideFooter
           disableColumnResize
-          // slots={{ toolbar: null }}
-          // getRowHeight={() => 'auto'}
-          rowHeight={50}
-          // autoHeight
+          rowHeight={60}
           disableRowSelectionOnClick
           rows={upcomingBookings.map((booking) => ({
             id: booking.booking_id, // Used internally by DataGrid
             name: booking.booking.user.display_name,
             status: t(`admin.dashboard.status.${booking.booking.status.toLowerCase()}`),
-            duration: `${computeDuration(booking.start_date, booking.end_date)} Days`,
+            duration: `${computeDuration(booking.start_date, booking.end_date)} ${t('admin.dashboard.duration.days')}`,
             dateRange: `${booking.start_date} - ${booking.end_date}`,
             view: `/bookings/${booking.booking_id}`,
           }))}
@@ -278,9 +284,8 @@ const AdminDashboard = () => {
           <StyledDataGrid
             hideFooter
             disableColumnResize
-            autoHeight
-            // slots={{ toolbar: null }}
-            // getRowHeight={() => 'auto'}
+            slots={{ toolbar: null }}
+            getRowHeight={() => 'auto'}
             rows={authActivities
               .filter(act =>
                 act.display_name &&
@@ -291,10 +296,10 @@ const AdminDashboard = () => {
                 id: act.display_name + act.last_sign_in_at,
                 name: act.display_name,
                 lastSignIn: act.last_sign_in_at
-                  ? format(parseISO(act.last_sign_in_at), 'PPpp')
+                  ? formatDate(act.last_sign_in_at)
                   : '—',
                 confirmed: act.confirmed_at
-                  ? format(parseISO(act.confirmed_at), 'PPpp')
+                  ? formatDate(act.confirmed_at)
                   : '—',
               }))}
             columns={[
@@ -340,7 +345,8 @@ const AdminDashboard = () => {
           <StyledDataGrid
             hideFooter
             disableColumnResize
-            autoHeight
+            slots={{ toolbar: null }}
+            getRowHeight={() => 'auto'}
             rows={users
               .filter(u => u.user_id)
               .slice(0, 3)

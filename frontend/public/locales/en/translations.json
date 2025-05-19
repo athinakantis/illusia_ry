@@ -62,6 +62,9 @@
         "rejected": "Rejected",
         "cancelled": "Cancelled",
         "completed": "Completed"
+      },
+      "duration": {
+        "days": "Days"
       }
     }
   }
