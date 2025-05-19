@@ -5,6 +5,8 @@ test.controller.ts
 Test
 /frontend/src/Test/
 # compiled output
+/dist
+
 dist
 node_modules
 build
