@@ -7,7 +7,7 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import { ItemService } from '../services/items.service';
+import { ItemService } from './items.service';
 import { CustomRequest } from 'src/types/request.type';
 import { Tables } from 'src/types/supabase';
 

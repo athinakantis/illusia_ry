@@ -5,9 +5,8 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { GuestService } from '../services/guest.service';
-import { AuthGuard } from 'src/guards/auth.guard';
-
+import { GuestService } from './guest.service';
+import { AuthGuard } from 'src/guards/role.guard';
 
 // These routes are for users who are not logged in.
 @Controller('items')

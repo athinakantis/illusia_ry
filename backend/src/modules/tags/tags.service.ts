@@ -45,15 +45,7 @@ export class TagService {
       throw new BadRequestException('Failed to create tag');
     }
     if (error) throw new BadRequestException(error.message);
-    this.supabaseService.logAction({
-      user_id: req['user'].id,
-      action_type: 'CREATE_TAG',
-      target_id: data?.tag_id,
-      metadata: {
-        tag_name: dto.tag_name,
-        description: dto.description,
-      },
-    })
+    
     return {
       message: 'Tag created',
       data: data as Tables<'tags'>
