@@ -1,22 +1,28 @@
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Box, IconButton, Typography } from '@mui/material';
+import React from 'react';
+import { Box, IconButton, MenuItem, Select, Typography } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
 import { renderCellExpand } from './RenderCellExpand';
 import { Item } from '../../types/types';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { deleteItem, fetchAllItems } from '../../slices/itemsSlice';
+import { updateItemVisibility } from '../../slices/itemsSlice';
 import { formatDate } from '../../utility/formatDate';
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useNavigate } from 'react-router-dom';
+import { StyledDataGrid } from '../CustomComponents/StyledDataGrid';
+import { selectAllCategories } from '../../slices/itemsSlice';
+import { getCategoryName } from '../../utility/getCategoryName';
 
 interface ItemDataGridProps {
   data: Item[];
 }
-
-const uuidLength = 230;
 const timeStampLength = 150;
 
 export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const categories = useAppSelector(selectAllCategories);
   const handleDelete = (id: string) => {
     if (confirm('Are you sure you want to delete this item?')) {
       dispatch(deleteItem(id)).then(() => dispatch(fetchAllItems()));
@@ -25,12 +31,15 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
 
   const columns: GridColDef[] = [
     {
-      field: 'item_id',// ID of the item
-      headerClassName: 'super-app-theme--header',// Class to edit the Header CSS
+      field: 'item_id',
+      headerClassName: 'super-app-theme--header',
       headerAlign: 'left',
       headerName: 'ID',
-      width: uuidLength, // Adjust width as needed
-      renderCell: renderCellExpand,// Function to render the cell content with word wrapping
+      width: 100,
+      renderCell: (params) => (
+        
+        String(params.value).slice(0, 8)
+      ),
     },
     {
       field: 'item_name',
@@ -41,21 +50,54 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       renderCell: renderCellExpand,
     },
     {
+
       field: 'description',
       headerClassName: 'super-app-theme--header',
       headerName: 'Description',
       headerAlign: 'left',
       minWidth: 240,
       flex: 1,
-      renderCell: renderCellExpand,
+      renderCell: (params) => (
+        <Typography
+          variant="body2"
+          sx={{
+            whiteSpace: 'normal',
+            wordBreak: 'break-word',
+            overflowWrap: 'break-word',
+            lineHeight: 1.4,
+            width: '100%',
+            maxHeight: 80,
+            overflow: 'auto',
+          }}
+        >
+          {params.value}
+        </Typography>
+      ),
     },
     {
-      field: 'image_path',
+      field: 'visible',
       headerClassName: 'super-app-theme--header',
-      headerName: 'Image Path',
+      headerName: 'Visibility',
       headerAlign: 'left',
-      minWidth: 240,
-      renderCell: renderCellExpand,
+      width: 120,
+      renderCell: (params) => (
+        <Select
+          value={params.row.visible ? 'Visible' : 'Hidden'}
+          size="small"
+          onChange={(e) => {
+            const newVisible = e.target.value === 'Visible';
+            if (newVisible !== params.row.visible) {
+              dispatch(
+                updateItemVisibility({ id: params.row.item_id, visible: newVisible })
+              );
+            }
+          }}
+          sx={{ fontSize: '0.85rem' }}
+        >
+          <MenuItem value="Visible">Visible</MenuItem>
+          <MenuItem value="Hidden">Hidden</MenuItem>
+        </Select>
+      ),
     },
     {
       field: 'location',
@@ -68,7 +110,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
     {
       field: 'quantity',
       headerClassName: 'super-app-theme--header',
-      headerName: 'Pcs',
+      headerName: 'Qty',
       headerAlign: 'left',
       type: 'number',
       width: 50,
@@ -79,8 +121,10 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       headerClassName: 'super-app-theme--header',
       headerName: 'Category',
       headerAlign: 'left',
-      minWidth: uuidLength,
-      renderCell: renderCellExpand,
+      minWidth: 150,
+      renderCell: (params) => (
+        getCategoryName(categories, params.value)
+        ),
     },
     {
       field: 'created_at',
@@ -111,7 +155,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
         <>
           <IconButton
             component="a"
-            href={`/items/${params.row.item_id}`}
+            onClick={() => navigate(`/items/manage/${params.row.item_id}`)}
             aria-label="view"
             color="primary"
             size="medium"
@@ -130,67 +174,24 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       ),
     },
   ];
+
   return (
-    <Box sx={{ height: '700px', width: '100%', mt: 2 }}>
-      <DataGrid
+    <Box sx={{ width: '100%', mt: 2, height: 700 }}>
+      <StyledDataGrid
         rows={data}
         loading={data.length === 0}
         getRowId={(row) => row.item_id}
         columns={columns}
         pageSizeOptions={[10, 25, 50, 100]}
-        // getRowHeight={()=> "auto"}
-        rowHeight={70}
-        sx={{
-          '& .MuiDataGrid-row:first-of-type': {
-            mt: 1
-          },
-          // Header CSS
-          '& .super-app-theme--header': {
-            backgroundColor: 'primary.main',
-            color: 'text.light',
-            fontSize: '1.1rem',
-          },
-          // Individual Cell CSS
-          '& .MuiDataGrid-cell': {
-            pl: 2,// padding left
-
-          },
-          // Footer CSS
-          '& .MuiDataGrid-footerContainer': {
-            backgroundColor: 'primary.main',
-          },
-          '& .MuiDataGrid-footerContainer :is(p, span, .MuiDataGrid-selectedRowCount)': {
-            color: 'background.default'
-          },
-          '& .MuiDataGrid-footerContainer :is(svg)': {
-            fill: 'white'
-          },
-          // Hover CSS
-          '& .MuiDataGrid-row:hover': {
-            backgroundColor: 'background.verylightgrey',
-            transition: 'background-color 0.3s ease',
-          },
-          // Focus CSS
-          '& .MuiDataGrid-cell:focus': {
-            outline: 'none',
-          },
-          // Selected Row CSS
-          '& .MuiDataGrid-row.Mui-selected': {
-            outline: '2px solid #44195B',
-            outlineOffset: '-2px',
-          },
-          // Even Row CSS
-          '& .MuiDataGrid-row:nth-of-type(even)': {
-            backgroundColor: 'background.verylightgrey',
-          },
-          // Odd Row CSS
-          '& .MuiDataGrid-row:nth-of-type(odd)': {
-            backgroundColor: 'background.default',
-            // borderTop: '1px solid #7b1fa2',
-            // borderBottom: '1px solid #7b1fa2',
-            borderColor: 'secondary.main',
+        initialState={{
+          pagination: { paginationModel: { pageSize: 10, page: 0 } },
+          sorting: {
+            sortModel: [{ field: 'item_name', sort: "asc" }],
+            
           },
         }}
+        rowHeight={70}
+        disableRowSelectionOnClick
       />
     </Box>
   );

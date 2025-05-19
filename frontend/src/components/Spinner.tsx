@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import './pyramid-loader.css'
 
 function Spinner() {
   return (

@@ -1,22 +1,20 @@
 import { ItemDataGrid } from '../ItemGrid/ItemDataGrid';
-import { useEffect } from 'react';
-import { fetchAllItems, selectAllItems } from '../../slices/itemsSlice';
+import { fetchAllItemsAdmin, selectAllItems } from '../../slices/itemsSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useAuth } from '../../hooks/useAuth';
-import { Box } from '@mui/material';
+import { Box, Button, Link } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 
 function Items() {
   const { role } = useAuth();
   const items = useAppSelector(selectAllItems);
+  const navigate = useNavigate()
   const dispatch = useAppDispatch();
-
   useEffect(() => {
-    if (!items || items.length <= 1) {
-      dispatch(fetchAllItems());
-    }
-  }, [dispatch, items]);
-
+    dispatch(fetchAllItemsAdmin());
+  }, [dispatch]);
   // Check if user is authorized
   if (!role?.includes('Admin') || !role) return
 
@@ -24,11 +22,11 @@ function Items() {
     <>
       <Box
         sx={{
-          mt: 5,
           width: '100%',
           display: 'flex',
+          flexDirection: 'column',
           justifyContent: 'center',
-          padding: 4,
+          padding: 2,
           boxSizing: 'border-box',
           '& .super-app-theme--header': {
             fontFamily: 'Roboto Slab, sans-serif',
@@ -39,6 +37,16 @@ function Items() {
           }
         }}
       >
+        <Box>
+          <Button component={Link} variant='contained'
+            onClick={() => navigate('/items/new')}
+            sx={{
+              bgcolor: 'primary.black',
+              borderRadius: 10,
+              fontSize: 16,
+              px: 5
+            }}>Add new item</Button>
+        </Box>
         <ItemDataGrid data={items} />
       </Box>
     </>
