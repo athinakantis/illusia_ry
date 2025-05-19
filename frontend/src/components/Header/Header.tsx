@@ -22,7 +22,7 @@ import { selectCart } from '../../slices/cartSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import NotificationsMenu from './NotificationMenu';
 import { useAuth } from '../../hooks/useAuth';
-import { fetchUserNotifications, selectUserNotifications } from '../../slices/notificationSlice';
+import { fetchAdminNotifications, fetchUserNotifications, selectUserNotifications } from '../../slices/notificationSlice';
 import { Trans, useTranslation } from 'react-i18next';
 
 const Header = () => {
@@ -31,7 +31,7 @@ const Header = () => {
   const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cart } = useAppSelector(selectCart)
-  const { user } = useAuth()
+  const { user, role } = useAuth()
   const userNotifications = useAppSelector(selectUserNotifications)
   const dispatch = useAppDispatch()
 
@@ -42,10 +42,13 @@ const Header = () => {
     setMobileOpen(!mobileOpen);
   };
 
+
+
   // Fetch user notifications
   useEffect(() => {
     if (user && userNotifications.length < 1) dispatch(fetchUserNotifications(user.id))
-  }, [])
+    if (role && ['Admin', 'Head Admin'].includes(role)) dispatch(fetchAdminNotifications())
+  }, [role])
 
   const drawer = (
     <List>

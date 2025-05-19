@@ -28,23 +28,28 @@ export const fetchAdminNotifications = createAsyncThunk(
 
 export const updateNotification = createAsyncThunk(
   'notifications/updateNotification',
-  async ({id, body}: {id: string, body: object}) => {
+  async ({ id, body }: { id: string; body: object }) => {
     const response = await notificationsApi.updateNotification(id, body);
     return response;
-  }
-)
+  },
+);
 
 export const notificationSlice = createSlice({
   name: 'notifications',
   initialState,
-  reducers: {},
+  reducers: {
+    updateAdminNotification(state, action) {
+      const { id } = action.payload;
+      delete state.adminNotifications[id];
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchUserNotifications.pending, (state) => {
       state.error = null;
       state.loading = true;
     });
     builder.addCase(fetchUserNotifications.fulfilled, (state, action) => {
-      console.log('Action payload: ',action.payload.data)
+      console.log('Action payload: ', action.payload.data);
       state.userNotifications = action.payload.data;
       state.loading = false;
     });
@@ -57,8 +62,7 @@ export const notificationSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(fetchAdminNotifications.fulfilled, (state, action) => {
-            console.log('Action payload: ',action.payload.data)
-
+      console.log('admin action payload: ', action.payload.data);
       state.adminNotifications = action.payload.data;
       state.loading = false;
     });
@@ -71,10 +75,13 @@ export const notificationSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(updateNotification.fulfilled, (state, action) => {
-      console.log('Action payload: ',action.payload.data)
-      const notificationToUpdate = state.userNotifications.findIndex((n: Partial<Tables<'notifications'>>) => n.id === action.payload.data.id)
+      console.log('Action payload: ', action.payload.data);
+      const notificationToUpdate = state.userNotifications.findIndex(
+        (n: Partial<Tables<'notifications'>>) =>
+          n.id === action.payload.data.id,
+      );
       if (notificationToUpdate !== -1) {
-        state.userNotifications[notificationToUpdate] = action.payload.data
+        state.userNotifications[notificationToUpdate] = action.payload.data;
       }
       state.loading = false;
     });
@@ -85,8 +92,12 @@ export const notificationSlice = createSlice({
   },
 });
 
-export const selectUserNotifications = (state: RootState) => state.notifications.userNotifications
-export const selectAdminNotifications = (state: RootState) => state.notifications.adminNotifications
-export const selectNotificationLoading = (state: RootState) => state.notifications.loading
-export const selectNotificationError = (state: RootState) => state.notifications.error
-export default notificationSlice.reducer
+export const selectUserNotifications = (state: RootState) =>
+  state.notifications.userNotifications;
+export const selectAdminNotifications = (state: RootState) =>
+  state.notifications.adminNotifications;
+export const selectNotificationLoading = (state: RootState) =>
+  state.notifications.loading;
+export const selectNotificationError = (state: RootState) =>
+  state.notifications.error;
+export default notificationSlice.reducer;

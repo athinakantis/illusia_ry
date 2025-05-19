@@ -50,7 +50,7 @@ const NotificationsMenu = () => {
     if (user && userNotifications.length < 1)
       dispatch(fetchUserNotifications(user.id));
     if (user && user.role && user.role.includes('Admin')) {
-      dispatch(fetchAdminNotifications())
+      dispatch(fetchAdminNotifications());
     }
   }, []);
 
@@ -59,8 +59,12 @@ const NotificationsMenu = () => {
   ) => (notification.metadata as BookingMetaData)?.booking_id;
 
   // ─── handlers ──────────────────────────────────────────────
-  const handleSetRead = (id: string) =>
-    dispatch(updateNotification({ id: id, body: { is_read: true } }));
+  const handleSetRead = (id: string, type: 'user_notification' | 'admin_notification') => {
+    type === 'user_notification' ?
+      dispatch(updateNotification({ id: id, body: { is_read: true } }))
+    :
+    dispatch(updateAdminNotification(id))
+  }
 
   return (
     <Box
@@ -140,17 +144,8 @@ const NotificationsMenu = () => {
           },
         }}
       >
-        {unreadUserNotifications.length < 1 ? (
-          <MenuItem
-            disableRipple
-            sx={{
-              '&:hover': { backgroundColor: 'inherit' },
-              justifyContent: 'center',
-            }}
-          >
-            <Typography>You have no new notifications!</Typography>
-          </MenuItem>
-        ) : (
+        {/* User notifications */}
+        {unreadUserNotifications.length > 0 && (
           <>
             {unreadUserNotifications.map((n) => (
               <MenuItem
@@ -160,8 +155,9 @@ const NotificationsMenu = () => {
                 sx={{ justifyContent: 'space-between', gap: '1rem' }}
               >
                 {n.title}
-                <Tooltip title='Mark as read'>
-                  <Button sx={{ minWidth: 'fit-content', p: '3px' }}
+                <Tooltip title="Mark as read">
+                  <Button
+                    sx={{ minWidth: 'fit-content', p: '3px' }}
                     onClick={(e) => {
                       e.preventDefault();
                       handleSetRead(n.id);
@@ -173,6 +169,46 @@ const NotificationsMenu = () => {
               </MenuItem>
             ))}
           </>
+        )}
+
+        {unreadAdminNotifications.length > 0 && (
+          <>
+            {unreadAdminNotifications.map((n) => (
+              <MenuItem
+                key={n.id}
+                disableRipple
+                component={Link}
+                href={n.link}
+                sx={{ justifyContent: 'space-between', gap: '1rem' }}
+              >
+                {n.message}
+                <Tooltip title="Mark as read">
+                  <Button
+                    sx={{ minWidth: 'fit-content', p: '3px' }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSetRead(n.id);
+                    }}
+                  >
+                    <CloseRoundedIcon />
+                  </Button>
+                </Tooltip>
+              </MenuItem>
+            ))}
+          </>
+        )}
+
+        {/* No notifications */}
+        {notificationCount < 1 && (
+          <MenuItem
+            disableRipple
+            sx={{
+              '&:hover': { backgroundColor: 'inherit' },
+              justifyContent: 'center',
+            }}
+          >
+            <Typography>You have no new notifications!</Typography>
+          </MenuItem>
         )}
       </Menu>
     </Box>

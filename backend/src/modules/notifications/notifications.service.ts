@@ -15,7 +15,7 @@ export class NotificationsService {
 
     const { data, error } = await CLIENT.from('notifications')
       .select('*')
-      .eq('user_id', userId)
+      .eq('user_id', userId);
 
     if (error) throw error;
 
@@ -24,17 +24,13 @@ export class NotificationsService {
       data,
     };
   }
-  
+
   @UseGuards(AuthGuard('Admin', 'Head Admin'))
   async getAdminNotifications(
     req: CustomRequest,
-  ): Promise<ApiResponse<Tables<'notifications'>[]>> {
+  ): Promise<ApiResponse<{ message: string; is_read: boolean; id: string }[]>> {
     const CLIENT = req['supabase'];
-    console.log('received request to admin route')
-    const { count, data, error } = await CLIENT.from('notifications')
-      .select('*')
-      .eq('recipient_type', 'ADMIN');
-
+    const { data, error } = await CLIENT.rpc('get_admin_notifications');
     if (error) throw error;
 
     return {
@@ -67,13 +63,13 @@ export class NotificationsService {
     body: Partial<Tables<'notifications'>>,
   ): Promise<ApiResponse<Tables<'notifications'>>> {
     const CLIENT = req['supabase'];
-    const read_at = new Date().toISOString()
+    const read_at = new Date().toISOString();
 
     const { data, error } = await CLIENT.from('notifications')
-    .update({...body, read_at})
-    .eq('id', id)
-    .select()
-    .maybeSingle()
+      .update({ ...body, read_at })
+      .eq('id', id)
+      .select()
+      .maybeSingle();
 
     if (error || !data) throw error;
 
