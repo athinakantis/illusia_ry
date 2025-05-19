@@ -40,7 +40,8 @@ export const notificationSlice = createSlice({
   reducers: {
     updateAdminNotification(state, action) {
       const { id } = action.payload;
-      delete state.adminNotifications[id];
+      const index = state.adminNotifications.findIndex((n) => n.id === id);
+      state.adminNotifications[index].is_read = true;
     },
   },
   extraReducers: (builder) => {
@@ -49,7 +50,6 @@ export const notificationSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(fetchUserNotifications.fulfilled, (state, action) => {
-      console.log('Action payload: ', action.payload.data);
       state.userNotifications = action.payload.data;
       state.loading = false;
     });
@@ -62,7 +62,6 @@ export const notificationSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(fetchAdminNotifications.fulfilled, (state, action) => {
-      console.log('admin action payload: ', action.payload.data);
       state.adminNotifications = action.payload.data;
       state.loading = false;
     });
@@ -75,10 +74,8 @@ export const notificationSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(updateNotification.fulfilled, (state, action) => {
-      console.log('Action payload: ', action.payload.data);
       const notificationToUpdate = state.userNotifications.findIndex(
-        (n: Partial<Tables<'notifications'>>) =>
-          n.id === action.payload.data.id,
+        (n) => n.id === action.payload.data.id,
       );
       if (notificationToUpdate !== -1) {
         state.userNotifications[notificationToUpdate] = action.payload.data;
@@ -92,6 +89,10 @@ export const notificationSlice = createSlice({
   },
 });
 
+/* Reducers */
+export const { updateAdminNotification } = notificationSlice.actions;
+
+/* State */
 export const selectUserNotifications = (state: RootState) =>
   state.notifications.userNotifications;
 export const selectAdminNotifications = (state: RootState) =>
@@ -100,4 +101,5 @@ export const selectNotificationLoading = (state: RootState) =>
   state.notifications.loading;
 export const selectNotificationError = (state: RootState) =>
   state.notifications.error;
+
 export default notificationSlice.reducer;

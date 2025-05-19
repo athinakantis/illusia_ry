@@ -16,6 +16,7 @@ import {
   fetchUserNotifications,
   selectAdminNotifications,
   selectUserNotifications,
+  updateAdminNotification,
   updateNotification,
 } from '../../slices/notificationSlice';
 import { Tables } from '../../types/supabase';
@@ -36,7 +37,7 @@ const NotificationsMenu = () => {
   const dispatch = useAppDispatch();
   const { user } = useAuth();
 
-  // Filter to get unread
+  // Unread notifications
   const unreadUserNotifications = userNotifications.filter(
     (n) => n.is_read === false,
   );
@@ -62,8 +63,8 @@ const NotificationsMenu = () => {
   const handleSetRead = (id: string, type: 'user_notification' | 'admin_notification') => {
     type === 'user_notification' ?
       dispatch(updateNotification({ id: id, body: { is_read: true } }))
-    :
-    dispatch(updateAdminNotification(id))
+      :
+      dispatch(updateAdminNotification({ id: id }))
   }
 
   return (
@@ -160,7 +161,7 @@ const NotificationsMenu = () => {
                     sx={{ minWidth: 'fit-content', p: '3px' }}
                     onClick={(e) => {
                       e.preventDefault();
-                      handleSetRead(n.id);
+                      handleSetRead(n.id, 'user_notification');
                     }}
                   >
                     <CloseRoundedIcon />
@@ -187,7 +188,7 @@ const NotificationsMenu = () => {
                     sx={{ minWidth: 'fit-content', p: '3px' }}
                     onClick={(e) => {
                       e.preventDefault();
-                      handleSetRead(n.id);
+                      handleSetRead(n.id, 'admin_notification');
                     }}
                   >
                     <CloseRoundedIcon />
