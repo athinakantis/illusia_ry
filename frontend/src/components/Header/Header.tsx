@@ -23,7 +23,6 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import NotificationsMenu from './NotificationMenu';
 import { useAuth } from '../../hooks/useAuth';
 import { fetchUserNotifications, selectUserNotifications } from '../../slices/notificationSlice';
-import { useAppSelector } from '../../store/hooks';
 import { Trans, useTranslation } from 'react-i18next';
 
 const Header = () => {
@@ -35,6 +34,7 @@ const Header = () => {
   const { user } = useAuth()
   const userNotifications = useAppSelector(selectUserNotifications)
   const dispatch = useAppDispatch()
+
   // Calculate total quantity of all cart items
   const totalItems = cart.reduce((total: number, item: Item) => total + (item.quantity || 0), 0)
 
@@ -42,16 +42,10 @@ const Header = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  // Fetch user notifications
   useEffect(() => {
     if (user && userNotifications.length < 1) dispatch(fetchUserNotifications(user.id))
   }, [])
-
-  const navigationLinks = [
-    { text: 'Home', path: '/' },
-    { text: 'Items', path: '/items' },
-    { text: 'Contact', path: '/items' },
-    { text: 'Bookings', path: '/bookings' },
-  ];
 
   const drawer = (
     <List>

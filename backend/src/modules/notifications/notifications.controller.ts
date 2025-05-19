@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Patch, Req } from '@nestjs/common';
-import { NotificationsService } from 'src/services/notifications.service';
 import { NotificationsType } from 'src/types/notifications';
 import { CustomRequest } from 'src/types/request.type';
 import { Tables } from 'src/types/supabase';
+import { NotificationsService } from './notifications.service';
 
 @Controller('notifications')
 export class NotificationsController {

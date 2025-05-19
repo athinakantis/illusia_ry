@@ -1,5 +1,5 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from 'src/guards/role.guard';
 import { NotificationsType } from 'src/types/notifications';
 import { CustomRequest } from 'src/types/request.type';
 import { ApiResponse } from 'src/types/response';
