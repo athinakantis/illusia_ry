@@ -151,7 +151,6 @@ export class BookingService {
         _items: payload.items,
       },
     );
-
     if (error) {
       throw new BadRequestException(error.message); // from @nestjs/common
     }
@@ -321,7 +320,6 @@ export class BookingService {
     if (!data.length) {
       throw new NotFoundException(`Booking ${bookingId} not found`);
     }
-    console.log('error', error);
     if (error) {
       throw new BadRequestException(error);
     }
