@@ -360,6 +360,7 @@ function Items() {
                           </Typography>
                         </Box>
 
+
                         <CardActions
                           sx={{ padding: 0, justifySelf: 'end', width: 'fit-content' }}
                         >
@@ -375,7 +376,15 @@ function Items() {
                             <AddCircleOutlineOutlinedIcon />
                           </Button>
                         </CardActions>
+
                       </CardContent>
+                      <Box
+                        sx={{ width: '80%', alignItems: 'center', display: 'flex' }}
+                      >
+                        <Typography variant="body1" sx={{ width: '70%' }}>
+                          Available {(range) ? item.quantity - (itemsMaxBookedQty[item.item_id] || 0) : item.quantity} pcs
+                        </Typography>
+                      </Box>
                     </Card>
                   ))}
                 </Stack>
