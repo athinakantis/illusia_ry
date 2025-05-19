@@ -44,20 +44,7 @@ import { useTranslatedSnackbar } from '../../CustomComponents/TranslatedSnackbar
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-/**
- * Allowed status filters rendered as Tabs.
- * We include the full i18n key as a **string literal** so the extractor
- * can detect it without warnings.
- */
 
-const STATUS_FILTERS = [
-  { key: 'adminBookings.tabs.all',      label: 'All',               value: 'all' },
-  { key: 'adminBookings.tabs.pending',  label: 'Pending approval',  value: 'pending' },
-  { key: 'adminBookings.tabs.approved', label: 'Approved',          value: 'approved' },
-  { key: 'adminBookings.tabs.rejected', label: 'Rejected',          value: 'rejected' },
-] as const;
-
-const VALID_FILTERS = STATUS_FILTERS.map(entry => entry.value);
 
 
 const AdminBookings = () => {
@@ -74,11 +61,11 @@ const AdminBookings = () => {
   const reservations = useAppSelector(selectAllReservations);
   const [searchParams] = useSearchParams()
 
-
+  type Filter = 'all' | 'pending' | 'approved' | 'rejected';
   // ─── Local state (active filter tab) ──────────────────────────
-  const [filter, setFilter] = useState<string>("all");
+  const [filter, setFilter] = useState<Filter>("all");
   const handleFilterChange = (_: SyntheticEvent, newValue: string) =>
-    setFilter(newValue);
+      setFilter(newValue as Filter);
 
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const toggleExpand = (id: string) =>
@@ -128,6 +115,7 @@ const AdminBookings = () => {
   useEffect(() => {
     if (users.length === 0) dispatch(fetchAllUsers());
   }, [dispatch, users.length]);
+  
   useEffect(() => {
     if (items.length === 0) dispatch(fetchAllItems());
   }, [dispatch, items.length]);
@@ -135,10 +123,12 @@ const AdminBookings = () => {
     if (reservations.length === 0) dispatch(fetchAllReservations());
   }, [dispatch, reservations.length]);
   useEffect(() => {
-    const search = searchParams.get('filter')
-    if (search && VALID_FILTERS.includes(search)) setFilter(search)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+          const search = searchParams.get('filter')
+          if (search && ['all', 'pending', 'approved', 'rejected'].includes(search)) {
+            setFilter(search as Filter)
+          }
+              // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [])
 
   // ─── Memoised filtered list ───────────────────────────────────
   const filteredBookings = useMemo(() => {
