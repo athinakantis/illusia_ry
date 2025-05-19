@@ -1,6 +1,6 @@
 import { Controller, Get, Req } from '@nestjs/common';
-import { ViewsService } from '../services/view.service';
-import { CustomRequest } from '../types/request.type';
+import { CustomRequest } from '../../types/request.type';
+import { ViewsService } from './view.service';
 
 @Controller('views')
 export class ViewsController  {
