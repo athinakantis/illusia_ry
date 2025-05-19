@@ -34,7 +34,7 @@ import {
   selectUserBookings,
   updateBookingStatus,
 } from '../../slices/bookingsSlice';
-import { useTranslatedSnackbar } from '../CustomComponents/TranslatedSnackbar';
+import { useTranslatedSnackbar } from '../CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
 import { useTranslation} from 'react-i18next';
 
 const UserBookings = () => {
@@ -48,10 +48,22 @@ const UserBookings = () => {
   const handleCancel = (booking: BookingWithRes) => {
     if (booking.status === 'pending') {
       dispatch(deleteBooking(booking.booking_id));
-      showSnackbar('snackbar.bookingDeleted', 'Your booking was deleted!', { variant: 'info' });
+      showSnackbar('snackbar.bookingDeleted', {
+        defaultValue: t('snackbar.bookingDeleted', {
+        defaultValue: 'Your booking was deleted!',
+        }),
+        variant: 'info',
+      });
     } else {
       dispatch(updateBookingStatus({ id: booking.booking_id, status: 'cancelled' }))
-      showSnackbar('snackbar.bookingCancelled', 'Your booking was cancelled!', { variant: 'info' });
+      showSnackbar('snackbar.bookingCancelled', {
+        // translate *now* so the string you pass is in the current language
+        defaultValue: t('snackbar.bookingCancelled', {
+          defaultValue: 'Booking cancelled',   // extractor sees this literal
+        }),
+        variant: 'info',
+        autoHideDuration: 4200,                // optional
+      });
     }
 
     setWantsToCancel(null)

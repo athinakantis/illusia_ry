@@ -40,7 +40,7 @@ import {
   selectAllReservations,
 } from "../../../slices/reservationsSlice";
 import CollapsibleDetail from "./CollapsibleDetail";
-import { useTranslatedSnackbar } from '../../CustomComponents/TranslatedSnackbar';
+import { useTranslatedSnackbar } from '../../CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -103,13 +103,13 @@ const AdminBookings = () => {
     if (!menuBookingId) return;
     dispatch(updateBookingStatus({ id: menuBookingId, status: "approved" }));
     handleMenuClose();
-    showSnackbar('snackbar.bookingApproved', 'Booking approved', { variant: 'success' });
+    showSnackbar('snackbar.bookingApproved', { defaultValue: 'Booking approved', variant: 'success' });
   };
   const rejectBooking = () => {
     if (!menuBookingId) return;
     dispatch(updateBookingStatus({ id: menuBookingId, status: "rejected" }));
     handleMenuClose();
-    showSnackbar('snackbar.bookingRejected', 'Booking rejected', { variant: 'error' });
+    showSnackbar('snackbar.bookingRejected', { defaultValue: 'Booking rejected', variant: 'error' });
   };
 
   // ─── Side Effects ──────────────────────────────────

@@ -19,10 +19,6 @@
     "end": "Loppupäivä",
     "qty": "Määrä"
   },
-  "snackbar": {
-    "bookingDeleted": "Varaus poistettu",
-    "bookingCancelled": "Varaus peruttu"
-  },
   "nav": {
     "home": "Etusivu",
     "items": "Tuotteet",
@@ -38,6 +34,9 @@
     "dashboard": "Hallintapaneeli",
     "myAccount": "Oma tili",
     "logOut": "Kirjaudu ulos"
+  },
+  "snackbar": {
+    "bookingCancelled": "Varaus peruttu"
   },
   "userBookings": {
     "heading": "Varauksesi",
@@ -62,5 +61,13 @@
     "answer2": "Yhden varauksen kesto voi olla enintään kaksi viikkoa",
     "question3": "Miksi minun on saatava hyväksyntä ennen kuin voin varata tuotteita?",
     "answer3": "Käyttäjiemme hyväksyntä takaa meille, että lainatut esineet palautetaan viimeistään kahden viikon kuluessa."
+  },
+  "snackbarTest": {
+    "title": "",
+    "success": "",
+    "warning": "",
+    "error": "",
+    "info": "",
+    "default": ""
   }
 }

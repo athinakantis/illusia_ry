@@ -26,5 +26,11 @@
   "button.test": "Testipainike",
   "{link": {
     "defaultValue}": ""
+  },
+  "snackbar": {
+    "bookingDeleted": "Varaus poistettu"
+  },
+  "userBookings": {
+    "test": ""
   }
 }

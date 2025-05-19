@@ -26,5 +26,11 @@
   "button.test": "",
   "{link": {
     "defaultValue}": "{link.defaultValue}"
+  },
+  "snackbar": {
+    "bookingDefault": "Booking successfully created"
+  },
+  "userBookings": {
+    "test": "Success"
   }
 }

@@ -35,6 +35,9 @@
     "myAccount": "My account",
     "logOut": "Log out"
   },
+  "snackbar": {
+    "bookingCancelled": "Your booking was cancelled"
+  },
   "userBookings": {
     "heading": "Your Bookings",
     "noBookings": "No bookings yet.",
@@ -58,5 +61,13 @@
     "answer2": "One booking can be a maximum duration of two weeks",
     "question3": "Why do I have to be approved before booking items?",
     "answer3": "We see the approval of our users as a guarantee that the items which have been lent will be returned after a maximum of 2 weeks."
+  },
+  "snackbarTest": {
+    "title": "Translated Snackbar\u00a0Test",
+    "success": "Success",
+    "warning": "Warning",
+    "error": "Error",
+    "info": "Info",
+    "default": "Default"
   }
 }

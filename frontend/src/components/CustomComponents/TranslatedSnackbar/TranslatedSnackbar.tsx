@@ -4,13 +4,15 @@ import SnackbarContent from '@mui/material/SnackbarContent';
 import { Typography, LinearProgress, Box, IconButton } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
-import { useTranslation } from 'react-i18next';
-import getBgColor from './TranslatedSnackbar/getBgColor';
+import { useTranslation, Trans } from 'react-i18next';
+import getBgColor from './getBgColor';
 
 /**
  * Options accepted by showSnackbar helper.
  */
 export interface TranslatedSnackbarOptions {
+  /** Fallback text – required so the extractor can pick up the key */
+  defaultValue: string;
   /** notistack variant (default: 'default') */
   variant?: VariantType;
   /** Auto‑hide timeout in **milliseconds** (default: 5000) */
@@ -25,7 +27,8 @@ export interface TranslatedSnackbarOptions {
  * Usage:
  * ```ts
  * const { showSnackbar } = useTranslatedSnackbar();
- * showSnackbar('snackbar.bookingApproved', 'Booking approved', {
+ * showSnackbar('snackbar.bookingApproved', {
+ *   defaultValue: 'Booking approved',
  *   variant: 'success',
  *   autoHideDuration: 3000,
  * });
@@ -39,26 +42,27 @@ export const useTranslatedSnackbar = () => {
   /**
    * Show a snackbar.
    *
-   * @param messageKey    i18n key
-   * @param defaultText   fallback text (English)
-   * @param options       variant & timeout
+   * @param messageKey i18n key
+   * @param options    defaultValue **must** be provided in options + variant & timeout
    * @returns snackbar key
    */
   const showSnackbar = (
     messageKey: string,
-    defaultText: string,
-    options: TranslatedSnackbarOptions = {},
+    {
+      defaultValue,
+      variant = 'default',
+      autoHideDuration = 4200,
+    }: TranslatedSnackbarOptions,
   ): SnackbarKey => {
-    const { variant = 'default', autoHideDuration = 4200 } = options;
-
     // `content` gives full control to render a custom component.
-    return enqueueSnackbar(t(messageKey, { defaultValue: defaultText }), {
+    return enqueueSnackbar(t(messageKey, { defaultValue }), {
       variant,
       autoHideDuration,
       content: (key) => (
         <TranslatedSnackbarContent
           id={key}
-          message={t(messageKey, { defaultValue: defaultText })}
+          messageKey={messageKey}
+          defaultValue={defaultValue}
           autoHideDuration={autoHideDuration}
           variant={variant}
           onClose={closeSnackbar}
@@ -72,7 +76,8 @@ export const useTranslatedSnackbar = () => {
 
 interface TranslatedSnackbarProps {
   id: SnackbarKey;
-  message: string;
+  messageKey: string;
+  defaultValue: string;
   autoHideDuration: number;
   variant: VariantType;
   onClose: (key?: SnackbarKey) => void;
@@ -87,7 +92,8 @@ const TranslatedSnackbarContent = React.forwardRef<HTMLDivElement, TranslatedSna
   (
     {
       id,
-      message,
+      messageKey,
+      defaultValue,
       autoHideDuration,
       variant,
       onClose,
@@ -115,7 +121,7 @@ const TranslatedSnackbarContent = React.forwardRef<HTMLDivElement, TranslatedSna
           <Box sx={{ display: 'flex', alignItems: 'center', pr: 1 }}>
             <Box sx={{ flexGrow: 1, pr: 1 }}>
               <Typography variant="body2" color="inherit">
-                {message}
+                <Trans i18nKey={messageKey} defaultValue={defaultValue} />
               </Typography>
               <LinearProgress
                 variant="determinate"
