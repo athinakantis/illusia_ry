@@ -83,7 +83,7 @@ function Home() {
             }
             }>
               <Link to={`/items?category=${displayCategories?.[0]?.category_name.replace(/ /g, '-')}`}>
-                <img src={displayCategories?.[0]?.image_path} alt="" />
+                <img src={displayCategories?.[0]?.image_path?.[0] || ''} alt="Category Image" />
                 <Typography variant='body3' color='text.main'>{displayCategories?.[0]?.category_name}</Typography>
               </Link>
             </Box>
@@ -99,13 +99,13 @@ function Home() {
               }}>
               <Box>
                 <Link to={`/items?category=${displayCategories?.[1]?.category_name.replace(/ /g, '-')}`}>
-                  <img src={displayCategories?.[1]?.image_path} alt="" />
+                  <img src={displayCategories?.[1]?.image_path?.[0] || ''} alt="Category Image 1" />
                   <Typography variant='body3' color='text.main'>{displayCategories?.[1]?.category_name}</Typography>
                 </Link>
               </Box>
               <Box>
                 <Link to={`/items?category=${displayCategories?.[3]?.category_name.replace(/ /g, '-')}`}>
-                  <img src={displayCategories?.[3]?.image_path} alt="" />
+                  <img src={displayCategories?.[3]?.image_path?.[0] || ''} alt="Category Image 3" />
                   <Typography variant='body3' color='text.main'>{displayCategories?.[3]?.category_name}</Typography>
                 </Link>
               </Box>
@@ -117,7 +117,7 @@ function Home() {
               }
             }}>
               <Link to={`/items?category=${displayCategories?.[2]?.category_name.replace(/ /g, '-')}`}>
-                <img src={displayCategories?.[2]?.image_path} alt="" />
+                <img src={displayCategories?.[2]?.image_path?.[0] || ''} alt="Category Image" />
                 <Typography variant='body3' color='text.main'>{displayCategories?.[2]?.category_name}</Typography>
               </Link>
             </Box>

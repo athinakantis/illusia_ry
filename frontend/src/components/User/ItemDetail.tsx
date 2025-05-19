@@ -25,8 +25,8 @@ import "slick-carousel/slick/slick-theme.css";
 import { ArrowBack, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 
 // Custom arrow components
-const NextArrow = (props: any) => {
-  const { onClick } = props;
+const NextArrow = ({ onClick }: { onClick?: React.MouseEventHandler<HTMLButtonElement> }) => {
+
   return (
     <IconButton
       onClick={onClick}
@@ -47,8 +47,7 @@ const NextArrow = (props: any) => {
   );
 };
 
-const PrevArrow = (props: any) => {
-  const { onClick } = props;
+const PrevArrow = ({ onClick }: { onClick?: React.MouseEventHandler<HTMLButtonElement> }) => {
   return (
     <IconButton
       onClick={onClick}

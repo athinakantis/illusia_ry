@@ -135,7 +135,7 @@ const AdminAddProduct = () => {
         setIsLoading(true);
         showSnackbar('Uploading item...', 'info');
 
-        let imageUrls: string[] = [];
+        const imageUrls: string[] = [];
 
         if (!user) {
             return;

@@ -106,7 +106,7 @@ useEffect(() => {
                         <img
                           onError={handleBrokenImg}
                           style={{ maxWidth: 78, borderRadius: '14px' }}
-                          src={item.image_path ?? '/src/assets/broken_img.png'}
+                          src={Array.isArray(item.image_path) ? item.image_path[0] : item.image_path ?? '/src/assets/broken_img.png'}
                         />
                         <Stack>
                           <Typography>{item.item_name}</Typography>

@@ -168,7 +168,7 @@ const AdminBookings = () => {
     items.find((it) => it.item_id === iid)?.item_name || iid.slice(0, 6);
 
   const itemImage = (iid: string) =>
-    items.find((it) => it.item_id === iid)?.image_path;
+      items.find((it) => it.item_id === iid)?.image_path?.[0];
   // Navigate to item page
   const itemLink = (iid: string) => `/items/manage/${iid}`;
 
