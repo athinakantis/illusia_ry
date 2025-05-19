@@ -25,7 +25,7 @@ code‑base.
 
 ## Why another snackbar?
 
-- **One‑liner usage** – `showSnackbar(key, fallback, options)`.
+- **One‑liner usage** – `showSnackbar({ message, variant?, autoHideDuration? })`.
 - **Progress bar** communicates the remaining lifetime to the user.
 - **Localised by default** – zero‑config `react‑i18next` integration.
 - Uses your **theme’s palette** for colours (`primary.light` for _info_
@@ -37,7 +37,7 @@ code‑base.
 
 ## Quick start
 
-```tsx
+```jsx
 // 1. Wrap your app once
 import { SnackbarProvider } from 'notistack';
 
@@ -49,18 +49,20 @@ root.render(
 
 // 2. Call the hook in any component
 import { useTranslatedSnackbar } from 'components/CustomComponents/TranslatedSnackbar';
+import { useTranslation } from 'react-i18next';
 
 const Demo = () => {
   const { showSnackbar } = useTranslatedSnackbar();
+  const { t } = useTranslation();
 
   return (
     <Button
       onClick={() =>
-        showSnackbar(
-          'snackbar.bookingApproved',
-          'Booking approved',          // fallback text
-          { variant: 'success', autoHideDuration: 4000 }
-        )
+        showSnackbar({
+          message: t('snackbar.bookingApproved', { defaultValue: 'Booking approved' }),
+          variant: 'success',
+          autoHideDuration: 4000,
+        })
       }
     >
       Click me
@@ -77,7 +79,17 @@ const Demo = () => {
 
 | Return value         | Description                                          |
 |----------------------|------------------------------------------------------|
-| `showSnackbar()`     | `(key: string, fallback: string, options?) => key` <br>• `key` — i18n lookup key <br>• `fallback` — English fallback for extraction tools <br>• `options.variant` — `"success" \| "warning" \| "error" \| "info" \| "default"` <br>• `options.autoHideDuration` — millis (default **5000 ms**) |
+| `showSnackbar()`     | `({ message, variant?, autoHideDuration? }) => key` <br>• `message` — already translated message string (usually `t(...)`) <br>• `variant` — `"success" \| "warning" \| "error" \| "info" \| "default"` (default: `"default"`) <br>• `autoHideDuration` — duration in milliseconds (default: **4200 ms**) |
+
+Example usage:
+
+```ts
+showSnackbar({
+  message: t('snackbar.bookingApproved', { defaultValue: 'Booking approved' }),
+  variant: 'success',
+  autoHideDuration: 3000,
+});
+```
 
 Internally the hook delegates to `notistack.enqueueSnackbar` and injects the
 custom content component.
@@ -89,7 +101,7 @@ custom content component.
 You rarely need to import this directly – it is provided to notistack for you –
 but if you want to render it yourself:
 
-```tsx
+```jsx
 <TranslatedSnackbarContent
   id={someKey}
   message="Plain text or already‑translated string"
@@ -121,18 +133,25 @@ strategy.
 
 The hook uses **`react‑i18next`**:
 
+When calling `showSnackbar`, pass the `message` argument as the result of `t`:
+
 ```ts
-t(key, { defaultValue: fallback })
+showSnackbar({
+  message: t('snackbar.bookingApproved', { defaultValue: 'Booking approved' }),
+  variant: 'success',
+  autoHideDuration: 4000,
+});
 ```
 
 That means:
 
-* The English fallback is still visible to extraction tools.
-* If the key is missing at runtime the user still sees meaningful text.
+- The English fallback is still visible to extraction tools.
+
+- If the key is missing at runtime the user still sees meaningful text.
 
 Add entries like this to every locale file:
 
-```jsonc
+```json
 {
   "snackbar": {
     "bookingApproved": "Varaus hyväksytty",
@@ -145,11 +164,11 @@ Add entries like this to every locale file:
 
 ## Accessibility notes
 
-* Content is rendered inside MUI’s `SnackbarContent`, which already sets
+- Content is rendered inside MUI’s `SnackbarContent`, which already sets
   `role="alert"` – assistive tech is notified immediately.
-* The progress bar is purely visual and intentionally marked
+- The progress bar is purely visual and intentionally marked
   `aria-hidden="true"` by MUI, keeping screen‑reader output concise.
-* The close button is keyboard‑focusable (`IconButton`) and has an
+- The close button is keyboard‑focusable (`IconButton`) and has an
   `aria-label="close"`.
 
 ---
@@ -175,14 +194,13 @@ stories.
   variant="contained"
   color="error"
   onClick={() =>
-    showSnackbar(
-      'snackbar.bookingRejected',
-      'Booking rejected',
-      { variant: 'error' }
-    )
+    showSnackbar({
+      message: t('snackbar.bookingRejected', { defaultValue: 'Booking rejected' }),
+      variant: 'error',
+    })
   }
 >
-  Error
+  {t('snackbarTest.error', { defaultValue: 'Error' })}
 </Button>
 ```
 
@@ -209,11 +227,10 @@ const NotificationTest = () => {
         <Button
           variant="contained"
           onClick={() =>
-            showSnackbar(
-              'snackbar.bookingApproved',
-              'Booking approved',
-              { variant: 'success' }
-            )
+            showSnackbar({
+              message: t('snackbar.bookingApproved', { defaultValue: 'Booking approved' }),
+              variant: 'success',
+            })
           }
         >
           {t('snackbarTest.success', { defaultValue: 'Success' })}
@@ -223,11 +240,10 @@ const NotificationTest = () => {
           variant="contained"
           color="warning"
           onClick={() =>
-            showSnackbar(
-              'snackbar.bookingWarning',
-              'Something needs attention',
-              { variant: 'warning' }
-            )
+            showSnackbar({
+              message: t('snackbar.bookingWarning', { defaultValue: 'Something needs attention' }),
+              variant: 'warning',
+            })
           }
         >
           {t('snackbarTest.warning', { defaultValue: 'Warning' })}
@@ -237,11 +253,10 @@ const NotificationTest = () => {
           variant="contained"
           color="error"
           onClick={() =>
-            showSnackbar(
-              'snackbar.bookingRejected',
-              'Booking rejected',
-              { variant: 'error' }
-            )
+            showSnackbar({
+              message: t('snackbar.bookingRejected', { defaultValue: 'Booking rejected' }),
+              variant: 'error',
+            })
           }
         >
           {t('snackbarTest.error', { defaultValue: 'Error' })}
@@ -251,11 +266,10 @@ const NotificationTest = () => {
           variant="contained"
           color="info"
           onClick={() =>
-            showSnackbar(
-              'snackbar.bookingInfo',
-              'General information',
-              { variant: 'info' }
-            )
+            showSnackbar({
+              message: t('snackbar.bookingInfo', { defaultValue: 'General information' }),
+              variant: 'info',
+            })
           }
         >
           {t('snackbarTest.info', { defaultValue: 'Info' })}
@@ -265,11 +279,10 @@ const NotificationTest = () => {
           variant="contained"
           color="secondary"
           onClick={() =>
-            showSnackbar(
-              'snackbar.bookingDefault',
-              'Default notification',
-              { variant: 'default' }
-            )
+            showSnackbar({
+              message: t('snackbar.bookingDefault', { defaultValue: 'Default notification' }),
+              variant: 'default',
+            })
           }
         >
           {t('snackbarTest.default', { defaultValue: 'Default' })}
