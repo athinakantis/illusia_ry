@@ -55,6 +55,13 @@
         "last_sign_in": "Viimeisin kirjautuminen",
         "confirmed": "Vahvistettu",
         "role": "Rooli"
+      },
+      "status": {
+        "pending": "Odottaa",
+        "approved": "Hyväksytty",
+        "rejected": "Hylätty",
+        "cancelled": "Peruutettu",
+        "completed": "Valmis"
       }
     }
   }

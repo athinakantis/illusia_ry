@@ -55,6 +55,13 @@
         "last_sign_in": "Last sign-in",
         "confirmed": "Confirmed",
         "role": "Role"
+      },
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled",
+        "completed": "Completed"
       }
     }
   }

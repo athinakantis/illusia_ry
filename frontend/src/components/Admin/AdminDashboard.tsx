@@ -226,7 +226,7 @@ const AdminDashboard = () => {
           rows={upcomingBookings.map((booking) => ({
             id: booking.booking_id, // Used internally by DataGrid
             name: booking.booking.user.display_name,
-            status: booking.booking.status,
+            status: t(`admin.dashboard.status.${booking.booking.status.toLowerCase()}`),
             duration: `${computeDuration(booking.start_date, booking.end_date)} Days`,
             dateRange: `${booking.start_date} - ${booking.end_date}`,
             view: `/bookings/${booking.booking_id}`,
