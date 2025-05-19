@@ -1,17 +1,20 @@
 import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { Link } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
+import { useTranslation, Trans } from 'react-i18next';
 
 const PersonMenu = () => {
   // ─── profile menu state ──────────────────────────────────────────────
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { signOut } = useAuth();
+  const { signOut, role } = useAuth();
+  const isUser = role === 'User';
+  const isAdmin = role === 'Admin' || role === 'Head Admin';
+  const { i18n } = useTranslation();
   const menuOpen = Boolean(anchorEl);
   const handleMenuOpen = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -81,26 +84,29 @@ const PersonMenu = () => {
           },
         }}
       >
-        <MenuItem component={Link} to="/bookings" onClick={handleMenuClose}>
-          <CalendarMonthRoundedIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
-          My bookings
-        </MenuItem>
-        <MenuItem component={Link} to="/admin/dashboard" onClick={handleMenuClose}>
-          <DashboardIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
-          Dashboard
-        </MenuItem>
+        {isUser || isAdmin && (
+          <MenuItem component={Link} to="/bookings" onClick={handleMenuClose}>
+            <CalendarTodayIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
+            <Trans i18nKey="person.myBookings">My bookings</Trans>
+          </MenuItem>
+        )}
+        {isAdmin && (
+          <MenuItem component={Link} to="/admin/dashboard" onClick={handleMenuClose}>
+            <DashboardIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
+            <Trans i18nKey="person.dashboard">Dashboard</Trans>
+          </MenuItem>
+        )}
         <MenuItem
           sx={{ height: '100%' }}
           component={Link}
           to="/account"
           onClick={handleMenuClose}
         >
-          <AccountCircleRoundedIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
-          My account
+          <AccountCircleIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
+          <Trans i18nKey="person.myAccount">My account</Trans>
         </MenuItem>
         <MenuItem disableRipple sx={{ pl: 2, pr: 2 }} onClick={signOut}>
-          <LogoutRoundedIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
-          Log out
+          <Trans i18nKey="person.logOut">Log out</Trans>
         </MenuItem>
         {/* language buttons */}
         <Box sx={{ px: 1, pt: 1 }}>
@@ -109,6 +115,7 @@ const PersonMenu = () => {
             size="small"
             color="primary"
             sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
+            onClick={() => { i18n.changeLanguage('en'); handleMenuClose(); }}
           >
             En
           </Button>
@@ -117,6 +124,7 @@ const PersonMenu = () => {
             size="small"
             color="primary"
             sx={{ padding: '4px 10px', minWidth: 'fit-content' }}
+            onClick={() => { i18n.changeLanguage('fi'); handleMenuClose(); }}
           >
             Fin
           </Button>

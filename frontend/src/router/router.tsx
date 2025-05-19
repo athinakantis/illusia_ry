@@ -4,7 +4,7 @@ import LoginPage from '../pages/LoginPage';
 import ItemsPage from '../pages/Items';
 import Root from '../components/Root';
 import Home from '../pages/Home';
-import SingleItem from '../components/Admin/ItemView';
+import SingleItem from '../components/Admin/AdminBookings/ItemView/ItemView';
 import AdminAddProduct from '../components/Admin/AdminAddProduct';
 import Cart from '../pages/Cart';
 import Contacts from '../pages/Contacts';
@@ -81,7 +81,7 @@ export const router = createBrowserRouter([
       {
         path: "/account",
         element: <Account />
-      }
+      },
 
     ]
   },

@@ -23,10 +23,13 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import NotificationsMenu from './NotificationMenu';
 import { useAuth } from '../../hooks/useAuth';
 import { fetchUserNotifications, selectUserNotifications } from '../../slices/notificationSlice';
+import { useAppSelector } from '../../store/hooks';
+import { Trans, useTranslation } from 'react-i18next';
 
 const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cart } = useAppSelector(selectCart)
   const { user } = useAuth()
@@ -52,11 +55,38 @@ const Header = () => {
 
   const drawer = (
     <List>
-      {navigationLinks.map((item) => (
-        <ListItem key={item.text} component={Link} to={item.path}>
-          <ListItemText primary={item.text} />
-        </ListItem>
-      ))}
+      <ListItem
+        component={Link}
+        to="/"
+        onClick={handleDrawerToggle}
+        sx={{ textDecoration: 'none', color: 'inherit' }}
+      >
+        <ListItemText primary={<Trans i18nKey="nav.home">Home</Trans>} />
+      </ListItem>
+      <ListItem
+        component={Link}
+        to="/items"
+        onClick={handleDrawerToggle}
+        sx={{ textDecoration: 'none', color: 'inherit' }}
+      >
+        <ListItemText primary={<Trans i18nKey="nav.items">Items</Trans>} />
+      </ListItem>
+      <ListItem
+        component={Link}
+        to="/contact"
+        onClick={handleDrawerToggle}
+        sx={{ textDecoration: 'none', color: 'inherit' }}
+      >
+        <ListItemText primary={<Trans i18nKey="nav.contact">Contact</Trans>} />
+      </ListItem>
+      <ListItem
+        component={Link}
+        to="/bookings"
+        onClick={handleDrawerToggle}
+        sx={{ textDecoration: 'none', color: 'inherit' }}
+      >
+        <ListItemText primary={<Trans i18nKey="nav.bookings">Bookings</Trans>} />
+      </ListItem>
     </List>
   );
 
@@ -86,7 +116,7 @@ const Header = () => {
             )}
             <Typography variant="h1" color='secondary' component="div"
               sx={{ fontWeight: '400', fontSize: { xs: '1.2rem', sm: '1.7rem' } }}>
-              ILLUSIA
+              {t('header.logoMain', { defaultValue: 'ILLUSIA' })}
             </Typography>
             <Typography
               sx={{
@@ -94,7 +124,9 @@ const Header = () => {
                 fontFamily: 'Lato, sans-serif',
                 fontSize: { xs: '1.2rem', sm: '1.7rem' }
               }}
-            >STORE</Typography>
+            >
+              {t('header.logoSecondary', { defaultValue: 'STORE' })}
+            </Typography>
           </Box>
         </Link>
 
@@ -104,7 +136,6 @@ const Header = () => {
           <Box sx={{
             display: 'flex',
             gap: '2rem',
-            /* Booking was blue so had to add these to adjust colors */
             '& a:active': { color: 'primary.light' },
             '& a:hover': { color: 'primary.main' },
             '& a': {
@@ -112,11 +143,26 @@ const Header = () => {
               color: "primary.light",
             }
           }}>
-            {navigationLinks.map((item) => (
-              <Typography key={item.text} variant='link'>
-                <Link to={item.path} style={{ textDecoration: 'none' }}>{item.text}</Link>
-              </Typography>
-            ))}
+            <Typography key="nav.home" variant='link'>
+              <Link to="/" style={{ textDecoration: 'none' }}>
+                <Trans i18nKey="nav.home">Home</Trans>
+              </Link>
+            </Typography>
+            <Typography key="nav.items" variant='link'>
+              <Link to="/items" style={{ textDecoration: 'none' }}>
+                <Trans i18nKey="nav.items">Items</Trans>
+              </Link>
+            </Typography>
+            <Typography key="nav.contact" variant='link'>
+              <Link to="/contact" style={{ textDecoration: 'none' }}>
+                <Trans i18nKey="nav.contact">Contact</Trans>
+              </Link>
+            </Typography>
+            <Typography key="nav.bookings" variant='link'>
+              <Link to="/bookings" style={{ textDecoration: 'none' }}>
+                <Trans i18nKey="nav.bookings">Bookings</Trans>
+              </Link>
+            </Typography>
           </Box>
         )}
 
