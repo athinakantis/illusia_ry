@@ -1,4 +1,10 @@
 {
+  "snackbar": {
+    "bookingApproved": "",
+    "bookingRejected": "",
+    "bookingDeleted": "Varaus poistettu",
+    "bookingCancelled": "Varaus peruttu"
+  },
   "adminBookings": {
     "heading": "Varaukset",
     "id": "Tunnus",
@@ -35,10 +41,6 @@
     "myAccount": "Oma tili",
     "logOut": "Kirjaudu ulos"
   },
-  "snackbar": {
-    "bookingDeleted": "Varaus poistettu",
-    "bookingCancelled": "Varaus peruttu"
-  },
   "userBookings": {
     "heading": "Varauksesi",
     "noBookings": "Ei varauksia vielä.",
@@ -64,11 +66,11 @@
     "answer3": "Käyttäjiemme hyväksyntä takaa meille, että lainatut esineet palautetaan viimeistään kahden viikon kuluessa."
   },
   "snackbarTest": {
-    "title": "",
-    "success": "",
-    "warning": "",
-    "error": "",
-    "info": "",
-    "default": ""
+    "title": "Käännetty Snackbar -testi",
+    "success": "Onnistui",
+    "warning": "Varoitus",
+    "error": "Virhe",
+    "info": "Info",
+    "default": "Oletus"
   }
 }

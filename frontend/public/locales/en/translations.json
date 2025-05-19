@@ -1,4 +1,10 @@
 {
+  "snackbar": {
+    "bookingApproved": "Booking approved",
+    "bookingRejected": "Booking rejected",
+    "bookingDeleted": "Your booking was deleted!",
+    "bookingCancelled": "Booking cancelled"
+  },
   "adminBookings": {
     "heading": "Bookings",
     "id": "ID",
@@ -34,10 +40,6 @@
     "dashboard": "Dashboard",
     "myAccount": "My account",
     "logOut": "Log out"
-  },
-  "snackbar": {
-    "bookingDeleted": "Your booking was deleted!",
-    "bookingCancelled": "Your booking was cancelled"
   },
   "userBookings": {
     "heading": "Your Bookings",
