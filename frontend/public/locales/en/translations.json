@@ -70,6 +70,21 @@
     "confirmYes": "Yes, I'm sure",
     "confirmNo": "No thanks"
   },
+  "cart": {
+    "yourCart": "Your Cart",
+    "items": "Items",
+    "quantity": "Qty",
+    "action": "Action",
+    "remove": "Remove",
+    "bookingSummary": "Booking Summary",
+    "dates": "Dates",
+    "changeDates": "Change the booking dates",
+    "confirmDates": "Confirm new dates",
+    "cancel": "Cancel",
+    "totalItems": "Total items",
+    "bookItems": "Book items",
+    "empty": "Your cart is currently empty! <1>Browse Items</1>"
+  },
   "home": {
     "heroTitle": "Home for live-action role-playing games props",
     "heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat",
