@@ -84,9 +84,7 @@ function Items() {
 
   const addToCart = (item: Item, quantity: number = 1) => {
     // need to fetch the bookings and reservations first in order for this to work properly
-
     if (range?.start === undefined) {
-
       showCustomSnackbar('Select dates before adding to cart', 'warning');
       return;
     }
@@ -202,6 +200,9 @@ function Items() {
     }
   };
 
+  /* Remove 'Uncategorised' from cat options */
+  const filteredCategories = categories.filter(c => c.category_name !== 'Uncategorised')
+
   return (
     <Box
       sx={{
@@ -235,7 +236,7 @@ function Items() {
         />
         {/* Categories */}
         <Box sx={{ pr: 2, gap: 1, display: 'flex', flexWrap: 'wrap' }}>
-          {categories.map((category) => (
+          {filteredCategories.map((category) => (
             <Chip
               variant={
                 categoryParams.includes(
