@@ -50,7 +50,6 @@ const ManageUsers: React.FC = () => {
   useEffect(() => {
     dispatch(fetchAllUsersWithRole());
     const param = searchParams.get('filter');
-    console.log('param: ', param);
     if (param && VALID_FILTERS.includes(param.toUpperCase())) setFilter(param.toUpperCase());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -236,10 +235,10 @@ const ManageUsers: React.FC = () => {
                 handleStatusChange(
                   params.row.user_id,
                   e.target.value as
-                    | 'approved'
-                    | 'rejected'
-                    | 'deactivated'
-                    | 'active',
+                  | 'approved'
+                  | 'rejected'
+                  | 'deactivated'
+                  | 'active',
                 );
               }}
             >

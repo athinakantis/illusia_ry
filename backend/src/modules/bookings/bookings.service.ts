@@ -373,6 +373,7 @@ export class BookingService {
         `*, booking:booking_id (status, user_id,
     user:user_id (display_name, email))`,
       )
+      .in('status', ['approved', 'pending'])
       .order('start_date')
       .limit(+amount);
 
