@@ -1,17 +1,17 @@
 {
   "snackbar": {
-    "bookingApproved": "",
-    "bookingRejected": "",
+    "bookingApproved": "Varaus hyväksytty",
+    "bookingRejected": "Varaus hylätty",
     "bookingDeleted": "Varaus poistettu",
     "bookingCancelled": "Varaus peruttu"
   },
   "adminBookings": {
     "heading": "Varaukset",
     "tabs": {
-      "all": "",
-      "pending": "",
-      "approved": "",
-      "rejected": ""
+      "all": "Kaikki",
+      "pending": "Odottaa hyväksyntää",
+      "approved": "Hyväksytyt",
+      "rejected": "Hylätyt"
     },
     "id": "Tunnus",
     "created": "Luotu",
@@ -50,14 +50,14 @@
   "userBookings": {
     "heading": "Varauksesi",
     "noBookings": "Ei varauksia vielä.",
-    "bookingId": "",
-    "created": "",
+    "bookingId": "Varausnumero",
+    "created": "Luotu",
     "cancelTooltip": "Peruuta varaus",
     "deleteTooltip": "Poista varaus",
-    "item": "",
-    "startDate": "",
-    "endDate": "",
-    "quantity": "",
+    "item": "Tuote",
+    "startDate": "Alkupäivä",
+    "endDate": "Loppupäivä",
+    "quantity": "Määrä",
     "confirmCancel": "Haluatko varmasti peruuttaa varauksesi?",
     "confirmYes": "Kyllä, olen varma",
     "confirmNo": "Ei kiitos"
