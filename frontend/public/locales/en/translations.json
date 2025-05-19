@@ -36,6 +36,7 @@
     "logOut": "Log out"
   },
   "snackbar": {
+    "bookingDeleted": "Your booking was deleted!",
     "bookingCancelled": "Your booking was cancelled"
   },
   "userBookings": {

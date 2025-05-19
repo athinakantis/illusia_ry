@@ -103,13 +103,17 @@ const AdminBookings = () => {
     if (!menuBookingId) return;
     dispatch(updateBookingStatus({ id: menuBookingId, status: "approved" }));
     handleMenuClose();
-    showSnackbar('snackbar.bookingApproved', { defaultValue: 'Booking approved', variant: 'success' });
+    showSnackbar('snackbar.bookingApproved', {
+      defaultValue: t('snackbar.bookingApproved', { defaultValue: 'Booking approved' }),
+      variant: 'success' });
   };
   const rejectBooking = () => {
     if (!menuBookingId) return;
     dispatch(updateBookingStatus({ id: menuBookingId, status: "rejected" }));
     handleMenuClose();
-    showSnackbar('snackbar.bookingRejected', { defaultValue: 'Booking rejected', variant: 'error' });
+    showSnackbar('snackbar.bookingRejected', { 
+      defaultValue: t('snackbar.bookingRejected', { defaultValue: 'Booking rejected' }),
+      variant: 'error' });
   };
 
   // ─── Side Effects ──────────────────────────────────

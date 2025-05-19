@@ -27,9 +27,6 @@
   "{link": {
     "defaultValue}": ""
   },
-  "snackbar": {
-    "bookingDeleted": "Varaus poistettu"
-  },
   "userBookings": {
     "test": ""
   }

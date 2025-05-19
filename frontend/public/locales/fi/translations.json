@@ -36,6 +36,7 @@
     "logOut": "Kirjaudu ulos"
   },
   "snackbar": {
+    "bookingDeleted": "Varaus poistettu",
     "bookingCancelled": "Varaus peruttu"
   },
   "userBookings": {
