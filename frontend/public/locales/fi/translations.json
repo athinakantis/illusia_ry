@@ -20,7 +20,10 @@
     "heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ahdistelussa ei ole nyt mitään hienostelua. Nyt artikkelin kirjoittaja on nero, joka on tyyny. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nyt ahdistetussa feugiatissa ei ole fringillaa.",
     "categoriesTitle": "Tutustu kategoriavalikoimaamme",
     "categoriesDescription": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.",
-    "askQuestion": "Kysy kysymys"
+    "askQuestion": "Kysy kysymys",
+    "cta": {
+      "browse_items": "Selaa tuotteita"
+    }
   },
   "faq": {
     "question1": "Milloin varaukseni hyväksytään?",

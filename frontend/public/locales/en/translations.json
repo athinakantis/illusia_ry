@@ -17,10 +17,13 @@
   },
   "home": {
     "heroTitle": "Home for live-action role-playing games props",
-    "heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat",
+    "heroDescription": "Step into character with our handpicked collection of high-quality LARP props. Whether you wield sword or staff, find everything you need to bring your story to life.",
     "categoriesTitle": "View Our Range Of Categories",
     "categoriesDescription": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.",
-    "askQuestion": "Ask a question"
+    "askQuestion": "Ask a question",
+    "cta": {
+      "browse_items": "Browse Items"
+    }
   },
   "faq": {
     "question1": "When will my booking be approved?",

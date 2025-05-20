@@ -5,12 +5,12 @@ import { fetchAllCategories, selectAllCategories } from '../slices/itemsSlice';
 import { Link } from 'react-router-dom';
 import { GridExpandMoreIcon } from '@mui/x-data-grid';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 function Home() {
   const categories = useAppSelector(selectAllCategories)
   const dispatch = useAppDispatch()
-
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (categories.length < 1) {
@@ -18,13 +18,24 @@ function Home() {
     }
   }, [dispatch, categories])
 
-
   // Categories to display
   const CATEGORIES_TO_DISPLAY = ['clothing', 'board games', 'props', 'accessories']
   const displayCategories = categories.filter(cat => {
     return CATEGORIES_TO_DISPLAY.includes(cat.category_name.toLowerCase())
   })
 
+  // Helper to get image src
+  const getImageSrc = (cat: any) => {
+    if (!cat) return '';
+    if (Array.isArray(cat.image_path)) return cat.image_path[0];
+    return cat.image_path;
+  };
+
+  // Helper to get translated category name
+  const getCategoryName = (cat: any) => {
+    if (!cat) return '';
+    return t(`categories.${cat.category_name.toLowerCase().replace(/ /g, '_')}`);
+  };
 
   return (
     <Box id='home'>
@@ -45,9 +56,33 @@ function Home() {
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat
             </Trans>
           </Typography>
+          {/* CTA Button */}
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+            <Button
+              component={Link}
+              to="/items"
+              variant="contained"
+              color="primary"
+              size="large"
+              sx={{
+                borderRadius: '32px',
+                px: 6,
+                py: 2,
+                fontFamily: 'Lato, sans-serif',
+                fontSize: 22,
+                textTransform: 'none',
+                fontWeight: 700,
+                backgroundColor: 'primary.light',
+                '&:hover': {
+                  backgroundColor: 'primary.main'
+                }
+              }}
+            >
+              <Trans i18nKey="home.cta.browse_items">Browse Items</Trans>
+            </Button>
+          </Box>
         </Box>
       </Box>
-
 
       {/* Category section */}
       <Box component='section'
@@ -75,7 +110,6 @@ function Home() {
             justifyContent={'center'}
             sx={{ maxHeight: { xs: '100%', sm: 400, xl: 513 } }}>
 
-
             <Box sx={{
               '& > a > img': {
                 height: { xs: 'auto', sm: '100%' }
@@ -83,8 +117,8 @@ function Home() {
             }
             }>
               <Link to={`/items?category=${displayCategories?.[0]?.category_name.replace(/ /g, '-')}`}>
-                <img src={displayCategories?.[0]?.image_path} alt="" />
-                <Typography variant='body3' color='text.main'>{displayCategories?.[0]?.category_name}</Typography>
+                <img src={getImageSrc(displayCategories?.[0])} alt="" />
+                <Typography variant='body3' color='text.main'>{getCategoryName(displayCategories?.[0])}</Typography>
               </Link>
             </Box>
 
@@ -99,14 +133,14 @@ function Home() {
               }}>
               <Box>
                 <Link to={`/items?category=${displayCategories?.[1]?.category_name.replace(/ /g, '-')}`}>
-                  <img src={displayCategories?.[1]?.image_path} alt="" />
-                  <Typography variant='body3' color='text.main'>{displayCategories?.[1]?.category_name}</Typography>
+                  <img src={getImageSrc(displayCategories?.[1])} alt="" />
+                  <Typography variant='body3' color='text.main'>{getCategoryName(displayCategories?.[1])}</Typography>
                 </Link>
               </Box>
               <Box>
                 <Link to={`/items?category=${displayCategories?.[3]?.category_name.replace(/ /g, '-')}`}>
-                  <img src={displayCategories?.[3]?.image_path} alt="" />
-                  <Typography variant='body3' color='text.main'>{displayCategories?.[3]?.category_name}</Typography>
+                  <img src={getImageSrc(displayCategories?.[3])} alt="" />
+                  <Typography variant='body3' color='text.main'>{getCategoryName(displayCategories?.[3])}</Typography>
                 </Link>
               </Box>
             </Stack>
@@ -117,8 +151,8 @@ function Home() {
               }
             }}>
               <Link to={`/items?category=${displayCategories?.[2]?.category_name.replace(/ /g, '-')}`}>
-                <img src={displayCategories?.[2]?.image_path} alt="" />
-                <Typography variant='body3' color='text.main'>{displayCategories?.[2]?.category_name}</Typography>
+                <img src={getImageSrc(displayCategories?.[2])} alt="" />
+                <Typography variant='body3' color='text.main'>{getCategoryName(displayCategories?.[2])}</Typography>
               </Link>
             </Box>
           </Stack>
