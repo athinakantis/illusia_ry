@@ -107,7 +107,7 @@ const PersonMenu = () => {
           <Trans i18nKey="person.myAccount">My account</Trans>
         </MenuItem>
         <MenuItem disableRipple sx={{ pl: 2, pr: 2 }} onClick={signOut}>
-          <LogoutRoundedIcon />
+          <LogoutRoundedIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
           <Trans i18nKey="person.logOut">Log out</Trans>
         </MenuItem>
         {/* language buttons */}
