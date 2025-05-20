@@ -17,15 +17,23 @@
   },
   "home": {
     "heroTitle": "Live action -roolipelien rekvisiittakoti",
-    "heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ahdistelussa ei ole nyt mitään hienostelua. Nyt artikkelin kirjoittaja on nero, joka on tyyny. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nyt ahdistetussa feugiatissa ei ole fringillaa.",
+    "heroDescription": "Astu rooliisi korkealaatuisten LARP-rekvisiittojen tarkoin valitussa kokoelmassamme. Kannatpa sitten miekkaa tai sauvaa, meiltä löydät kaiken tarvittavan tarinasi herättämiseen eloon.",
     "categoriesTitle": "Tutustu kategoriavalikoimaamme",
-    "categoriesDescription": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.",
-    "askQuestion": "Kysy kysymys",
+    "categoriesDescription": "Meiltä löytyy monipuolisesti tarvikkeita taisteluliiveistä avararuusalusten konsoleihin, askartelutarpeisiin, vaahtosammuttimiin - ja kaikkeen siltä väliltä.",
+    "categories": {
+      "clothing": "Vaatteet",
+      "board_games": "Lautapelit",
+      "props": "Lavasteet",
+      "accessories": "Asusteet"
+    },
     "cta": {
       "browse_items": "Selaa tuotteita"
     }
   },
   "faq": {
+    "faqTitle": "Usein kysytyt kysymykset",
+    "askQuestion": "Esitä kysymys",
+    "faqDescription": "Ennen kuin otat yhteyttä tarkista usein kysytyt kysymykset.",
     "question1": "Milloin varaukseni hyväksytään?",
     "answer1": "Käymme varaukset läpi mahdollisimman pian. Varaukset hyväksytään yleensä 2–3 päivän kuluessa. Jos olet odottanut yli 5 päivää, lähetä meille sähköpostia.",
     "question2": "Kuinka pitkäksi aikaa voin varata tuotteita?",

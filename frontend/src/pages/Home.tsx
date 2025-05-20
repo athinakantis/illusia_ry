@@ -118,7 +118,9 @@ function Home() {
             }>
               <Link to={`/items?category=${displayCategories?.[0]?.category_name.replace(/ /g, '-')}`}>
                 <img src={getImageSrc(displayCategories?.[0])} alt="" />
-                <Typography variant='body3' color='text.main'>{getCategoryName(displayCategories?.[0])}</Typography>
+                <Typography variant='body3' color='text.main'>
+                  {t(`home.categories.${displayCategories?.[0]?.category_name.toLowerCase().replace(/ /g, '_')}`)}
+                </Typography>
               </Link>
             </Box>
 
@@ -134,13 +136,17 @@ function Home() {
               <Box>
                 <Link to={`/items?category=${displayCategories?.[1]?.category_name.replace(/ /g, '-')}`}>
                   <img src={getImageSrc(displayCategories?.[1])} alt="" />
-                  <Typography variant='body3' color='text.main'>{getCategoryName(displayCategories?.[1])}</Typography>
+                  <Typography variant='body3' color='text.main'>
+                    {t(`home.categories.${displayCategories?.[1]?.category_name.toLowerCase().replace(/ /g, '_')}`)}
+                  </Typography>
                 </Link>
               </Box>
               <Box>
                 <Link to={`/items?category=${displayCategories?.[3]?.category_name.replace(/ /g, '-')}`}>
                   <img src={getImageSrc(displayCategories?.[3])} alt="" />
-                  <Typography variant='body3' color='text.main'>{getCategoryName(displayCategories?.[3])}</Typography>
+                  <Typography variant='body3' color='text.main'>
+                    {t(`home.categories.${displayCategories?.[3]?.category_name.toLowerCase().replace(/ /g, '_')}`)}
+                  </Typography>
                 </Link>
               </Box>
             </Stack>
@@ -152,7 +158,9 @@ function Home() {
             }}>
               <Link to={`/items?category=${displayCategories?.[2]?.category_name.replace(/ /g, '-')}`}>
                 <img src={getImageSrc(displayCategories?.[2])} alt="" />
-                <Typography variant='body3' color='text.main'>{getCategoryName(displayCategories?.[2])}</Typography>
+                <Typography variant='body3' color='text.main'>
+                  {t(`home.categories.${displayCategories?.[2]?.category_name.toLowerCase().replace(/ /g, '_')}`)}
+                </Typography>
               </Link>
             </Box>
           </Stack>
@@ -165,10 +173,14 @@ function Home() {
           }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: 521 }}>
               <Typography variant='h3'
-                sx={{ fontWeight: 700, fontFamily: 'Oxygen, sans-serif', color: '#3D3D3D', mb: '14px' }}>Frequently Asked Questions</Typography>
-              <Typography color='text.primary' variant='body3'>Before reaching out to us, see if you can find you're looking for in our FAQ</Typography>
+                sx={{ fontWeight: 700, fontFamily: 'Oxygen, sans-serif', color: '#3D3D3D', mb: '14px' }}>
+                <Trans i18nKey="faq.faqTitle">Frequently Asked Questions</Trans>
+              </Typography>
+              <Typography color='text.primary' variant='body3'>
+                <Trans i18nKey="faq.faqDescription">Before reaching out to us, see if you can find what you're looking for in our FAQ</Trans>
+              </Typography>
               <Button variant='rounded' endIcon={<ArrowForwardIosRoundedIcon />} sx={{ mt: '32px' }}>
-                <Trans i18nKey="home.askQuestion">Ask a question</Trans>
+                <Trans i18nKey="faq.askQuestion">Ask a question</Trans>
               </Button>
             </Box>
             <Box sx={{

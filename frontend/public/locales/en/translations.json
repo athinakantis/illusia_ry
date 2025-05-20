@@ -19,13 +19,21 @@
     "heroTitle": "Home for live-action role-playing games props",
     "heroDescription": "Step into character with our handpicked collection of high-quality LARP props. Whether you wield sword or staff, find everything you need to bring your story to life.",
     "categoriesTitle": "View Our Range Of Categories",
-    "categoriesDescription": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.",
-    "askQuestion": "Ask a question",
+    "categoriesDescription": "We offer a wide range of supplies — from combat vests to spaceship consoles, crafting materials, fire extinguishers — and everything in between.",
+    "categories": {
+      "clothing": "Clothing",
+      "board_games": "Board Games",
+      "props": "Props",
+      "accessories": "Accessories"
+    },
     "cta": {
       "browse_items": "Browse Items"
     }
   },
   "faq": {
+    "faqTitle": "Frequently Asked Questions",
+    "askQuestion": "Ask a question",
+    "faqDescription": "Before reaching out to us, see if you can find what you're looking for in our FAQ",
     "question1": "When will my booking be approved?",
     "answer1": "We look through bookings as soon as we can. Bookings are usually approved within the span of 2-3 days. If you've waited longer than 5 days, send us an email",
     "question2": "How long can I book items for?",
