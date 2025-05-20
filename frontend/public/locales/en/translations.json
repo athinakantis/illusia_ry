@@ -77,6 +77,22 @@
       "duration": {
         "days": "Days"
       }
+    },
+    "add_product": {
+      "title": "Add New Product",
+      "item_name": "Item Name",
+      "description": "Description",
+      "location": "Location",
+      "quantity": "Quantity",
+      "category": "Category",
+      "upload_files": "Upload files",
+      "selected_images": "Selected Images:",
+      "add": "Add Item",
+      "adding": "Adding Item...",
+      "uploading": "Uploading item...",
+      "upload_failed": "Failed to upload images. Please try again.",
+      "success": "Item added successfully!",
+      "save_failed": "Failed to save item. Please try again."
     }
   },
   "roles": {

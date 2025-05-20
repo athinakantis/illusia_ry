@@ -77,6 +77,22 @@
       "duration": {
         "days": "päivää"
       }
+    },
+    "add_product": {
+      "title": "Lisää uusi tuote",
+      "item_name": "Tuotteen nimi",
+      "description": "Kuvaus",
+      "location": "Sijainti",
+      "quantity": "Määrä",
+      "category": "Kategoria",
+      "upload_files": "Lataa kuvat",
+      "selected_images": "Valitut kuvat:",
+      "add": "Lisää tuote",
+      "adding": "Lisätään tuotetta...",
+      "uploading": "Ladataan tuotetta...",
+      "upload_failed": "Kuvien lataus epäonnistui. Yritä uudelleen.",
+      "success": "Tuote lisätty onnistuneesti!",
+      "save_failed": "Tuotteen tallennus epäonnistui. Yritä uudelleen."
     }
   },
   "roles": {
