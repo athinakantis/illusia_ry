@@ -15,6 +15,21 @@
     "myAccount": "Oma tili",
     "logOut": "Kirjaudu ulos"
   },
+  "cart": {
+    "yourCart": "Ostoskorisi",
+    "items": "Tuotteet",
+    "quantity": "Määrä",
+    "action": "Toiminnot",
+    "remove": "Poista",
+    "bookingSummary": "Varausyhteenveto",
+    "dates": "Päivämäärät",
+    "changeDates": "Vaihda varauksen päivämäärät",
+    "confirmDates": "Vahvista uudet päivämäärät",
+    "cancel": "Peruuta",
+    "totalItems": "Tuotteita yhteensä",
+    "bookItems": "Varaa tuotteet",
+    "empty": "Ostoskori on tyhjä! <1>Selaa tuotteita</1>"
+  },
   "home": {
     "heroTitle": "Live action -roolipelien rekvisiittakoti",
     "heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ahdistelussa ei ole nyt mitään hienostelua. Nyt artikkelin kirjoittaja on nero, joka on tyyny. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nyt ahdistetussa feugiatissa ei ole fringillaa.",
