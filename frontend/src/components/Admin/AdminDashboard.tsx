@@ -338,7 +338,9 @@ const AdminDashboard = () => {
               .map((u) => ({
                 id: u.user_id,
                 name: u.display_name ?? u.email,
-                role: u.role_title ?? '—',
+                role: u.role_title
+                  ? t(`roles.${u.role_title.toLowerCase().replace(/\s+/g, '_')}`)
+                  : '—',
               }))}
             columns={[
               { field: 'name', headerName: t('admin.dashboard.columns.name'), flex: 1, headerClassName: 'super-app-theme--header' },

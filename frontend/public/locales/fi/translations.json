@@ -67,5 +67,11 @@
         "days": "päivää"
       }
     }
+  },
+  "roles": {
+    "head_admin": "Pääkäyttäjä",
+    "admin": "Ylläpitäjä",
+    "user": "Käyttäjä",
+    "unapproved": "Hyväksymätön"
   }
 }

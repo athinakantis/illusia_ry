@@ -67,5 +67,11 @@
         "days": "Days"
       }
     }
+  },
+  "roles": {
+    "head_admin": "Head Admin",
+    "admin": "Admin",
+    "user": "User",
+    "unapproved": "Unapproved"
   }
 }
