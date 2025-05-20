@@ -284,8 +284,6 @@ const AdminDashboard = () => {
           <StyledDataGrid
             hideFooter
             disableColumnResize
-            slots={{ toolbar: null }}
-            getRowHeight={() => 'auto'}
             rows={authActivities
               .filter(act =>
                 act.display_name &&
@@ -307,28 +305,17 @@ const AdminDashboard = () => {
               {
                 field: 'lastSignIn', headerName: t('admin.dashboard.columns.last_sign_in'), flex: 1, headerClassName: 'super-app-theme--header',
                 renderCell: (params) => (
-                  <div style={{
-                    whiteSpace: 'normal',
-                    lineHeight: '20px',
-                    padding: '8px 0'
-                  }}>
-                    {params.value}
-                  </div>
+                  <div style={{ whiteSpace: 'normal', lineHeight: '20px', padding: '8px 0' }}>{params.value}</div>
                 )
               },
               {
                 field: 'confirmed', headerName: t('admin.dashboard.columns.confirmed'), flex: 1, headerClassName: 'super-app-theme--header',
                 renderCell: (params) => (
-                  <div style={{
-                    whiteSpace: 'normal',
-                    lineHeight: '20px',
-                    padding: '8px 0'
-                  }}>
-                    {params.value}
-                  </div>
+                  <div style={{ whiteSpace: 'normal', lineHeight: '20px', padding: '8px 0' }}>{params.value}</div>
                 )
               },
             ]}
+            autoHeight
           />
         </Grid>
 
@@ -345,8 +332,6 @@ const AdminDashboard = () => {
           <StyledDataGrid
             hideFooter
             disableColumnResize
-            slots={{ toolbar: null }}
-            getRowHeight={() => 'auto'}
             rows={users
               .filter(u => u.user_id)
               .slice(0, 3)
@@ -359,6 +344,7 @@ const AdminDashboard = () => {
               { field: 'name', headerName: t('admin.dashboard.columns.name'), flex: 1, headerClassName: 'super-app-theme--header' },
               { field: 'role', headerName: t('admin.dashboard.columns.role'), flex: 1, headerClassName: 'super-app-theme--header' },
             ]}
+            autoHeight
           />
         </Grid>
       </Grid>
