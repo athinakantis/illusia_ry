@@ -47,6 +47,8 @@ import {
 import { Item } from '../types/types';
 import { showCustomSnackbar } from './CustomSnackbar';
 import Spinner from './Spinner';
+import { useTranslation } from 'react-i18next';
+
 
 function Items() {
   const items = useAppSelector(selectVisibleItems);
@@ -63,6 +65,7 @@ function Items() {
   const now = today(getLocalTimeZone());
   const [range, setRange] = useState<RangeValue<DateValue> | null>(null);
   const selectedDateRange = useAppSelector(selectDateRange);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (reservations.length < 1) {
@@ -224,7 +227,7 @@ function Items() {
         {/* Search */}
         <TextField
           id="filled-search"
-          label="Search our items"
+          label={t('items.search')}
           type="search"
           variant="outlined"
           sx={{

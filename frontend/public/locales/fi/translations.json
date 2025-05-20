@@ -103,6 +103,7 @@
   },
   "items": {
     "browse": "Selaa tuotteita",
-    "manage": "Hallinnoi tuotteita"
+    "manage": "Hallinnoi tuotteita",
+    "search": "Etsi tuotteita"
   }
 }
