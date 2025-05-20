@@ -13,6 +13,22 @@ import { AuthGuard } from 'src/guards/role.guard';
 export class GuestController {
   constructor(private readonly guestService: GuestService) {}
   
+
+  // GET items/tags  →  all tags
+  @Get("tags")
+  findAll() {
+    return this.guestService.getTags();
+  }
+  @Get("item_tags")
+  findAllItemTags() {
+    return this.guestService.getItemTags();
+  }
+  // GET items/:itemId/tags  →  tags on a specific item
+  @Get('/:itemId/tags')
+  findByItem(@Param('itemId') itemId: string) {
+    return this.guestService.findByItem(itemId);
+  }
+
   @Get('categories')
   async getAllCategories() {
     return this.guestService.getCategories();
