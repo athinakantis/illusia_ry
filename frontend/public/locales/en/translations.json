@@ -84,5 +84,9 @@
     "admin": "Admin",
     "user": "User",
     "unapproved": "Unapproved"
+  },
+  "items": {
+    "browse": "Browse Items",
+    "manage": "Manage Items"
   }
 }
