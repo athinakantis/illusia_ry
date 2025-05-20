@@ -71,7 +71,7 @@ function Home() {
                 fontFamily: 'Lato, sans-serif',
                 fontSize: 22,
                 textTransform: 'none',
-                fontWeight: 700,
+                fontWeight: 400,
                 backgroundColor: 'primary.light',
                 '&:hover': {
                   backgroundColor: 'primary.main'
