@@ -127,7 +127,6 @@ const SingleItem = () => {
               color: 'text.main',
               bgcolor: 'primary.light',
               borderRadius: 10,
-
             },
           }}
         >

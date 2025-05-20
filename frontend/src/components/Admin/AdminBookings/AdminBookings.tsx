@@ -180,9 +180,7 @@ const AdminBookings = () => {
   // ─── Loading/Error states ─────────────────────────────────────
   if (loading)
     return (
-      <Container sx={{ textAlign: "center", mt: 4 }}>
-        <Spinner />
-      </Container>
+      <Spinner />
     );
 
   if (error)

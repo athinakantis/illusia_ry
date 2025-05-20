@@ -55,20 +55,18 @@ function SingleBooking() {
   }
 
 
-useEffect(() => {
-  if (!booking_id) {
-    navigate('/bookings');
-    return;
-  }
-  // Always fetch fresh booking details when the ID changes
-  dispatch(fetchBooking(booking_id));
-}, [booking_id, dispatch, navigate]);
+  useEffect(() => {
+    if (!booking_id) {
+      navigate('/bookings');
+      return;
+    }
+    // Always fetch fresh booking details when the ID changes
+    dispatch(fetchBooking(booking_id));
+  }, [booking_id, dispatch, navigate]);
 
   if (loading)
     return (
-      <Box sx={{ mx: 'auto', width: 'fit-content' }}>
-        <Spinner />
-      </Box>
+      <Spinner />
     );
 
   if (!booking_selector)
