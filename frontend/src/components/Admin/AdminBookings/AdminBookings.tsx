@@ -40,24 +40,17 @@ import {
   selectAllReservations,
 } from "../../../slices/reservationsSlice";
 import CollapsibleDetail from "./CollapsibleDetail";
-import { CustomSnackbar } from "../../CustomSnackbar";
+import { useTranslatedSnackbar } from '../../CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
 import { useSearchParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
-/**
- * Allowed status filters rendered as Tabs
- */
-const STATUS_FILTERS = [
-  { label: "All", value: "all" },
-  { label: "Pending approval", value: "pending" },
-  { label: "Approved", value: "approved" },
-  { label: "Rejected", value: "rejected" },
-];
 
-const VALID_FILTERS = Array.from(STATUS_FILTERS.map(entry => entry.value))
 
 
 const AdminBookings = () => {
   const theme = useTheme();
+  const { t } = useTranslation();
+  const { showSnackbar } = useTranslatedSnackbar();
   // ─── Redux selectors ──────────────────────────────────────────
   const dispatch = useAppDispatch();
   const users = useAppSelector(selectAllUsers)
@@ -68,11 +61,11 @@ const AdminBookings = () => {
   const reservations = useAppSelector(selectAllReservations);
   const [searchParams] = useSearchParams()
 
-
+  type Filter = 'all' | 'pending' | 'approved' | 'rejected';
   // ─── Local state (active filter tab) ──────────────────────────
-  const [filter, setFilter] = useState<string>("all");
+  const [filter, setFilter] = useState<Filter>("all");
   const handleFilterChange = (_: SyntheticEvent, newValue: string) =>
-    setFilter(newValue);
+      setFilter(newValue as Filter);
 
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const toggleExpand = (id: string) =>
@@ -95,27 +88,25 @@ const AdminBookings = () => {
     setMenuBookingId(null);
   };
 
-  // Placeholder mutations
+ /*——————————————Approve Booking —————————————————————*/
   const approveBooking = () => {
     if (!menuBookingId) return;
     dispatch(updateBookingStatus({ id: menuBookingId, status: "approved" }));
     handleMenuClose();
-    CustomSnackbar({
-      message: 'Booking approved',
+    showSnackbar({
+      message: t('adminBookings.snackbar.bookingApproved', { defaultValue: 'Booking approved'}),
       variant: 'success',
-      onClose: () => { },
     });
   };
+  /*——————————————Reject Booking —————————————————————*/
   const rejectBooking = () => {
     if (!menuBookingId) return;
     dispatch(updateBookingStatus({ id: menuBookingId, status: "rejected" }));
     handleMenuClose();
-    CustomSnackbar({
-      message: 'Booking rejected',
+    showSnackbar({ 
+      message: t('adminBookings.snackbar.bookingRejected', { defaultValue: 'Booking rejected'}),
       variant: 'error',
-      onClose: () => { }
-    })
-
+    });
   };
 
   // ─── Side Effects ──────────────────────────────────
@@ -127,6 +118,7 @@ const AdminBookings = () => {
   useEffect(() => {
     if (users.length === 0) dispatch(fetchAllUsers());
   }, [dispatch, users.length]);
+  
   useEffect(() => {
     if (items.length === 0) dispatch(fetchAllItems());
   }, [dispatch, items.length]);
@@ -134,10 +126,12 @@ const AdminBookings = () => {
     if (reservations.length === 0) dispatch(fetchAllReservations());
   }, [dispatch, reservations.length]);
   useEffect(() => {
-    const search = searchParams.get('filter')
-    if (search && VALID_FILTERS.includes(search)) setFilter(search)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+          const search = searchParams.get('filter')
+          if (search && ['all', 'pending', 'approved', 'rejected'].includes(search)) {
+            setFilter(search as Filter)
+          }
+              // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [])
 
   // ─── Memoised filtered list ───────────────────────────────────
   const filteredBookings = useMemo(() => {
@@ -193,8 +187,8 @@ const AdminBookings = () => {
   // ─── Render ───────────────────────────────────────────────────
   return (
     <Container maxWidth="lg" sx={{ mt: 6 }}>
-      <Typography variant='heading_secondary_bold' gutterBottom>
-        Bookings
+      <Typography variant="heading_secondary_bold" gutterBottom>
+        {t('adminBookings.heading', { defaultValue: 'Bookings' })}
       </Typography>
 
       {/* Filter Tabs */}
@@ -205,12 +199,33 @@ const AdminBookings = () => {
         indicatorColor="primary"
         sx={{
           mb: 3,
-          "& .MuiTab-root": { textTransform: "none", fontWeight: 500 },
+          '& .MuiTab-root': { textTransform: 'none', fontWeight: 500 },
         }}
       >
-        {STATUS_FILTERS.map(({ label, value }) => (
-          <Tab key={value} label={label} value={value} />
-        ))}
+        <Tab
+          value="all"
+          label={t('adminBookings.tabs.all', {
+            defaultValue: 'All',
+          })}
+        />
+        <Tab
+          value="pending"
+          label={t('adminBookings.tabs.pending', {
+            defaultValue: 'Pending approval',
+          })}
+        />
+        <Tab
+          value="approved"
+          label={t('adminBookings.tabs.approved', {
+            defaultValue: 'Approved',
+          })}
+        />
+        <Tab
+          value="rejected"
+          label={t('adminBookings.tabs.rejected', {
+            defaultValue: 'Rejected',
+          })}
+        />
       </Tabs>
 
       {/* Bookings table */}
@@ -219,24 +234,48 @@ const AdminBookings = () => {
           <TableHead sx={{ bgcolor: theme.palette.background.verylightgrey }}>
             <TableRow>
               <TableCell />
-              <TableCell>ID</TableCell>
-              <TableCell>Created</TableCell>
-              <TableCell>Booking Dates</TableCell>
-              <TableCell>Customer</TableCell>
-              <TableCell align="center">Items</TableCell>
-              <TableCell>Status</TableCell>
+              {/*——————————————————————— ID ————————————————————————————*/}
+              <TableCell>
+                {t('adminBookings.id', { defaultValue: 'ID' })}
+              </TableCell>
+              {/*——————————————————————— Created ————————————————————————————*/}
+              <TableCell>
+                {t('adminBookings.created', { defaultValue: 'Created' })}
+              </TableCell>
+              {/*——————————————————————— Booking Dates ————————————————————————————*/}
+              <TableCell>
+                {t('adminBookings.bookingDates', {
+                  defaultValue: 'Booking Dates',
+                })}
+              </TableCell>
+              {/*——————————————————————— Customer ————————————————————————————*/}
+              <TableCell>
+                {t('adminBookings.customer', { defaultValue: 'Customer' })}
+              </TableCell>
+              {/*——————————————————————— Items ————————————————————————————*/}
+              <TableCell align="center">
+                {t('adminBookings.items', { defaultValue: 'Items' })}
+              </TableCell>
+              {/*——————————————————————— Status ————————————————————————————*/}
+              <TableCell>
+                {t('adminBookings.status', { defaultValue: 'Status' })}
+              </TableCell>
             </TableRow>
           </TableHead>
+          {/*———————————————————————————— Table Body ——————————————————————————*/}
           <TableBody>
             {filteredBookings.map((b) => {
               const res = reservationsByBooking(b.booking_id);
-              const itemsCount = res.reduce((sum, r) => sum + (r.quantity ?? 1), 0);
+              const itemsCount = res.reduce(
+                (sum, r) => sum + (r.quantity ?? 1),
+                0,
+              );
               // derive overall date range for the booking
               const earliestStart = Math.min(
-                ...res.map(r => new Date(r.start_date).getTime())
+                ...res.map((r) => new Date(r.start_date).getTime()),
               );
               const latestEnd = Math.max(
-                ...res.map(r => new Date(r.end_date).getTime())
+                ...res.map((r) => new Date(r.end_date).getTime()),
               );
 
               return (
@@ -244,7 +283,7 @@ const AdminBookings = () => {
                   <TableRow
                     hover
                     onClick={() => toggleExpand(b.booking_id)}
-                    sx={{ cursor: "pointer" }}
+                    sx={{ cursor: 'pointer' }}
                   >
                     <TableCell padding="checkbox">
                       <IconButton size="small">
@@ -255,21 +294,29 @@ const AdminBookings = () => {
                         )}
                       </IconButton>
                     </TableCell>
-                    <TableCell sx={{ color: "primary.main" }}>
+                    {/*——————————————————————— ID ————————————————————————————*/}
+                    <TableCell sx={{ color: 'primary.main' }}>
                       <Link to={`/bookings/${b.booking_id}`} style={{ color: 'inherit' }}>
                         {b.booking_id.slice(0, 8).toUpperCase()}
                       </Link>
                     </TableCell>
-                    <TableCell>{dayjs(b.created_at).format("DD.MM.YYYY")}</TableCell>
+                    {/*——————————————————————— Created ————————————————————————————*/}
                     <TableCell>
-                      {`${dayjs(earliestStart).format("DD.MM.YYYY")} - ${dayjs(
-                        latestEnd
-                      ).format("DD.MM.YYYY")}`}
+                      {dayjs(b.created_at).format('DD.MM.YYYY')}
                     </TableCell>
+                    {/*——————————————————————— Booking Dates ————————————————————————————*/}
+                    <TableCell>
+                      {`${dayjs(earliestStart).format('DD.MM.YYYY')} - ${dayjs(
+                        latestEnd,
+                      ).format('DD.MM.YYYY')}`}
+                    </TableCell>
+                    {/*——————————————————————— Customer ————————————————————————————*/}
                     <TableCell>{userName(b.user_id)}</TableCell>
+                    {/*——————————————————————— Items ————————————————————————————*/}
                     <TableCell align="center">{itemsCount}</TableCell>
-                    <TableCell sx={{ textTransform: "capitalize" }}>
-                      {b.status === "pending" ? (
+                    {/*——————————————————————— Status ————————————————————————————*/}
+                    <TableCell sx={{ textTransform: 'capitalize' }}>
+                      {b.status === 'pending' ? (
                         <Button
                           size="small"
                           variant="contained"
@@ -277,13 +324,15 @@ const AdminBookings = () => {
                           onClick={(e) => handleStatusClick(e, b.booking_id)}
                           endIcon={<KeyboardArrowDownIcon />}
                           sx={{
-                            textTransform: "none",
+                            textTransform: 'none',
                             borderRadius: 20,
-                            bgcolor: "secondary.light",
-                            color: "text.primary",
+                            bgcolor: 'secondary.light',
+                            color: 'text.primary',
                           }}
                         >
-                          Awaiting Approval
+                          {t('adminBookings.awaiting', {
+                            defaultValue: 'Awaiting Approval',
+                          })}
                         </Button>
                       ) : (
                         b.status
@@ -293,7 +342,10 @@ const AdminBookings = () => {
 
                   {/* Collapsible detail */}
                   <TableRow>
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+                    <TableCell
+                      style={{ paddingBottom: 0, paddingTop: 0 }}
+                      colSpan={7}
+                    >
                       <Collapse
                         in={expandedId === b.booking_id}
                         timeout="auto"
@@ -314,7 +366,9 @@ const AdminBookings = () => {
             {filteredBookings.length === 0 && (
               <TableRow>
                 <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
-                  No bookings found for selected filter.
+                  {t('adminBookings.noResults', {
+                    defaultValue: 'No bookings found for selected filter.',
+                  })}
                 </TableCell>
               </TableRow>
             )}
@@ -325,15 +379,19 @@ const AdminBookings = () => {
           anchorEl={menuAnchor}
           open={openMenu}
           onClose={handleMenuClose}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          transformOrigin={{ vertical: "top", horizontal: "left" }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         >
-          <MenuItem onClick={approveBooking}>Approve</MenuItem>
-          <MenuItem onClick={rejectBooking}>Reject</MenuItem>
+          {/*——————————————————————— Approve Booking ———————————————————————*/}
+          <MenuItem onClick={approveBooking}>
+            {t('adminBookings.approve', { defaultValue: 'Approve' })}
+          </MenuItem>
+          {/*——————————————————————— Reject Booking ———————————————————————*/}
+          <MenuItem onClick={rejectBooking}>
+            {t('adminBookings.reject', { defaultValue: 'Reject' })}
+          </MenuItem>
         </Menu>
       </Paper>
-
-
     </Container>
   );
 };
