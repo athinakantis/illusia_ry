@@ -95,10 +95,21 @@ const PersonMenu = () => {
         }}
       >
         {isUser || isAdmin && (
-          <MenuItem component={Link} to="/bookings" onClick={handleMenuClose}>
-            <CalendarTodayIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
-            <Trans i18nKey="person.myBookings">My bookings</Trans>
-          </MenuItem>
+          <>
+            <MenuItem component={Link} to="/bookings" onClick={handleMenuClose}>
+              <CalendarTodayIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
+              <Trans i18nKey="person.myBookings">My bookings</Trans>
+            </MenuItem>
+            <MenuItem
+              sx={{ height: '100%' }}
+              component={Link}
+              to="/account"
+              onClick={handleMenuClose}
+            >
+              <AccountCircleIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
+              <Trans i18nKey="person.myAccount">My account</Trans>
+            </MenuItem>
+          </>
         )}
         {isAdmin && (
           <>
@@ -116,15 +127,7 @@ const PersonMenu = () => {
             </MenuItem>
           </>
         )}
-        <MenuItem
-          sx={{ height: '100%' }}
-          component={Link}
-          to="/account"
-          onClick={handleMenuClose}
-        >
-          <AccountCircleIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
-          <Trans i18nKey="person.myAccount">My account</Trans>
-        </MenuItem>
+
         <MenuItem disableRipple sx={{ pl: 2, pr: 2 }} onClick={user ? signOut : navigateSignIn}>
           {user ?
             <>
