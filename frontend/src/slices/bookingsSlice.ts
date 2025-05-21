@@ -1,3 +1,9 @@
+/** Push or replace a booking row inside an array in-place */
+const upsertBookingArray = (arr: Booking[], row: Booking) => {
+  const idx = arr.findIndex(b => b.booking_id === row.booking_id);
+  if (idx === -1) arr.push(row);
+  else arr[idx] = row;
+};
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Booking, BookingsState } from '../types/types';
 import { RootState } from '../store/store';
@@ -24,8 +30,7 @@ export const fetchBooking = createAsyncThunk(
   'bookings/fetchBooking',
   async (id: string) => {
     const response = await bookingsApi.getBooking(id);
-    console.log(response);
-
+    console.log('Booking Fetched', response);
     return response.data;
   },
 );
@@ -195,6 +200,7 @@ export const bookingsSlice = createSlice({
       if (idxUser !== -1) {
         state.userBookings[idxUser] = updatedBooking;
       }
+
       state.loading = false;
     });
     builder.addCase(updateBookingStatus.rejected, (state, action) => {

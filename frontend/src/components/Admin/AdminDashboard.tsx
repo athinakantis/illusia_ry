@@ -27,7 +27,11 @@ import { UpcomingBooking } from '../../types/types';
 import { StyledDataGrid } from '../CustomComponents/StyledDataGrid';
 import { useAuth } from '../../hooks/useAuth';
 import Spinner from '../Spinner';
-// import { GridColDef } from '@mui/x-data-grid';
+
+// - Translations
+import { Trans, useTranslation } from 'react-i18next';
+import { fi } from 'date-fns/locale';
+
 
 // ─── Re-usable stat card ────────────────────────────────────
 const StatCard: React.FC<{ label: string; value: number | string }> = ({
@@ -50,7 +54,9 @@ const StatCard: React.FC<{ label: string; value: number | string }> = ({
       fontSize={'1.1rem'}
       gutterBottom
     >
-      {label}
+      <Trans i18nKey={`admin.dashboard.stats.${label.toLowerCase().replace(/\s+/g, '_')}`}>
+        {label}
+      </Trans>
     </Typography>
     <Typography variant="heading_secondary_bold" lineHeight={1} fontSize={56}>
       {value}
@@ -62,8 +68,7 @@ const StatCard: React.FC<{ label: string; value: number | string }> = ({
 
 const AdminDashboard = () => {
   const { role } = useAuth();
-
-  const dispatch = useAppDispatch();
+  const { t, i18n } = useTranslation(); const dispatch = useAppDispatch();
 
   const [authActivities, setAuthActivities] = React.useState<
     {
@@ -113,15 +118,23 @@ const AdminDashboard = () => {
     })();
   }, []);
 
+  // Helper function to format dates based on current language
+  const formatDate = (dateString: string) => {
+    const date = parseISO(dateString);
+    return format(date, 'PPpp', {
+      locale: i18n.language === 'fi' ? fi : undefined
+    });
+  };
+
   /* ————————————————— Conditional Renders ————————————————————————*/
-    // If we don’t know the role yet, render nothing (or a loader)
-    if (role === undefined) {
-      return <Spinner />;
-    }
-    // If not an Admin or Head Admin, redirect immediately
-    if (role !== 'Admin' && role !== 'Head Admin') {
-      return <Navigate to="/" replace />;
-    }
+  // If we don’t know the role yet, render nothing (or a loader)
+  if (role === undefined) {
+    return <Spinner />;
+  }
+  // If not an Admin or Head Admin, redirect immediately
+  if (role !== 'Admin' && role !== 'Head Admin') {
+    return <Navigate to="/" replace />;
+  }
   /* ────────── Memoized values ────────── */
   // combine bookings + reservations + users
 
@@ -132,6 +145,14 @@ const AdminDashboard = () => {
   // );
   // console.log("Overviews" + overviews);
   // console.log("upcomingBookings:", upcomingBookings);
+  // If we don't know the role yet, render nothing (or a loader)
+  if (role === undefined) {
+    return <Spinner />;
+  }
+  // If not an Admin or Head Admin, redirect immediately
+  if (role !== 'Admin' && role !== 'Head Admin') {
+    return <Navigate to="/" replace />;
+  }
 
   /* ────────── Render ────────── */
   return (
@@ -152,7 +173,7 @@ const AdminDashboard = () => {
           component="h1"
           gutterBottom
         >
-          Admin Dashboard
+          <Trans i18nKey="admin.dashboard.title">Admin Dashboard</Trans>
         </Typography>
 
         {/* ───── Stats ───── */}
@@ -177,19 +198,18 @@ const AdminDashboard = () => {
           fontSize={20}
           gutterBottom
         >
-          Quick Actions
+          <Trans i18nKey="admin.dashboard.quick_actions">Quick actions</Trans>
         </Typography>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
           <Button variant="rounded"
+            component={Link}
+            to='/items/new'
             sx={{
               height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
               pl: 4, pr: 4, textTransform: 'capitalize'
             }}>
-            Add Item
+            <Trans i18nKey="admin.dashboard.add_item">Add item</Trans>
           </Button>
-
-
-
 
           <Button
             component={Link}
@@ -200,7 +220,7 @@ const AdminDashboard = () => {
               height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
               pl: 4, pr: 4, textTransform: 'capitalize'
             }}>
-            Approve bookings
+            <Trans i18nKey="admin.dashboard.view_bookings">View bookings</Trans>
           </Button>
           <Button
             component={Link} to="/admin/users" variant="rounded" color="grey"
@@ -208,7 +228,7 @@ const AdminDashboard = () => {
               height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
               pl: 4, pr: 4, textTransform: 'capitalize'
             }}>
-            Manage users
+            <Trans i18nKey="admin.dashboard.manage_users">Manage users</Trans>
           </Button>
         </Stack>
       </Box>
@@ -221,33 +241,30 @@ const AdminDashboard = () => {
           fontSize={20}
           gutterBottom
         >
-          Upcoming bookings
+          <Trans i18nKey="admin.dashboard.upcoming_bookings">Upcoming bookings</Trans>
         </Typography>
         <StyledDataGrid
           style={{ width: '100%' }}
           hideFooter
           disableColumnResize
-          // slots={{ toolbar: null }}
-          // getRowHeight={() => 'auto'}
-          rowHeight={50}
-          // autoHeight
+          rowHeight={60}
           disableRowSelectionOnClick
           rows={upcomingBookings.map((booking) => ({
             id: booking.booking_id, // Used internally by DataGrid
             name: booking.booking.user.display_name,
-            status: booking.booking.status,
-            duration: `${computeDuration(booking.start_date, booking.end_date)} Days`,
+            status: t(`admin.dashboard.status.${booking.booking.status.toLowerCase()}`),
+            duration: `${computeDuration(booking.start_date, booking.end_date)} ${t('admin.dashboard.duration.days')}`,
             dateRange: `${booking.start_date} - ${booking.end_date}`,
             view: `/bookings/${booking.booking_id}`,
           }))}
           columns={[
-            { field: 'name', headerName: 'Name', flex: 1, headerClassName: 'super-app-theme--header' },
-            { field: 'status', headerName: 'Status', flex: 1, headerClassName: 'super-app-theme--header' },
-            { field: 'duration', headerName: 'Duration', flex: 1, headerClassName: 'super-app-theme--header' },
-            { field: 'dateRange', headerName: 'Date Range', flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'name', headerName: t('admin.dashboard.columns.name'), flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'status', headerName: t('admin.dashboard.columns.status'), flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'duration', headerName: t('admin.dashboard.columns.duration'), flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'dateRange', headerName: t('admin.dashboard.columns.date_range'), flex: 1, headerClassName: 'super-app-theme--header' },
             {
               field: 'view',
-              headerName: 'Actions',
+              headerName: t('admin.dashboard.columns.actions'),
               flex: 1,
               renderCell: (params) => (
                 <MuiLink
@@ -261,7 +278,7 @@ const AdminDashboard = () => {
                     }
                   }}
                 >
-                  Show booking
+                  <Trans i18nKey="admin.dashboard.show_booking">Show booking</Trans>
                 </MuiLink>
               ),
               headerClassName: 'super-app-theme--header',
@@ -281,15 +298,12 @@ const AdminDashboard = () => {
             fontSize={20}
             gutterBottom
           >
-            Recent activity
+            <Trans i18nKey="admin.dashboard.recent_activity">Recent activity</Trans>
           </Typography>
           {/* User, Last sign-in, Confirmed */}
           <StyledDataGrid
             hideFooter
             disableColumnResize
-            autoHeight
-            // slots={{ toolbar: null }}
-            // getRowHeight={() => 'auto'}
             rows={authActivities
               .filter(act =>
                 act.display_name &&
@@ -300,39 +314,28 @@ const AdminDashboard = () => {
                 id: act.display_name + act.last_sign_in_at,
                 name: act.display_name,
                 lastSignIn: act.last_sign_in_at
-                  ? format(parseISO(act.last_sign_in_at), 'PPpp')
+                  ? formatDate(act.last_sign_in_at)
                   : '—',
                 confirmed: act.confirmed_at
-                  ? format(parseISO(act.confirmed_at), 'PPpp')
+                  ? formatDate(act.confirmed_at)
                   : '—',
               }))}
             columns={[
-              { field: 'name', headerName: 'User', flex: 1, headerClassName: 'super-app-theme--header' },
+              { field: 'name', headerName: t('admin.dashboard.columns.name'), flex: 1, headerClassName: 'super-app-theme--header' },
               {
-                field: 'lastSignIn', headerName: 'Last sign-in', flex: 1, headerClassName: 'super-app-theme--header',
+                field: 'lastSignIn', headerName: t('admin.dashboard.columns.last_sign_in'), flex: 1, headerClassName: 'super-app-theme--header',
                 renderCell: (params) => (
-                  <div style={{
-                    whiteSpace: 'normal',
-                    lineHeight: '20px',
-                    padding: '8px 0'
-                  }}>
-                    {params.value}
-                  </div>
+                  <div style={{ whiteSpace: 'normal', lineHeight: '20px', padding: '8px 0' }}>{params.value}</div>
                 )
               },
               {
-                field: 'confirmed', headerName: 'Confirmed', flex: 1, headerClassName: 'super-app-theme--header',
+                field: 'confirmed', headerName: t('admin.dashboard.columns.confirmed'), flex: 1, headerClassName: 'super-app-theme--header',
                 renderCell: (params) => (
-                  <div style={{
-                    whiteSpace: 'normal',
-                    lineHeight: '20px',
-                    padding: '8px 0'
-                  }}>
-                    {params.value}
-                  </div>
+                  <div style={{ whiteSpace: 'normal', lineHeight: '20px', padding: '8px 0' }}>{params.value}</div>
                 )
               },
             ]}
+            autoHeight
           />
         </Grid>
 
@@ -344,25 +347,26 @@ const AdminDashboard = () => {
             fontSize={20}
             gutterBottom
           >
-            Users &amp; Roles
+            <Trans i18nKey="admin.dashboard.users_and_roles">Users &amp; Roles</Trans>
           </Typography>
           <StyledDataGrid
             hideFooter
             disableColumnResize
-            autoHeight
-            // style={{ display: 'flex', flexDirection: 'column' }}
             rows={users
               .filter(u => u.user_id)
               .slice(0, 3)
               .map((u) => ({
                 id: u.user_id,
                 name: u.display_name ?? u.email,
-                role: u.role_title ?? '—',
+                role: u.role_title
+                  ? t(`roles.${u.role_title.toLowerCase().replace(/\s+/g, '_')}`)
+                  : '—',
               }))}
             columns={[
-              { field: 'name', headerName: 'User', flex: 1, headerClassName: 'super-app-theme--header' },
-              { field: 'role', headerName: 'Role', flex: 1, headerClassName: 'super-app-theme--header' },
+              { field: 'name', headerName: t('admin.dashboard.columns.name'), flex: 1, headerClassName: 'super-app-theme--header' },
+              { field: 'role', headerName: t('admin.dashboard.columns.role'), flex: 1, headerClassName: 'super-app-theme--header' },
             ]}
+            autoHeight
           />
         </Grid>
       </Grid>

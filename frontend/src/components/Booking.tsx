@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Chip,
   ButtonGroup,
   Dialog,
   DialogActions,
@@ -27,6 +28,9 @@ import {
 } from '../slices/bookingsSlice';
 import Spinner from './Spinner';
 import { showCustomSnackbar } from './CustomSnackbar';
+import { BookingWithItems } from '../types/types';
+import broken_img from '../assets/broken_img.png'
+
 import { RangeValue } from '@react-types/shared';
 import { DateValue, parseDate } from '@internationalized/date';
 import { ItemWithQuantity, Reservation } from '../types/types';
@@ -72,9 +76,27 @@ function SingleBooking() {
   };
 
   const handleBrokenImg = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+    (e.target as HTMLImageElement).src = broken_img;
   }
 
+  /**
+ * A booking can be "touched" (button shown) when:
+ *   • status === "pending"   → user may DELETE the booking
+ *   • status === "approved"  → user may CANCEL it *if* start date is in the future
+ */
+  const canModify = (b: BookingWithItems) => {
+    // earliest start date across all reservations
+    const earliestStart = Math.min(
+      ...b?.items?.map(r => new Date(r.start_date).getTime())
+    );
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (b?.booking?.status === 'pending') return true;                       // deletable
+    if (b?.booking?.status === 'approved' && earliestStart > today.getTime())
+      return true;                                                 // cancellable
+    return false;
+  };
   const handleStartEditingBooking = () => {
     setEditingBooking(true);
 
@@ -217,9 +239,7 @@ function SingleBooking() {
 
   if (loading)
     return (
-      <Box sx={{ mx: 'auto', width: 'fit-content' }}>
-        <Spinner />
-      </Box>
+      <Spinner />
     );
 
   if (!booking_selector)
@@ -235,25 +255,32 @@ function SingleBooking() {
 
   return (
     <Box maxWidth={900} sx={{ m: 'auto', p: 2 }}>
-      <Typography variant="heading_secondary_bold">
-        Booking ID: {booking.booking_id.substring(24).toUpperCase()}
-      </Typography>
-      {!editingBooking ?
-        <Typography variant="body2">{`${items[0].start_date} - ${items[0].end_date}`}</Typography>
-        :
-        <Provider theme={defaultTheme} colorScheme="light" maxWidth={270}>
-          <DateRangePicker
-            labelPosition="side"
-            labelAlign="end"
-            width={270}
-            aria-label="Select dates"
-            value={tempBookingRange}
-            onChange={handleDateChange}
-            isRequired
-            maxVisibleMonths={1}
-          />
-        </Provider>
-      }
+      <Stack sx={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
+        <Stack>
+          <Typography variant="heading_secondary_bold">
+            Booking ID: {booking.booking_id.slice(0, 8).toUpperCase()}
+          </Typography>
+          {!editingBooking ?
+            <Typography variant="body2">{`${items[0].start_date} - ${items[0].end_date}`}</Typography>
+            :
+            <Provider theme={defaultTheme} colorScheme="light" maxWidth={270}>
+              <DateRangePicker
+                labelPosition="side"
+                labelAlign="end"
+                width={270}
+                aria-label="Select dates"
+                value={tempBookingRange}
+                onChange={handleDateChange}
+                isRequired
+                maxVisibleMonths={1}
+              />
+            </Provider>
+          }
+        </Stack>
+
+        <Chip label={booking.status} />
+      </Stack>
+
       <Box>
         <TableContainer sx={{ pt: 2 }}>
           <Table>
@@ -272,7 +299,7 @@ function SingleBooking() {
                         <img
                           onError={handleBrokenImg}
                           style={{ maxWidth: 78, borderRadius: '14px' }}
-                          src={item.image_path ?? '/src/assets/broken_img.png'}
+                          src={item.image_path?.[0] ?? broken_img}
                         />
                         <Stack>
                           <Typography>{item.item_name}</Typography>
@@ -406,26 +433,22 @@ function SingleBooking() {
         {
           // Only allow dates that are after todays date to be cancelled
           // And booking that haven't been cancelled or rejected
-          items[0].start_date >
-          new Date().toLocaleDateString().slice(0, 10) &&
-          !NON_CANCELLABLE.includes(booking.status) && (
-            <>
-              <Button
-                onClick={() => setWantsToCancel(true)}
-                size="small"
-                variant="outlined_rounded"
-                sx={{
-                  mt: 2,
-                  display: 'block',
-                  ml: 'auto',
-                  height: 'fit-content',
-                  width: 'fit-content',
-                  padding: '6px 40px',
-                }}
-              >
-                Cancel
-              </Button>
-            </>
+          canModify(booking_selector) && (
+            <Button
+              onClick={() => setWantsToCancel(true)}
+              size="small"
+              variant="outlined_rounded"
+              sx={{
+                mt: 2,
+                display: 'block',
+                ml: 'auto',
+                height: 'fit-content',
+                width: 'fit-content',
+                padding: '6px 40px',
+              }}
+            >
+              Cancel Booking
+            </Button>
           )
         }
         {wantsToCancel &&

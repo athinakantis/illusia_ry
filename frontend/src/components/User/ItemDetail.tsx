@@ -23,10 +23,15 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ArrowBack, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
+import broken_img from '../../assets/broken_img.png'
 import { selectQtyForItemInReservationsByIdInDateRange } from '../../slices/reservationsSlice';
 
+interface ArrowProps {
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}
+
 // Custom arrow components
-const NextArrow = (props: any) => {
+const NextArrow = (props: ArrowProps) => {
   const { onClick } = props;
   return (
     <IconButton
@@ -48,7 +53,7 @@ const NextArrow = (props: any) => {
   );
 };
 
-const PrevArrow = (props: any) => {
+const PrevArrow = (props: ArrowProps) => {
   const { onClick } = props;
   return (
     <IconButton
@@ -117,7 +122,7 @@ const ItemDetail: React.FC = () => {
   }
 
   const handleBrokenImg = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+    (e.target as HTMLImageElement).src = broken_img;
   }
 
   const handleCartAddition = () => {
@@ -226,7 +231,7 @@ const ItemDetail: React.FC = () => {
                 boxShadow: 0,
                 bgcolor: 'background.verylightgrey',
               }}
-              src={'/src/assets/broken_img.png'}
+              src={broken_img}
               alt={item?.item_name || 'Item'}
             />
           )}

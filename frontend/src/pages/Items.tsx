@@ -8,12 +8,14 @@ import { loadCartFromStorage, selectCart } from '../slices/cartSlice';
 import { useAppSelector } from '../store/hooks';
 import { a11yProps, CustomTabPanel } from '../components/CustomComponents/CustomTabPanel';
 import { CartState } from '../types/types';
+import { useTranslation } from 'react-i18next';
 
 function Items() {
   const { role } = useAuth()
   const dispatch = useDispatch()
   const { cart } = useAppSelector(selectCart)
   const [value, setValue] = useState(0);
+  const { t } = useTranslation();
 
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
@@ -30,7 +32,7 @@ function Items() {
     if (cart.length < savedCart.cart.length) {
       dispatch(loadCartFromStorage(savedCart));
     }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 
@@ -38,8 +40,8 @@ function Items() {
   if (role && role?.includes('Admin')) return (
     <Box sx={{ maxWidth: 1300, m: '0 auto', p: 2 }}>
       <Tabs value={value} onChange={handleChange} aria-label="Item View">
-        <Tab label="Browse Items" {...a11yProps(0)} />
-        <Tab label="Manage Items" {...a11yProps(1)} />
+        <Tab label={t('items.browse')} {...a11yProps(0)} />
+        <Tab label={t('items.manage')} {...a11yProps(1)} />
       </Tabs>
       <CustomTabPanel value={value} index={0}>
         <UserItems />
