@@ -17,7 +17,8 @@ import SingleBooking from '../components/Booking';
 import ManageUsers from '../components/Admin/ManageUsers';
 import TagTestPage from '../../Test/TagTestPage';
 import Token from '../../Test/Token';
-import ManageCategory from '../components/Admin/AddItem/ManageCategory';
+import ManageCategory from '../components/Admin/AddItem/ManageCategory/ManageCategory';
+import ManageTags from '../components/Admin/AddItem/ManageTags';
 
 
 export const router = createBrowserRouter([
@@ -95,8 +96,8 @@ export const router = createBrowserRouter([
         element: <Token />
       },
       {
-        path: "/categories",
-        element: <ManageCategory />
+        path: "/tags",
+        element: <ManageTags />
       }
 
     ]

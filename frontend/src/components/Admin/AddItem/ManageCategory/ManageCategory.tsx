@@ -21,9 +21,11 @@ const ManageCategory = () => {
     <>
       {/* Launch button — place this wherever you need it */}
       <Button
-        variant="outlined"
+        variant="text"
+        color="secondary"
         startIcon={<CategoryIcon />}
         onClick={handleOpen}
+
       >
         Manage Categories
       </Button>

@@ -43,6 +43,7 @@ export const fetchAllTags = createAsyncThunk<
 >('tags/fetchAll', async (_, { rejectWithValue }) => {
   try {
     const res = await tagsApi.getAllTags();
+    console.log('Fetched tags:', res);
     return res.data;
   } catch (err) {
     const error = err as Error
@@ -58,8 +59,12 @@ export const createTag = createAsyncThunk<
 >('tags/createTag', async (payload, { rejectWithValue }) => {
   try {
     const res = await tagsApi.createTag(payload);
-    // backend returns the *new* tag in res.data[0]
-    return res.data[0];
+    console.log('Created tag:', res);
+
+    // The API may return { data: [...]} *or* { data: {...} }.
+    const created = Array.isArray(res.data) ? res.data[0] : res.data;
+
+    return created as Tag;
   } catch (err) {
     const error = err as Error;
     return rejectWithValue(error.message ?? 'Failed to create tag');
@@ -74,7 +79,11 @@ export const updateTag = createAsyncThunk<
 >('tags/updateTag', async ({ tagId, ...rest }, { rejectWithValue }) => {
   try {
     const res = await tagsApi.updateTag(tagId, rest);
-    return res.data[0];
+    console.log('Updated tag:', res);
+
+    const updated = Array.isArray(res.data) ? res.data[0] : res.data;
+
+    return updated as Tag;
   } catch (err) {
     const error = err as Error;
     return rejectWithValue(error.message ?? 'Failed to update tag');
@@ -89,6 +98,7 @@ export const deleteTag = createAsyncThunk<
 >('tags/deleteTag', async ({ tagId }, { rejectWithValue }) => {
   try {
     await tagsApi.deleteTag(tagId);
+    console.log('Deleted tag:', tagId);
     return tagId;
   } catch (err) {
     const error = err as Error;
@@ -104,7 +114,11 @@ export const addTagToItem = createAsyncThunk<
 >('tags/addTagToItem', async ({ itemId, tagId }, { rejectWithValue }) => {
   try {
     const res = await tagsApi.addTagToItem(itemId, tagId);
-    return res.data[0];
+    console.log('Attached tag:', res);
+
+    const rel = Array.isArray(res.data) ? res.data[0] : res.data;
+
+    return rel as ItemTagRelation;
   } catch (err) {
     const error = err as Error;
     return rejectWithValue(error.message ?? 'Failed to attach tag');
@@ -119,7 +133,19 @@ export const removeTagFromItem = createAsyncThunk<
 >('tags/removeTagFromItem', async ({ itemId, tagId }, { rejectWithValue }) => {
   try {
     const res = await tagsApi.removeTagFromItem(itemId, tagId);
-    return res.data[0];
+    console.log('Detached tag:', res);
+
+    /**
+     * Supabase DELETE sometimes returns `data: []`.  When that happens
+     * we fabricate the minimal relation object so downstream reducers
+     * (itemsSlice) can still update their caches.
+     */
+    const rel =
+      Array.isArray(res.data) && res.data.length > 0
+        ? res.data[0]
+        : { item_id: itemId, tag_id: tagId };
+
+    return rel as ItemTagRelation;
   } catch (err) {
     const error = err as Error;
     return rejectWithValue(error.message ?? 'Failed to detach tag');
@@ -153,20 +179,48 @@ const tagSlice = createSlice({
     });
 
     /* ---------------- createTag ---------------- */
-    builder.addCase(createTag.fulfilled, (s, a: PayloadAction<Tag>) => {
-      s.tags.push(a.payload);
+    builder.addCase(createTag.fulfilled, (s, a: PayloadAction<Tag | undefined>) => {
+      /**
+       * Supabase will only return the inserted row if the query uses
+       * `.select()`.  When that isn’t the case `a.payload` will be `undefined`.
+       * We must guard against that to avoid pushing an `undefined` value,
+       * which breaks `Array.map` calls in the UI.
+       */
+      if (a.payload) {
+        s.tags.push(a.payload);
+      } else {
+        // Optional: log a warning to help with backend debugging
+        console.warn(
+          '[tagSlice] createTag.fulfilled received undefined payload – ' +
+          'did you forget to add `.select()` to the Supabase insert query?'
+        );
+      }
     });
 
     /* ---------------- updateTag ---------------- */
-    builder.addCase(updateTag.fulfilled, (s, a: PayloadAction<Tag | undefined>) => {
-      // Sometimes the backend returns an empty array → undefined payload.
-      if (!a.payload) return;                              // nothing to update
+    builder.addCase(updateTag.fulfilled, (s, a) => {
+      /**
+       * Supabase’s `update()` often returns an empty array unless you chain
+       * `.select()` on the query.  If that happens we still want to reflect the
+       * change in our client cache, otherwise the UI won’t update until the next
+       * full reload.
+       *
+       * ❶ If the backend DID return the updated row, use it verbatim.  
+       * ❷ Otherwise fall back to the data we just sent (`a.meta.arg`).
+       */
+      const updated = a.payload ?? {
+        // a.meta.arg has the *input* that was sent to the thunk
+        tag_id: a.meta.arg.tagId,
+        tag_name: a.meta.arg.tag_name,
+        description:
+          'description' in a.meta.arg ? a.meta.arg.description : undefined,
+      } as Tag;
 
-      const idx = s.tags.findIndex((t) => t.tag_id === a.payload.tag_id);
+      const idx = s.tags.findIndex((t) => t.tag_id === updated.tag_id);
       if (idx !== -1) {
-        s.tags[idx] = a.payload;                           // replace existing
+        s.tags[idx] = { ...s.tags[idx], ...updated }; // merge to preserve other fields
       } else {
-        s.tags.push(a.payload);                            // or append if not cached yet
+        s.tags.push(updated);
       }
     });
 

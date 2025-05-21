@@ -20,15 +20,15 @@ import {
 } from "@mui/material";
 import { Add, Close, Delete, Edit, Save } from "@mui/icons-material";
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import {
   createCategory,
   deleteCategory,
   fetchAllCategories,
   selectAllCategories,
   updateCategory,
-} from "../../../slices/itemsSlice";
-import Spinner from "../../Spinner";
+} from "../../../../slices/itemsSlice";
+import Spinner from "../../../Spinner";
 
 type Category = {
   category_id: string;
