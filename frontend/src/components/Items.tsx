@@ -352,13 +352,17 @@ function Items() {
                           justifyContent: 'space-between',
                         }}
                       >
-                        <Box
-                          sx={{ width: '80%', alignItems: 'center', display: 'flex' }}
+                        <Stack
+                          sx={{ width: '80%', lineHeight: '100%' }}
                         >
-                          <Typography variant="body1" sx={{ width: '70%' }}>
+                          <Typography variant="body1">
                             {item.item_name}
                           </Typography>
-                        </Box>
+                          <Typography variant="body3" sx={{ fontStyle: 'italic' }}>
+                            Available {(range) ? item.quantity - (itemsMaxBookedQty[item.item_id] || 0) : item.quantity} pcs
+                          </Typography>
+                        </Stack>
+
 
                         <CardActions
                           sx={{ padding: 0, justifySelf: 'end', width: 'fit-content' }}
@@ -375,6 +379,7 @@ function Items() {
                             <AddCircleOutlineOutlinedIcon />
                           </Button>
                         </CardActions>
+
                       </CardContent>
                     </Card>
                   ))}
