@@ -7,6 +7,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useTranslation, Trans } from 'react-i18next';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 
 const PersonMenu = () => {
   // ─── profile menu state ──────────────────────────────────────────────
@@ -92,7 +93,7 @@ const PersonMenu = () => {
         )}
         {isAdmin && (
           <MenuItem component={Link} to="/admin/dashboard" onClick={handleMenuClose}>
-            <DashboardIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" /> 
+            <DashboardIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
             <Trans i18nKey="person.dashboard">Dashboard</Trans>
           </MenuItem>
         )}
@@ -106,6 +107,7 @@ const PersonMenu = () => {
           <Trans i18nKey="person.myAccount">My account</Trans>
         </MenuItem>
         <MenuItem disableRipple sx={{ pl: 2, pr: 2 }} onClick={signOut}>
+          <LogoutRoundedIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
           <Trans i18nKey="person.logOut">Log out</Trans>
         </MenuItem>
         {/* language buttons */}

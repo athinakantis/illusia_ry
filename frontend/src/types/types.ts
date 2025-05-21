@@ -33,7 +33,7 @@ export interface ItemState {
   categories: {
     category_id: string;
     category_name: string;
-    image_path: string[];
+    image_path: string;
   }[];
 }
 export interface ApiResponse<T> {
