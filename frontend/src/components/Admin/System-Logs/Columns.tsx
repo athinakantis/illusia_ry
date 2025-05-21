@@ -120,8 +120,22 @@ export const systemLogColumns: GridColDef<SystemLog>[] = [
               {(params.row.metadata?.item_name ?? value) as React.ReactNode}
             </Box>
           );
-        case 'item_reservations':
-          return <ReservationLabelCell value={value} metadata={params.row.metadata} />;
+        case 'item_reservations': {
+          // Ensure metadata exists and matches the reservation shape
+          if (!params.row.metadata) {
+            return <Box sx={{ fontSize: 12 }}>—</Box>;
+          }
+          const reservationMetadata = params.row.metadata as {
+            booking_id: string;
+            created_at: string | null;
+            end_date: string;
+            id: string;
+            item_id: string;
+            quantity: number;
+            start_date: string;
+          };
+          return <ReservationLabelCell value={value} metadata={reservationMetadata} />;
+        }
         case 'categories':
           return <CategoryLabelCell value={value} />;
         case 'users':

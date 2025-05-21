@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import { DataGrid, GridPaginationModel, DataGridProps } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import { SystemLog } from '../../../api/system-logs';
-import { systemLogColumns } from './columns';
+import { systemLogColumns } from './Columns';
 
 interface SystemLogsTableProps {
   rows: SystemLog[];
