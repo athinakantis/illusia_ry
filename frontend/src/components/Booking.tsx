@@ -41,6 +41,7 @@ import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelect
 import { store } from '../store/store';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 import { updateReservation } from '../slices/reservationsSlice';
+import { useAuth } from '../hooks/useAuth';
 
 function SingleBooking() {
   const navigate = useNavigate();
@@ -57,7 +58,8 @@ function SingleBooking() {
   >>([]);
   const [qtyCheckErrors] = useState<Record<string, string>>({});
   const [incorrectTempBooking, setIncorrectTempBooking] = useState(false);
-
+  const { role } = useAuth();
+  const isAdmin = role === 'Admin' || role === 'Head Admin';
 
 
 
@@ -395,42 +397,9 @@ function SingleBooking() {
           // And booking that haven't been cancelled or rejected
           canModify(booking_selector) && (
             <>
-              <Box display="flex" justifyContent="flex-end">
-                {!editingBooking ?
-                  <Button
-                    size="small"
-                    variant="outlined_rounded"
-                    sx={{
-                      mt: 2,
-                      display: 'block',
-                      ml: 'auto',
-                      height: 'fit-content',
-                      width: 'fit-content',
-                      padding: '6px 40px',
-                    }}
-                    onClick={handleStartEditingBooking}
-                  >
-                    Edit Booking
-                  </Button>
-                  :
-                  <>
-                    {!incorrectTempBooking &&
-                      <Button
-                        size="small"
-                        variant="outlined_rounded"
-                        sx={{
-                          mt: 2,
-                          display: 'block',
-                          ml: 'auto',
-                          height: 'fit-content',
-                          width: 'fit-content',
-                          padding: '6px 40px',
-                        }}
-                        onClick={handleSaveEditingBooking}
-                      >
-                        Save
-                      </Button>
-                    }
+              {isAdmin &&
+                <Box display="flex" justifyContent="flex-end">
+                  {!editingBooking ?
                     <Button
                       size="small"
                       variant="outlined_rounded"
@@ -442,14 +411,48 @@ function SingleBooking() {
                         width: 'fit-content',
                         padding: '6px 40px',
                       }}
-                      onClick={handleCancelEditingBooking}
+                      onClick={handleStartEditingBooking}
                     >
-                      Cancel
+                      Edit Booking
                     </Button>
-                  </>
-                }
-              </Box>
-
+                    :
+                    <>
+                      {!incorrectTempBooking &&
+                        <Button
+                          size="small"
+                          variant="outlined_rounded"
+                          sx={{
+                            mt: 2,
+                            display: 'block',
+                            ml: 'auto',
+                            height: 'fit-content',
+                            width: 'fit-content',
+                            padding: '6px 40px',
+                          }}
+                          onClick={handleSaveEditingBooking}
+                        >
+                          Save
+                        </Button>
+                      }
+                      <Button
+                        size="small"
+                        variant="outlined_rounded"
+                        sx={{
+                          mt: 2,
+                          display: 'block',
+                          ml: 'auto',
+                          height: 'fit-content',
+                          width: 'fit-content',
+                          padding: '6px 40px',
+                        }}
+                        onClick={handleCancelEditingBooking}
+                      >
+                        Cancel
+                      </Button>
+                    </>
+                  }
+                </Box>
+              }
               <Button
                 onClick={() => setWantsToCancel(true)}
                 size="small"
