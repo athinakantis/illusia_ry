@@ -26,6 +26,7 @@ import {
 } from '../slices/bookingsSlice';
 import Spinner from './Spinner';
 import { showCustomSnackbar } from './CustomSnackbar';
+import broken_img from '../assets/broken_img.png'
 
 function SingleBooking() {
   const navigate = useNavigate();
@@ -50,24 +51,22 @@ function SingleBooking() {
   };
 
   const handleBrokenImg = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+    (e.target as HTMLImageElement).src = broken_img;
   }
 
 
-useEffect(() => {
-  if (!booking_id) {
-    navigate('/bookings');
-    return;
-  }
-  // Always fetch fresh booking details when the ID changes
-  dispatch(fetchBooking(booking_id));
-}, [booking_id, dispatch, navigate]);
+  useEffect(() => {
+    if (!booking_id) {
+      navigate('/bookings');
+      return;
+    }
+    // Always fetch fresh booking details when the ID changes
+    dispatch(fetchBooking(booking_id));
+  }, [booking_id, dispatch, navigate]);
 
   if (loading)
     return (
-      <Box sx={{ mx: 'auto', width: 'fit-content' }}>
-        <Spinner />
-      </Box>
+      <Spinner />
     );
 
   if (!booking_selector)
@@ -106,7 +105,7 @@ useEffect(() => {
                         <img
                           onError={handleBrokenImg}
                           style={{ maxWidth: 78, borderRadius: '14px' }}
-                          src={item.image_path ?? '/src/assets/broken_img.png'}
+                          src={item.image_path?.[0] ?? broken_img}
                         />
                         <Stack>
                           <Typography>{item.item_name}</Typography>
