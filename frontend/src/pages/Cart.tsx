@@ -39,6 +39,7 @@ import { RangeValue } from '@react-types/shared';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 import { ItemWithQuantity } from '../types/types';
 import broken_img from '../assets/broken_img.png'
+import { fetchFutureReservations } from '../slices/reservationsSlice';
 
 
 function Cart() {
@@ -249,6 +250,8 @@ function Cart() {
 			showCustomSnackbar('Your booking has been created!', 'success');
 			dispatch(emptyCart());
 			dispatch(fetchUserBookings(user.id));
+			dispatch(fetchFutureReservations());
+			// update future reservations
 
 			// Navigate to new booking
 			navigate(`/bookings/${resultAction.payload.booking_id}`)

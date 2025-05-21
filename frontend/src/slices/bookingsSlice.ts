@@ -2,7 +2,7 @@
 const upsertBookingArray = (arr: Booking[], row: Booking) => {
   const idx = arr.findIndex(b => b.booking_id === row.booking_id);
   if (idx === -1) arr.push(row);
-  else            arr[idx] = row;
+  else arr[idx] = row;
 };
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Booking, BookingsState } from '../types/types';
@@ -89,7 +89,7 @@ export const fetchUserBookings = createAsyncThunk<
  */
 export const updateBookingStatus = createAsyncThunk<
   Booking,
-  { id: string; status: 'approved' | 'rejected' | 'cancelled'},
+  { id: string; status: 'approved' | 'rejected' | 'cancelled' },
   { rejectValue: string }
 >(
   'bookings/updateBookingStatus',
@@ -171,8 +171,11 @@ export const bookingsSlice = createSlice({
       state.loading = false;
     });
 
-    builder.addCase(addBooking.fulfilled, (state) => {
+    builder.addCase(addBooking.fulfilled, (state, action) => {
       localStorage.removeItem('savedCart');
+      console.log(action.payload);
+      console.log(state.bookings);
+
       state.loading = false;
     });
     builder.addCase(addBooking.rejected, (state, action) => {
