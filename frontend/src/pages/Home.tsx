@@ -32,10 +32,10 @@ function Home() {
   };
 
   // Helper to get translated category name
-  const getCategoryName = (cat: any) => {
-    if (!cat) return '';
-    return t(`categories.${cat.category_name.toLowerCase().replace(/ /g, '_')}`);
-  };
+  // const getCategoryName = (cat: any) => {
+  //   if (!cat) return '';
+  //   return t(`categories.${cat.category_name.toLowerCase().replace(/ /g, '_')}`);
+  // };
 
   return (
     <Box id='home'>
