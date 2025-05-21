@@ -1,4 +1,40 @@
 {
+  "adminBookings": {
+    "snackbar": {
+      "bookingApproved": "Varaus hyväksytty",
+      "bookingRejected": "Varaus hylätty"
+    },
+    "heading": "Varaukset",
+    "tabs": {
+      "all": "Kaikki",
+      "pending": "Odottaa hyväksyntää",
+      "approved": "Hyväksytyt",
+      "rejected": "Hylätyt"
+    },
+    "id": "Tunnus",
+    "created": "Luotu",
+    "bookingDates": "Varauspäivät",
+    "customer": "Asiakas",
+    "items": "Tuotteet",
+    "status": "Tila",
+    "awaiting": "Odottaa hyväksyntää",
+    "noResults": "Valitulle suodattimelle ei löytynyt varauksia.",
+    "approve": "Hyväksy",
+    "reject": "Hylkää"
+  },
+  "collapsibleDetail": {
+    "title": "Varauskohteet",
+    "item": "Tuote",
+    "start": "Alkupäivä",
+    "end": "Loppupäivä",
+    "qty": "Määrä"
+  },
+  "Bookings": {
+    "snackbar": {
+      "deleted": "Varaus poistettu",
+      "cancelled": "Varaus peruttu"
+    }
+  },
   "nav": {
     "home": "Etusivu",
     "items": "Tuotteet",
@@ -22,6 +58,25 @@
     "logIn": "Kirjaudu sisään",
     "manageUsers": "Hallinnoi käyttäjiä",
     "manageBookings": "Hallitse varauksia"
+  },
+  "userBookings": {
+    "snackbar": {
+      "bookingDeleted": "Varaus poistettu",
+      "bookingCancelled": "Varaus peruttu"
+    },
+    "heading": "Varauksesi",
+    "noBookings": "Ei varauksia vielä.",
+    "bookingId": "Varausnumero",
+    "created": "Luotu",
+    "cancelTooltip": "Peruuta varaus",
+    "deleteTooltip": "Poista varaus",
+    "item": "Tuote",
+    "startDate": "Alkupäivä",
+    "endDate": "Loppupäivä",
+    "quantity": "Määrä",
+    "confirmCancel": "Haluatko varmasti peruuttaa varauksesi?",
+    "confirmYes": "Kyllä, olen varma",
+    "confirmNo": "Ei kiitos"
   },
   "cart": {
     "yourCart": "Ostoskorisi",

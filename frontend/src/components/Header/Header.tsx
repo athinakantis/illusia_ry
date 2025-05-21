@@ -17,11 +17,14 @@ import {
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Link, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import { SyntheticEvent, useState } from 'react';
+import { useEffect, useState, SyntheticEvent } from 'react';
 import PersonMenu from './PersonMenu';
 import { Item } from '../../types/types';
 import { selectCart } from '../../slices/cartSlice';
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import NotificationsMenu from './NotificationMenu';
+import { useAuth } from '../../hooks/useAuth';
+import { fetchAdminNotifications, fetchUserNotifications, selectUserNotifications } from '../../slices/notificationSlice';
 import { Trans, useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -32,6 +35,10 @@ const Header = () => {
   const { t, i18n } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cart } = useAppSelector(selectCart)
+  const { user, role } = useAuth()
+  const userNotifications = useAppSelector(selectUserNotifications)
+  const dispatch = useAppDispatch()
+
   // Calculate total quantity of all cart items
   const { role, user, signOut } = useAuth()
 
@@ -48,6 +55,13 @@ const Header = () => {
     setMobileOpen(!mobileOpen)
   }
 
+
+
+  // Fetch user notifications
+  useEffect(() => {
+    if (user && userNotifications.length < 1) dispatch(fetchUserNotifications(user.id))
+    if (role && ['Admin', 'Head Admin'].includes(role)) dispatch(fetchAdminNotifications())
+  }, [role])
 
   const drawer = (
     <Stack sx={{
@@ -274,8 +288,8 @@ const Header = () => {
             p: '6px 8px'
           }
         }}>
-
           {!isMobile && <PersonMenu />}
+          {user && <NotificationsMenu />}
           <Link to='/cart' aria-label="Go to cart" style={{ position: 'relative' }}>
             <ShoppingBagIcon />
             {totalItems > 0 &&

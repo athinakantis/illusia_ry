@@ -26,5 +26,26 @@
   "button.test": "Testipainike",
   "{link": {
     "defaultValue}": ""
-  }
+  },
+  "userBookings": {
+    "test": ""
+  },
+  "snackbar": {
+    "bookingApproved": "Varaus hyväksytty",
+    "bookingRejected": "Varaus hylätty",
+    "bookingDeleted": "Varaus poistettu",
+    "bookingCancelled": "Varaus peruttu"
+  },
+  "adminBookings": {
+    "TEST": "",
+    "bookingRejected": ""
+  },
+  "UserBookings": {
+    "snackbar": {
+      "bookingDeleted": "",
+      "bookingCancelled": ""
+    }
+  },
+  "Your booking was deleted": "",
+  "Your booking was cancelled": ""
 }
