@@ -1,7 +1,6 @@
 import {
   Container,
   Typography,
-  CircularProgress,
   Alert,
   Box,
   Stack,
@@ -19,7 +18,6 @@ import {
   DialogTitle,
   DialogActions,
   Button,
-  Link
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -34,6 +32,7 @@ import {
 } from '../../slices/bookingsSlice';
 import { showCustomSnackbar } from '../CustomSnackbar';
 import Spinner from '../Spinner';
+import { Link } from 'react-router-dom';
 
 const UserBookings = () => {
   const { user } = useAuth();
@@ -122,7 +121,7 @@ const UserBookings = () => {
         ) : (
           <Stack spacing={4}>
             {sortedBookings.map((booking) => (
-              <Link key={booking.booking_id} href={`/bookings/${booking.booking_id}`} sx={{ textDecoration: 'none' }}>
+              <Link to={`/bookings/${booking.booking_id}`} key={booking.booking_id} style={{ textDecoration: 'none' }}>
                 <Box
                   sx={{ p: 3, pb: 4 }}
                   border={'1px solid #E2E2E2'}

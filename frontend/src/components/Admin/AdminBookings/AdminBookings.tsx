@@ -18,7 +18,6 @@ import {
   Button,
   Menu,
   MenuItem,
-  Link
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -42,7 +41,7 @@ import {
 } from "../../../slices/reservationsSlice";
 import CollapsibleDetail from "./CollapsibleDetail";
 import { CustomSnackbar } from "../../CustomSnackbar";
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 
 /**
  * Allowed status filters rendered as Tabs
@@ -257,7 +256,7 @@ const AdminBookings = () => {
                       </IconButton>
                     </TableCell>
                     <TableCell sx={{ color: "primary.main" }}>
-                      <Link href={`/bookings/${b.booking_id}`}>
+                      <Link to={`/bookings/${b.booking_id}`} style={{ color: 'inherit' }}>
                         {b.booking_id.slice(0, 8).toUpperCase()}
                       </Link>
                     </TableCell>

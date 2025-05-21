@@ -30,6 +30,7 @@ import { showCustomSnackbar } from './CustomSnackbar';
 import { BookingWithItems } from '../types/types';
 import broken_img from '../assets/broken_img.png'
 
+
 function SingleBooking() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -63,17 +64,16 @@ function SingleBooking() {
   const canModify = (b: BookingWithItems) => {
     // earliest start date across all reservations
     const earliestStart = Math.min(
-      ...b.items.map(r => new Date(r.start_date).getTime())
+      ...b?.items?.map(r => new Date(r.start_date).getTime())
     );
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    if (b.booking.status === 'pending') return true;                       // deletable
-    if (b.booking.status === 'approved' && earliestStart > today.getTime())
+    if (b?.booking?.status === 'pending') return true;                       // deletable
+    if (b?.booking?.status === 'approved' && earliestStart > today.getTime())
       return true;                                                 // cancellable
     return false;
   };
-
 
   useEffect(() => {
     if (!booking_id) {
