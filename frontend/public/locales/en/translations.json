@@ -3,9 +3,10 @@
     "home": "Home",
     "items": "Items",
     "contact": "Contact",
-    "bookings": "My bookings",
+    "bookings": "Bookings",
     "manageUsers": "Manage users",
     "manageBookings": "Manage bookings",
+    "dashboard": "Dashboard",
     "logOut": "Log out",
     "logIn": "Log in"
   },
