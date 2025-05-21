@@ -18,6 +18,7 @@ import {
   Button,
   Menu,
   MenuItem,
+  Link
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -256,7 +257,9 @@ const AdminBookings = () => {
                       </IconButton>
                     </TableCell>
                     <TableCell sx={{ color: "primary.main" }}>
-                      {b.booking_id.slice(0, 8)}
+                      <Link href={`/bookings/${b.booking_id}`}>
+                        {b.booking_id.slice(0, 8).toUpperCase()}
+                      </Link>
                     </TableCell>
                     <TableCell>{dayjs(b.created_at).format("DD.MM.YYYY")}</TableCell>
                     <TableCell>

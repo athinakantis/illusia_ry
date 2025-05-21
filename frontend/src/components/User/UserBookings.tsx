@@ -33,6 +33,7 @@ import {
   selectUserBookings,
 } from '../../slices/bookingsSlice';
 import { showCustomSnackbar } from '../CustomSnackbar';
+import Spinner from '../Spinner';
 
 const UserBookings = () => {
   const { user } = useAuth();
@@ -93,9 +94,7 @@ const UserBookings = () => {
   /* ─────────────────── UI states ─────────────────── */
   if (loading)
     return (
-      <Container sx={{ textAlign: 'center', mt: 4 }}>
-        <CircularProgress color="secondary" />
-      </Container>
+      <Spinner />
     );
 
   if (error)
