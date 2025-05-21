@@ -28,6 +28,7 @@ import { Box, TextField, Typography } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useTranslation } from 'react-i18next';
 
 type CreateItemPayload = Omit<
     TablesInsert<'items'>,
@@ -68,6 +69,7 @@ const AdminAddProduct = () => {
         whiteSpace: 'nowrap',
         width: 1,
     });
+    const { t } = useTranslation();
 
     // If user is not admin, navigate elsewhere (/items for now)
     useEffect(() => {
@@ -133,9 +135,9 @@ const AdminAddProduct = () => {
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setIsLoading(true);
-        showSnackbar('Uploading item...', 'info');
+        showSnackbar(t('admin.add_product.uploading'), 'info');
 
-        let imageUrls: string[] = [];
+        const imageUrls: string[] = [];
 
         if (!user) {
             return;
@@ -174,7 +176,7 @@ const AdminAddProduct = () => {
                 }
             } catch (error) {
                 console.error('Error uploading files:', error);
-                showSnackbar('Failed to upload images. Please try again.', 'error');
+                showSnackbar(t('admin.add_product.upload_failed'), 'error');
                 return;
             }
         }
@@ -187,7 +189,7 @@ const AdminAddProduct = () => {
         try {
             await dispatch(createItem(newItemData)).unwrap();
             setIsLoading(false);
-            showSnackbar('Item added successfully!', 'success');
+            showSnackbar(t('admin.add_product.success'), 'success');
             setFormData({
                 item_name: '',
                 description: '',
@@ -199,7 +201,7 @@ const AdminAddProduct = () => {
         } catch (err) {
             console.error('Failed to save the item:', err);
             setIsLoading(false);
-            showSnackbar('Failed to save item. Please try again.', 'error');
+            showSnackbar(t('admin.add_product.save_failed'), 'error');
             return;
         }
     };
@@ -224,10 +226,10 @@ const AdminAddProduct = () => {
             }}
         >
             <Typography variant="h5" textAlign="center">
-                Add New Product
+                {t('admin.add_product.title')}
             </Typography>
             <TextField
-                label="Item Name"
+                label={t('admin.add_product.item_name')}
                 name="item_name"
                 value={formData.item_name}
                 onChange={handleInputChange}
@@ -235,7 +237,7 @@ const AdminAddProduct = () => {
                 disabled={isLoading}
             />
             <TextField
-                label="Description"
+                label={t('admin.add_product.description')}
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
@@ -244,7 +246,7 @@ const AdminAddProduct = () => {
                 disabled={isLoading}
             />
             <TextField
-                label="Location"
+                label={t('admin.add_product.location')}
                 name="location"
                 value={formData.location}
                 onChange={handleInputChange}
@@ -252,7 +254,7 @@ const AdminAddProduct = () => {
                 disabled={isLoading}
             />
             <TextField
-                label="Quantity"
+                label={t('admin.add_product.quantity')}
                 name="quantity"
                 type="number"
                 value={formData.quantity}
@@ -263,10 +265,10 @@ const AdminAddProduct = () => {
             />
             {/* Category Selection */}
             <FormControl>
-                <InputLabel>Category</InputLabel>
+                <InputLabel>{t('admin.add_product.category')}</InputLabel>
                 <Select
                     value={formData.category_id}
-                    label="Category"
+                    label={t('admin.add_product.category')}
                     name='category_id'
                     onChange={handleSelectChange}
                 >
@@ -289,7 +291,7 @@ const AdminAddProduct = () => {
                     disabled={isLoading}
                     sx={{ flexGrow: 1, height: 75 }}
                 >
-                    Upload files
+                    {t('admin.add_product.upload_files')}
                     <VisuallyHiddenInput
                         type="file"
                         id="item_image"
@@ -304,7 +306,7 @@ const AdminAddProduct = () => {
                 {/* Preview Section */}
                 {selectedFiles.length > 0 && (
                     <Stack spacing={2}>
-                        <Typography variant="subtitle1">Selected Images:</Typography>
+                        <Typography variant="subtitle1">{t('admin.add_product.selected_images')}</Typography>
                         {selectedFiles.map((file, index) => (
                             <Box
                                 key={index}
@@ -360,7 +362,7 @@ const AdminAddProduct = () => {
                     disabled={isLoading}
                     sx={{ flexGrow: 100, mt: 2 }}
                 >
-                    {isLoading ? 'Adding Item...' : 'Add Item'}
+                    {isLoading ? t('admin.add_product.adding') : t('admin.add_product.add')}
                 </Button>
             </Box>
             <Snackbar

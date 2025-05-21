@@ -26,8 +26,12 @@ import { ArrowBack, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import broken_img from '../../assets/broken_img.png'
 import { selectQtyForItemInReservationsByIdInDateRange } from '../../slices/reservationsSlice';
 
+interface ArrowProps {
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}
+
 // Custom arrow components
-const NextArrow = (props: any) => {
+const NextArrow = (props: ArrowProps) => {
   const { onClick } = props;
   return (
     <IconButton
@@ -49,7 +53,7 @@ const NextArrow = (props: any) => {
   );
 };
 
-const PrevArrow = (props: any) => {
+const PrevArrow = (props: ArrowProps) => {
   const { onClick } = props;
   return (
     <IconButton
