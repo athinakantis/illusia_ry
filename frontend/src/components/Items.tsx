@@ -243,11 +243,11 @@ function Items() {
             {t('items.date_picker_disabled_info')}
           </Alert>
         )}
-        <Provider theme={defaultTheme} colorScheme="light" maxWidth={270}>
+        <Provider theme={defaultTheme} colorScheme="light">
           <DateRangePicker
             labelPosition="side"
             labelAlign="end"
-            width={270}
+            width="100%"
             aria-label="Select dates"
             value={range}
             minValue={now}
