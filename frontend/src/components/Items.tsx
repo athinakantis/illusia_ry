@@ -47,6 +47,7 @@ import {
 import { Item } from '../types/types';
 import { showCustomSnackbar } from './CustomSnackbar';
 import Spinner from './Spinner';
+import broken_img from '../assets/broken_img.png'
 
 function Items() {
   const items = useAppSelector(selectVisibleItems);
@@ -122,7 +123,7 @@ function Items() {
   const handleBrokenImg = (
     e: React.SyntheticEvent<HTMLImageElement, Event>,
   ) => {
-    (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+    (e.target as HTMLImageElement).src = broken_img;
   };
 
   const toggleCategory = (category: string) => {
@@ -335,7 +336,7 @@ function Items() {
                       }}>
                         <CardMedia
                           component="img"
-                          image={Array.isArray(item.image_path) && item.image_path.length > 0 ? item.image_path[0] : '/src/assets/broken_img.png'}
+                          image={Array.isArray(item.image_path) && item.image_path.length > 0 ? item.image_path[0] : broken_img}
                           onError={handleBrokenImg}
                           sx={{
                             height: '100%',

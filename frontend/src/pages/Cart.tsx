@@ -38,6 +38,8 @@ import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalize
 import { RangeValue } from '@react-types/shared';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 import { ItemWithQuantity } from '../types/types';
+import broken_img from '../assets/broken_img.png'
+
 
 function Cart() {
 	const dispatch = useAppDispatch();
@@ -231,7 +233,7 @@ function Cart() {
 	const handleBrokenImg = (
 		e: React.SyntheticEvent<HTMLImageElement, Event>,
 	) => {
-		(e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+		(e.target as HTMLImageElement).src = broken_img;
 	};
 
 	const handleAddBooking = async () => {
@@ -299,7 +301,7 @@ function Cart() {
 													<CardMedia
 														component="img"
 														image={
-															item.image_path[0] || '/src/assets/broken_img.png'
+															item.image_path[0] || broken_img
 														}
 														onError={handleBrokenImg}
 														style={{ width: 78, borderRadius: 14 }}
