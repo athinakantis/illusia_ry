@@ -29,6 +29,7 @@ import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useTranslation } from 'react-i18next';
+import ManageCategory from './ManageCategory';
 
 type CreateItemPayload = Omit<
     TablesInsert<'items'>,
@@ -281,6 +282,7 @@ const AdminAddProduct = () => {
             </FormControl>
             {/* Image Upload Section */}
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <ManageCategory />
                 <Button
                     component="label"
                     role={'button'}

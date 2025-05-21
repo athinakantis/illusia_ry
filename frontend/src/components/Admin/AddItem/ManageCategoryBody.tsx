@@ -123,6 +123,7 @@ const ManageCategoryBody = () => {
               {categories.map((cat) => {
                 const isEditing = editId === cat.category_id;
                 return (
+                  
                   <ListItem
                     key={cat.category_id}
                     secondaryAction={isEditing
