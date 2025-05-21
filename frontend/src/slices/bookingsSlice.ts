@@ -200,7 +200,7 @@ export const bookingsSlice = createSlice({
           booking: updatedBooking,
         };
       }
-      console.log("state.bookings", state.booking);
+
       state.loading = false;
     });
     builder.addCase(updateBookingStatus.rejected, (state, action) => {
