@@ -302,7 +302,7 @@ function SingleBooking() {
             <TableHead>
               <TableRow>
                 <TableCell>Item</TableCell>
-                <TableCell>Qty</TableCell>
+                <TableCell align='center'>Qty</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -325,7 +325,7 @@ function SingleBooking() {
                       </Stack>
                     </Link>
                   </TableCell>
-                  <TableCell>
+                  <TableCell align='center' sx={{ width: 200 }}>
                     {!editingBooking ?
                       <Typography>{item.quantity}</Typography>
                       :
@@ -398,24 +398,8 @@ function SingleBooking() {
           canModify(booking_selector) && (
             <>
               {isAdmin &&
-                <Box display="flex" justifyContent="flex-end">
-                  {!editingBooking ?
-                    <Button
-                      size="small"
-                      variant="outlined_rounded"
-                      sx={{
-                        mt: 2,
-                        display: 'block',
-                        ml: 'auto',
-                        height: 'fit-content',
-                        width: 'fit-content',
-                        padding: '6px 40px',
-                      }}
-                      onClick={handleStartEditingBooking}
-                    >
-                      Edit Booking
-                    </Button>
-                    :
+                <Stack display="flex" sx={{ flexDirection: 'row', gap: '10px', justifyContent: 'end' }}>
+                  {editingBooking &&
                     <>
                       {!incorrectTempBooking &&
                         <Button
@@ -424,7 +408,6 @@ function SingleBooking() {
                           sx={{
                             mt: 2,
                             display: 'block',
-                            ml: 'auto',
                             height: 'fit-content',
                             width: 'fit-content',
                             padding: '6px 40px',
@@ -440,7 +423,6 @@ function SingleBooking() {
                         sx={{
                           mt: 2,
                           display: 'block',
-                          ml: 'auto',
                           height: 'fit-content',
                           width: 'fit-content',
                           padding: '6px 40px',
@@ -451,23 +433,41 @@ function SingleBooking() {
                       </Button>
                     </>
                   }
-                </Box>
+                </Stack>
               }
-              <Button
-                onClick={() => setWantsToCancel(true)}
-                size="small"
-                variant="outlined_rounded"
-                sx={{
-                  mt: 2,
-                  display: 'block',
-                  ml: 'auto',
-                  height: 'fit-content',
-                  width: 'fit-content',
-                  padding: '6px 40px',
-                }}
-              >
-                Cancel Booking
-              </Button>
+              {!editingBooking && (
+                <Stack sx={{ flexDirection: 'row', gap: '10px', justifyContent: 'end' }}>
+                  <Button
+                    size="small"
+                    variant="outlined_rounded"
+                    sx={{
+                      mt: 2,
+                      display: 'block',
+                      height: 'fit-content',
+                      width: 'fit-content',
+                      padding: '6px 40px',
+                    }}
+                    onClick={handleStartEditingBooking}
+                  >
+                    Edit Booking
+                  </Button>
+                  <Button
+                    onClick={() => setWantsToCancel(true)}
+                    size="small"
+                    variant="outlined_rounded"
+                    sx={{
+                      mt: 2,
+                      display: 'block',
+                      height: 'fit-content',
+                      width: 'fit-content',
+                      padding: '6px 40px',
+                    }}
+                  >
+                    Cancel Booking
+                  </Button>
+                </Stack>
+              )
+              }
             </>
           )
         }
