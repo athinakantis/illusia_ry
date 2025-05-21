@@ -38,7 +38,7 @@ const ManageCategory = () => {
       {/* Modal overlay */}
       <Dialog
         fullWidth
-        maxWidth="lg"   
+        maxWidth="sm"   
         open={open}
         onClose={handleClose}
         scroll="paper"
