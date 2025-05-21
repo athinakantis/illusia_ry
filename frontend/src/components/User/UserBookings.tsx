@@ -138,7 +138,7 @@ const UserBookings = () => {
                     <Stack sx={{ gap: '2px' }}>
                       <Typography variant="subheading" fontWeight={600}>
                         Booking&nbsp;ID:&nbsp;
-                        {booking.booking_id.slice(-12).toUpperCase()}
+                        {booking.booking_id.slice(0, 8).toUpperCase()}
                       </Typography>
                       <Typography variant="body3" fontWeight={500} fontSize={14}>
                         Created at {new Date(booking.created_at).toLocaleString()}

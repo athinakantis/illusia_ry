@@ -65,7 +65,7 @@ export const deleteBooking = createAsyncThunk<
  * @returns A promise that resolves to an array of bookings with reservations
  */
 export const fetchUserBookings = createAsyncThunk<
-  BookingWithItems[],
+  Booking[],
   string,
   { rejectValue: string }
 >('bookings/fetchUserBookings', async (userId, { rejectWithValue }) => {
@@ -248,10 +248,10 @@ export const selectBookingsByUserId = (userId: string) => (state: RootState) =>
   state.bookings.bookings.filter((booking) => booking.user_id === userId);
 
 export const selectBookingDates = (booking_id: string) => (state: RootState) => {
-  const bookingWithId = state.bookings.userBookings.find((booking) => booking.booking.booking_id === booking_id);
+  const bookingWithId = state.bookings.userBookings.find((booking) => booking.booking_id === booking_id);
 
-  if (bookingWithId?.items)
-    return { start_date: bookingWithId?.items[0].start_date, end_date: bookingWithId?.items[0].end_date }
+  if (bookingWithId)
+    return { start_date: bookingWithId?.reservations?.[0].start_date, end_date: bookingWithId?.reservations?.[0].end_date }
   else return;
 }
 
