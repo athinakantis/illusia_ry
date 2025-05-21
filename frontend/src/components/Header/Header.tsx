@@ -26,7 +26,6 @@ import NotificationsMenu from './NotificationMenu';
 import { useAuth } from '../../hooks/useAuth';
 import { fetchAdminNotifications, fetchUserNotifications, selectUserNotifications } from '../../slices/notificationSlice';
 import { Trans, useTranslation } from 'react-i18next';
-import { useAuth } from '../../hooks/useAuth';
 
 const Header = () => {
   const theme = useTheme();
@@ -35,14 +34,12 @@ const Header = () => {
   const { t, i18n } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cart } = useAppSelector(selectCart)
-  const { user, role } = useAuth()
+  const { role, user, signOut } = useAuth()
   const userNotifications = useAppSelector(selectUserNotifications)
   const dispatch = useAppDispatch()
+  const isAdmin = role === 'Admin' || role === 'Head Admin'
 
   // Calculate total quantity of all cart items
-  const { role, user, signOut } = useAuth()
-
-  const isAdmin = role === 'Admin' || role === 'Head Admin'
   const totalItems = cart.reduce((total: number, item: Item) => total + (item.quantity || 0), 0)
 
   const handleDrawerToggle = (e: SyntheticEvent) => {
@@ -60,7 +57,7 @@ const Header = () => {
   // Fetch user notifications
   useEffect(() => {
     if (user && userNotifications.length < 1) dispatch(fetchUserNotifications(user.id))
-    if (role && ['Admin', 'Head Admin'].includes(role)) dispatch(fetchAdminNotifications())
+    if (role && ['Admin', 'Head Admin'].includes(role)) dispatch(fetchAdminNotifications())
   }, [role])
 
   const drawer = (

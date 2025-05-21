@@ -150,6 +150,7 @@ const NotificationsMenu = () => {
           <>
             {unreadUserNotifications.map((n) => (
               <MenuItem
+                key={n.id}
                 disableRipple
                 component={Link}
                 href={`/bookings/${renderNotificationLink(n)}`}
