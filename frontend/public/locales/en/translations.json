@@ -3,7 +3,11 @@
     "home": "Home",
     "items": "Items",
     "contact": "Contact",
-    "bookings": "Bookings"
+    "bookings": "My bookings",
+    "manageUsers": "Manage users",
+    "manageBookings": "Manage bookings",
+    "logOut": "Log out",
+    "logIn": "Log in"
   },
   "header": {
     "logoMain": "ILLUSIA",
@@ -13,7 +17,10 @@
     "myBookings": "My bookings",
     "dashboard": "Dashboard",
     "myAccount": "My account",
-    "logOut": "Log out"
+    "logOut": "Log out",
+    "logIn": "Log in",
+    "manageUsers": "Manage users",
+    "manageBookings": "Manage bookings"
   },
   "cart": {
     "yourCart": "Your Cart",

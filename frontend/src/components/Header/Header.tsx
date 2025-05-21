@@ -10,66 +10,115 @@ import {
   ListItemText,
   useMediaQuery,
   useTheme,
+  Divider,
+  Button,
 } from '@mui/material';
-import Logout from '../Auth/LoginOutBtn';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import PersonMenu from './PersonMenu';
 import { Item } from '../../types/types';
 import { selectCart } from '../../slices/cartSlice';
 import { useAppSelector } from '../../store/hooks';
 import { Trans, useTranslation } from 'react-i18next';
+import { useAuth } from '../../hooks/useAuth';
 
 const Header = () => {
   const theme = useTheme();
+  const navigate = useNavigate()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cart } = useAppSelector(selectCart)
   // Calculate total quantity of all cart items
+  const { role, user, signOut } = useAuth()
+
+  const isAdmin = role === 'Admin' || role === 'Head Admin'
   const totalItems = cart.reduce((total: number, item: Item) => total + (item.quantity || 0), 0)
 
-  const handleDrawerToggle = () => {
+  const handleDrawerToggle = (e: SyntheticEvent) => {
+    e.preventDefault()
     setMobileOpen(!mobileOpen);
   };
+
+  const navigateToPage = (page: string) => {
+    navigate(page)
+    setMobileOpen(!mobileOpen)
+  }
 
 
   const drawer = (
     <List>
       <ListItem
-        component={Link}
-        to="/"
-        onClick={handleDrawerToggle}
-        sx={{ textDecoration: 'none', color: 'inherit' }}
+        onClick={() => navigateToPage('/')}
+        sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
       >
         <ListItemText primary={<Trans i18nKey="nav.home">Home</Trans>} />
       </ListItem>
-    <ListItem
-        component={Link}
-        to="/items"
-        onClick={handleDrawerToggle}
-        sx={{ textDecoration: 'none', color: 'inherit' }}
+      <ListItem
+        onClick={() => navigateToPage('/items')}
+        sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
       >
         <ListItemText primary={<Trans i18nKey="nav.items">Items</Trans>} />
       </ListItem>
       <ListItem
-        component={Link}
-        to="/contact"
-        onClick={handleDrawerToggle}
-        sx={{ textDecoration: 'none', color: 'inherit' }}
+        onClick={() => navigateToPage('/contact')}
+        sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
       >
         <ListItemText primary={<Trans i18nKey="nav.contact">Contact</Trans>} />
       </ListItem>
-      <ListItem
-        component={Link}
-        to="/bookings"
-        onClick={handleDrawerToggle}
-        sx={{ textDecoration: 'none', color: 'inherit' }}
-      >
-        <ListItemText primary={<Trans i18nKey="nav.bookings">Bookings</Trans>} />
-      </ListItem>
+      {user && (
+        <ListItem
+          onClick={() => navigateToPage('/bookings')}
+          sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+        >
+          <ListItemText primary={<Trans i18nKey="nav.bookings">My bookings</Trans>} />
+        </ListItem>
+      )}
+
+      {isAdmin && (
+        <>
+          <Divider variant="middle" component="li" />
+
+          <ListItem
+            onClick={() => navigateToPage('/admin/bookings')}
+            sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+          >
+            <ListItemText primary={<Trans i18nKey="nav.manageBookings">Manage bookings</Trans>} />
+          </ListItem>
+
+          <ListItem
+            onClick={() => navigateToPage('/admin/users')}
+            sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+
+          >
+            <ListItemText primary={<Trans i18nKey="nav.manageUsers">Manage Users</Trans>} />
+          </ListItem>
+        </>
+      )}
+
+      {user ?
+        <ListItem
+          component={Button}
+          variant='text'
+          onClick={() => {
+            signOut
+            handleDrawerToggle
+          }}
+          sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+        >
+          <ListItemText primary={<Trans i18nKey="nav.logOut"></Trans>} />
+        </ListItem>
+        :
+        <ListItem
+          component={Button}
+          onClick={() => navigateToPage('login')}
+          sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+        >
+          <ListItemText primary={<Trans i18nKey="nav.logIn">Log in</Trans>} />
+        </ListItem>
+      }
     </List>
   );
 
@@ -126,6 +175,7 @@ const Header = () => {
               color: "primary.light",
             }
           }}>
+
             <Typography key="nav.home" variant='link'>
               <Link to="/" style={{ textDecoration: 'none' }}>
                 <Trans i18nKey="nav.home">Home</Trans>
@@ -143,7 +193,7 @@ const Header = () => {
             </Typography>
             <Typography key="nav.bookings" variant='link'>
               <Link to="/bookings" style={{ textDecoration: 'none' }}>
-                <Trans i18nKey="nav.bookings">Bookings</Trans>
+                <Trans i18nKey="nav.bookings">My bookings</Trans>
               </Link>
             </Typography>
           </Box>
@@ -174,7 +224,7 @@ const Header = () => {
           }
         }}>
 
-          <PersonMenu />
+          {!isMobile && <PersonMenu />}
           <Link to='/cart' aria-label="Go to cart" style={{ position: 'relative' }}>
             <ShoppingBagIcon />
             {totalItems > 0 &&
@@ -198,7 +248,6 @@ const Header = () => {
               }} />
             }
           </Link>
-          <Logout />
         </Box>
       </Toolbar>
 

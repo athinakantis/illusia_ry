@@ -3,7 +3,11 @@
     "home": "Etusivu",
     "items": "Tuotteet",
     "contact": "Ota yhteyttä",
-    "bookings": "Varaukset"
+    "bookings": "Minun varaukset",
+    "manageUsers": "Hallinnoi käyttäjiä",
+    "manageBookings": "Hallitse varauksia",
+    "logOut": "Kirjaudu ulos",
+    "logIn": "Kirjaudu sisään"
   },
   "header": {
     "logoMain": "ILLUSIA",
@@ -13,7 +17,10 @@
     "myBookings": "Minun varaukset",
     "dashboard": "Hallintapaneeli",
     "myAccount": "Oma tili",
-    "logOut": "Kirjaudu ulos"
+    "logOut": "Kirjaudu ulos",
+    "logIn": "Kirjaudu sisään",
+    "manageUsers": "Hallinnoi käyttäjiä",
+    "manageBookings": "Hallitse varauksia"
   },
   "cart": {
     "yourCart": "Ostoskorisi",
