@@ -37,7 +37,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       headerName: 'ID',
       width: 100,
       renderCell: (params) => (
-        
+
         String(params.value).slice(0, 8)
       ),
     },
@@ -124,7 +124,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
       minWidth: 150,
       renderCell: (params) => (
         getCategoryName(categories, params.value)
-        ),
+      ),
     },
     {
       field: 'created_at',
@@ -187,10 +187,9 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
           pagination: { paginationModel: { pageSize: 10, page: 0 } },
           sorting: {
             sortModel: [{ field: 'item_name', sort: "asc" }],
-            
           },
         }}
-        rowHeight={70}
+        getRowHeight={() => 'auto'}
         disableRowSelectionOnClick
       />
     </Box>
