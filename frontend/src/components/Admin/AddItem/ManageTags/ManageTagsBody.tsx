@@ -24,10 +24,10 @@ import {
     selectAllTags,
     selectTagsLoading,
     updateTag,
-} from "../../../slices/tagSlice";
+} from "../../../../slices/tagSlice";
 import { FC, useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { selectTagIdsForItem } from "../../../slices/itemsSlice";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
+import { selectTagIdsForItem, fetchAllItemTags } from "../../../../slices/itemsSlice";
 import { Trans, useTranslation } from "react-i18next";
 
 interface BodyProps {
@@ -53,6 +53,10 @@ const ManageTagsBody: FC<BodyProps> = ({ itemId }) => {
     useEffect(() => {
         if (tags.length === 0 && !loading) dispatch(fetchAllTags());
     }, [dispatch, tags.length, loading]);
+
+    useEffect(() => {
+      dispatch(fetchAllItemTags());
+    }, [dispatch]);
 
     /* ---------------- handlers ---------------- */
     const handleCreate = () => {

@@ -133,17 +133,7 @@ const AdminDashboard = () => {
   if (role !== 'Admin' && role !== 'Head Admin') {
     return <Navigate to="/" replace />;
   }
-  /* ────────── Memoized values ────────── */
-  // combine bookings + reservations + users
 
-  // inside your component:
-  // const overviews: BookingOverview[] = useMemo(
-  //   () => buildBookingOverviews(bookings, reservations, users, items),
-  //   [bookings, reservations, users, items],
-  // );
-  // console.log("Overviews" + overviews);
-  // console.log("upcomingBookings:", upcomingBookings);
-  // If we don't know the role yet, render nothing (or a loader)
   if (role === undefined) {
     return <Spinner />;
   }

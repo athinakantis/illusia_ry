@@ -15,10 +15,7 @@ import AdminBookings from '../components/Admin/AdminBookings/AdminBookings';
 import Account from '../components/Account';
 import SingleBooking from '../components/Booking';
 import ManageUsers from '../components/Admin/ManageUsers';
-import TagTestPage from '../../Test/TagTestPage';
-import Token from '../../Test/Token';
-import ManageCategory from '../components/Admin/AddItem/ManageCategory/ManageCategory';
-import ManageTags from '../components/Admin/AddItem/ManageTags';
+
 
 
 export const router = createBrowserRouter([
@@ -86,18 +83,6 @@ export const router = createBrowserRouter([
       {
         path: "/account",
         element: <Account />
-      },
-      {
-        path: "/test",
-        element: <TagTestPage />
-      },
-      {
-        path: "/token",
-        element: <Token />
-      },
-      {
-        path: "/tags",
-        element: <ManageTags />
       }
 
     ]

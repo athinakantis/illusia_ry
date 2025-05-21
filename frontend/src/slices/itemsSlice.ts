@@ -74,7 +74,6 @@ export const deleteCategory = createAsyncThunk(
   'items/deleteCategory',
   async (id: string) => {
     const response = await categoriesApi.deleteCategory(id);
-    console.log('deleteCategory response', response);
     return response;
   }
 );
@@ -99,7 +98,6 @@ export const deleteItem = createAsyncThunk(
   'items/deleteItem',
   async (id: string) => {
     const response = await itemsApi.deleteItem(id);
-    console.log('deleteItem response', response);
     return response;
   }
 );

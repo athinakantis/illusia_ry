@@ -43,7 +43,6 @@ export const fetchAllTags = createAsyncThunk<
 >('tags/fetchAll', async (_, { rejectWithValue }) => {
   try {
     const res = await tagsApi.getAllTags();
-    console.log('Fetched tags:', res);
     return res.data;
   } catch (err) {
     const error = err as Error
@@ -59,8 +58,7 @@ export const createTag = createAsyncThunk<
 >('tags/createTag', async (payload, { rejectWithValue }) => {
   try {
     const res = await tagsApi.createTag(payload);
-    console.log('Created tag:', res);
-
+ 
     // The API may return { data: [...]} *or* { data: {...} }.
     const created = Array.isArray(res.data) ? res.data[0] : res.data;
 
@@ -79,7 +77,6 @@ export const updateTag = createAsyncThunk<
 >('tags/updateTag', async ({ tagId, ...rest }, { rejectWithValue }) => {
   try {
     const res = await tagsApi.updateTag(tagId, rest);
-    console.log('Updated tag:', res);
 
     const updated = Array.isArray(res.data) ? res.data[0] : res.data;
 
@@ -98,7 +95,6 @@ export const deleteTag = createAsyncThunk<
 >('tags/deleteTag', async ({ tagId }, { rejectWithValue }) => {
   try {
     await tagsApi.deleteTag(tagId);
-    console.log('Deleted tag:', tagId);
     return tagId;
   } catch (err) {
     const error = err as Error;
@@ -114,7 +110,6 @@ export const addTagToItem = createAsyncThunk<
 >('tags/addTagToItem', async ({ itemId, tagId }, { rejectWithValue }) => {
   try {
     const res = await tagsApi.addTagToItem(itemId, tagId);
-    console.log('Attached tag:', res);
 
     const rel = Array.isArray(res.data) ? res.data[0] : res.data;
 
@@ -133,7 +128,6 @@ export const removeTagFromItem = createAsyncThunk<
 >('tags/removeTagFromItem', async ({ itemId, tagId }, { rejectWithValue }) => {
   try {
     const res = await tagsApi.removeTagFromItem(itemId, tagId);
-    console.log('Detached tag:', res);
 
     /**
      * Supabase DELETE sometimes returns `data: []`.  When that happens
@@ -144,7 +138,6 @@ export const removeTagFromItem = createAsyncThunk<
       Array.isArray(res.data) && res.data.length > 0
         ? res.data[0]
         : { item_id: itemId, tag_id: tagId };
-
     return rel as ItemTagRelation;
   } catch (err) {
     const error = err as Error;

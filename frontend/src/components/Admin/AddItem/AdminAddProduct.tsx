@@ -30,7 +30,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useTranslation } from 'react-i18next';
 import ManageCategory from './ManageCategory/ManageCategory';
-import ManageTags from './ManageTags';
+import ManageTags from './ManageTags/ManageTags';
 
 type CreateItemPayload = Omit<
     TablesInsert<'items'>,
