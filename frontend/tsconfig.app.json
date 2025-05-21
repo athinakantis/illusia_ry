@@ -24,5 +24,5 @@
     "noUncheckedSideEffectImports": true,
     "noImplicitAny": true,
   },
-  "include": ["src","vite.config.ts", "Test"],// Test is Jonathan's test folder
+  "include": ["src","vite.config.ts"],
 }

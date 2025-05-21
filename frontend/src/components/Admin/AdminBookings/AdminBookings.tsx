@@ -41,7 +41,7 @@ import {
 } from "../../../slices/reservationsSlice";
 import CollapsibleDetail from "./CollapsibleDetail";
 import { useTranslatedSnackbar } from '../../CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 
@@ -162,10 +162,8 @@ const AdminBookings = () => {
   const itemName = (iid: string) =>
     items.find((it) => it.item_id === iid)?.item_name || iid.slice(0, 6);
 
-  const itemImage = (iid: string) => {
-    const image = items.find((it) => it.item_id === iid)?.image_path;
-    return Array.isArray(image) ? image[0] : image;
-  };
+  const itemImage = (iid: string) =>
+    items.find((it) => it.item_id === iid)?.image_path[0];
   // Navigate to item page
   const itemLink = (iid: string) => `/items/manage/${iid}`;
 
@@ -176,9 +174,7 @@ const AdminBookings = () => {
   // ─── Loading/Error states ─────────────────────────────────────
   if (loading)
     return (
-      <Container sx={{ textAlign: "center", mt: 4 }}>
-        <Spinner />
-      </Container>
+      <Spinner />
     );
 
   if (error)

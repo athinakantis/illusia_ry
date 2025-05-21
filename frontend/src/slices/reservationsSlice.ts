@@ -72,6 +72,7 @@ export const selectQtyForItemInReservationsByIdInDateRange = (id: string, start_
 
     const maxAvailableQtyInRange = getMaxBookedQtyForItem(getBookedQtyByDateAndItemForReservationsInRange(new Date(start_date), new Date(end_date), itemReservations)[id]);
 
+
     // should we just build a map of all the reservations straight from the beginning? Shhould make the things much simpler
     return maxAvailableQtyInRange;
 }
