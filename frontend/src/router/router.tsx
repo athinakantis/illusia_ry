@@ -5,7 +5,7 @@ import ItemsPage from '../pages/Items';
 import Root from '../components/Root';
 import Home from '../pages/Home';
 import SingleItem from '../components/Admin/AdminBookings/ItemView/ItemView';
-import AdminAddProduct from '../components/Admin/AdminBookings/AddItem/AdminAddProduct';
+import AdminAddProduct from '../components/Admin/AddItem/AdminAddProduct';
 import Cart from '../pages/Cart';
 import Contacts from '../pages/Contacts';
 import ItemDetail from '../components/User/ItemDetail';
@@ -17,7 +17,7 @@ import SingleBooking from '../components/Booking';
 import ManageUsers from '../components/Admin/ManageUsers';
 import TagTestPage from '../../Test/TagTestPage';
 import Token from '../../Test/Token';
-import ManageCategory from '../components/Admin/AdminBookings/AddItem/ManageCategory';
+import ManageCategory from '../components/Admin/AddItem/ManageCategory';
 
 
 export const router = createBrowserRouter([

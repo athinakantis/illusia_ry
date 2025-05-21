@@ -5,11 +5,11 @@ import {
   } from '@mui/material';
   import { Add, Delete, Edit, Save, Close } from '@mui/icons-material';
   import { useState, useEffect } from 'react';
-  import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
+  import { useAppDispatch, useAppSelector } from '../../../store/hooks';
   import {
     selectAllCategories, fetchAllCategories,
     createCategory, updateCategory, deleteCategory
-  } from '../../../../slices/itemsSlice';
+  } from '../../../slices/itemsSlice';
   
   type Category = { category_id: string; category_name: string; image_path: string };
   

@@ -1,15 +1,15 @@
 import { useState, FormEvent, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../store/hooks'; // Use your custom hooks
-import { FormData } from '../../../../types/types';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks'; // Use your custom hooks
+import { FormData } from '../../../types/types';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../../hooks/useAuth'; // Import your auth hook
+import { useAuth } from '../../../hooks/useAuth'; // Import your auth hook
 import {
     createItem,
     selectAllCategories,
-} from '../../../../slices/itemsSlice';
-import { supabase } from '../../../../config/supabase';
+} from '../../../slices/itemsSlice';
+import { supabase } from '../../../config/supabase';
 import { v4 as uuidv4 } from 'uuid';
-import { TablesInsert } from '../../../../types/supabase.type';
+import { TablesInsert } from '../../../types/supabase.type';
 import MuiAlert, { AlertColor } from '@mui/material/Alert';
 import {
     Button,
