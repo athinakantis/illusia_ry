@@ -40,6 +40,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
 import { store } from '../store/store';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
+import { updateReservation } from '../slices/reservationsSlice';
 
 function SingleBooking() {
   const navigate = useNavigate();
@@ -48,13 +49,11 @@ function SingleBooking() {
   const booking_selector = useAppSelector(selectBooking);
   const loading = useAppSelector(selectBookingsLoading);
   const [wantsToCancel, setWantsToCancel] = useState(false)
-  const NON_CANCELLABLE = ['cancelled', 'rejected'];
-
   const [editingBooking, setEditingBooking] = useState(false); // for editing the booking
   const [tempBookingRange, setTempBookingRange] = useState<RangeValue<DateValue> | null>(null);
   const [tempBookingItems, setTempBookingItems] = useState<Array<
     Partial<Tables<'items'>> &
-    Pick<Reservation, 'quantity' | 'start_date' | 'end_date'>
+    Pick<Reservation, 'id' | 'quantity' | 'start_date' | 'end_date'>
   >>([]);
   const [qtyCheckErrors] = useState<Record<string, string>>({});
   const [incorrectTempBooking, setIncorrectTempBooking] = useState(false);
@@ -103,8 +102,22 @@ function SingleBooking() {
   }
 
   const handleSaveEditingBooking = () => {
+
+    console.log("starting the update");
+    console.log(booking_selector);
+    if (tempBookingRange)
+      tempBookingItems.map(item => {
+        item.id && dispatch(updateReservation({
+          bookingId: booking.booking_id, reservationId: item.id, updatedReservation: {
+            item_id: item.item_id,
+            start_date: tempBookingRange.start.toString(),
+            end_date: tempBookingRange.end.toString(),
+            quantity: item.quantity
+          }
+        }))
+      })
     setEditingBooking(false);
-    // hee should confirm all the edits by updating the reservations
+    // refetch the booking ??
   }
 
   const handleCancelEditingBooking = () => {
@@ -122,7 +135,7 @@ function SingleBooking() {
 
       tempBookingItems.forEach(item => {
         const initialItemQty = booking_selector?.items.find(initialItem => initialItem.item_id === item.item_id)?.quantity ?? 0;
-        if (item) {
+        if (item.item_id) {
           const availabilityCheck = checkAvailabilityForItemOnDates(
             item.item_id,
             item.quantity - initialItemQty, // is not updated fast enough
@@ -159,7 +172,7 @@ function SingleBooking() {
     }
   };
 
-  const handleRemove = (item_id: string | undefined, quantity: number = 1) => {
+  const handleRemove = (item_id: string, quantity: number = 1) => {
     if (editingBooking) {
       setTempBookingItems(tempBookingItems.map(item => {
         if (item.item_id == item_id) {
@@ -261,7 +274,7 @@ function SingleBooking() {
             Booking ID: {booking.booking_id.slice(0, 8).toUpperCase()}
           </Typography>
           {!editingBooking ?
-            <Typography variant="body2">{`${items[0].start_date} - ${items[0].end_date}`}</Typography>
+            <Typography variant="body2">{tempBookingRange && `${tempBookingRange.start.toString()} - ${tempBookingRange.end.toString()}`}</Typography>
             :
             <Provider theme={defaultTheme} colorScheme="light" maxWidth={270}>
               <DateRangePicker
@@ -304,7 +317,7 @@ function SingleBooking() {
                         <Stack>
                           <Typography>{item.item_name}</Typography>
                           {incorrectTempBooking &&
-                            <Typography color="error">{qtyCheckErrors[item.item_id]}</Typography>
+                            <Typography color="error">{(item.item_id && qtyCheckErrors[item.item_id])}</Typography>
                           }
                         </Stack>
                       </Stack>
@@ -322,7 +335,7 @@ function SingleBooking() {
                       >
                         <Button
                           onClick={() => {
-                            handleRemove(item.item_id);
+                            (item.item_id && handleRemove(item.item_id));
                           }}
                           variant="outlined"
                           sx={{
@@ -357,7 +370,7 @@ function SingleBooking() {
                         <Button
                           variant="outlined"
                           onClick={() => {
-                            handleIncrease(item.item_id);
+                            (item.item_id && handleIncrease(item.item_id));
                           }}
                           sx={{
                             borderRadius: '60px',
@@ -377,78 +390,82 @@ function SingleBooking() {
             </TableBody>
           </Table>
         </TableContainer>
-
-        <Box display="flex" justifyContent="flex-end">
-          {!editingBooking ?
-            <Button
-              size="small"
-              variant="outlined_rounded"
-              sx={{
-                mt: 2,
-                display: 'block',
-                ml: 'auto',
-                height: 'fit-content',
-                width: 'fit-content',
-                padding: '6px 40px',
-              }}
-              onClick={handleStartEditingBooking}
-            >
-              Edit Booking
-            </Button>
-            :
-            <>
-              <Button
-                size="small"
-                variant="outlined_rounded"
-                sx={{
-                  mt: 2,
-                  display: 'block',
-                  ml: 'auto',
-                  height: 'fit-content',
-                  width: 'fit-content',
-                  padding: '6px 40px',
-                }}
-                onClick={handleSaveEditingBooking}
-              >
-                Save
-              </Button>
-              <Button
-                size="small"
-                variant="outlined_rounded"
-                sx={{
-                  mt: 2,
-                  display: 'block',
-                  ml: 'auto',
-                  height: 'fit-content',
-                  width: 'fit-content',
-                  padding: '6px 40px',
-                }}
-                onClick={handleCancelEditingBooking}
-              >
-                Cancel
-              </Button>
-            </>
-          }
-        </Box>
         {
           // Only allow dates that are after todays date to be cancelled
           // And booking that haven't been cancelled or rejected
           canModify(booking_selector) && (
-            <Button
-              onClick={() => setWantsToCancel(true)}
-              size="small"
-              variant="outlined_rounded"
-              sx={{
-                mt: 2,
-                display: 'block',
-                ml: 'auto',
-                height: 'fit-content',
-                width: 'fit-content',
-                padding: '6px 40px',
-              }}
-            >
-              Cancel Booking
-            </Button>
+            <>
+              <Box display="flex" justifyContent="flex-end">
+                {!editingBooking ?
+                  <Button
+                    size="small"
+                    variant="outlined_rounded"
+                    sx={{
+                      mt: 2,
+                      display: 'block',
+                      ml: 'auto',
+                      height: 'fit-content',
+                      width: 'fit-content',
+                      padding: '6px 40px',
+                    }}
+                    onClick={handleStartEditingBooking}
+                  >
+                    Edit Booking
+                  </Button>
+                  :
+                  <>
+                    {!incorrectTempBooking &&
+                      <Button
+                        size="small"
+                        variant="outlined_rounded"
+                        sx={{
+                          mt: 2,
+                          display: 'block',
+                          ml: 'auto',
+                          height: 'fit-content',
+                          width: 'fit-content',
+                          padding: '6px 40px',
+                        }}
+                        onClick={handleSaveEditingBooking}
+                      >
+                        Save
+                      </Button>
+                    }
+                    <Button
+                      size="small"
+                      variant="outlined_rounded"
+                      sx={{
+                        mt: 2,
+                        display: 'block',
+                        ml: 'auto',
+                        height: 'fit-content',
+                        width: 'fit-content',
+                        padding: '6px 40px',
+                      }}
+                      onClick={handleCancelEditingBooking}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                }
+              </Box>
+
+              <Button
+                onClick={() => setWantsToCancel(true)}
+                size="small"
+                variant="outlined_rounded"
+                sx={{
+                  mt: 2,
+                  display: 'block',
+                  ml: 'auto',
+                  height: 'fit-content',
+                  width: 'fit-content',
+                  padding: '6px 40px',
+                }}
+              >
+                Cancel Booking
+              </Button>
+            </>
           )
         }
         {wantsToCancel &&
@@ -470,6 +487,7 @@ function SingleBooking() {
           </Dialog>
         }
       </Box>
+
     </Box>
   );
 }
