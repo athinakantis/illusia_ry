@@ -8,10 +8,14 @@ import { fetchFutureReservations, selectAllReservations } from '../slices/reserv
 import { fetchAllCategories, fetchAllItems, selectAllCategories, selectAllItems } from '../slices/itemsSlice';
 import { loadCartFromStorage, selectCart } from '../slices/cartSlice';
 import ScrollToTop from '../utility/ScrollToTop';
+import { fetchAllUsersWithRole, selectAllUsers } from '../slices/usersSlice';
+import { fetchAllBookings, selectAllBookings } from '../slices/bookingsSlice';
 
 function Root() {
   const reservations = useAppSelector(selectAllReservations);
   const items = useAppSelector(selectAllItems);
+  const users = useAppSelector(selectAllUsers);
+  const bookings = useAppSelector(selectAllBookings);
   const categories = useAppSelector(selectAllCategories);
   const { cart } = useAppSelector(selectCart);
   const dispatch = useAppDispatch();
@@ -22,7 +26,19 @@ function Root() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if(users.length <= 1) {
+      dispatch(fetchAllUsersWithRole());
+    }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
+  useEffect(() => {
+      if(!bookings.length) {
+          dispatch(fetchAllBookings());
+      }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   /*
   Effect to fetch ITEMS and CATEGORIES
   */

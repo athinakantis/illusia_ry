@@ -230,6 +230,14 @@ const AdminDashboard = () => {
             }}>
             <Trans i18nKey="admin.dashboard.manage_users">Manage users</Trans>
           </Button>
+          <Button
+            component={Link} to="/admin/logs" variant="rounded" color="grey"
+            sx={{
+              height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
+              pl: 4, pr: 4, textTransform: 'capitalize'
+            }}>
+            View logs
+          </Button>
         </Stack>
       </Box>
 
