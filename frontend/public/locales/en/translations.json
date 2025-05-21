@@ -32,7 +32,7 @@
   },
   "home": {
     "heroTitle": "Your go-to specialty store for LARP props and accessories",
-    "heroDescription": "Whether you need smaller props or larger set pieces, you’ll find everything you need to bring your story to life.",
+    "heroDescription": "Whether you need smaller props or larger set pieces, you'll find everything you need to bring your story to life.",
     "categoriesTitle": "View Our Range Of Categories",
     "categoriesDescription": "We offer a wide range of supplies — from combat vests to spaceship consoles, crafting materials, fire extinguishers — and everything in between.",
     "categories": {
@@ -119,6 +119,7 @@
   "items": {
     "browse": "Browse Items",
     "manage": "Manage Items",
-    "search": "Search our items"
+    "search": "Search our items",
+    "date_picker_disabled_info": "You cannot select new dates while you have items with previously selected dates in your cart. Please clear your cart or adjust dates within the cart."
   }
 }

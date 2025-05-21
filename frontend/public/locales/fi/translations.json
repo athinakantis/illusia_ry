@@ -119,6 +119,7 @@
   "items": {
     "browse": "Selaa tuotteita",
     "manage": "Hallinnoi tuotteita",
-    "search": "Etsi tuotteita"
+    "search": "Etsi tuotteita",
+    "date_picker_disabled_info": "Et voi vaihtaa päivämäärää, kun ostoskorissasi on tuotteita valituilla päivillä. Tyhjennä ostoskori tai muuta päivämäärää ostoskorin sisällä."
   }
 }
