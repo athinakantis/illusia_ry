@@ -262,6 +262,7 @@ const AdminBookings = () => {
               </TableCell>
             </TableRow>
           </TableHead>
+          {/*———————————————————————————— Table Body ——————————————————————————*/}
           <TableBody>
             {filteredBookings.map((b) => {
               const res = reservationsByBooking(b.booking_id);
@@ -295,7 +296,9 @@ const AdminBookings = () => {
                     </TableCell>
                     {/*——————————————————————— ID ————————————————————————————*/}
                     <TableCell sx={{ color: 'primary.main' }}>
-                      {b.booking_id.slice(0, 8)}
+                      <Link to={`/bookings/${b.booking_id}`} style={{ color: 'inherit' }}>
+                        {b.booking_id.slice(0, 8).toUpperCase()}
+                      </Link>
                     </TableCell>
                     {/*——————————————————————— Created ————————————————————————————*/}
                     <TableCell>
