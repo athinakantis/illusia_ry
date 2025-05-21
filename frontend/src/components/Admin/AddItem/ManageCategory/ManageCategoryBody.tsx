@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CircularProgress,
   Collapse,
   IconButton,
   List,
