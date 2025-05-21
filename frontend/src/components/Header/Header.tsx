@@ -29,7 +29,7 @@ const Header = () => {
   const theme = useTheme();
   const navigate = useNavigate()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cart } = useAppSelector(selectCart)
   // Calculate total quantity of all cart items
@@ -50,14 +50,14 @@ const Header = () => {
 
 
   const drawer = (
-    <Stack sx={{ justifyContent: 'space-between', height: '100%' }}>
+    <Stack sx={{
+      justifyContent: 'space-between', height: '100%',
+      '& .MuiListItem-root': { height: 45 },
+      '& .MuiListItemText-root': { transition: 'all 200ms', padding: '7px 16px', borderRadius: 3, m: 0 },
+      '& .MuiListItemText-root:hover': { bgcolor: '#f5f5f5' }
+    }}>
 
-      <List
-        sx={{
-          '& .MuiListItem-root': { height: 45 },
-          '& .MuiListItemText-root': { transition: 'all 200ms', padding: '7px 16px', borderRadius: 3, m: 0 },
-          '& .MuiListItemText-root:hover': { bgcolor: '#f5f5f5' }
-        }}>
+      <List>
         <ListItem
           onClick={() => navigateToPage('/')}
           sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
@@ -90,6 +90,13 @@ const Header = () => {
             <Divider variant="middle" component="li" sx={{ my: 2 }} />
 
             <ListItem
+              onClick={() => navigateToPage('/admin/dashboard')}
+              sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+            >
+              <ListItemText primary={<Trans i18nKey="nav.dashboard">Dashboard</Trans>} />
+            </ListItem>
+
+            <ListItem
               onClick={() => navigateToPage('/admin/bookings')}
               sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
             >
@@ -108,27 +115,57 @@ const Header = () => {
 
       </List>
       <Box>
+        <ListItem>
+          <Button
+            variant="text"
+            size="small"
+            color="primary"
+            sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
+            onClick={() => { i18n.changeLanguage('en'); setMobileOpen(!mobileOpen); }}
+          >
+            En
+          </Button>
+          <Button
+            variant="text"
+            size="small"
+            color="primary"
+            sx={{ padding: '4px 10px', minWidth: 'fit-content' }}
+            onClick={() => { i18n.changeLanguage('fi'); setMobileOpen(!mobileOpen); }}
+          >
+            Fin
+          </Button>
+        </ListItem>
         {user ?
           <ListItem
-            component={Button}
-            variant='text'
-
-            onClick={() => {
-              signOut()
-              handleDrawerToggle
-            }}
-            sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+            sx={{ textDecoration: 'none', mb: 2, color: 'inherit', '&:hover': { cursor: 'pointer' } }}
           >
-            <ListItemText primary={<Trans i18nKey="nav.logOut"></Trans>} />
+            <Button
+              variant="text_contained"
+              size="small"
+              color="primary"
+              sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
+              onClick={() => {
+                signOut()
+                handleDrawerToggle
+              }}
+            >
+              <Trans i18nKey="nav.logOut">Log out</Trans>
+            </Button>
           </ListItem>
           :
           <ListItem
-            component={Button}
-            variant='text'
             onClick={() => navigateToPage('login')}
-            sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+            sx={{ textDecoration: 'none', mb: 2, color: 'inherit', '&:hover': { cursor: 'pointer' } }}
           >
-            <ListItemText primary={<Trans i18nKey="nav.logIn">Log in</Trans>} />
+            <Button
+              variant="text_contained"
+              size="small"
+              color="primary"
+              sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
+              onClick={() => { i18n.changeLanguage('en'); setMobileOpen(!mobileOpen); }}
+            >
+              <Trans i18nKey="nav.logOut">Log out</Trans>
+            </Button>
           </ListItem>
         }
       </Box>
