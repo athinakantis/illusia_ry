@@ -11,6 +11,12 @@ import {
   ListItemText,
   TextField,
   Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import { Add, Close, Delete, Edit, Save } from "@mui/icons-material";
 import { useEffect, useState } from "react";
@@ -41,6 +47,27 @@ const ManageCategoryBody = () => {
   const [editId, setEditId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
   const [editImg, setEditImg] = useState("");
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
+
+  const handleDeleteClick = (cat: Category) => {
+    setCategoryToDelete(cat);
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (categoryToDelete) {
+      dispatch(deleteCategory(categoryToDelete.category_id));
+    }
+    setConfirmOpen(false);
+    setCategoryToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmOpen(false);
+    setCategoryToDelete(null);
+  };
 
   useEffect(() => {
     if (!categories.length) dispatch(fetchAllCategories());
@@ -76,7 +103,6 @@ const ManageCategoryBody = () => {
     }
     setEditId(null);
   };
-  const handleDelete = (id: string) => dispatch(deleteCategory(id));
 
   /* -------- render -------- */
   return (
@@ -123,7 +149,6 @@ const ManageCategoryBody = () => {
               {categories.map((cat) => {
                 const isEditing = editId === cat.category_id;
                 return (
-                  
                   <ListItem
                     key={cat.category_id}
                     secondaryAction={isEditing
@@ -142,11 +167,16 @@ const ManageCategoryBody = () => {
                           <IconButton onClick={() => handleEdit(cat)}>
                             <Edit />
                           </IconButton>
-                          <IconButton
-                            onClick={() => handleDelete(cat.category_id)}
-                          >
-                            <Delete />
-                          </IconButton>
+                          <Tooltip title={cat.category_name === 'Uncategorized' ? "Cannot delete Uncategorized" : "Delete category"}>
+                            <span>
+                              <IconButton
+                                onClick={() => handleDeleteClick(cat)}
+                                disabled={cat.category_name === 'Uncategorized'}
+                              >
+                                <Delete />
+                              </IconButton>
+                            </span>
+                          </Tooltip>
                         </>
                       )}
                   >
@@ -181,8 +211,10 @@ const ManageCategoryBody = () => {
                             src={cat.image_path}
                             alt={cat.category_name}
                             sx={{
-                              width: 32,
-                              height: 32,
+                              width: 50,
+                              height: 50,
+                              borderRadius: "5px",
+                              objectFit: "cover",
                               mr: 1,
                             }}
                           />
@@ -205,6 +237,18 @@ const ManageCategoryBody = () => {
             </List>
           )}
       </CardContent>
+      <Dialog open={confirmOpen} onClose={handleCancelDelete} maxWidth="sm">
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete the category "{categoryToDelete?.category_name}"?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete} color="secondary">Cancel</Button>
+          <Button onClick={handleConfirmDelete} color="error">Delete</Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   );
 };

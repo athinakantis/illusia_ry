@@ -8,9 +8,7 @@ import {
 } from '@mui/material';
 import CategoryIcon from '@mui/icons-material/Category';
 import CloseIcon from '@mui/icons-material/Close';
-
 import ManageCategoryBody from './ManageCategoryBody';
-import FullScreenDialog from './Dialog';
 
 
 const ManageCategory = () => {
@@ -29,11 +27,6 @@ const ManageCategory = () => {
       >
         Manage Categories
       </Button>
-
-      <FullScreenDialog
-
-      />
-
 
       {/* Modal overlay */}
       <Dialog
