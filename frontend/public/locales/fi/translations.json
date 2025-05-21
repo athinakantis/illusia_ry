@@ -86,13 +86,24 @@
     "empty": "Ostoskori on tyhjä! <1>Selaa tuotteita</1>"
   },
   "home": {
-    "heroTitle": "Live action -roolipelien rekvisiittakoti",
-    "heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ahdistelussa ei ole nyt mitään hienostelua. Nyt artikkelin kirjoittaja on nero, joka on tyyny. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nyt ahdistetussa feugiatissa ei ole fringillaa.",
+    "heroTitle": "Erikoiskauppa LARP-rekvisiitalle, tarvikkeille ja lavasteille",
+    "heroDescription": "Tarvitsetpa sitten pienempää rekvisiittaa tai isompia lavasteita, meiltä löydät kaiken tarvittavan tarinasi eloon herättämiseksi.",
     "categoriesTitle": "Tutustu kategoriavalikoimaamme",
-    "categoriesDescription": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.",
-    "askQuestion": "Kysy kysymys"
+    "categoriesDescription": "Meiltä löytyy monipuolisesti tarvikkeita taisteluliiveistä avararuusalusten konsoleihin, askartelutarpeisiin, vaahtosammuttimiin - ja kaikkeen siltä väliltä.",
+    "categories": {
+      "clothing": "Vaatteet",
+      "board_games": "Lautapelit",
+      "props": "Lavasteet",
+      "accessories": "Asusteet"
+    },
+    "cta": {
+      "browse_items": "Selaa tuotteita"
+    }
   },
   "faq": {
+    "faqTitle": "Usein kysytyt kysymykset",
+    "askQuestion": "Esitä kysymys",
+    "faqDescription": "Ennen kuin otat yhteyttä tarkista usein kysytyt kysymykset.",
     "question1": "Milloin varaukseni hyväksytään?",
     "answer1": "Käymme varaukset läpi mahdollisimman pian. Varaukset hyväksytään yleensä 2–3 päivän kuluessa. Jos olet odottanut yli 5 päivää, lähetä meille sähköpostia.",
     "question2": "Kuinka pitkäksi aikaa voin varata tuotteita?",
@@ -100,12 +111,69 @@
     "question3": "Miksi minun on saatava hyväksyntä ennen kuin voin varata tuotteita?",
     "answer3": "Käyttäjiemme hyväksyntä takaa meille, että lainatut esineet palautetaan viimeistään kahden viikon kuluessa."
   },
-  "snackbarTest": {
-    "title": "Käännetty Snackbar -testi",
-    "success": "Onnistui",
-    "warning": "Varoitus",
-    "error": "Virhe",
-    "info": "Info",
-    "default": "Oletus"
+  "admin": {
+    "dashboard": {
+      "title": "Hallintapaneeli",
+      "stats": {
+        "total_users": "Käyttäjät yhteensä",
+        "total_bookings": "Varaukset yhteensä",
+        "inventory_items": "Varastotuotteet"
+      },
+      "quick_actions": "Pikatoiminnot",
+      "add_item": "Lisää tuote",
+      "view_bookings": "Näytä varaukset",
+      "manage_users": "Hallitse käyttäjiä",
+      "upcoming_bookings": "Tulevat varaukset",
+      "recent_activity": "Viimeisin toiminta",
+      "users_and_roles": "Käyttäjät ja roolit",
+      "show_booking": "Näytä varaus",
+      "columns": {
+        "name": "Nimi",
+        "status": "Tila",
+        "duration": "Kesto",
+        "date_range": "Aikaväli",
+        "actions": "Toiminnot",
+        "last_sign_in": "Viimeisin kirjautuminen",
+        "confirmed": "Vahvistettu",
+        "role": "Rooli"
+      },
+      "status": {
+        "pending": "Odottaa",
+        "approved": "Hyväksytty",
+        "rejected": "Hylätty",
+        "cancelled": "Peruutettu",
+        "completed": "Valmis"
+      },
+      "duration": {
+        "days": "päivää"
+      }
+    },
+    "add_product": {
+      "title": "Lisää uusi tuote",
+      "item_name": "Tuotteen nimi",
+      "description": "Kuvaus",
+      "location": "Sijainti",
+      "quantity": "Määrä",
+      "category": "Kategoria",
+      "upload_files": "Lataa kuvat",
+      "selected_images": "Valitut kuvat:",
+      "add": "Lisää tuote",
+      "adding": "Lisätään tuotetta...",
+      "uploading": "Ladataan tuotetta...",
+      "upload_failed": "Kuvien lataus epäonnistui. Yritä uudelleen.",
+      "success": "Tuote lisätty onnistuneesti!",
+      "save_failed": "Tuotteen tallennus epäonnistui. Yritä uudelleen."
+    }
+  },
+  "roles": {
+    "head_admin": "Pääkäyttäjä",
+    "admin": "Ylläpitäjä",
+    "user": "Käyttäjä",
+    "unapproved": "Hyväksymätön"
+  },
+  "items": {
+    "browse": "Selaa tuotteita",
+    "manage": "Hallinnoi tuotteita",
+    "search": "Etsi tuotteita"
   }
 }
