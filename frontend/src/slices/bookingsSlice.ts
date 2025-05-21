@@ -247,6 +247,16 @@ export const selectBookingsCount = (state: RootState) =>
 export const selectBookingsByUserId = (userId: string) => (state: RootState) =>
   state.bookings.bookings.filter((booking) => booking.user_id === userId);
 
+/**
+ * Selector to retrieve a single booking by its booking_id
+ */
+export const selectBookingById = (
+  state: RootState,
+  bookingId: string
+) => state.bookings.bookings.find(
+  (booking) => booking.booking_id === bookingId
+);
+
 export const selectBookingDates = (booking_id: string) => (state: RootState) => {
   const bookingWithId = state.bookings.userBookings.find((booking) => booking.booking_id === booking_id);
 

@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogActions,
   Button,
+  Avatar,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -29,8 +30,10 @@ import {
   deleteBooking,
   fetchUserBookings,
   selectUserBookings,
+  updateBookingStatus,
 } from '../../slices/bookingsSlice';
-import { showCustomSnackbar } from '../CustomSnackbar';
+import { useTranslatedSnackbar } from '../CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
+import { useTranslation} from 'react-i18next';
 import Spinner from '../Spinner';
 import { Link } from 'react-router-dom';
 
@@ -43,9 +46,22 @@ const UserBookings = () => {
 
   /* ─────────────────── handlers ─────────────────── */
   const handleCancel = (booking: BookingWithRes) => {
-    dispatch(deleteBooking(booking.booking_id));
-    showCustomSnackbar('Your booking was deleted!', 'info');
-    setWantsToCancel(null);
+    if (booking.status === 'pending') {
+      dispatch(deleteBooking(booking.booking_id));
+      showSnackbar({
+        message: t('userBookings.snackbar.bookingDeleted', {
+        defaultValue: 'Your booking was deleted!',
+        }),
+        variant: 'info',
+      });
+    } else {
+      dispatch(updateBookingStatus({ id: booking.booking_id, status: 'cancelled' }))
+      showSnackbar({message: t('userBookings.snackbar.bookingCancelled', {
+          defaultValue: 'Booking cancelled',  
+        }),
+        variant: 'info',               
+      });
+    }
 
     setWantsToCancel(null)
   };
@@ -90,6 +106,13 @@ const UserBookings = () => {
     (state: RootState) => state.items.items as Item[],
   );
 
+  const { t } = useTranslation();
+  const { showSnackbar } = useTranslatedSnackbar();
+
+  // Helper to fetch the first image url for an item
+  const getItemImage = (id: string): string | undefined =>
+    items.find(i => i.item_id === id)?.image_path?.[0];
+
   /* ─────────────────── UI states ─────────────────── */
   if (loading)
     return (
@@ -113,11 +136,13 @@ const UserBookings = () => {
           gutterBottom
           sx={{ mb: 2 }}
         >
-          Your Bookings
+          {t('userBookings.heading', { defaultValue: 'Your Bookings' })}
         </Typography>
 
         {bookings.length === 0 ? (
-          <Typography>No bookings yet.</Typography>
+          <Typography>
+            {t('userBookings.noBookings', { defaultValue: 'No bookings yet.' })}
+          </Typography>
         ) : (
           <Stack spacing={4}>
             {sortedBookings.map((booking) => (
@@ -137,11 +162,11 @@ const UserBookings = () => {
                   >
                     <Stack sx={{ gap: '2px' }}>
                       <Typography variant="subheading" fontWeight={600}>
-                        Booking&nbsp;ID:&nbsp;
+                      {t('userBookings.bookingId', { defaultValue: 'Booking ID' })}:
                         {booking.booking_id.slice(0, 8).toUpperCase()}
                       </Typography>
                       <Typography variant="body3" fontWeight={500} fontSize={14}>
-                        Created at {new Date(booking.created_at).toLocaleString()}
+                      {t('userBookings.created', { defaultValue: 'Created at' })} {new Date(booking.created_at).toLocaleString()}
                       </Typography>
                     </Stack>
 
@@ -170,7 +195,13 @@ const UserBookings = () => {
                         }
                       />
                       {canModify(booking) && (
-                        <Tooltip title={booking.status === 'approved' ? 'Cancel booking' : 'Delete booking'}>
+                        <Tooltip
+                          title={
+                            booking.status === 'approved'
+                              ? t('userBookings.cancelTooltip', { defaultValue: 'Cancel booking' })
+                              : t('userBookings.deleteTooltip', { defaultValue: 'Delete booking' })
+                          }
+                        >
                           <IconButton
                             onClick={(e) => {
                               e.preventDefault();
@@ -196,26 +227,51 @@ const UserBookings = () => {
                         },
                       }}
                     >
+                      {/*——————————— Table Header —————————————*/}
                       <TableHead>
                         <TableRow>
+                          <TableCell sx={{ width: 56 }} />
+                          {/*——————————— Item Name ————————————*/}
                           <TableCell align="left" sx={{ pl: 0 }}>
-                            Item
+                            {t('userBookings.item', { defaultValue: 'Item' })}
                           </TableCell>
-                          <TableCell>Start Date</TableCell>
-                          <TableCell>End Date</TableCell>
-                          <TableCell align="center">Quantity</TableCell>
+                          {/*——————————— Start Date ———————————*/}
+                          <TableCell>
+                            {t('userBookings.startDate', { defaultValue: 'Start Date' })}
+                          </TableCell>
+                          {/*——————————— End Date ——————————————*/}
+                          <TableCell>
+                            {t('userBookings.endDate', { defaultValue: 'End Date' })}
+                          </TableCell>
+                          {/*———————————— Quantity —————————————*/}
+                          <TableCell align="center">
+                            {t('userBookings.quantity', { defaultValue: 'Quantity' })}
+                          </TableCell>
                         </TableRow>
                       </TableHead>
+                      {/*——————————— Table Body ———————————*/}
                       <TableBody>
                         {booking.reservations.map((res) => (
                           <TableRow key={res.reservation_id}>
+                            {/*———————— Item Image —————————*/}
+                            <TableCell sx={{ width: 56 }}>
+                              <Avatar
+                                src={getItemImage(res.item_id)}
+                                alt={items.find((i) => i.item_id === res.item_id)?.item_name ?? res.item_id}
+                                variant="square"
+                                sx={{ width: 48, height: 48 }}
+                              />
+                            </TableCell>
+                            {/*————————— Item Name ——————————*/}
                             <TableCell align="left" sx={{ pl: 0 }}>
                               {items.find((i) => i.item_id === res.item_id)
                                 ?.item_name ?? res.item_id}
                             </TableCell>
+                            {/*—————————— Start Date ——————————*/}
                             <TableCell>
                               {new Date(res.start_date).toLocaleDateString()}
                             </TableCell>
+                            {/*—————————— End Date —————————————*/}
                             <TableCell>
                               {new Date(res.end_date).toLocaleDateString()}
                             </TableCell>
@@ -232,20 +288,31 @@ const UserBookings = () => {
         )}
       </Box>
       {wantsToCancel &&
+        // Dialog to confirm booking cancellation
         <Dialog
           open={wantsToCancel ? true : false}
           onClose={() => setWantsToCancel(null)}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
+          {/* Confirm Cancel */}
           <DialogTitle id="alert-dialog-title">
-            Are you sure you want to cancel your booking?
+            {t('userBookings.confirmCancel', {
+              defaultValue: 'Are you sure you want to cancel your booking?',
+            })}
           </DialogTitle>
           <DialogActions>
-            <Button variant='outlined' onClick={() => handleCancel(wantsToCancel)}>
-              Yes, I'm sure
+            <Button variant="outlined" onClick={() => handleCancel(wantsToCancel)}>
+              {t('userBookings.confirmYes', { defaultValue: "Yes, I'm sure" })}
             </Button>
-            <Button variant='contained' color='secondary' autoFocus onClick={() => setWantsToCancel(null)}>No thanks</Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              autoFocus
+              onClick={() => setWantsToCancel(null)}
+            >
+              {t('userBookings.confirmNo', { defaultValue: 'No thanks' })}
+            </Button>
           </DialogActions>
         </Dialog>
       }

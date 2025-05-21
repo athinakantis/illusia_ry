@@ -373,7 +373,6 @@ import { SupabaseClient } from '@supabase/supabase-js';
       .select('*')
       .eq('user_id', userId)
       .maybeSingle();
-      console.log(`Updated user: ${JSON.stringify(updatedUser)}`);
 
     if (fetchErr) {
       throw new BadRequestException(fetchErr.message);

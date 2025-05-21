@@ -51,7 +51,6 @@ export class GuestController {
 
   @Get(':id')
   async getItemById(@Param('id') id: string) {
-    console.log("Fetching item with ID:", id);
     return this.guestService.getItemById(id);
   }
 
