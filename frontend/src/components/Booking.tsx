@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogTitle,
@@ -101,10 +102,16 @@ function SingleBooking() {
 
   return (
     <Box maxWidth={900} sx={{ m: 'auto', p: 2 }}>
-      <Typography variant="heading_secondary_bold">
-        Booking ID: {booking.booking_id.slice(0, 8).toUpperCase()}
-      </Typography>
-      <Typography variant="body2">{`${items[0].start_date} - ${items[0].end_date}`}</Typography>
+      <Stack sx={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
+        <Stack>
+          <Typography variant="heading_secondary_bold">
+            Booking ID: {booking.booking_id.slice(0, 8).toUpperCase()}
+          </Typography>
+          <Typography variant="body2">{`${items[0].start_date} - ${items[0].end_date}`}</Typography>
+        </Stack>
+
+        <Chip label={booking.status} />
+      </Stack>
 
       <Box>
         <TableContainer sx={{ pt: 2 }}>
