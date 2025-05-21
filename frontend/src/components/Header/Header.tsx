@@ -12,6 +12,7 @@ import {
   useTheme,
   Divider,
   Button,
+  Stack,
 } from '@mui/material';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Link, useNavigate } from 'react-router-dom';
@@ -49,77 +50,90 @@ const Header = () => {
 
 
   const drawer = (
-    <List>
-      <ListItem
-        onClick={() => navigateToPage('/')}
-        sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
-      >
-        <ListItemText primary={<Trans i18nKey="nav.home">Home</Trans>} />
-      </ListItem>
-      <ListItem
-        onClick={() => navigateToPage('/items')}
-        sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
-      >
-        <ListItemText primary={<Trans i18nKey="nav.items">Items</Trans>} />
-      </ListItem>
-      <ListItem
-        onClick={() => navigateToPage('/contact')}
-        sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
-      >
-        <ListItemText primary={<Trans i18nKey="nav.contact">Contact</Trans>} />
-      </ListItem>
-      {user && (
+    <Stack sx={{ justifyContent: 'space-between', height: '100%' }}>
+
+      <List
+        sx={{
+          '& .MuiListItem-root': { height: 45 },
+          '& .MuiListItemText-root': { transition: 'all 200ms', padding: '7px 16px', borderRadius: 3, m: 0 },
+          '& .MuiListItemText-root:hover': { bgcolor: '#f5f5f5' }
+        }}>
         <ListItem
-          onClick={() => navigateToPage('/bookings')}
+          onClick={() => navigateToPage('/')}
           sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
         >
-          <ListItemText primary={<Trans i18nKey="nav.bookings">My bookings</Trans>} />
+          <ListItemText primary={<Trans i18nKey="nav.home">Home</Trans>} />
         </ListItem>
-      )}
-
-      {isAdmin && (
-        <>
-          <Divider variant="middle" component="li" />
-
+        <ListItem
+          onClick={() => navigateToPage('/items')}
+          sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+        >
+          <ListItemText primary={<Trans i18nKey="nav.items">Items</Trans>} />
+        </ListItem>
+        <ListItem
+          onClick={() => navigateToPage('/contact')}
+          sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+        >
+          <ListItemText primary={<Trans i18nKey="nav.contact">Contact</Trans>} />
+        </ListItem>
+        {user && (
           <ListItem
-            onClick={() => navigateToPage('/admin/bookings')}
+            onClick={() => navigateToPage('/bookings')}
             sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
           >
-            <ListItemText primary={<Trans i18nKey="nav.manageBookings">Manage bookings</Trans>} />
+            <ListItemText primary={<Trans i18nKey="nav.bookings">My bookings</Trans>} />
           </ListItem>
+        )}
 
+        {isAdmin && (
+          <>
+            <Divider variant="middle" component="li" sx={{ my: 2 }} />
+
+            <ListItem
+              onClick={() => navigateToPage('/admin/bookings')}
+              sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+            >
+              <ListItemText primary={<Trans i18nKey="nav.manageBookings">Manage bookings</Trans>} />
+            </ListItem>
+
+            <ListItem
+              onClick={() => navigateToPage('/admin/users')}
+              sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+
+            >
+              <ListItemText primary={<Trans i18nKey="nav.manageUsers">Manage Users</Trans>} />
+            </ListItem>
+          </>
+        )}
+
+      </List>
+      <Box>
+        {user ?
           <ListItem
-            onClick={() => navigateToPage('/admin/users')}
+            component={Button}
+            variant='text'
+
+            onClick={() => {
+              signOut()
+              handleDrawerToggle
+            }}
             sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
-
           >
-            <ListItemText primary={<Trans i18nKey="nav.manageUsers">Manage Users</Trans>} />
+            <ListItemText primary={<Trans i18nKey="nav.logOut"></Trans>} />
           </ListItem>
-        </>
-      )}
+          :
+          <ListItem
+            component={Button}
+            variant='text'
+            onClick={() => navigateToPage('login')}
+            sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+          >
+            <ListItemText primary={<Trans i18nKey="nav.logIn">Log in</Trans>} />
+          </ListItem>
+        }
+      </Box>
+    </Stack >
 
-      {user ?
-        <ListItem
-          component={Button}
-          variant='text'
-          onClick={() => {
-            signOut
-            handleDrawerToggle
-          }}
-          sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
-        >
-          <ListItemText primary={<Trans i18nKey="nav.logOut"></Trans>} />
-        </ListItem>
-        :
-        <ListItem
-          component={Button}
-          onClick={() => navigateToPage('login')}
-          sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
-        >
-          <ListItemText primary={<Trans i18nKey="nav.logIn">Log in</Trans>} />
-        </ListItem>
-      }
-    </List>
   );
 
   return (
