@@ -33,6 +33,9 @@ import { ItemWithQuantity, Reservation } from '../types/types';
 import { Tables } from '../types/supabase.type';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
+import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
+import { store } from '../store/store';
+import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 
 function SingleBooking() {
   const navigate = useNavigate();
@@ -50,7 +53,7 @@ function SingleBooking() {
     Pick<Reservation, 'quantity' | 'start_date' | 'end_date'>
   >>([]);
   const [qtyCheckErrors] = useState<Record<string, string>>({});
-  const [incorrectBooking, setIncorrectBooking] = useState(false);
+  const [incorrectTempBooking, setIncorrectTempBooking] = useState(false);
 
 
 
@@ -74,17 +77,134 @@ function SingleBooking() {
 
   const handleStartEditingBooking = () => {
     setEditingBooking(true);
-    updateTempBooking();
+
   }
 
   const handleSaveEditingBooking = () => {
     setEditingBooking(false);
+    // hee should confirm all the edits by updating the reservations
   }
 
   const handleCancelEditingBooking = () => {
+    updateTempBookingWithBooking();
+    setIncorrectTempBooking(false);
     setEditingBooking(false);
-
   }
+
+  const checkTempBookingForDates = (newRange: RangeValue<DateValue> | null = tempBookingRange) => {
+    Object.keys(qtyCheckErrors).forEach(key => {
+      delete qtyCheckErrors[key];
+    }); // emtying the errors array*/
+
+    if (newRange) {
+
+      tempBookingItems.forEach(item => {
+        const initialItemQty = booking_selector?.items.find(initialItem => initialItem.item_id === item.item_id)?.quantity ?? 0;
+        if (item) {
+          const availabilityCheck = checkAvailabilityForItemOnDates(
+            item.item_id,
+            item.quantity - initialItemQty, // is not updated fast enough
+            newRange.start.toString(),
+            newRange.end.toString(),
+            false
+          )(store.getState());
+
+          if (availabilityCheck.severity != 'success') {
+            qtyCheckErrors[item.item_id] = availabilityCheck.message;
+          }
+          // finish the check - if there is no success ,then there is a error
+        }
+      });
+
+      setIncorrectTempBooking(Object.keys(qtyCheckErrors).length !== 0);
+
+    }
+  }
+
+  const handleDateChange = (newRange: RangeValue<DateValue> | null) => {
+    if (newRange) {
+      const startDate = new Date(newRange.start.toString());
+      const endDate = new Date(newRange.end.toString());
+      const diffInMs = endDate.getTime() - startDate.getTime();
+      const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+      if (diffInDays > 14) {
+        showCustomSnackbar('You can only book a maximum of 14 days', 'warning');
+        return;
+      }
+      setTempBookingRange(newRange);
+      checkTempBookingForDates(newRange);
+    }
+  };
+
+  const handleRemove = (item_id: string | undefined, quantity: number = 1) => {
+    if (editingBooking) {
+      setTempBookingItems(tempBookingItems.map(item => {
+        if (item.item_id == item_id) {
+          if (item.quantity - quantity >= 0) {
+            item.quantity -= quantity;
+          }
+        }
+        return item;
+      }))
+
+      checkTempBookingForDates();
+      // if the cart is being edited, the changes reflect only in local cart, not touching redux
+    }
+  }
+
+  const handleIncrease = (item_id: string, quantity: number = 1) => {
+    if (tempBookingRange) {
+      const start_date = tempBookingRange.start.toString();
+      const end_date = tempBookingRange.end.toString();
+      const qtyInLocalCart = tempBookingItems.find(item => item.item_id === item_id)?.quantity ?? 0;
+      const initialItemQty = booking_selector?.items.find(item => item.item_id === item_id)?.quantity ?? 0;
+
+      const checkAdditionToCart = checkAvailabilityForItemOnDates(
+        item_id,
+        qtyInLocalCart + quantity - initialItemQty, // currently still includes the number from the reservation. Should subsctract the total qty in of the item in the reservation
+        start_date,
+        end_date,
+        false,
+      )(store.getState());
+      // checks if item can be added to cart
+      if (checkAdditionToCart.severity === 'success') {
+        if (editingBooking) {
+          setTempBookingItems(tempBookingItems.map(item => {
+            if (item.item_id == item_id) {
+              item.quantity += quantity;
+            }
+            return item;
+          }))
+          // if the cart is being edited, then only added to local cart
+        }
+        showCustomSnackbar('Item added to cart', 'success');
+        // adds the item in case it is available
+
+      } else {
+        showCustomSnackbar(
+          checkAdditionToCart.message,
+          checkAdditionToCart.severity,
+        );
+      }
+    }
+  };
+
+  const updateTempBookingWithBooking = () => {
+    if (booking_selector) {
+      setTempBookingItems(booking_selector.items.map(item => ({ ...item })));
+      setTempBookingRange({
+        start: parseDate(booking_selector.items[0].start_date),
+        end: parseDate(booking_selector.items[0].end_date)
+      }
+      );
+    }
+  }
+
+  useEffect(() => {
+    updateTempBookingWithBooking();
+  }, [booking_selector]);
+
 
   useEffect(() => {
     if (!booking_id) {
@@ -94,8 +214,6 @@ function SingleBooking() {
     // Always fetch fresh booking details when the ID changes
     dispatch(fetchBooking(booking_id));
   }, [booking_id, dispatch, navigate]);
-
-
 
   if (loading)
     return (
@@ -113,26 +231,29 @@ function SingleBooking() {
       </Stack>
     );
 
-  const updateTempBooking = () => {
-    setTempBookingItems(booking_selector.items.map(item => ({ ...item })));
-    setTempBookingRange({
-      start: parseDate(booking_selector.items[0].start_date),
-      end: parseDate(booking_selector.items[0].end_date)
-    });
-  }
-
   const { items, booking } = booking_selector;
-
-  console.log(booking_selector);
-
 
   return (
     <Box maxWidth={900} sx={{ m: 'auto', p: 2 }}>
       <Typography variant="heading_secondary_bold">
         Booking ID: {booking.booking_id.substring(24).toUpperCase()}
       </Typography>
-      <Typography variant="body2">{`${items[0].start_date} - ${items[0].end_date}`}</Typography>
-
+      {!editingBooking ?
+        <Typography variant="body2">{`${items[0].start_date} - ${items[0].end_date}`}</Typography>
+        :
+        <Provider theme={defaultTheme} colorScheme="light" maxWidth={270}>
+          <DateRangePicker
+            labelPosition="side"
+            labelAlign="end"
+            width={270}
+            aria-label="Select dates"
+            value={tempBookingRange}
+            onChange={handleDateChange}
+            isRequired
+            maxVisibleMonths={1}
+          />
+        </Provider>
+      }
       <Box>
         <TableContainer sx={{ pt: 2 }}>
           <Table>
@@ -143,7 +264,7 @@ function SingleBooking() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((item) => (
+              {tempBookingItems.map((item) => (
                 <TableRow sx={{ height: 130 }} key={item.item_id}>
                   <TableCell>
                     <Link href={`/items/${item.item_id}`} sx={{ textDecoration: 'none' }}>
@@ -155,6 +276,9 @@ function SingleBooking() {
                         />
                         <Stack>
                           <Typography>{item.item_name}</Typography>
+                          {incorrectTempBooking &&
+                            <Typography color="error">{qtyCheckErrors[item.item_id]}</Typography>
+                          }
                         </Stack>
                       </Stack>
                     </Link>
@@ -171,7 +295,7 @@ function SingleBooking() {
                       >
                         <Button
                           onClick={() => {
-
+                            handleRemove(item.item_id);
                           }}
                           variant="outlined"
                           sx={{
@@ -206,6 +330,7 @@ function SingleBooking() {
                         <Button
                           variant="outlined"
                           onClick={() => {
+                            handleIncrease(item.item_id);
                           }}
                           sx={{
                             borderRadius: '60px',

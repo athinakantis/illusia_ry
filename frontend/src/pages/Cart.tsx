@@ -169,7 +169,9 @@ function Cart() {
 		if (editingCart) {
 			setLocalCart(localCart.map(item => {
 				if (item.item_id == item_id) {
-					item.quantity -= quantity;
+					if (item.quantity - quantity >= 0) {
+						item.quantity -= quantity;
+					}
 				}
 				return item;
 			}))
