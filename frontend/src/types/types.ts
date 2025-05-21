@@ -23,10 +23,15 @@ export interface ItemState {
     image_path: string;
   }[];
 }
-export interface ApiResponse<T> {
+/**
+ * Generic wrapper returned by our backend.
+ * `meta` is optional and its shape varies by endpoint.
+ */
+export interface ApiResponse<T, M = unknown> {
   data: T;
-  error?: string | Error;
   message: string;
+  meta?: M;
+  error?: string | Error; // some endpoints include this instead of 4xx
 }
 
 export interface FormData {
