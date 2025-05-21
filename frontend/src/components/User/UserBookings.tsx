@@ -233,6 +233,7 @@ const UserBookings = () => {
       </Box>
       {wantsToCancel &&
         <Dialog
+          maxWidth="md"
           open={wantsToCancel ? true : false}
           onClose={() => setWantsToCancel(null)}
           aria-labelledby="alert-dialog-title"

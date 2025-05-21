@@ -170,6 +170,7 @@ function SingleBooking() {
         }
         {wantsToCancel &&
           <Dialog
+            maxWidth="md"
             open={wantsToCancel ? true : false}
             onClose={() => setWantsToCancel(false)}
             aria-labelledby="alert-dialog-title"
