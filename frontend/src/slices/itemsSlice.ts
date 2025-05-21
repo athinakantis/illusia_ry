@@ -1,4 +1,3 @@
-
 import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 import { Item, ItemState } from '../types/types';
 import { CreateItemPayload, itemsApi } from '../api/items';
@@ -6,6 +5,12 @@ import { RootState } from '../store/store';
 import { categoriesApi } from '../api/categories';
 import { addTagToItem, removeTagFromItem } from './tagSlice';
 import { tagsApi } from '../api/tags';
+
+interface Category {
+  category_id: string;
+  category_name: string;
+  image_path: string;
+}
 
 const initialState: ItemState = {
   items: [],
@@ -49,6 +54,31 @@ export const fetchAllItemTags = createAsyncThunk(
   }
 );
 
+export const createCategory = createAsyncThunk(
+  'items/createCategory',
+  async (categoryData: { category_name: string; image_path?: string }) => {
+    const response = await categoriesApi.createCategory(categoryData);
+    return response;
+  }
+);
+
+export const updateCategory = createAsyncThunk(
+  'items/updateCategory',
+  async ({ id, categoryData }: { id: string; categoryData: { category_name: string; image_path?: string } }) => {
+    const response = await categoriesApi.updateCategory(id, categoryData);
+    return response;
+  }
+);
+
+export const deleteCategory = createAsyncThunk(
+  'items/deleteCategory',
+  async (id: string) => {
+    const response = await categoriesApi.deleteCategory(id);
+    console.log('deleteCategory response', response);
+    return response;
+  }
+);
+
 export const fetchItemById = createAsyncThunk(
   'items/fetchItemById',
   async (id: string) => {
@@ -69,6 +99,7 @@ export const deleteItem = createAsyncThunk(
   'items/deleteItem',
   async (id: string) => {
     const response = await itemsApi.deleteItem(id);
+    console.log('deleteItem response', response);
     return response;
   }
 );
@@ -128,6 +159,75 @@ export const itemsSlice = createSlice({
       state.error = 'Could not fetch items'
       state.loading = false
     })
+
+    /* ---------- create category ---------- */
+    builder.addCase(createCategory.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(createCategory.fulfilled, (state, action) => {
+      state.loading = false;
+      const rows = action.payload?.data as Category[] | Category | undefined;
+      if (!rows) return;
+      const newCat = Array.isArray(rows) ? rows[0] : rows;
+      state.categories.push(newCat);
+    });
+    builder.addCase(createCategory.rejected, (state) => {
+      state.loading = false;
+      state.error = 'Could not create category';
+    });
+
+    /* ---------- update category ---------- */
+    builder.addCase(updateCategory.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateCategory.fulfilled, (state, action) => {
+      state.loading = false;
+      const rows = action.payload?.data as Category[] | Category | undefined;
+      if (!rows) return;
+      const updatedCat = Array.isArray(rows) ? rows[0] : rows;
+      const idx = state.categories.findIndex(c => c.category_id === updatedCat.category_id);
+      if (idx !== -1) {
+        state.categories[idx] = updatedCat;
+      }
+    });
+    builder.addCase(updateCategory.rejected, (state) => {
+      state.loading = false;
+      state.error = 'Could not update category';
+    });
+
+    /* ---------- delete category ---------- */
+    builder.addCase(deleteCategory.pending, (state) => {
+      state.loading = true;
+    });
+
+    builder.addCase(deleteCategory.fulfilled, (state, action) => {
+      state.loading = false;
+      // ❶ Try to get the removed ID from the payload (if the backend returns it)
+      let removedId: string | undefined;
+      const rows = action.payload?.data as Category[] | Category | null | undefined;
+
+      if (rows) {
+        removedId = Array.isArray(rows)
+          ? rows[0]?.category_id
+          : (rows as Category | null)?.category_id;
+      }
+
+      // ❷ Fallback: use the ID we originally passed into deleteCategory(id)
+      if (!removedId && action.meta?.arg) {
+        removedId = action.meta.arg as string;
+      }
+
+      // ❸ Finally remove it from the slice
+      if (removedId) {
+        state.categories = state.categories.filter(
+          (c) => c.category_id !== removedId
+        );
+      }
+    });
+    builder.addCase(deleteCategory.rejected, (state) => {
+      state.loading = false;
+      state.error = 'Could not delete category';
+    });
     builder.addCase(fetchItemById.pending, (state) => {
       state.loading = true
     })
@@ -222,7 +322,7 @@ export const itemsSlice = createSlice({
         byItem[r.item_id].push(r.tag_id);
       });
 
-      state.items.forEach((it: any) => {
+      state.items.forEach((it) => {
         it.tag_ids = byItem[it.item_id] ?? [];
       });
       if (state.item) {
