@@ -34,8 +34,7 @@ import broken_img from '../assets/broken_img.png'
 import { useTranslation } from 'react-i18next';
 import { RangeValue } from '@react-types/shared';
 import { DateValue, parseDate } from '@internationalized/date';
-import { ItemWithQuantity, Reservation } from '../types/types';
-import { Tables } from '../types/supabase.type';
+import { Reservation } from '../types/types';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
@@ -43,6 +42,8 @@ import { store } from '../store/store';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 import { updateReservation } from '../slices/reservationsSlice';
 import { useAuth } from '../hooks/useAuth';
+import { showCustomSnackbar } from './CustomSnackbar';
+import { Tables } from '../types/supabase';
 
 function SingleBooking() {
   const navigate = useNavigate();
@@ -51,7 +52,6 @@ function SingleBooking() {
   const booking_selector = useAppSelector(selectBooking);
   const loading = useAppSelector(selectBookingsLoading);
   const [wantsToCancel, setWantsToCancel] = useState(false)
-  const NON_CANCELLABLE = ['cancelled', 'rejected']
   const { showSnackbar } = useTranslatedSnackbar();
   const { t } = useTranslation();
   const [editingBooking, setEditingBooking] = useState(false); // for editing the booking
