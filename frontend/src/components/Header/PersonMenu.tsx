@@ -74,14 +74,14 @@ const PersonMenu = () => {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         sx={{
           '& .MuiMenuItem-root': {
-            py: '10px',
+            py: '10px', gap: '7px',
             borderBottom: '1px solid #e2e2e2',
           },
           '& .MuiList-root': { pt: 0 },
           '& .MuiPaper-root': {
             boxShadow: 'none',
             border: '1px solid #e2e2e2',
-            width: 300,
+            width: 200,
           },
         }}
       >

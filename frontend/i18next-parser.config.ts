@@ -5,7 +5,7 @@ export default {
   
     createOldCatalogs: true,
     // Save the \_old files
-  
+  debug: true,
     defaultNamespace: 'translations',
     // Default namespace used in your i18next config
   
@@ -33,6 +33,18 @@ export default {
     // Key separator used in your translation keys
     // If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.
   
+    // Tell the parser which function names carry translation keys
+    func: {
+      // Literal keys in t('foo.bar') and showSnackbar('foo.bar', …)
+      list: ['i18next.t', 'i18n.t', 't', 'showSnackbar'],
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    },
+    trans: {
+      component: 'Trans',
+      i18nKey: 'i18nKey',
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    },
+
     // see below for more details
     lexers: {
       hbs: ['HandlebarsLexer'],

@@ -27,10 +27,11 @@ import {
   updateBookingStatus,
 } from '../slices/bookingsSlice';
 import Spinner from './Spinner';
-import { showCustomSnackbar } from './CustomSnackbar';
+
+import { useTranslatedSnackbar } from './CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
 import { BookingWithItems } from '../types/types';
 import broken_img from '../assets/broken_img.png'
-
+import { useTranslation } from 'react-i18next';
 import { RangeValue } from '@react-types/shared';
 import { DateValue, parseDate } from '@internationalized/date';
 import { ItemWithQuantity, Reservation } from '../types/types';
@@ -50,6 +51,9 @@ function SingleBooking() {
   const booking_selector = useAppSelector(selectBooking);
   const loading = useAppSelector(selectBookingsLoading);
   const [wantsToCancel, setWantsToCancel] = useState(false)
+  const NON_CANCELLABLE = ['cancelled', 'rejected']
+  const { showSnackbar } = useTranslatedSnackbar();
+  const { t } = useTranslation();
   const [editingBooking, setEditingBooking] = useState(false); // for editing the booking
   const [tempBookingRange, setTempBookingRange] = useState<RangeValue<DateValue> | null>(null);
   const [tempBookingItems, setTempBookingItems] = useState<Array<
@@ -67,11 +71,19 @@ function SingleBooking() {
   const handleCancel = (booking_id: string) => {
     if (booking.status === 'pending') {
       dispatch(deleteBooking(booking_id));
-      showCustomSnackbar('Your booking was deleted!', 'info');
+      showSnackbar({
+        message: t('Bookings.snackbar.deleted', { defaultValue: 'Your booking was deleted' }),
+        variant: 'success',
+        autoHideDuration: 3000,
+      })
       setTimeout(() => navigate('/bookings'), 2000)
     } else {
       dispatch(updateBookingStatus({ id: booking.booking_id, status: 'cancelled' }))
-      showCustomSnackbar('Your booking was cancelled!', 'info');
+      showSnackbar({
+        message: t('Bookings.snackbar.cancelled', { defaultValue: 'Your booking was cancelled' }),
+        variant: 'info',
+        autoHideDuration: 3000,
+      })
     }
     setWantsToCancel(false)
   };
