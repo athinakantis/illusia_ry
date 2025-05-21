@@ -113,7 +113,7 @@ export type BookingWithItems = {
   booking: Tables<'bookings'>;
   items: Array<
     Partial<Tables<'items'>> &
-      Pick<Reservation, 'quantity' | 'start_date' | 'end_date'>
+    Pick<Reservation, | 'quantity' | 'start_date' | 'end_date'>
   >;
 };
 

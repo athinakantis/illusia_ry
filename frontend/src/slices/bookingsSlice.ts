@@ -24,6 +24,8 @@ export const fetchBooking = createAsyncThunk(
   'bookings/fetchBooking',
   async (id: string) => {
     const response = await bookingsApi.getBooking(id);
+    console.log(response);
+
     return response.data;
   },
 );
@@ -82,7 +84,7 @@ export const fetchUserBookings = createAsyncThunk<
  */
 export const updateBookingStatus = createAsyncThunk<
   Booking,
-  { id: string; status: 'approved' | 'rejected' | 'cancelled'},
+  { id: string; status: 'approved' | 'rejected' | 'cancelled' },
   { rejectValue: string }
 >(
   'bookings/updateBookingStatus',
@@ -185,7 +187,7 @@ export const bookingsSlice = createSlice({
       if (index !== -1) {
         state.bookings[index] = updatedBooking;
       }
-      
+
       // Update the user bookings
       const idxUser = state.userBookings.findIndex(
         (b) => b.booking_id === updatedBooking.booking_id,

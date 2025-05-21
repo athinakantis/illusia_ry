@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogActions,
   DialogTitle,
@@ -14,7 +15,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useDebugValue, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
@@ -26,6 +27,12 @@ import {
 } from '../slices/bookingsSlice';
 import Spinner from './Spinner';
 import { showCustomSnackbar } from './CustomSnackbar';
+import { RangeValue } from '@react-types/shared';
+import { DateValue, parseDate } from '@internationalized/date';
+import { ItemWithQuantity, Reservation } from '../types/types';
+import { Tables } from '../types/supabase.type';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
 
 function SingleBooking() {
   const navigate = useNavigate();
@@ -34,7 +41,19 @@ function SingleBooking() {
   const booking_selector = useAppSelector(selectBooking);
   const loading = useAppSelector(selectBookingsLoading);
   const [wantsToCancel, setWantsToCancel] = useState(false)
-  const NON_CANCELLABLE = ['cancelled', 'rejected']
+  const NON_CANCELLABLE = ['cancelled', 'rejected'];
+
+  const [editingBooking, setEditingBooking] = useState(false); // for editing the booking
+  const [tempBookingRange, setTempBookingRange] = useState<RangeValue<DateValue> | null>(null);
+  const [tempBookingItems, setTempBookingItems] = useState<Array<
+    Partial<Tables<'items'>> &
+    Pick<Reservation, 'quantity' | 'start_date' | 'end_date'>
+  >>([]);
+  const [qtyCheckErrors] = useState<Record<string, string>>({});
+  const [incorrectBooking, setIncorrectBooking] = useState(false);
+
+
+
 
   /* ─────────────────── handlers ─────────────────── */
   const handleCancel = (booking_id: string) => {
@@ -53,15 +72,30 @@ function SingleBooking() {
     (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
   }
 
-
-useEffect(() => {
-  if (!booking_id) {
-    navigate('/bookings');
-    return;
+  const handleStartEditingBooking = () => {
+    setEditingBooking(true);
+    updateTempBooking();
   }
-  // Always fetch fresh booking details when the ID changes
-  dispatch(fetchBooking(booking_id));
-}, [booking_id, dispatch, navigate]);
+
+  const handleSaveEditingBooking = () => {
+    setEditingBooking(false);
+  }
+
+  const handleCancelEditingBooking = () => {
+    setEditingBooking(false);
+
+  }
+
+  useEffect(() => {
+    if (!booking_id) {
+      navigate('/bookings');
+      return;
+    }
+    // Always fetch fresh booking details when the ID changes
+    dispatch(fetchBooking(booking_id));
+  }, [booking_id, dispatch, navigate]);
+
+
 
   if (loading)
     return (
@@ -79,7 +113,18 @@ useEffect(() => {
       </Stack>
     );
 
+  const updateTempBooking = () => {
+    setTempBookingItems(booking_selector.items.map(item => ({ ...item })));
+    setTempBookingRange({
+      start: parseDate(booking_selector.items[0].start_date),
+      end: parseDate(booking_selector.items[0].end_date)
+    });
+  }
+
   const { items, booking } = booking_selector;
+
+  console.log(booking_selector);
+
 
   return (
     <Box maxWidth={900} sx={{ m: 'auto', p: 2 }}>
@@ -115,21 +160,75 @@ useEffect(() => {
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <Typography>{item.quantity}</Typography>
+                    {!editingBooking ?
+                      <Typography>{item.quantity}</Typography>
+                      :
+                      <ButtonGroup
+                        sx={{ height: '40px' }}
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled button group"
+                      >
+                        <Button
+                          onClick={() => {
+
+                          }}
+                          variant="outlined"
+                          sx={{
+                            borderRadius: '60px',
+                            borderTop: '1px solid #E2E2E2 !important',
+                            borderLeft: '1px solid #E2E2E2 !important',
+                            borderBottom: '1px solid #E2E2E2 !important',
+                            borderRight: '0px !important',
+                          }}
+                        >
+                          <RemoveIcon />
+                        </Button>
+                        <Box
+                          sx={{
+                            width: 20,
+                            textAlign: 'center',
+                            borderTop: '1px solid #E2E2E2',
+                            borderBottom: '1px solid #E2E2E2',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            px: 2,
+                          }}
+                        >
+                          <Typography
+                            variant="body1"
+                            sx={{ height: 'fit-content', lineHeight: 1 }}
+                          >
+                            {item.quantity}
+                          </Typography>
+                        </Box>
+                        <Button
+                          variant="outlined"
+                          onClick={() => {
+                          }}
+                          sx={{
+                            borderRadius: '60px',
+                            borderTop: '1px solid #E2E2E2 !important',
+                            borderRight: '1px solid #E2E2E2 !important',
+                            borderBottom: '1px solid #E2E2E2 !important',
+                            borderLeft: '0px',
+                          }}
+                        >
+                          <AddIcon />
+                        </Button>
+                      </ButtonGroup>
+                    }
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-        {
-          // Only allow dates that are after todays date to be cancelled
-          // And booking that haven't been cancelled or rejected
-          items[0].start_date >
-          new Date().toLocaleDateString().slice(0, 10) &&
-          !NON_CANCELLABLE.includes(booking.status) && (
+
+        <Box display="flex" justifyContent="flex-end">
+          {!editingBooking ?
             <Button
-              onClick={() => setWantsToCancel(true)}
               size="small"
               variant="outlined_rounded"
               sx={{
@@ -140,9 +239,68 @@ useEffect(() => {
                 width: 'fit-content',
                 padding: '6px 40px',
               }}
+              onClick={handleStartEditingBooking}
             >
-              Cancel
+              Edit Booking
             </Button>
+            :
+            <>
+              <Button
+                size="small"
+                variant="outlined_rounded"
+                sx={{
+                  mt: 2,
+                  display: 'block',
+                  ml: 'auto',
+                  height: 'fit-content',
+                  width: 'fit-content',
+                  padding: '6px 40px',
+                }}
+                onClick={handleSaveEditingBooking}
+              >
+                Save
+              </Button>
+              <Button
+                size="small"
+                variant="outlined_rounded"
+                sx={{
+                  mt: 2,
+                  display: 'block',
+                  ml: 'auto',
+                  height: 'fit-content',
+                  width: 'fit-content',
+                  padding: '6px 40px',
+                }}
+                onClick={handleCancelEditingBooking}
+              >
+                Cancel
+              </Button>
+            </>
+          }
+        </Box>
+        {
+          // Only allow dates that are after todays date to be cancelled
+          // And booking that haven't been cancelled or rejected
+          items[0].start_date >
+          new Date().toLocaleDateString().slice(0, 10) &&
+          !NON_CANCELLABLE.includes(booking.status) && (
+            <>
+              <Button
+                onClick={() => setWantsToCancel(true)}
+                size="small"
+                variant="outlined_rounded"
+                sx={{
+                  mt: 2,
+                  display: 'block',
+                  ml: 'auto',
+                  height: 'fit-content',
+                  width: 'fit-content',
+                  padding: '6px 40px',
+                }}
+              >
+                Cancel
+              </Button>
+            </>
           )
         }
         {wantsToCancel &&
