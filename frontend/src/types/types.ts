@@ -10,7 +10,10 @@ export interface Item {
   quantity: number;
   created_at: string;
   visible?: boolean;
+  /**  UUIDs of the tags attached to this item */
+  tag_ids?: string[];
 }
+
 export type Tag = Pick<
   Tables<'tags'>,
   'tag_id' | 'tag_name' | 'description' | 'created_at'
