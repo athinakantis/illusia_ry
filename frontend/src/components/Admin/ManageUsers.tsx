@@ -10,7 +10,7 @@ import {
   Container,
   useTheme,
 } from '@mui/material';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   fetchAllUsersWithRole,
@@ -25,6 +25,7 @@ import { StyledDataGrid } from '../CustomComponents/StyledDataGrid';
 
 
 const STATUS_OPTIONS = ['pending', 'approved', 'rejected', 'deactivated', 'active'] as const;
+
 const STATUS_LABELS: Record<typeof STATUS_OPTIONS[number], string> = {
   pending: 'Pending',
   approved: 'Approved',
@@ -163,6 +164,7 @@ const ManageUsers: React.FC = () => {
           const options = currentRole === 'Unapproved'
             ? ['Unapproved', 'User']
             : [currentRole];
+
           return (
             <Select
               type="button"
@@ -251,7 +253,7 @@ const ManageUsers: React.FC = () => {
             rows={filtered}
             getRowId={(row) => row.user_id}
             columns={columns}
-            sx={{ '& .columnHeader': { bgcolor: theme.palette.background.verylightgrey } }}
+            sx={{ '& .columnHeader, .MuiDataGrid-scrollbarFiller ': { bgcolor: theme.palette.background.verylightgrey } }}
 
             initialState={{
               pagination: { paginationModel: { pageSize: 10, page: 0 } },
