@@ -128,7 +128,7 @@ const AdminDashboard = () => {
 
   /* ————————————————— Conditional Renders ————————————————————————*/
   // If we don’t know the role yet, render nothing (or a loader)
-  if (role === undefined) {
+  if (role === null) {
     return <Spinner />;
   }
   // If not an Admin or Head Admin, redirect immediately

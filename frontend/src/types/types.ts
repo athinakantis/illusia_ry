@@ -1,4 +1,4 @@
-import { Tables } from './supabase.type';
+import { Tables } from './supabase';
 
 export interface Item {
   item_id: string;
@@ -132,4 +132,56 @@ export type UpcomingBooking = Tables<'item_reservations'> & {
   booking: Tables<'bookings'> & {
     user: Tables<'users'>;
   };
+};
+
+export type NotificationsType =
+  | BookingNotifications
+  | UserManagementNotifications;
+
+export type BookingNotifications =
+  | 'NEW BOOKING'
+  | 'BOOKING_REJECTED'
+  | 'BOOKING_APPROVED';
+export type UserManagementNotifications = 'NEW_USER';
+
+export interface NotificationState {
+  userNotifications: Array<Tables<'notifications'>>;
+  adminNotifications: AdminNotification[];
+  loading: boolean;
+  error: null | string;
+}
+
+// NOTIFICATIONS
+// Metadata types
+export type BookingMetaData = {
+  booking_id: string;
+};
+export type BookingApprovedMetadata = {
+  booking_id: number;
+};
+
+export type BookingRejectedMetadata = {
+  booking_id: number;
+  reason?: string;
+};
+
+export type Notification =
+  | {
+      type: 'BOOKING_APPROVED';
+      metadata: BookingApprovedMetadata;
+    }
+  | {
+      type: 'BOOKING_REJECTED';
+      metadata: BookingRejectedMetadata;
+    }
+  | {
+      type: string;
+      metadata: JSON; // fallback for unknown types
+    };
+
+export type AdminNotification = {
+  id: 'pending_bookings_notification' | 'pending_users_notification';
+  message: string;
+  is_read: boolean;
+  link: string;
 };

@@ -17,9 +17,7 @@ api.interceptors.request.use(
     if (sessionData?.session?.access_token) {
       config.headers.Authorization = `Bearer ${sessionData.session.access_token}`;
     }
-
-    // (response: ApiResponse<unknown>) => response.data;
-
+    
     return config;
   },
   (error) => {

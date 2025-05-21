@@ -91,6 +91,7 @@ const AdminBookings = () => {
  /*——————————————Approve Booking —————————————————————*/
   const approveBooking = () => {
     if (!menuBookingId) return;
+    console.log(menuBookingId)
     dispatch(updateBookingStatus({ id: menuBookingId, status: "approved" }));
     handleMenuClose();
     showSnackbar({
@@ -114,7 +115,6 @@ const AdminBookings = () => {
   useEffect(() => {
     if (bookings.length === 0) dispatch(fetchAllBookings());
   }, [dispatch, bookings.length]);
-
   useEffect(() => {
     if (users.length === 0) dispatch(fetchAllUsers());
   }, [dispatch, users.length]);
