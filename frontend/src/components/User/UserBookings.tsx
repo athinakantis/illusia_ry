@@ -32,14 +32,13 @@ import {
 } from '../../slices/bookingsSlice';
 import { showCustomSnackbar } from '../CustomSnackbar';
 import Spinner from '../Spinner';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const UserBookings = () => {
   const { user } = useAuth();
   const userId = user?.id;
   const dispatch = useAppDispatch();
   const theme = useTheme();
-  const navigate = useNavigate()
   const [wantsToCancel, setWantsToCancel] = useState<BookingWithRes | null>(null);
 
   /* ─────────────────── handlers ─────────────────── */
