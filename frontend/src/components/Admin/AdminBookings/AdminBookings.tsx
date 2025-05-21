@@ -40,8 +40,8 @@ import {
   selectAllReservations,
 } from "../../../slices/reservationsSlice";
 import CollapsibleDetail from "./CollapsibleDetail";
-import { useSearchParams } from 'react-router-dom';
-import { showCustomSnackbar } from '../../CustomSnackbar';
+import { CustomSnackbar } from "../../CustomSnackbar";
+import { useSearchParams, Link } from 'react-router-dom';
 
 /**
  * Allowed status filters rendered as Tabs
@@ -101,19 +101,21 @@ const AdminBookings = () => {
     console.log(menuBookingId)
     dispatch(updateBookingStatus({ id: menuBookingId, status: "approved" }));
     handleMenuClose();
-    showCustomSnackbar(
-      'Booking approved',
-      'success'
-    );
+    CustomSnackbar({
+      message: 'Booking approved',
+      variant: 'success',
+      onClose: () => { },
+    });
   };
   const rejectBooking = () => {
     if (!menuBookingId) return;
     dispatch(updateBookingStatus({ id: menuBookingId, status: "rejected" }));
     handleMenuClose();
-    showCustomSnackbar(
-      'Booking rejected',
-      'error',
-    )
+    CustomSnackbar({
+      message: 'Booking rejected',
+      variant: 'error',
+      onClose: () => { }
+    })
 
   };
 
@@ -167,7 +169,7 @@ const AdminBookings = () => {
     items.find((it) => it.item_id === iid)?.item_name || iid.slice(0, 6);
 
   const itemImage = (iid: string) =>
-    items.find((it) => it.item_id === iid)?.image_path;
+    items.find((it) => it.item_id === iid)?.image_path[0];
   // Navigate to item page
   const itemLink = (iid: string) => `/items/manage/${iid}`;
 
@@ -176,12 +178,10 @@ const AdminBookings = () => {
     reservations.filter((r) => r.booking_id === bid);
 
   // ─── Loading/Error states ─────────────────────────────────────
-
-  if (loading) return (
-    <Container sx={{ textAlign: "center", mt: 4, display: 'flex', justifyContent: 'center' }}>
+  if (loading)
+    return (
       <Spinner />
-    </Container>
-  );
+    );
 
   if (error)
     return (
@@ -256,7 +256,9 @@ const AdminBookings = () => {
                       </IconButton>
                     </TableCell>
                     <TableCell sx={{ color: "primary.main" }}>
-                      {b.booking_id.slice(0, 8)}
+                      <Link to={`/bookings/${b.booking_id}`} style={{ color: 'inherit' }}>
+                        {b.booking_id.slice(0, 8).toUpperCase()}
+                      </Link>
                     </TableCell>
                     <TableCell>{dayjs(b.created_at).format("DD.MM.YYYY")}</TableCell>
                     <TableCell>
