@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { notificationsApi } from '../api/notifications';
 import { NotificationState } from '../types/types';
 import { RootState } from '../store/store';
-import { Tables } from '../types/supabase';
 
 const initialState: NotificationState = {
   userNotifications: [],

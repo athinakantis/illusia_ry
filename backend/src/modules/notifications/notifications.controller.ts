@@ -13,7 +13,6 @@ export class NotificationsController {
     @Param('userId') userId: string,
     @Req() req: CustomRequest,
   ) {
-    console.log('Received request for user notifications of user :', userId)
     return this.notificationsService.getUserNotifications(userId, req);
   }
 
