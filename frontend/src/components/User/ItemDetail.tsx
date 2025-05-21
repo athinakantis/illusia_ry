@@ -23,6 +23,8 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ArrowBack, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
+import broken_img from '../../assets/broken_img.png'
+import { selectQtyForItemInReservationsByIdInDateRange } from '../../slices/reservationsSlice';
 
 // Custom arrow components
 const NextArrow = (props: any) => {
@@ -81,6 +83,14 @@ const ItemDetail: React.FC = () => {
   const categories = useAppSelector(selectAllCategories);
   const selectedDateRange = useAppSelector(selectDateRange);
 
+  const itemMaxBookedQty = (range && itemId) ? selectQtyForItemInReservationsByIdInDateRange(
+    itemId,
+    range.start.toString(),
+    range.end.toString(),
+  )(store.getState())
+    :
+    {};
+  // checks the bookings of the items in date range
 
   useEffect(() => {
     if (selectedDateRange.start_date && selectedDateRange.end_date) {
@@ -108,7 +118,7 @@ const ItemDetail: React.FC = () => {
   }
 
   const handleBrokenImg = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+    (e.target as HTMLImageElement).src = broken_img;
   }
 
   const handleCartAddition = () => {
@@ -217,7 +227,7 @@ const ItemDetail: React.FC = () => {
                 boxShadow: 0,
                 bgcolor: 'background.verylightgrey',
               }}
-              src={'/src/assets/broken_img.png'}
+              src={broken_img}
               alt={item?.item_name || 'Item'}
             />
           )}
@@ -228,6 +238,9 @@ const ItemDetail: React.FC = () => {
           <Stack spacing={2}>
             <Typography variant="h1" color='#3D3D3D' sx={{ fontWeight: 700, fontSize: 36, fontFamily: 'Lato, sans-serif' }}>
               {item?.item_name || 'Item name'}
+            </Typography>
+            <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+              Available {(range && item && typeof (itemMaxBookedQty) === "number") ? item?.quantity - (itemMaxBookedQty || 0) : item?.quantity} pcs
             </Typography>
             <Typography variant="subtitle1" color="text.secondary" gutterBottom>
               {itemCategory?.category_name || 'Category'}

@@ -1,4 +1,4 @@
-import { Tables } from 'src/types/supabase';
+import { Tables } from "./supabase";
 
 // Combination of user data and role title
 export type AdminUserRow = Pick<

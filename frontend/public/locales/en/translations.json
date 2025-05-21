@@ -15,6 +15,21 @@
     "myAccount": "My account",
     "logOut": "Log out"
   },
+  "cart": {
+    "yourCart": "Your Cart",
+    "items": "Items",
+    "quantity": "Qty",
+    "action": "Action",
+    "remove": "Remove",
+    "bookingSummary": "Booking Summary",
+    "dates": "Dates",
+    "changeDates": "Change the booking dates",
+    "confirmDates": "Confirm new dates",
+    "cancel": "Cancel",
+    "totalItems": "Total items",
+    "bookItems": "Book items",
+    "empty": "Your cart is currently empty! <1>Browse Items</1>"
+  },
   "home": {
     "heroTitle": "Your go-to specialty store for LARP props and accessories",
     "heroDescription": "Whether you need smaller props or larger set pieces, you’ll find everything you need to bring your story to life.",

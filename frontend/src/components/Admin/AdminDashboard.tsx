@@ -127,6 +127,24 @@ const AdminDashboard = () => {
   };
 
   /* ————————————————— Conditional Renders ————————————————————————*/
+  // If we don’t know the role yet, render nothing (or a loader)
+  if (role === undefined) {
+    return <Spinner />;
+  }
+  // If not an Admin or Head Admin, redirect immediately
+  if (role !== 'Admin' && role !== 'Head Admin') {
+    return <Navigate to="/" replace />;
+  }
+  /* ────────── Memoized values ────────── */
+  // combine bookings + reservations + users
+
+  // inside your component:
+  // const overviews: BookingOverview[] = useMemo(
+  //   () => buildBookingOverviews(bookings, reservations, users, items),
+  //   [bookings, reservations, users, items],
+  // );
+  // console.log("Overviews" + overviews);
+  // console.log("upcomingBookings:", upcomingBookings);
   // If we don't know the role yet, render nothing (or a loader)
   if (role === undefined) {
     return <Spinner />;
@@ -184,6 +202,8 @@ const AdminDashboard = () => {
         </Typography>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
           <Button variant="rounded"
+            component={Link}
+            to='/items/new'
             sx={{
               height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
               pl: 4, pr: 4, textTransform: 'capitalize'

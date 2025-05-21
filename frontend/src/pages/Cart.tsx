@@ -33,10 +33,13 @@ import { showCustomSnackbar } from '../components/CustomSnackbar';
 import { store } from '../store/store';
 import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
 import { useEffect, useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
 import { RangeValue } from '@react-types/shared';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 import { ItemWithQuantity } from '../types/types';
+import broken_img from '../assets/broken_img.png'
+
 
 function Cart() {
 	const dispatch = useAppDispatch();
@@ -50,9 +53,10 @@ function Cart() {
 	const [incorrectCart, setIncorrectCart] = useState(false);
 	const [localCart, setLocalCart] = useState<ItemWithQuantity[]>([]);
 	const navigate = useNavigate()
+	const { t } = useTranslation();
 
 	useEffect(() => {
-		updateRangeWithSelectedRange();
+		updateRangeWithSelectedRange(); // These need to be changed around. Your calling on something that is not set yet.
 	}, [selectedDateRange]);
 
 	useEffect(() => {
@@ -229,7 +233,7 @@ function Cart() {
 	const handleBrokenImg = (
 		e: React.SyntheticEvent<HTMLImageElement, Event>,
 	) => {
-		(e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+		(e.target as HTMLImageElement).src = broken_img;
 	};
 
 	const handleAddBooking = async () => {
@@ -259,7 +263,7 @@ function Cart() {
 				px: 2,
 			}}
 		>
-			<Typography variant="heading_secondary_bold">Your Cart</Typography>
+			<Typography variant="heading_secondary_bold">{t('cart.yourCart', { defaultValue: 'Your Cart' })}</Typography>
 
 			{cart.length > 0 ? (
 				<Stack
@@ -276,9 +280,9 @@ function Cart() {
 						<Table aria-label="simple table">
 							<TableHead>
 								<TableRow>
-									<TableCell>Items ({totalItems})</TableCell>
-									<TableCell align="center">Qty</TableCell>
-									<TableCell align="right">Action</TableCell>
+									<TableCell>{t('cart.items', { defaultValue: 'Items' })} ({totalItems})</TableCell>
+									<TableCell align="center">{t('cart.quantity', { defaultValue: 'Qty' })}</TableCell>
+									<TableCell align="right">{t('cart.action', { defaultValue: 'Action' })}</TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
@@ -297,7 +301,7 @@ function Cart() {
 													<CardMedia
 														component="img"
 														image={
-															item.image_path || '/src/assets/broken_img.png'
+															item.image_path[0] || broken_img
 														}
 														onError={handleBrokenImg}
 														style={{ width: 78, borderRadius: 14 }}
@@ -377,7 +381,7 @@ function Cart() {
 													handleRemove(item.item_id, item.quantity);
 												}}
 											>
-												Remove
+												{t('cart.remove', { defaultValue: 'Remove' })}
 												<CloseIcon sx={{ fill: '#414141' }} />
 											</Button>
 										</TableCell>
@@ -413,10 +417,10 @@ function Cart() {
 								fontWeight: 500,
 							}}
 						>
-							Booking Summary
+							{t('cart.bookingSummary', { defaultValue: 'Booking Summary' })}
 						</Typography>
 						<Stack direction={'row'} justifyContent={'space-between'}>
-							<Typography variant="body2">Dates</Typography>
+							<Typography variant="body2">{t('cart.dates', { defaultValue: 'Dates' })}</Typography>
 							{!editingCart ?
 								<Typography variant="body2">
 									{selectedDateRange.start_date} - {selectedDateRange.end_date}
@@ -449,7 +453,7 @@ function Cart() {
 									}}
 									onClick={handleStartDateEdit}
 								>
-									Change the booking dates
+									{t('cart.changeDates', { defaultValue: 'Change the booking dates' })}
 								</Button>
 								:
 								<>
@@ -465,7 +469,7 @@ function Cart() {
 										}}
 										onClick={handleCompleteDateEdit}
 									>
-										Confirm new dates
+										{t('cart.confirmDates', { defaultValue: 'Confirm new dates' })}
 									</Button>
 
 									<Button
@@ -480,13 +484,13 @@ function Cart() {
 										}}
 										onClick={handleCancelDateEdit}
 									>
-										Cancel
+										{t('cart.cancel', { defaultValue: 'Cancel' })}
 									</Button>
 								</>
 							}
 						</Stack>
 						<Stack direction={'row'} justifyContent={'space-between'}>
-							<Typography variant="body2">Total items</Typography>
+							<Typography variant="body2">{t('cart.totalItems', { defaultValue: 'Total items' })}</Typography>
 							<Typography variant="body2">{totalItems}</Typography>
 						</Stack>
 						{!user && <Stack sx={{ border: '1px solid #E2E2E2', flexDirection: 'row', padding: '20px 24px', gap: '10px' }}>
@@ -504,13 +508,18 @@ function Cart() {
 							onClick={handleAddBooking}
 							disabled={editingCart}
 						>
-							Book items
+							{t('cart.bookItems', { defaultValue: 'Book items' })}
 						</Button>
 					</Stack>
 				</Stack>
 			) : (
 				<Typography>
-					Your cart is currently empty! <Link to="/items">Browse Items</Link>
+					<Trans
+						i18nKey="cart.empty"
+						defaultValue="Your cart is currently empty! Browse Items"
+					>
+						Your cart is currently empty! <Link to="/items">Browse Items</Link>
+					</Trans>
 				</Typography>
 			)}
 		</Box>
