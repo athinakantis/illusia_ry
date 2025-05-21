@@ -31,7 +31,6 @@ import {
   deleteBooking,
   fetchUserBookings,
   selectUserBookings,
-  updateBookingStatus,
 } from '../../slices/bookingsSlice';
 import { showCustomSnackbar } from '../CustomSnackbar';
 
