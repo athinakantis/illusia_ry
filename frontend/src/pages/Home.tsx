@@ -7,6 +7,13 @@ import { GridExpandMoreIcon } from '@mui/x-data-grid';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import { Trans, useTranslation } from 'react-i18next';
 
+// Define Category type for helpers
+type Category = {
+  category_id: string;
+  category_name: string;
+  image_path: string | string[];
+};
+
 function Home() {
   const categories = useAppSelector(selectAllCategories)
   const dispatch = useAppDispatch()
@@ -25,17 +32,17 @@ function Home() {
   })
 
   // Helper to get image src
-  const getImageSrc = (cat: any) => {
+  const getImageSrc = (cat: Category | undefined) => {
     if (!cat) return '';
     if (Array.isArray(cat.image_path)) return cat.image_path[0];
     return cat.image_path;
   };
 
   // Helper to get translated category name
-  // const getCategoryName = (cat: any) => {
-  //   if (!cat) return '';
-  //   return t(`categories.${cat.category_name.toLowerCase().replace(/ /g, '_')}`);
-  // };
+  const getCategoryName = (cat: Category | undefined) => {
+    if (!cat) return '';
+    return t(`home.categories.${cat.category_name.toLowerCase().replace(/ /g, '_')}`);
+  };
 
   return (
     <Box id='home'>
@@ -119,7 +126,7 @@ function Home() {
               <Link to={`/items?category=${displayCategories?.[0]?.category_name.replace(/ /g, '-')}`}>
                 <img src={getImageSrc(displayCategories?.[0])} alt="" />
                 <Typography variant='body3' color='text.main'>
-                  {t(`home.categories.${displayCategories?.[0]?.category_name.toLowerCase().replace(/ /g, '_')}`)}
+                  {getCategoryName(displayCategories?.[0])}
                 </Typography>
               </Link>
             </Box>
@@ -137,7 +144,7 @@ function Home() {
                 <Link to={`/items?category=${displayCategories?.[1]?.category_name.replace(/ /g, '-')}`}>
                   <img src={getImageSrc(displayCategories?.[1])} alt="" />
                   <Typography variant='body3' color='text.main'>
-                    {t(`home.categories.${displayCategories?.[1]?.category_name.toLowerCase().replace(/ /g, '_')}`)}
+                    {getCategoryName(displayCategories?.[1])}
                   </Typography>
                 </Link>
               </Box>
@@ -145,7 +152,7 @@ function Home() {
                 <Link to={`/items?category=${displayCategories?.[3]?.category_name.replace(/ /g, '-')}`}>
                   <img src={getImageSrc(displayCategories?.[3])} alt="" />
                   <Typography variant='body3' color='text.main'>
-                    {t(`home.categories.${displayCategories?.[3]?.category_name.toLowerCase().replace(/ /g, '_')}`)}
+                    {getCategoryName(displayCategories?.[3])}
                   </Typography>
                 </Link>
               </Box>
@@ -159,7 +166,7 @@ function Home() {
               <Link to={`/items?category=${displayCategories?.[2]?.category_name.replace(/ /g, '-')}`}>
                 <img src={getImageSrc(displayCategories?.[2])} alt="" />
                 <Typography variant='body3' color='text.main'>
-                  {t(`home.categories.${displayCategories?.[2]?.category_name.toLowerCase().replace(/ /g, '_')}`)}
+                  {getCategoryName(displayCategories?.[2])}
                 </Typography>
               </Link>
             </Box>
