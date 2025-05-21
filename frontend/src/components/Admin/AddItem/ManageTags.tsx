@@ -1,4 +1,4 @@
-import { useState, FC } from 'react';
+import { useState, useEffect, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -16,14 +16,30 @@ import ManageTagsBody from './ManageTagsBody';
 /* ------------------------------------------------------------ */
 
 interface ManageTagsProps {
-  /** Optional – if supplied, check‑boxes will attach/detach the tag
-      for that particular item. */
+  /** If supplied, check‑boxes will attach/detach the tag for that item */
   itemId?: string;
+  /** Open the dialog immediately (used after “item created” prompt) */
+  autoOpen?: boolean;
+  /** Callback fired when the dialog is closed */
+  onClose?: () => void;
 }
 
-const ManageTags: FC<ManageTagsProps> = ({ itemId }) => {
+const ManageTags: FC<ManageTagsProps> = ({
+  itemId,
+  autoOpen = false,
+  onClose,
+}) => {
   const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(autoOpen);
+  // open automatically when the prop toggles true
+  useEffect(() => {
+    if (autoOpen) setOpen(true);
+  }, [autoOpen]);
+
+  const handleClose = () => {
+    setOpen(false);
+    onClose?.();
+  };
 
   return (
     <>
@@ -33,21 +49,21 @@ const ManageTags: FC<ManageTagsProps> = ({ itemId }) => {
         startIcon={<LocalOfferIcon />}
         onClick={() => setOpen(true)}
       >
-        {t('addItem.manageTags.title', { defaultValue: "Manage Tags" })}
+        {t('admin.add_product.manage_tags.title', { defaultValue: "Manage Tags" })}
       </Button>
 
       <Dialog
         fullWidth
         maxWidth="sm"
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={handleClose}
         scroll="paper"
       >
         <DialogTitle sx={{ m: 0, p: 2 }}>
-          {t('addItem.manageTags.title', { defaultValue: "Manage Tags" })}
+          {t('admin.add_product.manage_tags.title', { defaultValue: "Manage Tags" })}
           <IconButton
             aria-label="close"
-            onClick={() => setOpen(false)}
+            onClick={handleClose}
             sx={{ position: 'absolute', right: 8, top: 8 }}
           >
             <CloseIcon />

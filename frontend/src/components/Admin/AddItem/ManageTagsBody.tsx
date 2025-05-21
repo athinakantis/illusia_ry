@@ -77,7 +77,7 @@ const ManageTagsBody: FC<BodyProps> = ({ itemId }) => {
     const handleDelete = (tagId: string) => {
         if (
             confirm(
-                t("addItem.manageTags.confirmDelete", {
+                t("admin.add_product.manage_tag_body.confirmDelete", {
                     defaultValue: "Are you sure you want to delete this tag?",
                 }),
             )
@@ -155,7 +155,7 @@ const ManageTagsBody: FC<BodyProps> = ({ itemId }) => {
             {/* create new ---------------------------------------------------- */}
             <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
                 <TextField
-                    label={t("addItem.manageTags.newTag", {
+                    label={t("admin.add_product.manage_tag_body.newTag", {
                         defaultValue: "New tag",
                     })}
                     size="small"
@@ -168,12 +168,22 @@ const ManageTagsBody: FC<BodyProps> = ({ itemId }) => {
                     onClick={handleCreate}
                     disabled={!newName.trim()}
                 >
-                    {t("addItem.manageTags.add", { defaultValue: "Add" })}
+                    {t("admin.add_product.manage_tag_body.add", { defaultValue: "Add" })}
                 </Button>
                 {loading && (
                     <CircularProgress size={24} sx={{ alignSelf: "center" }} />
                 )}
             </Box>
+
+            {/* attach mode hint ------------------------------------------------ */}
+            {itemId && (
+                <Box sx={{ mb: 1, fontSize: 12, opacity: 0.7 }}>
+                    {t('admin.add_product.manage_tag_body.attachHint', {
+                        defaultValue:
+                            'Tip: Tick the check-boxes to attach or detach tags for this item.',
+                    })}
+                </Box>
+            )}
 
             {/* list ---------------------------------------------------------- */}
             <List dense>
@@ -202,13 +212,13 @@ const ManageTagsBody: FC<BodyProps> = ({ itemId }) => {
                 <Tooltip
                     title={
                         <Trans
-                            i18nKey="addItem.manageTags.checkBoxesTip">
+                            i18nKey="admin.add_product.manage_tag_body.checkBoxesTip">
                                 Check boxes are only available in the Item editor.
                             </Trans>
                     }
                 >
                     <span style={{ fontSize: 12, opacity: 0.7 }}>
-                        {t("addItem.manageTags.checkBoxesTip", {
+                        {t("admin.add_product.manage_tag_body.checkBoxesTip", {
                             defaultValue:
                                 "Check boxes are only available in the Item editor.",
                         })}

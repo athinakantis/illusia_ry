@@ -38,8 +38,6 @@
   "admin": {
     "dashboard": {
       "stats": {
-        "total_users": "Käyttäjät yhteensä",
-        "total_bookings": "Varaukset yhteensä",
         "inventory_items": "Varastotuotteet"
       },
       "status": {
@@ -116,11 +114,31 @@
       "blueBG": "\u001b[44m\u001b[49m",
       "magentaBG": "\u001b[45m\u001b[49m",
       "cyanBG": "\u001b[46m\u001b[49m",
-      "whiteBG": "\u001b[47m\u001b[49m"
+      "whiteBG": "\u001b[47m\u001b[49m",
+      "title": "Hallitse tunnisteita",
+      "confirmDelete": "Oletko varma, että haluat poistaa tämän tunnisteen?",
+      "newTag": "Uusi tunniste",
+      "add": "Lisää",
+      "attachHint": "Vinkki: Merkitse valintaruudut kiinnittääksesi tai irrottaksesi tunnisteita tälle tuotteelle.",
+      "checkBoxesTip": "Valintaruudut ovat käytettävissä vain tuotteen muokkaustyökalussa."
     }
   },
   "Delete tag?": "",
   "New tag": "",
   "Add": "",
-  "Open this from the Item editor to attach tags": ""
+  "Open this from the Item editor to attach tags": "",
+  "add_product": {
+    "manage_tags": {
+      "title": ""
+    },
+    "manage_tag_body": {
+      "confirmDelete": "",
+      "newTag": "",
+      "add": "",
+      "attachHint": "",
+      "checkBoxesTip": ""
+    }
+  },
+  "{label}": "{label}",
+  "{defaultLabel}": ""
 }

@@ -3,6 +3,7 @@
     "add_product": {
       "uploading": "Ladataan tuotetta...",
       "upload_failed": "Kuvien lataus epäonnistui. Yritä uudelleen.",
+      "add_tags_prompt": "Tuote luotu! Haluatko lisätä tunnisteita nyt?",
       "success": "Tuote lisätty onnistuneesti!",
       "save_failed": "Tuotteen tallennus epäonnistui. Yritä uudelleen.",
       "title": "Lisää uusi tuote",
@@ -14,10 +15,25 @@
       "selected_images": "Valitut kuvat:",
       "upload_files": "Lataa kuvat",
       "adding": "Lisätään tuotetta...",
-      "add": "Lisää tuote"
+      "add": "Lisää tuote",
+      "manage_tags": {
+        "title": ""
+      },
+      "manage_tag_body": {
+        "confirmDelete": "",
+        "newTag": "",
+        "add": "",
+        "attachHint": "",
+        "checkBoxesTip": ""
+      }
     },
     "dashboard": {
       "title": "Hallintapaneeli",
+      "stats": {
+        "total_users": "Käyttäjät yhteensä",
+        "total_bookings": "Varaukset yhteensä",
+        "total_items": ""
+      },
       "quick_actions": "Pikatoiminnot",
       "add_item": "Lisää tuote",
       "view_bookings": "Näytä varaukset",
@@ -41,16 +57,6 @@
       "users_and_roles": "Käyttäjät ja roolit"
     }
   },
-  "addItem": {
-    "manageTags": {
-      "title": "",
-      "confirmDelete": "",
-      "newTag": "",
-      "add": "",
-      "checkBoxesTip": ""
-    }
-  },
-  "{label}": "",
   "nav": {
     "home": "Etusivu",
     "items": "Tuotteet",

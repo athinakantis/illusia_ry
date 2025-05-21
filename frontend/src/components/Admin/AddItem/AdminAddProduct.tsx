@@ -61,6 +61,7 @@ const AdminAddProduct = () => {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>('info');
     const [createdItemId, setCreatedItemId] = useState<string | null>(null);
+    const [openTagsAfterCreate, setOpenTagsAfterCreate] = useState(false);
     const VisuallyHiddenInput = styled('input')({
         clip: 'rect(0 0 0 0)',
         clipPath: 'inset(50%)',
@@ -192,6 +193,12 @@ const AdminAddProduct = () => {
         try {
             const savedItem = await dispatch(createItem(newItemData)).unwrap();
             setCreatedItemId(savedItem.data.item_id);           // keep the id so we can attach tags
+            const wantTags = window.confirm(
+              t('admin.add_product.add_tags_prompt', {
+                defaultValue: 'Item created! Do you want to add tags now?'
+              })
+            );
+            if (wantTags) setOpenTagsAfterCreate(true);
             setIsLoading(false);
             showSnackbar(t('admin.add_product.success'), 'success');
             setFormData({
@@ -341,7 +348,11 @@ const AdminAddProduct = () => {
                 {/*————————————————————— Manage Categories ——————————————*/}
             <ManageCategory />
 
-                <ManageTags itemId={createdItemId ?? undefined} />
+                <ManageTags
+                  itemId={createdItemId ?? undefined}
+                  autoOpen={openTagsAfterCreate}
+                  onClose={() => setOpenTagsAfterCreate(false)}
+                />
                 {/*————————————————————— Upload Files ———————————————————*/}
                 <Button
                     component="label"
@@ -379,7 +390,7 @@ const AdminAddProduct = () => {
                 open={snackbarOpen}
                 autoHideDuration={4000}
                 onClose={() => setSnackbarOpen(false)}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
                 <MuiAlert
                     onClose={() => setSnackbarOpen(false)}

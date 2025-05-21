@@ -38,8 +38,6 @@
   "admin": {
     "dashboard": {
       "stats": {
-        "total_users": "Total users",
-        "total_bookings": "Total bookings",
         "inventory_items": "Inventory items"
       },
       "status": {
@@ -127,11 +125,31 @@
       "blueBG": "\u001b[44mManage Tags\u001b[49m",
       "magentaBG": "\u001b[45mManage Tags\u001b[49m",
       "cyanBG": "\u001b[46mManage Tags\u001b[49m",
-      "whiteBG": "\u001b[47mManage Tags\u001b[49m"
+      "whiteBG": "\u001b[47mManage Tags\u001b[49m",
+      "title": "Manage Tags",
+      "confirmDelete": "Are you sure you want to delete this tag?",
+      "newTag": "New tag",
+      "add": "Add",
+      "attachHint": "Tip: Tick the check‑boxes to attach or detach tags for this item.",
+      "checkBoxesTip": "Check boxes are only available in the Item editor."
     }
   },
   "Delete tag?": "",
   "New tag": "",
   "Add": "",
-  "Open this from the Item editor to attach tags": ""
+  "Open this from the Item editor to attach tags": "",
+  "add_product": {
+    "manage_tags": {
+      "title": "Manage Tags"
+    },
+    "manage_tag_body": {
+      "confirmDelete": "Are you sure you want to delete this tag?",
+      "newTag": "New tag",
+      "add": "Add",
+      "attachHint": "Tip: Tick the check-boxes to attach or detach tags for this item.",
+      "checkBoxesTip": "Check boxes are only available in the Item editor."
+    }
+  },
+  "{label}": "{label}",
+  "{defaultLabel}": "{defaultLabel}"
 }
