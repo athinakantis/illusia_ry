@@ -326,7 +326,7 @@ function Items() {
                         textDecoration: 'none',
                         flex: 1,
                         flexBasis: 230,
-                        maxWidth: 300
+                        maxWidth: { xs: '100%', md: 300 }
                       }}
                     >
                       <Box sx={{
