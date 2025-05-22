@@ -5,13 +5,14 @@ import { useAuth } from '../../hooks/useAuth';
 import { Box, Button, Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-
+import { useTranslation } from 'react-i18next';
 
 function Items() {
   const { role } = useAuth();
   const items = useAppSelector(selectAllItems);
   const navigate = useNavigate()
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   useEffect(() => {
     dispatch(fetchAllItemsAdmin());
   }, [dispatch]);
@@ -45,7 +46,7 @@ function Items() {
               borderRadius: 10,
               fontSize: 16,
               px: 5
-            }}>Add new item</Button>
+            }}>{t('admin.dashboard.add_item')}</Button>
         </Box>
         <ItemDataGrid data={items} />
       </Box>

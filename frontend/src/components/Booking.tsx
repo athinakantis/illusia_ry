@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogTitle,
@@ -25,7 +26,11 @@ import {
   updateBookingStatus,
 } from '../slices/bookingsSlice';
 import Spinner from './Spinner';
-import { showCustomSnackbar } from './CustomSnackbar';
+
+import { useTranslatedSnackbar } from './CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
+import { BookingWithItems } from '../types/types';
+import broken_img from '../assets/broken_img.png'
+import { useTranslation } from 'react-i18next';
 
 function SingleBooking() {
   const navigate = useNavigate();
@@ -35,39 +40,65 @@ function SingleBooking() {
   const loading = useAppSelector(selectBookingsLoading);
   const [wantsToCancel, setWantsToCancel] = useState(false)
   const NON_CANCELLABLE = ['cancelled', 'rejected']
+  const { showSnackbar } = useTranslatedSnackbar();
+  const { t } = useTranslation();
 
   /* ─────────────────── handlers ─────────────────── */
   const handleCancel = (booking_id: string) => {
     if (booking.status === 'pending') {
       dispatch(deleteBooking(booking_id));
-      showCustomSnackbar('Your booking was deleted!', 'info');
+      showSnackbar({
+        message: t('Bookings.snackbar.deleted', { defaultValue: 'Your booking was deleted' }),
+        variant: 'success',
+        autoHideDuration: 3000,
+      })
       setTimeout(() => navigate('/bookings'), 2000)
     } else {
       dispatch(updateBookingStatus({ id: booking.booking_id, status: 'cancelled' }))
-      showCustomSnackbar('Your booking was cancelled!', 'info');
+      showSnackbar({
+        message: t('Bookings.snackbar.cancelled', { defaultValue: 'Your booking was cancelled' }),
+        variant: 'info',
+        autoHideDuration: 3000,
+      })
     }
     setWantsToCancel(false)
   };
 
   const handleBrokenImg = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+    (e.target as HTMLImageElement).src = broken_img;
   }
 
+  /**
+ * A booking can be "touched" (button shown) when:
+ *   • status === "pending"   → user may DELETE the booking
+ *   • status === "approved"  → user may CANCEL it *if* start date is in the future
+ */
+  const canModify = (b: BookingWithItems) => {
+    // earliest start date across all reservations
+    const earliestStart = Math.min(
+      ...b?.items?.map(r => new Date(r.start_date).getTime())
+    );
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-useEffect(() => {
-  if (!booking_id) {
-    navigate('/bookings');
-    return;
-  }
-  // Always fetch fresh booking details when the ID changes
-  dispatch(fetchBooking(booking_id));
-}, [booking_id, dispatch, navigate]);
+    if (b?.booking?.status === 'pending') return true;                       // deletable
+    if (b?.booking?.status === 'approved' && earliestStart > today.getTime())
+      return true;                                                 // cancellable
+    return false;
+  };
+
+  useEffect(() => {
+    if (!booking_id) {
+      navigate('/bookings');
+      return;
+    }
+    // Always fetch fresh booking details when the ID changes
+    dispatch(fetchBooking(booking_id));
+  }, [booking_id, dispatch, navigate]);
 
   if (loading)
     return (
-      <Box sx={{ mx: 'auto', width: 'fit-content' }}>
-        <Spinner />
-      </Box>
+      <Spinner />
     );
 
   if (!booking_selector)
@@ -83,10 +114,16 @@ useEffect(() => {
 
   return (
     <Box maxWidth={900} sx={{ m: 'auto', p: 2 }}>
-      <Typography variant="heading_secondary_bold">
-        Booking ID: {booking.booking_id.substring(24).toUpperCase()}
-      </Typography>
-      <Typography variant="body2">{`${items[0].start_date} - ${items[0].end_date}`}</Typography>
+      <Stack sx={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
+        <Stack>
+          <Typography variant="heading_secondary_bold">
+            Booking ID: {booking.booking_id.slice(0, 8).toUpperCase()}
+          </Typography>
+          <Typography variant="body2">{`${items[0].start_date} - ${items[0].end_date}`}</Typography>
+        </Stack>
+
+        <Chip label={booking.status} />
+      </Stack>
 
       <Box>
         <TableContainer sx={{ pt: 2 }}>
@@ -106,7 +143,7 @@ useEffect(() => {
                         <img
                           onError={handleBrokenImg}
                           style={{ maxWidth: 78, borderRadius: '14px' }}
-                          src={item.image_path ?? '/src/assets/broken_img.png'}
+                          src={item.image_path?.[0] ?? broken_img}
                         />
                         <Stack>
                           <Typography>{item.item_name}</Typography>
@@ -125,9 +162,7 @@ useEffect(() => {
         {
           // Only allow dates that are after todays date to be cancelled
           // And booking that haven't been cancelled or rejected
-          items[0].start_date >
-          new Date().toLocaleDateString().slice(0, 10) &&
-          !NON_CANCELLABLE.includes(booking.status) && (
+          canModify(booking_selector) && (
             <Button
               onClick={() => setWantsToCancel(true)}
               size="small"
@@ -141,7 +176,7 @@ useEffect(() => {
                 padding: '6px 40px',
               }}
             >
-              Cancel
+              Cancel Booking
             </Button>
           )
         }

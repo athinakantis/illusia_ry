@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
-import { formatDate } from '../../../../utility/formatDate';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { formatDate } from '../../../utility/formatDate';
 import {
   deleteItem,
   fetchAllCategories,
@@ -9,7 +9,7 @@ import {
   selectAllCategories,
   selectItemById,
   updateItem,
-} from '../../../../slices/itemsSlice';
+} from '../../../slices/itemsSlice';
 import {
   Box,
   Button,
@@ -24,16 +24,17 @@ import {
 import { ImPencil2 } from 'react-icons/im';
 import { CiTrash } from 'react-icons/ci';
 import { ArrowBack } from '@mui/icons-material';
-import Spinner from '../../../Spinner';
-import { useAuth } from '../../../../hooks/useAuth';
+import Spinner from '../../Spinner';
+import { useAuth } from '../../../hooks/useAuth';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import broken_img from "../../../assets/broken_img.png"
 
 import { NextArrow, PrevArrow } from './Arrows';
 
 const SingleItem = () => {
-/* ———————————————————————  Constants  ——————————————————————————————— */
+  /* ———————————————————————  Constants  ——————————————————————————————— */
   const { itemId } = useParams<{ itemId: string }>();
   const item = useAppSelector(selectItemById(itemId ?? ''));
   const [isEditing, setIsEditing] = useState(false);
@@ -46,7 +47,7 @@ const SingleItem = () => {
     (cat) => cat.category_id === item?.category_id,
   );
 
-/* ———————————————————————  Side-Effects  ——————————————————————————————— */
+  /* ———————————————————————  Side-Effects  ——————————————————————————————— */
   useEffect(() => {
     if (!item) {
       dispatch(fetchItemById(itemId ?? ''));
@@ -64,7 +65,7 @@ const SingleItem = () => {
     if (role === undefined) return;
     if (role === null) navigate('/items');
   }, [role, navigate]);
-/* ———————————————————————— Handlers —————————————————————————————————————*/
+  /* ———————————————————————— Handlers —————————————————————————————————————*/
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!formData) return;
     const { name, value } = e.target;
@@ -96,9 +97,9 @@ const SingleItem = () => {
   const handleBrokenImg = (
     e: React.SyntheticEvent<HTMLImageElement, Event>,
   ) => {
-    (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+    (e.target as HTMLImageElement).src = broken_img;
   };
-/* —————————————————————————————— Conditional Renders ———————————————————————— */
+  /* —————————————————————————————— Conditional Renders ———————————————————————— */
   if (!item || typeof item !== 'object' || !('image_path' in item)) {
     return <Spinner />;
   }
@@ -126,7 +127,6 @@ const SingleItem = () => {
               color: 'text.main',
               bgcolor: 'primary.light',
               borderRadius: 10,
-
             },
           }}
         >
@@ -215,7 +215,7 @@ const SingleItem = () => {
                   borderRadius: 2,
                   bgcolor: 'background.verylightgrey',
                 }}
-                src={'/src/assets/broken_img.png'}
+                src={broken_img}
                 alt={item?.item_name || 'Item'}
               />
             )}

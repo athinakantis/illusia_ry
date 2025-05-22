@@ -1,4 +1,40 @@
 {
+  "adminBookings": {
+    "snackbar": {
+      "bookingApproved": "Booking approved",
+      "bookingRejected": "Booking rejected"
+    },
+    "heading": "Bookings",
+    "tabs": {
+      "all": "All",
+      "pending": "Pending approval",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "id": "ID",
+    "created": "Created",
+    "bookingDates": "Booking Dates",
+    "customer": "Customer",
+    "items": "Items",
+    "status": "Status",
+    "awaiting": "Awaiting Approval",
+    "noResults": "No bookings found for selected filter.",
+    "approve": "Approve",
+    "reject": "Reject"
+  },
+  "collapsibleDetail": {
+    "title": "Reservation items",
+    "item": "Item",
+    "start": "Start Date",
+    "end": "End Date",
+    "qty": "Quantity"
+  },
+  "Bookings": {
+    "snackbar": {
+      "deleted": "Your booking was deleted",
+      "cancelled": "Your booking was cancelled"
+    }
+  },
   "nav": {
     "home": "Home",
     "items": "Items",
@@ -14,6 +50,25 @@
     "dashboard": "Dashboard",
     "myAccount": "My account",
     "logOut": "Log out"
+  },
+  "userBookings": {
+    "snackbar": {
+      "bookingDeleted": "Your booking was deleted!",
+      "bookingCancelled": "Booking cancelled"
+    },
+    "heading": "Your Bookings",
+    "noBookings": "No bookings yet.",
+    "bookingId": "Booking ID",
+    "created": "Created at",
+    "cancelTooltip": "Cancel booking",
+    "deleteTooltip": "Delete booking",
+    "item": "Item",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "quantity": "Quantity",
+    "confirmCancel": "Are you sure you want to cancel your booking?",
+    "confirmYes": "Yes, I'm sure",
+    "confirmNo": "No thanks"
   },
   "cart": {
     "yourCart": "Your Cart",
@@ -31,18 +86,94 @@
     "empty": "Your cart is currently empty! <1>Browse Items</1>"
   },
   "home": {
-    "heroTitle": "Home for live-action role-playing games props",
-    "heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat",
+    "heroTitle": "Your go-to specialty store for LARP props and accessories",
+    "heroDescription": "Whether you need smaller props or larger set pieces, you’ll find everything you need to bring your story to life.",
     "categoriesTitle": "View Our Range Of Categories",
-    "categoriesDescription": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.",
-    "askQuestion": "Ask a question"
+    "categoriesDescription": "We offer a wide range of supplies — from combat vests to spaceship consoles, crafting materials, fire extinguishers — and everything in between.",
+    "categories": {
+      "clothing": "Clothing",
+      "board_games": "Board Games",
+      "props": "Props",
+      "accessories": "Accessories"
+    },
+    "cta": {
+      "browse_items": "Browse Items"
+    }
   },
   "faq": {
+    "faqTitle": "Frequently Asked Questions",
+    "askQuestion": "Ask a question",
+    "faqDescription": "Before reaching out to us, see if you can find what you're looking for in our FAQ",
     "question1": "When will my booking be approved?",
     "answer1": "We look through bookings as soon as we can. Bookings are usually approved within the span of 2-3 days. If you've waited longer than 5 days, send us an email",
     "question2": "How long can I book items for?",
     "answer2": "One booking can be a maximum duration of two weeks",
     "question3": "Why do I have to be approved before booking items?",
     "answer3": "We see the approval of our users as a guarantee that the items which have been lent will be returned after a maximum of 2 weeks."
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "stats": {
+        "total_users": "Total users",
+        "total_bookings": "Total bookings",
+        "inventory_items": "Inventory items"
+      },
+      "quick_actions": "Quick actions",
+      "add_item": "Add item",
+      "view_bookings": "View bookings",
+      "manage_users": "Manage users",
+      "upcoming_bookings": "Upcoming bookings",
+      "recent_activity": "Recent activity",
+      "users_and_roles": "Users & Roles",
+      "show_booking": "Show booking",
+      "columns": {
+        "name": "Name",
+        "status": "Status",
+        "duration": "Duration",
+        "date_range": "Date Range",
+        "actions": "Actions",
+        "last_sign_in": "Last sign-in",
+        "confirmed": "Confirmed",
+        "role": "Role"
+      },
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled",
+        "completed": "Completed"
+      },
+      "duration": {
+        "days": "Days"
+      }
+    },
+    "add_product": {
+      "title": "Add New Product",
+      "item_name": "Item Name",
+      "description": "Description",
+      "location": "Location",
+      "quantity": "Quantity",
+      "category": "Category",
+      "upload_files": "Upload files",
+      "selected_images": "Selected Images:",
+      "add": "Add Item",
+      "adding": "Adding Item...",
+      "uploading": "Uploading item...",
+      "upload_failed": "Failed to upload images. Please try again.",
+      "success": "Item added successfully!",
+      "save_failed": "Failed to save item. Please try again."
+    }
+  },
+  "roles": {
+    "head_admin": "Head Admin",
+    "admin": "Admin",
+    "user": "User",
+    "unapproved": "Unapproved"
+  },
+  "items": {
+    "browse": "Browse Items",
+    "manage": "Manage Items",
+    "search": "Search our items"
   }
 }
