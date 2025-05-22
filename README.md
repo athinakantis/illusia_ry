@@ -30,6 +30,8 @@ We are a group of 4 Web-Development Students who were tasked with creating a Boo
 - React
 - NestJS
 - TypeScript
+- MUI
+- Axios
 
 ## Authors
 
