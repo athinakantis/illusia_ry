@@ -54,7 +54,17 @@
       },
       "show_booking": "Show booking",
       "recent_activity": "Recent activity",
-      "users_and_roles": "Users & Roles"
+      "users_and_roles": "Users & Roles",
+      "roles": {
+        "head_admin": "Head Admin",
+        "user": "User",
+        "admin": "Admin",
+        "unapproved": "Unapproved"
+      },
+      "status": {
+        "cancelled": "cancelled",
+        "approved": "approved"
+      }
     }
   },
   "adminBookings": {
