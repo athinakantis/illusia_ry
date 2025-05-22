@@ -174,5 +174,71 @@
     "answer2": "Yhden varauksen kesto voi olla enintään kaksi viikkoa",
     "question3": "Miksi minun on saatava hyväksyntä ennen kuin voin varata tuotteita?",
     "answer3": "Käyttäjiemme hyväksyntä takaa meille, että lainatut esineet palautetaan viimeistään kahden viikon kuluessa."
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Hallintapaneeli",
+      "stats": {
+        "total_users": "Käyttäjät yhteensä",
+        "total_bookings": "Varaukset yhteensä",
+        "inventory_items": "Varastotuotteet"
+      },
+      "quick_actions": "Pikatoiminnot",
+      "add_item": "Lisää tuote",
+      "view_bookings": "Näytä varaukset",
+      "manage_users": "Hallitse käyttäjiä",
+      "upcoming_bookings": "Tulevat varaukset",
+      "recent_activity": "Viimeisin toiminta",
+      "users_and_roles": "Käyttäjät ja roolit",
+      "show_booking": "Näytä varaus",
+      "columns": {
+        "name": "Nimi",
+        "status": "Tila",
+        "duration": "Kesto",
+        "date_range": "Aikaväli",
+        "actions": "Toiminnot",
+        "last_sign_in": "Viimeisin kirjautuminen",
+        "confirmed": "Vahvistettu",
+        "role": "Rooli"
+      },
+      "status": {
+        "pending": "Odottaa",
+        "approved": "Hyväksytty",
+        "rejected": "Hylätty",
+        "cancelled": "Peruutettu",
+        "completed": "Valmis"
+      },
+      "duration": {
+        "days": "päivää"
+      }
+    },
+    "add_product": {
+      "title": "Lisää uusi tuote",
+      "item_name": "Tuotteen nimi",
+      "description": "Kuvaus",
+      "location": "Sijainti",
+      "quantity": "Määrä",
+      "category": "Kategoria",
+      "upload_files": "Lataa kuvat",
+      "selected_images": "Valitut kuvat:",
+      "add": "Lisää tuote",
+      "adding": "Lisätään tuotetta...",
+      "uploading": "Ladataan tuotetta...",
+      "upload_failed": "Kuvien lataus epäonnistui. Yritä uudelleen.",
+      "success": "Tuote lisätty onnistuneesti!",
+      "save_failed": "Tuotteen tallennus epäonnistui. Yritä uudelleen."
+    }
+  },
+  "roles": {
+    "head_admin": "Pääkäyttäjä",
+    "admin": "Ylläpitäjä",
+    "user": "Käyttäjä",
+    "unapproved": "Hyväksymätön"
+  },
+  "items": {
+    "browse": "Selaa tuotteita",
+    "manage": "Hallinnoi tuotteita",
+    "search": "Etsi tuotteita",
+    "date_picker_disabled_info": "Et voi vaihtaa päivämäärää, kun ostoskorissasi on tuotteita valituilla päivillä. Tyhjennä ostoskori tai muuta päivämäärää ostoskorin sisällä."
   }
 }

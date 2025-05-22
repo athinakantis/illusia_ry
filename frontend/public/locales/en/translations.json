@@ -157,7 +157,15 @@
   },
   "home": {
     "heroTitle": "Your go-to specialty store for LARP props and accessories",
-    "heroDescription": "Whether you need smaller props or larger set pieces, you’ll find everything you need to bring your story to life.",
+    "heroDescription": "Whether you need smaller props or larger set pieces, you'll find everything you need to bring your story to life.",
+    "categoriesTitle": "View Our Range Of Categories",
+    "categoriesDescription": "We offer a wide range of supplies — from combat vests to spaceship consoles, crafting materials, fire extinguishers — and everything in between.",
+    "categories": {
+      "clothing": "Clothing",
+      "board_games": "Board Games",
+      "props": "Props",
+      "accessories": "Accessories"
+    },
     "cta": {
       "browse_items": "Browse Items"
     },
@@ -174,5 +182,71 @@
     "answer2": "One booking can be a maximum duration of two weeks",
     "question3": "Why do I have to be approved before booking items?",
     "answer3": "We see the approval of our users as a guarantee that the items which have been lent will be returned after a maximum of 2 weeks."
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "stats": {
+        "total_users": "Total users",
+        "total_bookings": "Total bookings",
+        "inventory_items": "Inventory items"
+      },
+      "quick_actions": "Quick actions",
+      "add_item": "Add item",
+      "view_bookings": "View bookings",
+      "manage_users": "Manage users",
+      "upcoming_bookings": "Upcoming bookings",
+      "recent_activity": "Recent activity",
+      "users_and_roles": "Users & Roles",
+      "show_booking": "Show booking",
+      "columns": {
+        "name": "Name",
+        "status": "Status",
+        "duration": "Duration",
+        "date_range": "Date Range",
+        "actions": "Actions",
+        "last_sign_in": "Last sign-in",
+        "confirmed": "Confirmed",
+        "role": "Role"
+      },
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled",
+        "completed": "Completed"
+      },
+      "duration": {
+        "days": "Days"
+      }
+    },
+    "add_product": {
+      "title": "Add New Product",
+      "item_name": "Item Name",
+      "description": "Description",
+      "location": "Location",
+      "quantity": "Quantity",
+      "category": "Category",
+      "upload_files": "Upload files",
+      "selected_images": "Selected Images:",
+      "add": "Add Item",
+      "adding": "Adding Item...",
+      "uploading": "Uploading item...",
+      "upload_failed": "Failed to upload images. Please try again.",
+      "success": "Item added successfully!",
+      "save_failed": "Failed to save item. Please try again."
+    }
+  },
+  "roles": {
+    "head_admin": "Head Admin",
+    "admin": "Admin",
+    "user": "User",
+    "unapproved": "Unapproved"
+  },
+  "items": {
+    "browse": "Browse Items",
+    "manage": "Manage Items",
+    "search": "Search our items",
+    "date_picker_disabled_info": "You cannot select new dates while you have items with previously selected dates in your cart. Please clear your cart or adjust dates within the cart."
   }
 }
