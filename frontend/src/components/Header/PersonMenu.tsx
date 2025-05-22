@@ -106,10 +106,12 @@ const PersonMenu = () => {
           <AccountCircleIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
           <Trans i18nKey="person.myAccount">My account</Trans>
         </MenuItem>
-        <MenuItem disableRipple sx={{ pl: 2, pr: 2 }} onClick={signOut}>
-          <LogoutRoundedIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
-          <Trans i18nKey="person.logOut">Log out</Trans>
-        </MenuItem>
+        {role &&
+          <MenuItem disableRipple sx={{ pl: 2, pr: 2 }} onClick={signOut}>
+            <LogoutRoundedIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
+            <Trans i18nKey="person.logOut">Log out</Trans>
+          </MenuItem>
+        }
         {/* language buttons */}
         <Box sx={{ px: 1, pt: 1 }}>
           <Button
