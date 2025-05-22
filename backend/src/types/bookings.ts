@@ -9,5 +9,5 @@ export type UpcomingBooking = Tables<'item_reservations'> & {
 
 export type BookingWithItems = {
   booking: Tables<'bookings'>;
-  items: Array<Partial<Tables<'items'>> & Pick<Tables<'item_reservations'>, 'quantity' | 'start_date' | 'end_date'>>
+  items: Array<Partial<Tables<'items'>> & Pick<Tables<'item_reservations'>, 'id' | 'quantity' | 'start_date' | 'end_date'>>
 };

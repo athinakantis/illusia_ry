@@ -29,6 +29,14 @@ export const fetchFutureReservations = createAsyncThunk(
     }
 );
 
+export const updateReservation = createAsyncThunk(
+    'reservations/updateReservations',
+    async ({ bookingId, reservationId, updatedReservation }: { bookingId: string, reservationId: string, updatedReservation: object }) => {
+        const response = await reservationsApi.updateReservation(bookingId, reservationId, updatedReservation);
+        return response;
+    }
+)
+
 export const reservationsSlice = createSlice({
     name: 'reservations',
     initialState,

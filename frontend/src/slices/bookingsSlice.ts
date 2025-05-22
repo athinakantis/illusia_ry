@@ -186,19 +186,19 @@ export const bookingsSlice = createSlice({
     builder.addCase(updateBookingStatus.fulfilled, (state, action) => {
       const updatedBooking = action.payload;
       // Update the booking in the state
-      upsertBookingArray(state.bookings, updatedBooking);
-      upsertBookingArray(state.userBookings, updatedBooking);
-      /* ---------- keep single‑booking view in sync ---------- */
-      if (
-        state.booking &&                         // we have a booking open
-        state.booking.booking.booking_id === updatedBooking.booking_id
-      ) {
-        // state.booking expects BookingWithItems { booking, items }
-        // so we reuse the existing items array and patch the booking row only.
-        state.booking = {
-          ...state.booking,
-          booking: updatedBooking,
-        };
+      const index = state.bookings.findIndex(
+        (booking) => booking.booking_id === updatedBooking.booking_id,
+      );
+      if (index !== -1) {
+        state.bookings[index] = updatedBooking;
+      }
+
+      // Update the user bookings
+      const idxUser = state.userBookings.findIndex(
+        (b) => b.booking_id === updatedBooking.booking_id,
+      );
+      if (idxUser !== -1) {
+        state.userBookings[idxUser] = updatedBooking;
       }
 
       state.loading = false;
