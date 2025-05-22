@@ -62,6 +62,9 @@ const StatCard: React.FC<{ text: string; value: number | string }> = ({
   </Paper>
 );
 
+
+
+
 // ── Main component ────────────────────────────────────────
 
 const AdminDashboard = () => {
@@ -84,7 +87,6 @@ const AdminDashboard = () => {
     (state) => state.reservations.reservations,
   );
   const [upcomingBookings, setUpcomingBookings] = useState<UpcomingBooking[]>([]);
-
 
   // ─── Side-Effects ────────────────────────────────────────────
   useEffect(() => {
