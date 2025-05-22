@@ -189,7 +189,7 @@ const AdminDashboard = () => {
               text={
                 t('admin.dashboard.stats.total_users', {
                   defaultValue: 'Total users',
-              })}
+                })}
               value={users.length}
             />
           </Grid>
@@ -362,12 +362,6 @@ const AdminDashboard = () => {
                   <div style={{ whiteSpace: 'normal', lineHeight: '20px', padding: '8px 0' }}>{params.value}</div>
                 )
               },
-              {
-                field: 'confirmed', headerName: t('admin.dashboard.columns.confirmed'), flex: 1, headerClassName: 'super-app-theme--header',
-                renderCell: (params) => (
-                  <div style={{ whiteSpace: 'normal', lineHeight: '20px', padding: '8px 0' }}>{params.value}</div>
-                )
-              },
             ]}
             autoHeight
           />
@@ -394,7 +388,8 @@ const AdminDashboard = () => {
                 name: u.display_name ?? u.email,
                 role: u.role_title
                   ? t(`admin.dashboard.roles.${u.role_title.toLowerCase().replace(/\s+/g, '_')}`, {
-                    defaultValue: u.role_title})
+                    defaultValue: u.role_title
+                  })
                   : '—',
               }))}
             columns={[

@@ -19,7 +19,7 @@ dayjs.extend(relativeTime);
 /* ─────────——————————— Column Definitions ————───────── */
 export const systemLogColumns: GridColDef<SystemLog>[] = [
 
-   /*——————————————— Created at ————————————————————*/
+  /*——————————————— Created at ————————————————————*/
   {
     field: 'created_at',
     headerName: 'When',
@@ -77,8 +77,8 @@ export const systemLogColumns: GridColDef<SystemLog>[] = [
       }
       const color: 'success' | 'warning' | 'error' =
         action === 'INSERT' ? 'success'
-        : action === 'DELETE' ? 'error'
-        : 'warning';
+          : action === 'DELETE' ? 'error'
+            : 'warning';
       return (
         <Chip
           label={actionLabel}
@@ -163,7 +163,7 @@ export const systemLogColumns: GridColDef<SystemLog>[] = [
       const metadata = params.value ?? {};
       return (
         <Accordion sx={{ width: '100%' }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ p: 0, m: 0 }}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ p: 0, m: 0, px: 1 }}>
             <Typography variant="caption">View JSON</Typography>
           </AccordionSummary>
           <AccordionDetails sx={{ p: 1, maxHeight: 200, overflow: 'auto' }}>
