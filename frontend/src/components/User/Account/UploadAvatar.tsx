@@ -4,10 +4,12 @@ import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { supabase } from '../../../config/supabase';
 import { useAuth } from '../../../hooks/useAuth';
 import { useCurrentUserImage } from '../../../hooks/use-current-user-image';
+import { useTranslation } from 'react-i18next';
 // UploadAvatar now manages its own avatar URL state and user fetching.
 
 export const UploadAvatar: React.FC = () => {
   const [uploading, setUploading] = useState(false);
+  const { t } = useTranslation();
   const { user } = useAuth();
   const userId = user?.id;
   const initialUrl = useCurrentUserImage();
@@ -123,7 +125,9 @@ useEffect(() => {
       </Box>
       {uploading && <CircularProgress size={24} />}
       <Typography variant="caption" color="textSecondary">
-        {uploading ? 'Uploading...' : 'Change avatar'}
+        {uploading
+          ? t('avatar.uploading', { defaultValue: 'Uploading...' })
+          : t('avatar.change', { defaultValue: 'Change avatar' })}
       </Typography>
     </Box>
   );

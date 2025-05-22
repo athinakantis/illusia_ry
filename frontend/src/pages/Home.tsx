@@ -126,7 +126,7 @@ function Home() {
               <Link to={`/items?category=${displayCategories?.[0]?.category_name.replace(/ /g, '-')}`}>
                 <img src={getImageSrc(displayCategories?.[0])} alt="" />
                 <Typography variant='body3' color='text.main'>
-                  {getCategoryName(displayCategories?.[0])}
+                  {t(`home.categories.${displayCategories?.[0]?.category_name.toLowerCase().replace(/ /g, '_')}`,{defaultValue: "Board Games"})}
                 </Typography>
               </Link>
             </Box>
@@ -144,7 +144,7 @@ function Home() {
                 <Link to={`/items?category=${displayCategories?.[1]?.category_name.replace(/ /g, '-')}`}>
                   <img src={getImageSrc(displayCategories?.[1])} alt="" />
                   <Typography variant='body3' color='text.main'>
-                    {getCategoryName(displayCategories?.[1])}
+                  {t(`home.categories.${displayCategories?.[1]?.category_name.toLowerCase().replace(/ /g, '_')}`,{defaultValue: "Clothing"})}
                   </Typography>
                 </Link>
               </Box>
@@ -152,7 +152,7 @@ function Home() {
                 <Link to={`/items?category=${displayCategories?.[3]?.category_name.replace(/ /g, '-')}`}>
                   <img src={getImageSrc(displayCategories?.[3])} alt="" />
                   <Typography variant='body3' color='text.main'>
-                    {getCategoryName(displayCategories?.[3])}
+                    {t(`home.categories.${displayCategories?.[3]?.category_name.toLowerCase().replace(/ /g, '_')}`,{defaultValue: "Accessories"})}
                   </Typography>
                 </Link>
               </Box>
@@ -166,7 +166,7 @@ function Home() {
               <Link to={`/items?category=${displayCategories?.[2]?.category_name.replace(/ /g, '-')}`}>
                 <img src={getImageSrc(displayCategories?.[2])} alt="" />
                 <Typography variant='body3' color='text.main'>
-                  {getCategoryName(displayCategories?.[2])}
+                  {t(`home.categories.${displayCategories?.[2]?.category_name.toLowerCase().replace(/ /g, '_')}`,{defaultValue: "Props"})}
                 </Typography>
               </Link>
             </Box>

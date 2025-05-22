@@ -200,7 +200,7 @@ const AdminAddProduct = () => {
             );
             if (wantTags) setOpenTagsAfterCreate(true);
             setIsLoading(false);
-            showSnackbar(t('admin.add_product.success'), 'success');
+            showSnackbar(t('admin.add_product.success',{defaultValue: 'Item created successfully!'}), 'success');
             setFormData({
                 item_name: '',
                 description: '',

@@ -123,6 +123,21 @@
     "manage": "Hallinnoi tuotteita"
   },
   "account": {
+    "nameUpdated": "",
+    "errorUpdatingName": "",
+    "notLoggedIn": "",
+    "logIn": "",
+    "signUp": "",
+    "accessAccount": "",
+    "tabs": {
+      "profile": "",
+      "security": ""
+    },
+    "changeEmail": "",
+    "changePhone": "",
+    "addPhone": "",
+    "createdOn": "",
+    "deleteAccount": "",
     "email": {
       "mfaPrompt": "",
       "status": {
@@ -146,7 +161,47 @@
     }
   },
   "common": {
-    "sending": ""
+    "or": "",
+    "save": "",
+    "sending": "",
+    "cancel": ""
+  },
+  "deleteAccount": {
+    "error": {
+      "noToken": "",
+      "deleteFailed": ""
+    },
+    "title": "",
+    "warning": "",
+    "deleting": "",
+    "confirm": ""
+  },
+  "security": {
+    "status": {
+      "unenrollFailed": "",
+      "canceled": "",
+      "generating": "",
+      "scanQr": "",
+      "verifying": "",
+      "enabled": "",
+      "challengeError": "",
+      "verificationFailed": "",
+      "removed": ""
+    },
+    "prompt": {
+      "code": ""
+    },
+    "heading": "",
+    "enableTOTP": "",
+    "codeLabel": "",
+    "verifyActivate": "",
+    "cancelSetup": "",
+    "enabled": "",
+    "disableTOTP": ""
+  },
+  "avatar": {
+    "uploading": "",
+    "change": ""
   },
   "userBookings": {
     "snackbar": {
