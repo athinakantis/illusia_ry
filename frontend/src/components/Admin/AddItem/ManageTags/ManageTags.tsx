@@ -48,6 +48,8 @@ const ManageTags: FC<ManageTagsProps> = ({
         color="secondary"
         startIcon={<LocalOfferIcon />}
         onClick={() => setOpen(true)}
+        sx={{ flex: 1 }}
+
       >
         {t('admin.add_product.manage_tags.title', { defaultValue: "Manage Tags" })}
       </Button>

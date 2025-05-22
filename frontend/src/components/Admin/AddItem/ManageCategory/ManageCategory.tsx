@@ -25,6 +25,7 @@ const ManageCategory = () => {
         color="secondary"
         startIcon={<CategoryIcon />}
         onClick={handleOpen}
+        sx={{ flex: 1 }}
 
       >
         Manage Categories
@@ -33,7 +34,7 @@ const ManageCategory = () => {
       {/* Modal overlay */}
       <Dialog
         fullWidth
-        maxWidth="sm"   
+        maxWidth="sm"
         open={open}
         onClose={handleClose}
         scroll="paper"

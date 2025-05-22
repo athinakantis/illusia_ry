@@ -200,7 +200,7 @@ const AdminAddProduct = () => {
             );
             if (wantTags) setOpenTagsAfterCreate(true);
             setIsLoading(false);
-            showSnackbar(t('admin.add_product.success',{defaultValue: 'Item created successfully!'}), 'success');
+            showSnackbar(t('admin.add_product.success', { defaultValue: 'Item created successfully!' }), 'success');
             setFormData({
                 item_name: '',
                 description: '',
@@ -353,39 +353,39 @@ const AdminAddProduct = () => {
                     autoOpen={openTagsAfterCreate}
                     onClose={() => setOpenTagsAfterCreate(false)}
                 />
-                {/*————————————————————— Upload Files ———————————————————*/}
-                <Button
-                    component="label"
-                    role={'button'}
-                    variant="contained"
-                    color="secondary"
-                    tabIndex={-1}
-                    startIcon={<ImCloudUpload />}
-                    disabled={isLoading}
-                    sx={{ pl: 2 }}
-                >
-                    {t('admin.add_product.upload_files')}
-                    <VisuallyHiddenInput
-                        type="file"
-                        id="item_image"
-                        name="item_image"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        disabled={isLoading}
-                        multiple
-                    />
-                </Button>
-                {/*————————————————————— Submit Button ———————————————————*/}
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="secondary"
-                    disabled={isLoading}
-                >
-                    {isLoading ? t('admin.add_product.adding') : t('admin.add_product.add')}
-                </Button>
-            </Stack>
 
+            </Stack>
+            {/*————————————————————— Upload Files ———————————————————*/}
+            <Button
+                component="label"
+                role={'button'}
+                variant="contained"
+                color="secondary"
+                tabIndex={-1}
+                startIcon={<ImCloudUpload />}
+                disabled={isLoading}
+                sx={{ pl: 2, height: 80 }}
+            >
+                {t('admin.add_product.upload_files')}
+                <VisuallyHiddenInput
+                    type="file"
+                    id="item_image"
+                    name="item_image"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    disabled={isLoading}
+                    multiple
+                />
+            </Button>
+            {/*————————————————————— Submit Button ———————————————————*/}
+            <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                disabled={isLoading}
+            >
+                {isLoading ? t('admin.add_product.adding') : t('admin.add_product.add')}
+            </Button>
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={4000}
