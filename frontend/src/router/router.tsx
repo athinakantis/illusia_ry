@@ -4,7 +4,7 @@ import LoginPage from '../pages/LoginPage';
 import ItemsPage from '../pages/Items';
 import Root from '../components/Root';
 import Home from '../pages/Home';
-import SingleItem from '../components/Admin/AdminBookings/ItemView/ItemView';
+import SingleItem from '../components/Admin/ItemView/ItemView';
 import AdminAddProduct from '../components/Admin/AddItem/AdminAddProduct';
 import Cart from '../pages/Cart';
 import Contacts from '../pages/Contacts';
@@ -12,11 +12,12 @@ import ItemDetail from '../components/User/ItemDetail';
 import UserBookings from '../components/User/UserBookings';
 import AdminDashboard from '../components/Admin/AdminDashboard';
 import AdminBookings from '../components/Admin/AdminBookings/AdminBookings';
-import Account from '../components/Account';
+import Account from '../components/User/Account/Account';
 import SingleBooking from '../components/Booking';
 import ManageUsers from '../components/Admin/ManageUsers';
-
-
+import AuthCallbackHandler from '../components/CallbackHandler';
+import SystemLogsPage from '../pages/SystemLogs';
+import PhoneLogin from '../components/Auth/PhoneLogin';
 
 export const router = createBrowserRouter([
   {
@@ -28,11 +29,16 @@ export const router = createBrowserRouter([
         element: <Home />
       },
       {
+        path: "/auth/callback",
+        element: <AuthCallbackHandler />
+      },
+      {
         path: '/login',
         element: (
           <>
             <AuthRedirect />
             <LoginPage />
+           
           </>
         )
       },
@@ -81,8 +87,16 @@ export const router = createBrowserRouter([
         element: <ManageUsers />
       },
       {
+        path: "/admin/logs",
+        element: <SystemLogsPage />
+      },
+      {
         path: "/account",
         element: <Account />
+      },
+      {
+        path: "/phone-login",
+        element: <PhoneLogin />
       }
 
     ]

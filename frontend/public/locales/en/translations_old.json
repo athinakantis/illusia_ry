@@ -27,129 +27,20 @@
   "{link": {
     "defaultValue}": "{link.defaultValue}"
   },
-  "home": {
-    "categories": {
-      "clothing": "Clothing",
-      "board_games": "Board Games",
-      "props": "Props",
-      "accessories": "Accessories"
+  "snackbar": {
+    "bookingDefault": "Booking successfully created",
+    "bookingDeleted": "Your booking was deleted!",
+    "bookingCancelled": "Booking cancelled"
+  },
+  "userBookings": {
+    "test": "Success"
+  },
+  "UserBookings": {
+    "snackbar": {
+      "bookingDeleted": "Your booking was deleted!",
+      "bookingCancelled": "Booking cancelled"
     }
   },
-  "admin": {
-    "dashboard": {
-      "stats": {
-        "inventory_items": "Inventory items"
-      },
-      "status": {
-        "pending": "Pending",
-        "approved": "Approved",
-        "rejected": "Rejected",
-        "cancelled": "Cancelled",
-        "completed": "Completed"
-      }
-    }
-  },
-  "roles": {
-    "head_admin": "Head Admin",
-    "admin": "Admin",
-    "user": "User",
-    "unapproved": "Unapproved"
-  },
-  "addItem": {
-    "manageTags": {
-      "0": "M",
-      "1": "a",
-      "2": "n",
-      "3": "a",
-      "4": "g",
-      "5": "e",
-      "6": " ",
-      "7": "T",
-      "8": "a",
-      "9": "g",
-      "10": "s",
-      "bold": "\u001b[1mManage Tags\u001b[22m",
-      "strip": "Manage Tags",
-      "stripColors": "Manage Tags",
-      "trap": "൩ΛŋΛɢҼ ŦȺɢϟ",
-      "zalgo": "M̧̨̺͙̗̼̤̙̰̪͖̞͕͎͉͈̣̲͕̳̱͎̰̥̱͍̰͔̼̳̭͉̭̳̲͇̖͍͉̙̙͓̯̟̭̗̗̘̫̥͔̼͇̠͖̭͇̮̪̲͚͖͊ͥ́̎ͪ́ͅͅͅą̛̦͈͍̺̫̩͈̣̬̙͕̜̞̻̯̹̩̗̮̹̘̞̳̣͇͈̼̞̭̖̻̣̟̭͖̻̜̖͕̠ͦͥ̐̓ͬͦ͊̈̇͊̓̒ͅn̨̛͔͖̺̬̗͙̠͖͇̟̼̩̩̼̘̲͓̰̦͍̠̩͇͈͙̞͕͇̣͓̱̻̜͇͈͇̼̰̪͔̭͙̣̻̹̟̺̺̳̯̠̹̻̒̈̊͑̍ͪ͞͞ͅa̴̡̯̪̥̬̮̞͕̺͉̬̞̩̻͎̝̳̯̘͙͈͉̙͙̮̻̤̪ͧͯͣ̀ͣ̃ͫ̋́͛̇ͯ̒̂́̚͢͜͡g̨̺̗̠͎̤̞͇̗͖͕͈̥͕̲̮͓̰̘̞͇͕͍̠̳͚̲̯̫͔̖̥̲̙̜̖ͦ̄̒ͧ̆ͭͭ̐̊͌̂̈̃͛ͮ̐́̚͡͞͞e̷̯͙̘̼̦̮̫͙̘̻̳̹̖̦̜̠͈͔̺̫̱͚̦͔̮͙̙̪̯͓͉̝̤͈̦̮͎̬̩̟̣͈͈̱͈̗̻̠̬͔̝̤̗̝̭̯̘͌̃̈͒̀ͅͅ ̷̡͎̟̹̦͎͇̜̦̘͇̦̖̥͇̺̠̲̬͕̻͇̞͍̮̮̣̲̘̥͚̥̱̝̞̥͇͖̪̜̞̰͌ͨ̐͒̎ͬ̒͟ͅͅͅṮ̶̴͖͓̫͚̲̥̻̗͇̙͕͕̯̬̒ͣ̈͐ͩ̊̔̑̎̂̍̿̽̅̒͆̀͡͡͡a̬̞̰̘̘̩̼̖͉͓̱̯̪͖͕͕̠̳̰̦͔͉͔̘͂ͫ̀̑͑ͣͣ̒̂ͭ̎͊́̆́͝g̶̡̧̢̼̭̞͍̳̲̖̜̤̣̱̲͖̗̻̞̘̘̘̣̺̰͎̠̹̟͈͉̠̹̣͔͓͕͔̥ͣ̃ͪ͋ͤ̿͑ͫ̓ͫͥ͆͊͒̍̚s̴ͦ͌͌ͧͨ̏́̏̐̚͜͞͝ ҉̺͓͎͚͍̭̯̻̼̙̪̳̹͓͉̲͖̟͙͙̻̰̬͔̺ͅ",
-      "zebra": "M\u001b[7ma\u001b[27mn\u001b[7ma\u001b[27mg\u001b[7me\u001b[27m \u001b[7mT\u001b[27ma\u001b[7mg\u001b[27ms",
-      "rainbow": "\u001b[31mM\u001b[39m\u001b[33ma\u001b[39m\u001b[32mn\u001b[39m\u001b[34ma\u001b[39m\u001b[35mg\u001b[39m\u001b[31me\u001b[39m \u001b[32mT\u001b[39m\u001b[34ma\u001b[39m\u001b[35mg\u001b[39m\u001b[31ms\u001b[39m",
-      "random": "\u001b[33mM\u001b[39m\u001b[34ma\u001b[39m\u001b[36mn\u001b[39m\u001b[7ma\u001b[27m\u001b[36mg\u001b[39m\u001b[90me\u001b[39m \u001b[37mT\u001b[39m\u001b[37ma\u001b[39m\u001b[31mg\u001b[39m\u001b[33ms\u001b[39m",
-      "america": "\u001b[31mM\u001b[39m\u001b[37ma\u001b[39m\u001b[34mn\u001b[39m\u001b[31ma\u001b[39m\u001b[37mg\u001b[39m\u001b[34me\u001b[39m \u001b[37mT\u001b[39m\u001b[34ma\u001b[39m\u001b[31mg\u001b[39m\u001b[37ms\u001b[39m",
-      "reset": "\u001b[0mManage Tags\u001b[0m",
-      "dim": "\u001b[2mManage Tags\u001b[22m",
-      "italic": "\u001b[3mManage Tags\u001b[23m",
-      "underline": "\u001b[4mManage Tags\u001b[24m",
-      "inverse": "\u001b[7mManage Tags\u001b[27m",
-      "hidden": "\u001b[8mManage Tags\u001b[28m",
-      "strikethrough": "\u001b[9mManage Tags\u001b[29m",
-      "black": "\u001b[30mManage Tags\u001b[39m",
-      "red": "\u001b[31mManage Tags\u001b[39m",
-      "green": "\u001b[32mManage Tags\u001b[39m",
-      "yellow": "\u001b[33mManage Tags\u001b[39m",
-      "blue": "\u001b[34mManage Tags\u001b[39m",
-      "magenta": "\u001b[35mManage Tags\u001b[39m",
-      "cyan": "\u001b[36mManage Tags\u001b[39m",
-      "white": "\u001b[37mManage Tags\u001b[39m",
-      "gray": "\u001b[90mManage Tags\u001b[39m",
-      "grey": "\u001b[90mManage Tags\u001b[39m",
-      "brightRed": "\u001b[91mManage Tags\u001b[39m",
-      "brightGreen": "\u001b[92mManage Tags\u001b[39m",
-      "brightYellow": "\u001b[93mManage Tags\u001b[39m",
-      "brightBlue": "\u001b[94mManage Tags\u001b[39m",
-      "brightMagenta": "\u001b[95mManage Tags\u001b[39m",
-      "brightCyan": "\u001b[96mManage Tags\u001b[39m",
-      "brightWhite": "\u001b[97mManage Tags\u001b[39m",
-      "bgBlack": "\u001b[40mManage Tags\u001b[49m",
-      "bgRed": "\u001b[41mManage Tags\u001b[49m",
-      "bgGreen": "\u001b[42mManage Tags\u001b[49m",
-      "bgYellow": "\u001b[43mManage Tags\u001b[49m",
-      "bgBlue": "\u001b[44mManage Tags\u001b[49m",
-      "bgMagenta": "\u001b[45mManage Tags\u001b[49m",
-      "bgCyan": "\u001b[46mManage Tags\u001b[49m",
-      "bgWhite": "\u001b[47mManage Tags\u001b[49m",
-      "bgGray": "\u001b[100mManage Tags\u001b[49m",
-      "bgGrey": "\u001b[100mManage Tags\u001b[49m",
-      "bgBrightRed": "\u001b[101mManage Tags\u001b[49m",
-      "bgBrightGreen": "\u001b[102mManage Tags\u001b[49m",
-      "bgBrightYellow": "\u001b[103mManage Tags\u001b[49m",
-      "bgBrightBlue": "\u001b[104mManage Tags\u001b[49m",
-      "bgBrightMagenta": "\u001b[105mManage Tags\u001b[49m",
-      "bgBrightCyan": "\u001b[106mManage Tags\u001b[49m",
-      "bgBrightWhite": "\u001b[107mManage Tags\u001b[49m",
-      "blackBG": "\u001b[40mManage Tags\u001b[49m",
-      "redBG": "\u001b[41mManage Tags\u001b[49m",
-      "greenBG": "\u001b[42mManage Tags\u001b[49m",
-      "yellowBG": "\u001b[43mManage Tags\u001b[49m",
-      "blueBG": "\u001b[44mManage Tags\u001b[49m",
-      "magentaBG": "\u001b[45mManage Tags\u001b[49m",
-      "cyanBG": "\u001b[46mManage Tags\u001b[49m",
-      "whiteBG": "\u001b[47mManage Tags\u001b[49m",
-      "title": "Manage Tags",
-      "confirmDelete": "Are you sure you want to delete this tag?",
-      "newTag": "New tag",
-      "add": "Add",
-      "attachHint": "Tip: Tick the check‑boxes to attach or detach tags for this item.",
-      "checkBoxesTip": "Check boxes are only available in the Item editor."
-    }
-  },
-  "Delete tag?": "",
-  "New tag": "",
-  "Add": "",
-  "Open this from the Item editor to attach tags": "",
-  "add_product": {
-    "manage_tags": {
-      "title": "Manage Tags"
-    },
-    "manage_tag_body": {
-      "confirmDelete": "Are you sure you want to delete this tag?",
-      "newTag": "New tag",
-      "add": "Add",
-      "attachHint": "Tip: Tick the check-boxes to attach or detach tags for this item.",
-      "checkBoxesTip": "Check boxes are only available in the Item editor."
-    }
-  },
-  "{label}": "{label}",
-  "{defaultLabel}": "{defaultLabel}"
+  "Your booking was deleted": "Your booking was deleted",
+  "Your booking was cancelled": "Your booking was cancelled"
 }

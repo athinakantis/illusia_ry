@@ -15,11 +15,14 @@ import Logout from '../Auth/LoginOutBtn';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PersonMenu from './PersonMenu';
 import { Item } from '../../types/types';
 import { selectCart } from '../../slices/cartSlice';
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import NotificationsMenu from './NotificationMenu';
+import { useAuth } from '../../hooks/useAuth';
+import { fetchAdminNotifications, fetchUserNotifications, selectUserNotifications } from '../../slices/notificationSlice';
 import { Trans, useTranslation } from 'react-i18next';
 
 const Header = () => {
@@ -28,6 +31,10 @@ const Header = () => {
   const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cart } = useAppSelector(selectCart)
+  const { user, role } = useAuth()
+  const userNotifications = useAppSelector(selectUserNotifications)
+  const dispatch = useAppDispatch()
+
   // Calculate total quantity of all cart items
   const totalItems = cart.reduce((total: number, item: Item) => total + (item.quantity || 0), 0)
 
@@ -35,6 +42,13 @@ const Header = () => {
     setMobileOpen(!mobileOpen);
   };
 
+
+
+  // Fetch user notifications
+  useEffect(() => {
+    if (user && userNotifications.length < 1) dispatch(fetchUserNotifications(user.id))
+    if (role && ['Admin', 'Head Admin'].includes(role)) dispatch(fetchAdminNotifications())
+  }, [role])
 
   const drawer = (
     <List>
@@ -46,7 +60,7 @@ const Header = () => {
       >
         <ListItemText primary={<Trans i18nKey="nav.home">Home</Trans>} />
       </ListItem>
-    <ListItem
+      <ListItem
         component={Link}
         to="/items"
         onClick={handleDrawerToggle}
@@ -173,8 +187,7 @@ const Header = () => {
             p: '6px 8px'
           }
         }}>
-
-          <PersonMenu />
+          {user && <NotificationsMenu />}
           <Link to='/cart' aria-label="Go to cart" style={{ position: 'relative' }}>
             <ShoppingBagIcon />
             {totalItems > 0 &&
@@ -198,6 +211,7 @@ const Header = () => {
               }} />
             }
           </Link>
+          <PersonMenu />
           <Logout />
         </Box>
       </Toolbar>

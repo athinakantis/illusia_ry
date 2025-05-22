@@ -57,6 +57,42 @@
       "users_and_roles": "Users & Roles"
     }
   },
+  "adminBookings": {
+    "snackbar": {
+      "bookingApproved": "Booking approved",
+      "bookingRejected": "Booking rejected"
+    },
+    "heading": "Bookings",
+    "tabs": {
+      "all": "All",
+      "pending": "Pending approval",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "id": "ID",
+    "created": "Created",
+    "bookingDates": "Booking Dates",
+    "customer": "Customer",
+    "items": "Items",
+    "status": "Status",
+    "awaiting": "Awaiting Approval",
+    "noResults": "No bookings found for selected filter.",
+    "approve": "Approve",
+    "reject": "Reject"
+  },
+  "collapsibleDetail": {
+    "title": "Reservation items",
+    "item": "Item",
+    "start": "Start Date",
+    "end": "End Date",
+    "qty": "Quantity"
+  },
+  "Bookings": {
+    "snackbar": {
+      "deleted": "Your booking was deleted",
+      "cancelled": "Your booking was cancelled"
+    }
+  },
   "nav": {
     "home": "Home",
     "items": "Items",
@@ -77,6 +113,25 @@
     "search": "Search our items",
     "browse": "Browse Items",
     "manage": "Manage Items"
+  },
+  "userBookings": {
+    "snackbar": {
+      "bookingDeleted": "Your booking was deleted!",
+      "bookingCancelled": "Booking cancelled"
+    },
+    "heading": "Your Bookings",
+    "noBookings": "No bookings yet.",
+    "bookingId": "Booking ID",
+    "created": "Created at",
+    "cancelTooltip": "Cancel booking",
+    "deleteTooltip": "Delete booking",
+    "item": "Item",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "quantity": "Quantity",
+    "confirmCancel": "Are you sure you want to cancel your booking?",
+    "confirmYes": "Yes, I'm sure",
+    "confirmNo": "No thanks"
   },
   "cart": {
     "yourCart": "Your Cart",
