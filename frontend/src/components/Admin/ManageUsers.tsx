@@ -7,8 +7,10 @@ import {
   Select,
   MenuItem,
   CircularProgress,
+  Container,
+  useTheme,
 } from '@mui/material';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   fetchAllUsersWithRole,
@@ -19,6 +21,7 @@ import {
 } from '../../slices/usersSlice';
 import { showCustomSnackbar } from '../CustomSnackbar';
 import { useAuth } from '../../hooks/useAuth';
+import { StyledDataGrid } from '../CustomComponents/StyledDataGrid';
 import { useSearchParams } from 'react-router-dom';
 
 const STATUS_OPTIONS = [
@@ -43,6 +46,7 @@ const ManageUsers: React.FC = () => {
   const users = useAppSelector(selectAllUsers);
   const loading = useAppSelector(selectUserLoading);
   const { role } = useAuth();
+  const theme = useTheme()
   const [searchParams] = useSearchParams();
   const [filter, setFilter] = useState<VALID_FILTER>('ALL');
 
@@ -135,12 +139,13 @@ const ManageUsers: React.FC = () => {
 
   // Define columns for DataGrid
   const columns: GridColDef[] = [
-    { field: 'display_name', headerName: 'Name', flex: 1, minWidth: 150 },
-    { field: 'email', headerName: 'Email', flex: 1, minWidth: 200 },
+    { field: 'display_name', headerName: 'Name', flex: 1, minWidth: 150, headerClassName: 'columnHeader' },
+    { field: 'email', headerName: 'Email', flex: 1, minWidth: 200, headerClassName: 'columnHeader' },
 
     {
       field: 'role_title',
       headerName: 'User role',
+      headerClassName: 'columnHeader',
       flex: 1,
       minWidth: 180,
       renderCell: (params: GridRenderCellParams) => {
@@ -218,6 +223,7 @@ const ManageUsers: React.FC = () => {
     {
       field: 'user_status',
       headerName: 'Status',
+      headerClassName: 'columnHeader',
       flex: 1,
       minWidth: 160,
       renderCell: (params: GridRenderCellParams) => {
@@ -257,16 +263,7 @@ const ManageUsers: React.FC = () => {
   ];
 
   return (
-    <Box
-      className="container"
-      sx={{ mt: 4, maxWidth: 1200, mx: 'auto', px: { xs: 1, md: 2 } }}
-    >
-      <Typography
-        component="h1"
-        variant="heading_secondary_bold"
-        mb={4}
-        gutterBottom
-      ></Typography>
+    <Container className="container" sx={{ mt: 6, mx: 'auto' }} maxWidth="lg">
       <Typography variant="heading_secondary_bold" gutterBottom>
         Manage Users
       </Typography>
@@ -299,10 +296,12 @@ const ManageUsers: React.FC = () => {
             <CircularProgress />
           </Box>
         ) : (
-          <DataGrid
+          <StyledDataGrid
             rows={filtered}
             getRowId={(row) => row.user_id}
             columns={columns}
+            sx={{ '& .columnHeader, .MuiDataGrid-scrollbarFiller ': { bgcolor: theme.palette.background.verylightgrey } }}
+
             initialState={{
               pagination: { paginationModel: { pageSize: 10, page: 0 } },
             }}
@@ -310,7 +309,7 @@ const ManageUsers: React.FC = () => {
           />
         )}
       </Box>
-    </Box>
+    </Container>
   );
 };
 

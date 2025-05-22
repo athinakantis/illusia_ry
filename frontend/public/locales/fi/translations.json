@@ -97,7 +97,12 @@
     "home": "Etusivu",
     "items": "Tuotteet",
     "contact": "Ota yhteyttä",
-    "bookings": "Varaukset"
+    "bookings": "Varaukset",
+    "manageUsers": "Hallinnoi käyttäjiä",
+    "manageBookings": "Hallitse varauksia",
+    "dashboard": "Hallintapaneeli",
+    "logOut": "Kirjaudu ulos",
+    "logIn": "Kirjaudu sisään"
   },
   "header": {
     "logoMain": "ILLUSIA",
@@ -107,7 +112,10 @@
     "myBookings": "Minun varaukset",
     "dashboard": "Hallintapaneeli",
     "myAccount": "Oma tili",
-    "logOut": "Kirjaudu ulos"
+    "logOut": "Kirjaudu ulos",
+    "logIn": "Kirjaudu sisään",
+    "manageUsers": "Hallinnoi käyttäjiä",
+    "manageBookings": "Hallitse varauksia"
   },
   "items": {
     "search": "Etsi tuotteita",

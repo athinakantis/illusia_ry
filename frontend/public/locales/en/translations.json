@@ -97,7 +97,12 @@
     "home": "Home",
     "items": "Items",
     "contact": "Contact",
-    "bookings": "Bookings"
+    "bookings": "Bookings",
+    "manageUsers": "Manage users",
+    "manageBookings": "Manage bookings",
+    "dashboard": "Dashboard",
+    "logOut": "Log out",
+    "logIn": "Log in"
   },
   "header": {
     "logoMain": "ILLUSIA",
@@ -107,7 +112,10 @@
     "myBookings": "My bookings",
     "dashboard": "Dashboard",
     "myAccount": "My account",
-    "logOut": "Log out"
+    "logOut": "Log out",
+    "logIn": "Log in",
+    "manageUsers": "Manage users",
+    "manageBookings": "Manage bookings"
   },
   "items": {
     "search": "Search our items",
