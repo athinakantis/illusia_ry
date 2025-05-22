@@ -1,21 +1,21 @@
 {
   "admin": {
     "add_product": {
-      "uploading": "Uploading item...",
-      "upload_failed": "Failed to upload images. Please try again.",
+      "uploading": "Uploading…",
+      "upload_failed": "Upload failed",
       "add_tags_prompt": "Item created! Do you want to add tags now?",
-      "success": "Item added successfully!",
-      "save_failed": "Failed to save item. Please try again.",
-      "title": "Add New Product",
-      "item_name": "Item Name",
+      "success": "Item created successfully!",
+      "save_failed": "Failed to save item",
+      "title": "Add new product",
+      "item_name": "Item name",
       "description": "Description",
       "location": "Location",
       "quantity": "Quantity",
       "category": "Category",
-      "selected_images": "Selected Images:",
+      "selected_images": "Selected images",
       "upload_files": "Upload files",
-      "adding": "Adding Item...",
-      "add": "Add Item",
+      "adding": "Adding…",
+      "add": "Add product",
       "manage_tags": {
         "title": "Manage Tags"
       },
@@ -40,15 +40,15 @@
       "manage_users": "Manage users",
       "upcoming_bookings": "Upcoming bookings",
       "duration": {
-        "days": "Days"
+        "days": "days"
       },
       "columns": {
         "name": "Name",
         "status": "Status",
         "duration": "Duration",
-        "date_range": "Date Range",
+        "date_range": "Date range",
         "actions": "Actions",
-        "last_sign_in": "Last sign-in",
+        "last_sign_in": "Last sign in",
         "confirmed": "Confirmed",
         "role": "Role"
       },
@@ -97,10 +97,10 @@
     "home": "Home",
     "items": "Items",
     "contact": "Contact",
-    "bookings": "Bookings",
+    "bookings": "My bookings",
     "dashboard": "Dashboard",
     "manageBookings": "Manage bookings",
-    "manageUsers": "Manage users",
+    "manageUsers": "Manage Users",
     "logOut": "Log out"
   },
   "header": {
@@ -111,18 +111,33 @@
     "myBookings": "My bookings",
     "myAccount": "My account",
     "dashboard": "Dashboard",
-    "manageUsers": "Manage users",
+    "manageUsers": "Manage Users",
     "manageBookings": "Manage bookings",
     "logOut": "Log out",
     "logIn": "Log in"
   },
   "items": {
-    "search": "Search our items",
-    "date_picker_disabled_info": "You cannot select new dates while you have items with previously selected dates in your cart. Please clear your cart or adjust dates within the cart.",
-    "browse": "Browse Items",
-    "manage": "Manage Items"
+    "search": "Search items",
+    "date_picker_disabled_info": "You cannot change the date when your cart has items for the selected days. Empty the cart or change the date within the cart.",
+    "browse": "Browse items",
+    "manage": "Manage items"
   },
   "account": {
+    "nameUpdated": "Your name has been updated to {{name}}.",
+    "errorUpdatingName": "Error updating name",
+    "notLoggedIn": "You are either not logged in or you don't have an account yet.",
+    "logIn": "log in",
+    "signUp": "sign up",
+    "accessAccount": "to access your account.",
+    "tabs": {
+      "profile": "Profile",
+      "security": "Security"
+    },
+    "changeEmail": "Change email",
+    "changePhone": "Change phone",
+    "addPhone": "Add phone number",
+    "createdOn": "Account created on",
+    "deleteAccount": "Delete Account",
     "email": {
       "mfaPrompt": "Enter your 6-digit authenticator code to confirm email change:",
       "status": {
@@ -146,7 +161,47 @@
     }
   },
   "common": {
-    "sending": "Sending…"
+    "or": "or",
+    "save": "Save",
+    "sending": "Sending…",
+    "cancel": "Cancel"
+  },
+  "deleteAccount": {
+    "error": {
+      "noToken": "Failed to retrieve authentication token.",
+      "deleteFailed": "Account deletion failed."
+    },
+    "title": "Delete Account?",
+    "warning": "Deleting your account will permanently remove <strong>all</strong> information related to your user, including profiles, settings, and data. This action <em>cannot</em> be undone.",
+    "deleting": "Deleting…",
+    "confirm": "Delete Account"
+  },
+  "security": {
+    "status": {
+      "unenrollFailed": "Unenroll failed",
+      "canceled": "MFA setup canceled.",
+      "generating": "Generating secret…",
+      "scanQr": "Scan this QR in your authenticator app, then enter the 6-digit code",
+      "verifying": "Verifying…",
+      "enabled": "MFA enabled 🎉",
+      "challengeError": "Challenge error",
+      "verificationFailed": "Verification failed",
+      "removed": "MFA factor removed"
+    },
+    "prompt": {
+      "code": "Enter the 6-digit code from your authenticator app"
+    },
+    "heading": "Security settings",
+    "enableTOTP": "Enable TOTP MFA",
+    "codeLabel": "6-digit code",
+    "verifyActivate": "Verify & Activate",
+    "cancelSetup": "Cancel setup",
+    "enabled": "Authenticator-app MFA is enabled.",
+    "disableTOTP": "Disable TOTP MFA"
+  },
+  "avatar": {
+    "uploading": "Uploading...",
+    "change": "Change avatar"
   },
   "userBookings": {
     "snackbar": {
@@ -183,13 +238,13 @@
     "empty": "Your cart is currently empty! <1>Browse Items</1>"
   },
   "home": {
-    "heroTitle": "Your go-to specialty store for LARP props and accessories",
-    "heroDescription": "Whether you need smaller props or larger set pieces, you'll find everything you need to bring your story to life.",
+    "heroTitle": "Home for live-action role-playing games props",
+    "heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat",
     "cta": {
       "browse_items": "Browse Items"
     },
     "categoriesTitle": "View Our Range Of Categories",
-    "categoriesDescription": "We offer a wide range of supplies — from combat vests to spaceship consoles, crafting materials, fire extinguishers — and everything in between."
+    "categoriesDescription": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam."
   },
   "faq": {
     "faqTitle": "Frequently Asked Questions",

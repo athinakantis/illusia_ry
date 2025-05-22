@@ -62,10 +62,10 @@
   },
   "home": {
     "categories": {
-      "clothing": "Clothing",
       "board_games": "Board Games",
       "props": "Props",
-      "accessories": "Accessories"
+      "accessories": "Accessories",
+      "clothing": "clothing"
     }
   },
   "roles": {
@@ -73,5 +73,10 @@
     "admin": "Admin",
     "user": "User",
     "unapproved": "Unapproved"
-  }
+  },
+  "clothing": "Clothing",
+  "board games": "Board Games",
+  "props": "Props",
+  "accessories": "Accessories",
+  "Clothing": "Clothing"
 }

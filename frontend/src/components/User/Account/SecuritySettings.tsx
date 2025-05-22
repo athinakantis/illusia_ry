@@ -9,12 +9,14 @@ import {
 } from '@mui/material';
 import { supabase } from '../../../config/supabase';
 import { Factor } from '@supabase/supabase-js';
+import { useTranslation } from 'react-i18next';
 
 const SecuritySettings = () => {
   const [totpFactor, setTotpFactor] = useState<Factor | null>(null);
   const [pending, setPending] = useState<{ id: string; qr: string; secret: string } | null>(null);
   const [code, setCode] = useState('');
   const [status, setStatus] = useState<string>();
+  const { t } = useTranslation();
 
   /** fetch existing factors */
   useEffect(() => {
@@ -29,15 +31,15 @@ const SecuritySettings = () => {
   async function handleCancelSetup(factorId: string) {
     const { error } = await supabase.auth.mfa.unenroll({ factorId });
     if (error) {
-      setStatus('Could not cancel setup: ' + error.message);
+      setStatus(t('security.status.unenrollFailed', { defaultValue: 'Unenroll failed' }) + ': ' + error.message);
     } else {
-      setStatus('MFA setup canceled.');
+      setStatus(t('security.status.canceled', { defaultValue: 'MFA setup canceled.' }));
       setPending(null);
     }
   }
   /** enrol */
   const handleEnroll = async () => {
-    setStatus('Generating secret…');
+    setStatus(t('security.status.generating', { defaultValue: 'Generating secret…' }));
     const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp' });
     if (error) return setStatus(error.message);
     setPending({
@@ -45,13 +47,13 @@ const SecuritySettings = () => {
       qr: data.totp.qr_code,
       secret: data.totp.secret,
     });
-    setStatus('Scan this QR in your authenticator app, then enter the 6‑digit code');
+    setStatus(t('security.status.scanQr', { defaultValue: 'Scan this QR in your authenticator app, then enter the 6-digit code' }));
   };
 
   /** verify */
   const handleVerify = async () => {
     if (!pending || !code) return;
-    setStatus('Verifying…');
+    setStatus(t('security.status.verifying', { defaultValue: 'Verifying…' }));
 
     // 1) Ask Supabase to create a new challenge for this factor
     const { data: challengeData, error: challengeErr } =
@@ -61,7 +63,7 @@ const SecuritySettings = () => {
       return;
     }
 
-    // 2) Verify the 6‑digit code against the challenge we just received
+    // 2) Verify the 6-digit code against the challenge we just received
     const { error } = await supabase.auth.mfa.verify({
       factorId: pending.id,
       challengeId: challengeData.id,
@@ -72,7 +74,7 @@ const SecuritySettings = () => {
       return;
     }
 
-    setStatus('MFA enabled 🎉');
+    setStatus(t('security.status.enabled', { defaultValue: 'MFA enabled 🎉' }));
     window.location.reload();
   };
 
@@ -83,12 +85,12 @@ const SecuritySettings = () => {
     // 1) challenge
     const { data: ch, error: chErr } = await supabase.auth.mfa.challenge({ factorId });
     if (chErr) {
-      setStatus(chErr.message || 'Challenge error');
+      setStatus(chErr.message || t('security.status.challengeError', { defaultValue: 'Challenge error' }));
       return;
     }
 
     // 2) prompt user for code...
-    const code = prompt('Enter the 6‑digit code from your authenticator app');
+    const code = prompt(t('security.prompt.code', { defaultValue: 'Enter the 6-digit code from your authenticator app' }));
     if (!code) return;
 
     // 3) verify
@@ -98,17 +100,17 @@ const SecuritySettings = () => {
       code,
     });
     if (vErr) {
-      setStatus(vErr.message || 'Verification failed');
+      setStatus(vErr.message || t('security.status.verificationFailed', { defaultValue: 'Verification failed' }));
       return;
     }
 
     // 4) now unenroll
     const { error: uErr } = await supabase.auth.mfa.unenroll({ factorId });
     if (uErr) {
-      setStatus(uErr.message || 'Unenroll failed');
+      setStatus(uErr.message || t('security.status.unenrollFailed', { defaultValue: 'Unenroll failed' }));
       return;
     }
-    setStatus('MFA factor removed');
+    setStatus(t('security.status.removed', { defaultValue: 'MFA factor removed' }));
     setTotpFactor(null);
     setPending(null);
     setCode('');
@@ -119,13 +121,13 @@ const SecuritySettings = () => {
   return (
     <Paper sx={{ p: 4, maxWidth: 450, m: 'auto' }}>
       <Typography variant="h5" gutterBottom>
-        Security settings
+        {t('security.heading', { defaultValue: 'Security settings' })}
       </Typography>
 
       {/* ───────── NO FACTOR ENROLLED YET ───────── */}
       {!totpFactor && !pending && (
         <Button variant="contained" onClick={handleEnroll}>
-          Enable TOTP MFA
+          {t('security.enableTOTP', { defaultValue: 'Enable TOTP MFA' })}
         </Button>
       )}
 
@@ -143,19 +145,19 @@ const SecuritySettings = () => {
             <Typography variant="caption">Secret: {pending.secret}</Typography>
           </Box>
           <TextField
-            label="6-digit code"
+            label={t('security.codeLabel', { defaultValue: '6-digit code' })}
             value={code}
             onChange={(e) => setCode(e.target.value)}
           />
           <Button variant="contained" onClick={handleVerify}>
-            Verify &amp; Activate
+            {t('security.verifyActivate', { defaultValue: 'Verify & Activate' })}
           </Button>
           <Button
             variant="outlined"
             color="error"
             onClick={() => handleCancelSetup(pending.id)}
           >
-            Cancel setup
+            {t('security.cancelSetup', { defaultValue: 'Cancel setup' })}
           </Button>
         </Stack>
 
@@ -165,14 +167,14 @@ const SecuritySettings = () => {
       {totpFactor && (
         <Box>
           <Typography sx={{ mb: 2 }}>
-            Authenticator‑app MFA is <strong>enabled</strong>.
+            {t('security.enabled', { defaultValue: 'Authenticator-app MFA is enabled.' })}
           </Typography>
           <Button
             variant="outlined"
             color="error"
             onClick={() => handleUnenroll(totpFactor.id)}
           >
-            Disable TOTP MFA
+            {t('security.disableTOTP', { defaultValue: 'Disable TOTP MFA' })}
           </Button>
         </Box>
       )}

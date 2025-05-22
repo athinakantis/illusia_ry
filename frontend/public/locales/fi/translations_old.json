@@ -21,5 +21,15 @@
     "admin": "Ylläpitäjä",
     "user": "Käyttäjä",
     "unapproved": "Hyväksymätön"
-  }
+  },
+  "clothing": "",
+  "board games": "",
+  "props": "",
+  "accessories": "",
+  "home": {
+    "categories": {
+      "clothing": "Test"
+    }
+  },
+  "Clothing": ""
 }

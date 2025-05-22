@@ -22,12 +22,14 @@ import DeleteAccount from './DeleteAccount';
 import { Link } from 'react-router-dom';
 import UploadAvatar from './UploadAvatar';
 import { usersApi } from '../../../api/users';
+import { useTranslation } from 'react-i18next';
 
 const Account = () => {
    // ──────────────────────────────   Variables  ───────────────────────────────────────────
    const theme = useTheme()
    const pallete = theme.palette
    const { user } = useAuth();
+   const { t } = useTranslation();
 
   // Local state for name and input
   const [name, setName] = useState('');
@@ -49,7 +51,6 @@ const Account = () => {
   const [showEmailEditor, setShowEmailEditor] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [editingName, setEditingName] = useState(false);
-
   // ──────────────────────────────   Effects  ───────────────────────────────────────────
   useEffect(() => {
     (async () => {
@@ -67,11 +68,20 @@ const Account = () => {
     try {
       await accountApi.updateName(nameInput);
       setName(nameInput);
-      showCustomSnackbar(`You're name has been updated to ${nameInput}.`, 'success');
+      showCustomSnackbar(
+        t('account.nameUpdated', {
+          defaultValue: 'Your name has been updated to {{name}}.',
+          name: nameInput,
+        }),
+        'success'
+      );
       setEditingName(false);
     } catch (error) {
       console.error('Error updating name:', error);
-      showCustomSnackbar('Error updating name', 'error');
+      showCustomSnackbar(
+        t('account.errorUpdatingName', { defaultValue: 'Error updating name' }),
+        'error'
+      );
     }
   };
  
@@ -92,18 +102,36 @@ const Account = () => {
         {/*                    Message and links if user is not signed in                     */}
         <Box sx={{ textAlign: 'center' }}>
           <Typography variant="h4" component="div" sx={{ mb: 2 }}>
-            You are either not logged in or you don't have an account yet.
+            {t('account.notLoggedIn', {
+              defaultValue:
+                "You are either not logged in or you don't have an account yet.",
+            })}
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Please{' '}
-            <Link to="/login?view=sign_in" style={{ textDecoration: 'none', color: pallete.primary.light, fontWeight: 300 }}>
-              log in
+            <Link
+              to="/login?view=sign_in"
+              style={{
+                textDecoration: 'none',
+                color: pallete.primary.light,
+                fontWeight: 300,
+              }}
+            >
+              {t('account.logIn', { defaultValue: 'log in' })}
             </Link>{' '}
-            or{' '}
-            <Link to="/login?view=sign_up" style={{ textDecoration: 'none', color: pallete.primary.light, fontWeight: 300 }}>
-              sign up
+            {t('common.or', { defaultValue: 'or' })}{' '}
+            <Link
+              to="/login?view=sign_up"
+              style={{
+                textDecoration: 'none',
+                color: pallete.primary.light,
+                fontWeight: 300,
+              }}
+            >
+              {t('account.signUp', { defaultValue: 'sign up' })}
             </Link>{' '}
-            to access your account.
+            {t('account.accessAccount', {
+              defaultValue: 'to access your account.',
+            })}
           </Typography>
         </Box>
       </Box>
@@ -132,8 +160,8 @@ const Account = () => {
           centered
           sx={{ mb: 2 }}
         >
-          <Tab label="Profile" />
-          <Tab label="Security" />
+          <Tab label={t('account.tabs.profile', { defaultValue: 'Profile' })} />
+          <Tab label={t('account.tabs.security', { defaultValue: 'Security' })} />
         </Tabs>
 
         {/*                       Card Content                          */}
@@ -168,7 +196,7 @@ const Account = () => {
                     variant="contained"
                     onClick={handleNameChange}
                   >
-                    Save
+                    {t('common.save', { defaultValue: 'Save' })}
                   </Button>
                   <IconButton size="small" onClick={() => setEditingName(false)}>
                     <EditIcon />
@@ -195,7 +223,7 @@ const Account = () => {
                 sx={{ textTransform: 'none', mt: 1 }}
                 onClick={() => setShowEmailEditor(true)}
               >
-                Change email
+                {t('account.changeEmail', { defaultValue: 'Change email' })}
               </Button>
               {showEmailEditor && (
             //                     Change Email Component
@@ -221,7 +249,7 @@ const Account = () => {
                     sx={{ textTransform: 'none', mt: 1 }}
                     onClick={() => setShowPhoneEditor(true)}
                   >
-                    Change phone
+                    {t('account.changePhone', { defaultValue: 'Change phone' })}
                   </Button>
                 </>
               ) : (
@@ -231,7 +259,7 @@ const Account = () => {
                   sx={{ textTransform: 'none', mt: 1 }}
                   onClick={() => setShowPhoneEditor(true)}
                 >
-                  Add phone number
+                  {t('account.addPhone', { defaultValue: 'Add phone number' })}
                 </Button>
               )}
 
@@ -249,7 +277,7 @@ const Account = () => {
                 />
               )}
               <Typography variant="body3" color="text.primary">
-                Account created on{' '}
+                {t('account.createdOn', { defaultValue: 'Account created on' })}{' '}
                 {new Date(user?.created_at).toLocaleDateString()}
               </Typography>
 
@@ -269,7 +297,7 @@ const Account = () => {
                   sx={{ textTransform: 'none' }}
                   onClick={() => setShowDeleteDialog(true)}
                 >
-                  Delete Account
+                  {t('account.deleteAccount', { defaultValue: 'Delete Account' })}
                 </Button>
                 {/*                 DELETE ACCOUNT COMPONENT                 */}
                 <DeleteAccount
