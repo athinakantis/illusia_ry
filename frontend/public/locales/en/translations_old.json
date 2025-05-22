@@ -42,5 +42,8 @@
     }
   },
   "Your booking was deleted": "Your booking was deleted",
-  "Your booking was cancelled": "Your booking was cancelled"
+  "Your booking was cancelled": "Your booking was cancelled",
+  "nav": {
+    "logIn": "Log in"
+  }
 }
