@@ -90,8 +90,6 @@ const AdminDashboard = () => {
   );
   const [upcomingBookings, setUpcomingBookings] = useState<UpcomingBooking[]>([]);
 
-  console.log(bookings);
-
   // ─── Side-Effects ────────────────────────────────────────────
   useEffect(() => {
     if (users.length === 0) dispatch(fetchAllUsersWithRole());

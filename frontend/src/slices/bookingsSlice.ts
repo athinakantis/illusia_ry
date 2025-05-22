@@ -172,11 +172,8 @@ export const bookingsSlice = createSlice({
       state.loading = false;
     });
 
-    builder.addCase(addBooking.fulfilled, (state, action) => {
+    builder.addCase(addBooking.fulfilled, (state) => {
       localStorage.removeItem('savedCart');
-      console.log(action.payload);
-      console.log(state.bookings);
-
       state.loading = false;
     });
     builder.addCase(addBooking.rejected, (state, action) => {
