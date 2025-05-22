@@ -5,7 +5,7 @@ import ItemsPage from '../pages/Items';
 import Root from '../components/Root';
 import Home from '../pages/Home';
 import SingleItem from '../components/Admin/ItemView/ItemView';
-import AdminAddProduct from '../components/Admin/AdminAddProduct';
+import AdminAddProduct from '../components/Admin/AddItem/AdminAddProduct';
 import Cart from '../pages/Cart';
 import Contacts from '../pages/Contacts';
 import ItemDetail from '../components/User/ItemDetail';
@@ -15,9 +15,9 @@ import AdminBookings from '../components/Admin/AdminBookings/AdminBookings';
 import Account from '../components/User/Account/Account';
 import SingleBooking from '../components/Booking';
 import ManageUsers from '../components/Admin/ManageUsers';
-import PhoneLogin from '../components/Auth/PhoneLogin';
 import AuthCallbackHandler from '../components/CallbackHandler';
 import SystemLogsPage from '../pages/SystemLogs';
+import PhoneLogin from '../components/Auth/PhoneLogin';
 
 export const router = createBrowserRouter([
   {
@@ -97,11 +97,6 @@ export const router = createBrowserRouter([
       {
         path: "/phone-login",
         element: <PhoneLogin />
-      },
-      // Can we keep this in for now because every time i make an endpoint i have to recreate this file and put it in the router?
-      {
-        path: "/token",
-        element: <h1>Token</h1> // This is just a placeholder for the hidden token page
       }
 
     ]

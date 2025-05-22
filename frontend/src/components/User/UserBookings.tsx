@@ -290,6 +290,7 @@ const UserBookings = () => {
       {wantsToCancel &&
         // Dialog to confirm booking cancellation
         <Dialog
+          maxWidth="md"
           open={wantsToCancel ? true : false}
           onClose={() => setWantsToCancel(null)}
           aria-labelledby="alert-dialog-title"

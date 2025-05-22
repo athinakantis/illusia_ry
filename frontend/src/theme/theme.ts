@@ -261,8 +261,11 @@ export const createAppTheme = () =>
               borderRadius: '3px', 
             },
             '& .MuiPaper-root': {
-              boxShadow: 'none', filter: 'none', padding: '2rem',
-              gap: '2rem', maxWidth: 440,
+              boxShadow: 'none',
+              filter: 'none',
+              padding: '2rem',
+              gap: '2rem',
+              /* maxWidth removed so MUI’s own `maxWidth="sm" | "md" | …` works */
             }
 
           }
