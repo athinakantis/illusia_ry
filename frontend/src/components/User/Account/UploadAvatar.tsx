@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import { Avatar, Box, IconButton, CircularProgress, Typography, Skeleton } from '@mui/material';
+import { Avatar, Box, IconButton, CircularProgress, Skeleton } from '@mui/material';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { supabase } from '../../../config/supabase';
 import { useAuth } from '../../../hooks/useAuth';
@@ -13,14 +13,14 @@ export const UploadAvatar: React.FC = () => {
   const initialUrl = useCurrentUserImage();
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
-useEffect(() => {
-  if (initialUrl) {
-    // Bust cache on initial load
-    setAvatarUrl(`${initialUrl}?updated_at=${Date.now()}`);
-  } else {
-    setAvatarUrl(null);
-  }
-}, [initialUrl]);
+  useEffect(() => {
+    if (initialUrl) {
+      // Bust cache on initial load
+      setAvatarUrl(`${initialUrl}?updated_at=${Date.now()}`);
+    } else {
+      setAvatarUrl(null);
+    }
+  }, [initialUrl]);
 
   if (!userId) {
     console.error('You must be logged in to upload an avatar');
@@ -66,7 +66,7 @@ useEffect(() => {
 
     // Persist to users table
 
-    const {data, error: updateError } = await supabase
+    const { data, error: updateError } = await supabase
       .from('users')
       .update({ profile_image_url: publicUrl })
       .eq('user_id', userId)
@@ -76,8 +76,8 @@ useEffect(() => {
       // No need to setAvatarUrl here; keep using the timestamped URL.
     } else {
       console.error('Error updating user avatar URL in users table:', updateError?.message);
-     }
-    
+    }
+
     setUploading(false);
   };
   // If image is still loading, show skeleton
@@ -95,17 +95,18 @@ useEffect(() => {
             height: 200,
             border: '2px solid',
             borderColor: 'primary.light',
-            boxShadow: 2
           }}
         />
         <IconButton
+          disableRipple
           component="label"
           htmlFor="avatar-upload-input"
           sx={{
             position: 'absolute',
             bottom: 0,
             right: 0,
-            bgcolor: 'background.paper'
+            bgcolor: 'background.paper',
+            '&:hover': { zIndex: 5, bgcolor: 'background.verylightgrey' }
           }}
           color="primary"
           disabled={uploading}
@@ -122,9 +123,6 @@ useEffect(() => {
         </IconButton>
       </Box>
       {uploading && <CircularProgress size={24} />}
-      <Typography variant="caption" color="textSecondary">
-        {uploading ? 'Uploading...' : 'Change avatar'}
-      </Typography>
     </Box>
   );
 };
