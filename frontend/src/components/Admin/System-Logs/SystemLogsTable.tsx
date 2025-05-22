@@ -33,6 +33,7 @@ export const SystemLogsTable: React.FC<SystemLogsTableProps> = ({
 }) => (
   <Box sx={{ flexGrow: 1 }}>
     <StripedDataGrid
+      sx={{ '& .MuiDataGrid-cell': { py: '10px' } }}
       rows={rows}
       columns={systemLogColumns}
       loading={loading}
