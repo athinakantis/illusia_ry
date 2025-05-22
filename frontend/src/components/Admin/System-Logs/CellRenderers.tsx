@@ -4,7 +4,7 @@ import { useUserName } from '../../../hooks/useUserName';
 import { useCategoryLabel } from '../../../hooks/useCategoryLabel';
 import { useUserNameForBooking } from '../../../hooks/useUserBookings';
 import { useItemLabel } from '../../../hooks/useItemLabel';
-import { Database } from '../../../types/supabase.type';
+import { Database } from '../../../types/supabase';
 
 // Import your Supabase-generated types
 // Alias the row type for item_reservations

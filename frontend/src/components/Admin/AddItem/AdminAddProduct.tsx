@@ -9,7 +9,7 @@ import {
 } from '../../../slices/itemsSlice';
 import { supabase } from '../../../config/supabase';
 import { v4 as uuidv4 } from 'uuid';
-import { TablesInsert } from '../../../types/supabase.type';
+import { TablesInsert } from '../../../types/supabase';
 import MuiAlert, { AlertColor } from '@mui/material/Alert';
 import {
     Button,
@@ -194,9 +194,9 @@ const AdminAddProduct = () => {
             const savedItem = await dispatch(createItem(newItemData)).unwrap();
             setCreatedItemId(savedItem.data.item_id);           // keep the id so we can attach tags
             const wantTags = window.confirm(
-              t('admin.add_product.add_tags_prompt', {
-                defaultValue: 'Item created! Do you want to add tags now?'
-              })
+                t('admin.add_product.add_tags_prompt', {
+                    defaultValue: 'Item created! Do you want to add tags now?'
+                })
             );
             if (wantTags) setOpenTagsAfterCreate(true);
             setIsLoading(false);
@@ -291,67 +291,67 @@ const AdminAddProduct = () => {
                 </Select>
             </FormControl>
 
-                {/* Preview Section */}
-                {selectedFiles.length > 0 && (
-                    <Stack spacing={2}>
-                        <Typography variant="subtitle1">{t('admin.add_product.selected_images')}</Typography>
-                        {selectedFiles.map((file, index) => (
+            {/* Preview Section */}
+            {selectedFiles.length > 0 && (
+                <Stack spacing={2}>
+                    <Typography variant="subtitle1">{t('admin.add_product.selected_images')}</Typography>
+                    {selectedFiles.map((file, index) => (
+                        <Box
+                            key={index}
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1,
+                                p: 1,
+                                border: '1px solid',
+                                borderColor: 'divider',
+                                borderRadius: 1,
+                            }}
+                        >
                             <Box
-                                key={index}
+                                component="img"
+                                src={file.preview}
+                                alt={`Preview ${index + 1}`}
                                 sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 1,
-                                    p: 1,
-                                    border: '1px solid',
-                                    borderColor: 'divider',
+                                    width: 60,
+                                    height: 60,
+                                    objectFit: 'cover',
                                     borderRadius: 1,
                                 }}
-                            >
-                                <Box
-                                    component="img"
-                                    src={file.preview}
-                                    alt={`Preview ${index + 1}`}
-                                    sx={{
-                                        width: 60,
-                                        height: 60,
-                                        objectFit: 'cover',
-                                        borderRadius: 1,
-                                    }}
-                                />
-                                <Box sx={{ flexGrow: 1 }}>
-                                    <Typography variant="body2" noWrap>
-                                        {file.file.name}
-                                    </Typography>
-                                </Box>
-                                <IconButton
-                                    onClick={() => handleSetMainImage(index)}
-                                    color={file.isMain ? 'primary' : 'default'}
-                                    size="small"
-                                >
-                                    {file.isMain ? <StarIcon /> : <StarBorderIcon />}
-                                </IconButton>
-                                <IconButton
-                                    onClick={() => handleRemoveImage(index)}
-                                    color="error"
-                                    size="small"
-                                >
-                                    <DeleteIcon />
-                                </IconButton>
+                            />
+                            <Box sx={{ flexGrow: 1 }}>
+                                <Typography variant="body2" noWrap>
+                                    {file.file.name}
+                                </Typography>
                             </Box>
-                        ))}
-                    </Stack>
-                )}
-                {/*————————————————————— Buttons ————————————————————————*/}
+                            <IconButton
+                                onClick={() => handleSetMainImage(index)}
+                                color={file.isMain ? 'primary' : 'default'}
+                                size="small"
+                            >
+                                {file.isMain ? <StarIcon /> : <StarBorderIcon />}
+                            </IconButton>
+                            <IconButton
+                                onClick={() => handleRemoveImage(index)}
+                                color="error"
+                                size="small"
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                        </Box>
+                    ))}
+                </Stack>
+            )}
+            {/*————————————————————— Buttons ————————————————————————*/}
 
             <Stack spacing={2} direction={"row"} alignItems="center">
                 {/*————————————————————— Manage Categories ——————————————*/}
-            <ManageCategory />
+                <ManageCategory />
 
                 <ManageTags
-                  itemId={createdItemId ?? undefined}
-                  autoOpen={openTagsAfterCreate}
-                  onClose={() => setOpenTagsAfterCreate(false)}
+                    itemId={createdItemId ?? undefined}
+                    autoOpen={openTagsAfterCreate}
+                    onClose={() => setOpenTagsAfterCreate(false)}
                 />
                 {/*————————————————————— Upload Files ———————————————————*/}
                 <Button
@@ -384,8 +384,8 @@ const AdminAddProduct = () => {
                 >
                     {isLoading ? t('admin.add_product.adding') : t('admin.add_product.add')}
                 </Button>
-                </Stack>
-            
+            </Stack>
+
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={4000}

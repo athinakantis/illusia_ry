@@ -1,4 +1,4 @@
-import { Tables } from "../types/supabase.type";
+import { Tables } from "../types/supabase";
 
 /**
  * Simple helper to map a category_id to its human‑readable name.
