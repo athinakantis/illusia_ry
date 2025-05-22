@@ -25,6 +25,7 @@ import { GuestModule } from '../guest/guest.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { NotificationsController } from '../notifications/notifications.controller';
 import { AccountModule } from '../account/account.module';
+import { AccountController } from '../account/account.controller';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -66,7 +67,7 @@ export class AppModule implements NestModule {
       TagController,
       CategoryController,
       SystemLogsController,
-      AccountModule
+      AccountController
       // Add other controllers that need authentication here
       );
   }
