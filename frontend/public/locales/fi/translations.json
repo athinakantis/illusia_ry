@@ -3,7 +3,7 @@
     "add_product": {
       "uploading": "Ladataan tuotetta...",
       "upload_failed": "Kuvien lataus epäonnistui. Yritä uudelleen.",
-      "add_tags_prompt": "",
+      "add_tags_prompt": "Tuote luotu! Haluatko lisätä tägejä nyt?",
       "success": "Tuote lisätty onnistuneesti!",
       "save_failed": "Tuotteen tallennus epäonnistui. Yritä uudelleen.",
       "title": "Lisää uusi tuote",
@@ -17,14 +17,14 @@
       "adding": "Lisätään tuotetta...",
       "add": "Lisää tuote",
       "manage_tags": {
-        "title": ""
+        "title": "Hallinnoi tägejä"
       },
       "manage_tag_body": {
-        "confirmDelete": "",
-        "newTag": "",
-        "add": "",
-        "attachHint": "",
-        "checkBoxesTip": ""
+        "confirmDelete": "Haluatko varmasti poistaa tämän tägin?",
+        "newTag": "Uusi tägi",
+        "add": "Lisää",
+        "attachHint": "Vihje: Rastita valintaruudut liittääksesi tai irrottaaksesi tägejä tältä tuotteelta.",
+        "checkBoxesTip": "Valintaruudut ovat käytettävissä vain tuotemuokkaimessa."
       }
     },
     "dashboard": {
@@ -32,7 +32,7 @@
       "stats": {
         "total_users": "Käyttäjät yhteensä",
         "total_bookings": "Varaukset yhteensä",
-        "total_items": ""
+        "total_items": "Tuotteet yhteensä"
       },
       "quick_actions": "Pikatoiminnot",
       "add_item": "Lisää tuote",
@@ -123,85 +123,85 @@
     "manage": "Hallinnoi tuotteita"
   },
   "account": {
-    "nameUpdated": "",
-    "errorUpdatingName": "",
-    "notLoggedIn": "",
-    "logIn": "",
-    "signUp": "",
-    "accessAccount": "",
+    "nameUpdated": "Nimesi on päivitetty muotoon {{name}}.",
+    "errorUpdatingName": "Nimen päivitys epäonnistui",
+    "notLoggedIn": "Et ole kirjautunut sisään tai sinulla ei vielä ole tiliä.",
+    "logIn": "kirjaudu sisään",
+    "signUp": "rekisteröidy",
+    "accessAccount": "päästäksesi tilillesi.",
     "tabs": {
-      "profile": "",
-      "security": ""
+      "profile": "Profiili",
+      "security": "Turvallisuus"
     },
-    "changeEmail": "",
-    "changePhone": "",
-    "addPhone": "",
-    "createdOn": "",
-    "deleteAccount": "",
+    "changeEmail": "Vaihda sähköposti",
+    "changePhone": "Vaihda puhelinnumero",
+    "addPhone": "Lisää puhelinnumero",
+    "createdOn": "Tili luotu",
+    "deleteAccount": "Poista tili",
     "email": {
-      "mfaPrompt": "",
+      "mfaPrompt": "Syötä 6-numeroinen autentikaattorisovelluksen koodi vahvistaaksesi sähköpostin vaihdon:",
       "status": {
-        "sending": "",
-        "linkSent": ""
+        "sending": "Lähetetään vahvistussähköpostia…",
+        "linkSent": "Vahvistuslinkki lähetetty uuteen sähköpostiosoitteeseesi. Tarkista postisi."
       },
-      "newLabel": "",
-      "update": ""
+      "newLabel": "Uusi sähköpostiosoite",
+      "update": "Päivitä sähköposti"
     },
     "phone": {
       "status": {
-        "sending": "",
-        "smsSent": "",
-        "verifying": "",
-        "confirmed": ""
+        "sending": "Lähetetään koodi…",
+        "smsSent": "SMS lähetetty! Syötä 6-numeroinen koodi.",
+        "verifying": "Vahvistetaan…",
+        "confirmed": "Puhelinnumero vahvistettu ✅"
       },
-      "numberLabel": "",
-      "sendCode": "",
-      "codeLabel": "",
-      "verifySave": ""
+      "numberLabel": "Puhelinnumero (E.164 esim. +358401234567)",
+      "sendCode": "Lähetä koodi",
+      "codeLabel": "6-numeroinen koodi",
+      "verifySave": "Vahvista ja tallenna"
     }
   },
   "common": {
-    "or": "",
-    "save": "",
-    "sending": "",
-    "cancel": ""
+    "or": "tai",
+    "save": "Tallenna",
+    "sending": "Lähetetään…",
+    "cancel": "Peruuta"
   },
   "deleteAccount": {
     "error": {
-      "noToken": "",
-      "deleteFailed": ""
+      "noToken": "Todennustunnuksen hakeminen epäonnistui.",
+      "deleteFailed": "Tilin poistaminen epäonnistui."
     },
-    "title": "",
-    "warning": "",
-    "deleting": "",
-    "confirm": ""
+    "title": "Poista tili?",
+    "warning": "Tilin poistaminen poistaa pysyvästi <strong>kaikki</strong> käyttäjääsi liittyvät tiedot, mukaan lukien profiilit, asetukset ja datan. Tätä toimintoa <em>ei</em> voi perua.",
+    "deleting": "Poistetaan…",
+    "confirm": "Poista tili"
   },
   "security": {
     "status": {
-      "unenrollFailed": "",
-      "canceled": "",
-      "generating": "",
-      "scanQr": "",
-      "verifying": "",
-      "enabled": "",
-      "challengeError": "",
-      "verificationFailed": "",
-      "removed": ""
+      "unenrollFailed": "Poistaminen epäonnistui",
+      "canceled": "MFA-asennus peruttu.",
+      "generating": "Luodaan salaisuutta…",
+      "scanQr": "Skannaa tämä QR-koodi autentikaattorisovelluksella ja syötä 6-numeroinen koodi",
+      "verifying": "Vahvistetaan…",
+      "enabled": "MFA otettu käyttöön 🎉",
+      "challengeError": "Haastevirhe",
+      "verificationFailed": "Vahvistus epäonnistui",
+      "removed": "MFA-tunniste poistettu"
     },
     "prompt": {
-      "code": ""
+      "code": "Syötä 6-numeroinen koodi autentikaattorisovelluksestasi"
     },
-    "heading": "",
-    "enableTOTP": "",
-    "codeLabel": "",
-    "verifyActivate": "",
-    "cancelSetup": "",
-    "enabled": "",
-    "disableTOTP": ""
+    "heading": "Turvallisuusasetukset",
+    "enableTOTP": "Ota TOTP-MFA käyttöön",
+    "codeLabel": "6-numeroinen koodi",
+    "verifyActivate": "Vahvista ja aktivoi",
+    "cancelSetup": "Peruuta asennus",
+    "enabled": "Autentikaattorisovelluksen MFA on käytössä.",
+    "disableTOTP": "Poista TOTP-MFA käytöstä"
   },
   "avatar": {
-    "uploading": "",
-    "change": ""
+    "uploading": "Ladataan...",
+    "change": "Vaihda avatar"
   },
   "userBookings": {
     "snackbar": {
@@ -244,14 +244,20 @@
       "browse_items": "Selaa tuotteita"
     },
     "categoriesTitle": "Tutustu kategoriavalikoimaamme",
-    "categoriesDescription": "Meiltä löytyy monipuolisesti tarvikkeita taisteluliiveistä avararuusalusten konsoleihin, askartelutarpeisiin, vaahtosammuttimiin - ja kaikkeen siltä väliltä."
+    "categoriesDescription": "Meiltä löytyy monipuolisesti tarvikkeita taisteluliiveistä avararuusalusten konsoleihin, askartelutarpeisiin, vaahtosammuttimiin - ja kaikkeen siltä väliltä.",
+    "categories": {
+      "board_games": "Lautapelit",
+      "clothing": "Vaatteet",
+      "accessories": "Tarvikkeet",
+      "props": "Rekvisiitta"
+    }
   },
   "faq": {
     "faqTitle": "Usein kysytyt kysymykset",
     "faqDescription": "Ennen kuin otat yhteyttä tarkista usein kysytyt kysymykset.",
     "askQuestion": "Esitä kysymys",
     "question1": "Milloin varaukseni hyväksytään?",
-    "answer1": "Käymme varaukset läpi mahdollisimman pian. Varaukset hyväksytään yleensä 2–3 päivän kuluessa. Jos olet odottanut yli 5 päivää, lähetä meille sähköpostia.",
+    "answer1": "Käymme varaukset läpi mahdollisimman pian. Varaukset hyväksytään yleensä 2-3 päivän kuluessa. Jos olet odottanut yli 5 päivää, lähetä meille sähköpostia.",
     "question2": "Kuinka pitkäksi aikaa voin varata tuotteita?",
     "answer2": "Yhden varauksen kesto voi olla enintään kaksi viikkoa",
     "question3": "Miksi minun on saatava hyväksyntä ennen kuin voin varata tuotteita?",

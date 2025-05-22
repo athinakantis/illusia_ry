@@ -60,14 +60,6 @@
       }
     }
   },
-  "home": {
-    "categories": {
-      "board_games": "Board Games",
-      "props": "Props",
-      "accessories": "Accessories",
-      "clothing": "clothing"
-    }
-  },
   "roles": {
     "head_admin": "Head Admin",
     "admin": "Admin",
@@ -78,5 +70,10 @@
   "board games": "Board Games",
   "props": "Props",
   "accessories": "Accessories",
-  "Clothing": "Clothing"
+  "Clothing": "Clothing",
+  "\"home": {
+    "categories": {
+      "accessories\"": "Accessories"
+    }
+  }
 }

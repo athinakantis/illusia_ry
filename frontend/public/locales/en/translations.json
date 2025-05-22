@@ -244,7 +244,13 @@
       "browse_items": "Browse Items"
     },
     "categoriesTitle": "View Our Range Of Categories",
-    "categoriesDescription": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam."
+    "categoriesDescription": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.",
+    "categories": {
+      "board_games": "Board Games",
+      "clothing": "Clothing",
+      "accessories": "Accessories",
+      "props": "Props"
+    }
   },
   "faq": {
     "faqTitle": "Frequently Asked Questions",
