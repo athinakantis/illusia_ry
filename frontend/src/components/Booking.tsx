@@ -16,7 +16,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useDebugValue, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
@@ -278,7 +278,7 @@ function SingleBooking() {
       </Stack>
     );
 
-  const { items, booking } = booking_selector;
+  const { booking } = booking_selector;
 
   return (
     <Box maxWidth={900} sx={{ m: 'auto', p: 2 }}>
