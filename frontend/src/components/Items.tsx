@@ -16,6 +16,7 @@ import {
   Typography,
   TextField,
   Chip,
+  Alert,
 } from '@mui/material';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { addItemToCart, selectDateRange } from '../slices/cartSlice';
@@ -232,11 +233,31 @@ function Items() {
           type="search"
           variant="outlined"
           sx={{
-            width: { xs: '100%', md: '90%' }, mt: 1,
+            width: '100%', mt: 1,
           }}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+        {/* Info box for disabled date picker */}
+        {selectedDateRange.start_date != null && (
+          <Alert severity="info" sx={{ mb: 2 }}>
+            {t('items.date_picker_disabled_info')}
+          </Alert>
+        )}
+        <Provider theme={defaultTheme} colorScheme="light">
+          <DateRangePicker
+            labelPosition="side"
+            labelAlign="end"
+            width="100%"
+            aria-label="Select dates"
+            value={range}
+            minValue={now}
+            onChange={handleDateChange}
+            isRequired
+            maxVisibleMonths={1}
+            isDisabled={selectedDateRange.start_date != null}
+          />
+        </Provider>
         {/* Categories */}
         <Box sx={{ pr: 2, gap: 1, display: 'flex', flexWrap: 'wrap' }}>
           {filteredCategories.map((category) => (
@@ -270,20 +291,7 @@ function Items() {
             />
           ))}
         </Box>
-        <Provider theme={defaultTheme} colorScheme="light" maxWidth={270}>
-          <DateRangePicker
-            labelPosition="side"
-            labelAlign="end"
-            width={270}
-            aria-label="Select dates"
-            value={range}
-            minValue={now}
-            onChange={handleDateChange}
-            isRequired
-            maxVisibleMonths={1}
-            isDisabled={selectedDateRange.start_date != null}
-          />
-        </Provider>
+
       </Stack>
 
       {/* Items Display */}
