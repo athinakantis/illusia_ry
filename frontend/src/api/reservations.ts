@@ -19,6 +19,10 @@ export const reservationsApi = {
         return api.get(`reservations/date-range?from=${now.toString()}&to=${future.toString()}`,
             { headers: { 'Access-Control-Allow-Origin': '*' } }
         )
-    }
+    },
     // gets all the reservations taht are active or will become active one year in advance
+
+    updateReservation: (bookingId: string, reservationId: string, updatedReservation: object) => {
+        return api.patch(`reservations/booking/${bookingId}/${reservationId}`, updatedReservation);
+    },
 };

@@ -127,7 +127,6 @@ const PersonMenu = () => {
             </MenuItem>
           </>
         )}
-
         <MenuItem disableRipple sx={{ pl: 2, pr: 2 }} onClick={user ? signOut : navigateSignIn}>
           {user ?
             <>
@@ -142,6 +141,7 @@ const PersonMenu = () => {
             </>
           }
         </MenuItem>
+
         {/* language buttons */}
         <Box sx={{ px: 1, pt: 1 }}>
           <Button

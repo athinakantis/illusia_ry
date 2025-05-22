@@ -276,7 +276,6 @@ export const createAppTheme = () =>
               filter: 'none',
               padding: '2rem',
               gap: '2rem',
-              maxWidth: 440,
             },
           },
         },
