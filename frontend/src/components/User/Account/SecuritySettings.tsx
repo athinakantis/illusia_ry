@@ -8,12 +8,7 @@ import {
   Paper,
 } from '@mui/material';
 import { supabase } from '../../../config/supabase';
-
-
-/** type helper */
-type Factor = Awaited<
-  ReturnType<typeof supabase.auth.mfa.listFactors>
->["data"]["all"][number];
+import { Factor } from '@supabase/supabase-js';
 
 const SecuritySettings = () => {
   const [totpFactor, setTotpFactor] = useState<Factor | null>(null);
@@ -57,7 +52,7 @@ const SecuritySettings = () => {
   const handleVerify = async () => {
     if (!pending || !code) return;
     setStatus('Verifying…');
-  
+
     // 1) Ask Supabase to create a new challenge for this factor
     const { data: challengeData, error: challengeErr } =
       await supabase.auth.mfa.challenge({ factorId: pending.id });
@@ -65,7 +60,7 @@ const SecuritySettings = () => {
       setStatus(challengeErr.message);
       return;
     }
-  
+
     // 2) Verify the 6‑digit code against the challenge we just received
     const { error } = await supabase.auth.mfa.verify({
       factorId: pending.id,
@@ -76,7 +71,7 @@ const SecuritySettings = () => {
       setStatus(error.message);
       return;
     }
-  
+
     setStatus('MFA enabled 🎉');
     window.location.reload();
   };
@@ -144,7 +139,7 @@ const SecuritySettings = () => {
               alt="QR code for TOTP MFA"
               style={{ width: '250px', height: '250px', marginBottom: '1rem', margin: '0 auto' }}
             />
-            
+
             <Typography variant="caption">Secret: {pending.secret}</Typography>
           </Box>
           <TextField
@@ -155,7 +150,7 @@ const SecuritySettings = () => {
           <Button variant="contained" onClick={handleVerify}>
             Verify &amp; Activate
           </Button>
-        <Button
+          <Button
             variant="outlined"
             color="error"
             onClick={() => handleCancelSetup(pending.id)}
@@ -163,7 +158,7 @@ const SecuritySettings = () => {
             Cancel setup
           </Button>
         </Stack>
-        
+
       )}
 
       {/* ───────── FACTOR ALREADY ENROLLED ───────── */}
