@@ -24,6 +24,7 @@ import { ItemModule } from '../item/item.module';
 import { GuestModule } from '../guest/guest.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { NotificationsController } from '../notifications/notifications.controller';
+import { AccountModule } from '../account/account.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -39,6 +40,7 @@ import { NotificationsController } from '../notifications/notifications.controll
     ItemModule,
     SystemLogsModule,    
     GuestModule,
+    AccountModule,
     NotificationsModule
     
     // Import other modules here if needed
@@ -64,6 +66,7 @@ export class AppModule implements NestModule {
       TagController,
       CategoryController,
       SystemLogsController,
+      AccountModule
       // Add other controllers that need authentication here
       );
   }
