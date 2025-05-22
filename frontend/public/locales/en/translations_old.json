@@ -42,5 +42,36 @@
     }
   },
   "Your booking was deleted": "Your booking was deleted",
-  "Your booking was cancelled": "Your booking was cancelled"
+  "Your booking was cancelled": "Your booking was cancelled",
+  "nav": {
+    "logIn": "Log in"
+  },
+  "admin": {
+    "dashboard": {
+      "stats": {
+        "inventory_items": "Inventory items"
+      },
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled",
+        "completed": "Completed"
+      }
+    }
+  },
+  "home": {
+    "categories": {
+      "clothing": "Clothing",
+      "board_games": "Board Games",
+      "props": "Props",
+      "accessories": "Accessories"
+    }
+  },
+  "roles": {
+    "head_admin": "Head Admin",
+    "admin": "Admin",
+    "user": "User",
+    "unapproved": "Unapproved"
+  }
 }

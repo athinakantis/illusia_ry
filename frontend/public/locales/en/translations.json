@@ -98,11 +98,10 @@
     "items": "Items",
     "contact": "Contact",
     "bookings": "Bookings",
-    "manageUsers": "Manage users",
-    "manageBookings": "Manage bookings",
     "dashboard": "Dashboard",
-    "logOut": "Log out",
-    "logIn": "Log in"
+    "manageBookings": "Manage bookings",
+    "manageUsers": "Manage users",
+    "logOut": "Log out"
   },
   "header": {
     "logoMain": "ILLUSIA",
@@ -110,17 +109,44 @@
   },
   "person": {
     "myBookings": "My bookings",
-    "dashboard": "Dashboard",
     "myAccount": "My account",
-    "logOut": "Log out",
-    "logIn": "Log in",
+    "dashboard": "Dashboard",
     "manageUsers": "Manage users",
-    "manageBookings": "Manage bookings"
+    "manageBookings": "Manage bookings",
+    "logOut": "Log out",
+    "logIn": "Log in"
   },
   "items": {
     "search": "Search our items",
+    "date_picker_disabled_info": "You cannot select new dates while you have items with previously selected dates in your cart. Please clear your cart or adjust dates within the cart.",
     "browse": "Browse Items",
     "manage": "Manage Items"
+  },
+  "account": {
+    "email": {
+      "mfaPrompt": "Enter your 6-digit authenticator code to confirm email change:",
+      "status": {
+        "sending": "Sending confirmation email…",
+        "linkSent": "Confirmation link sent to your new email. Please check your inbox."
+      },
+      "newLabel": "New email address",
+      "update": "Update email"
+    },
+    "phone": {
+      "status": {
+        "sending": "Sending code…",
+        "smsSent": "SMS sent! Enter the 6-digit code.",
+        "verifying": "Verifying…",
+        "confirmed": "Phone number confirmed ✅"
+      },
+      "numberLabel": "Phone number (E.164 e.g. +358401234567)",
+      "sendCode": "Send code",
+      "codeLabel": "6-digit code",
+      "verifySave": "Verify & Save"
+    }
+  },
+  "common": {
+    "sending": "Sending…"
   },
   "userBookings": {
     "snackbar": {
@@ -158,7 +184,7 @@
   },
   "home": {
     "heroTitle": "Your go-to specialty store for LARP props and accessories",
-    "heroDescription": "Whether you need smaller props or larger set pieces, you’ll find everything you need to bring your story to life.",
+    "heroDescription": "Whether you need smaller props or larger set pieces, you'll find everything you need to bring your story to life.",
     "cta": {
       "browse_items": "Browse Items"
     },

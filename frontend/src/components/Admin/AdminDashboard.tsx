@@ -70,6 +70,22 @@ const StatCard: React.FC<{ text: string; value: number | string }> = ({
 const AdminDashboard = () => {
   const { role } = useAuth();
   const { t, i18n } = useTranslation(); const dispatch = useAppDispatch();
+  // Map raw status codes (e.g. "APP", "PEN", "REJ") to clean keys used in translation files
+  const getStatusLabel = (rawStatus: string) => {
+    const map: Record<string, string> = {
+      approved: 'approved',
+      app: 'approved',
+      rejected: 'rejected',
+      rej: 'rejected',
+      pending: 'pending',
+      pen: 'pending',
+    };
+    const key = map[rawStatus.toLowerCase()] ?? rawStatus.toLowerCase();
+    // Fallback text is a nicely‑cased version of the key (e.g. "Approved")
+    return t(`admin.dashboard.status.${key}`, {
+      defaultValue: key.charAt(0).toUpperCase() + key.slice(1),
+    });
+  };
 
   const [authActivities, setAuthActivities] = React.useState<
     {
@@ -270,16 +286,16 @@ const AdminDashboard = () => {
           rows={upcomingBookings.map((booking) => ({
             id: booking.booking_id, // Used internally by DataGrid
             name: booking.booking.user.display_name,
-            status: t(`admin.dashboard.status.${booking.booking.status.toLowerCase()}`),
+            status: getStatusLabel(booking.booking.status),
             duration: `${computeDuration(booking.start_date, booking.end_date)} ${t('admin.dashboard.duration.days')}`,
             dateRange: `${booking.start_date} - ${booking.end_date}`,
             view: `/bookings/${booking.booking_id}`,
           }))}
           columns={[
-            { field: 'name', headerName: t('admin.dashboard.columns.name'), flex: 1, headerClassName: 'super-app-theme--header' },
-            { field: 'status', headerName: t('admin.dashboard.columns.status'), flex: 1, headerClassName: 'super-app-theme--header' },
-            { field: 'duration', headerName: t('admin.dashboard.columns.duration'), flex: 1, headerClassName: 'super-app-theme--header' },
-            { field: 'dateRange', headerName: t('admin.dashboard.columns.date_range'), flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'name', headerName: t('admin.dashboard.columns.name', { defaultValue: 'Name' }), flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'status', headerName: t('admin.dashboard.columns.status', { defaultValue: 'Status' }), flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'duration', headerName: t('admin.dashboard.columns.duration', { defaultValue: 'Duration' }), flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'dateRange', headerName: t('admin.dashboard.columns.date_range', { defaultValue: 'Date range' }), flex: 1, headerClassName: 'super-app-theme--header' },
             {
               field: 'view',
               headerName: t('admin.dashboard.columns.actions'),
@@ -377,7 +393,8 @@ const AdminDashboard = () => {
                 id: u.user_id,
                 name: u.display_name ?? u.email,
                 role: u.role_title
-                  ? t(`roles.${u.role_title.toLowerCase().replace(/\s+/g, '_')}`)
+                  ? t(`admin.dashboard.roles.${u.role_title.toLowerCase().replace(/\s+/g, '_')}`, {
+                    defaultValue: u.role_title})
                   : '—',
               }))}
             columns={[

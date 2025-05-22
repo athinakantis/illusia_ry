@@ -1,45 +1,9 @@
 {
-  "adminBookings": {
-    "snackbar": {
-      "bookingApproved": "Varaus hyväksytty",
-      "bookingRejected": "Varaus hylätty"
-    },
-    "heading": "Varaukset",
-    "tabs": {
-      "all": "Kaikki",
-      "pending": "Odottaa hyväksyntää",
-      "approved": "Hyväksytyt",
-      "rejected": "Hylätyt"
-    },
-    "id": "Tunnus",
-    "created": "Luotu",
-    "bookingDates": "Varauspäivät",
-    "customer": "Asiakas",
-    "items": "Tuotteet",
-    "status": "Tila",
-    "awaiting": "Odottaa hyväksyntää",
-    "noResults": "Valitulle suodattimelle ei löytynyt varauksia.",
-    "approve": "Hyväksy",
-    "reject": "Hylkää"
-  },
-  "collapsibleDetail": {
-    "title": "Varauskohteet",
-    "item": "Tuote",
-    "start": "Alkupäivä",
-    "end": "Loppupäivä",
-    "qty": "Määrä"
-  },
-  "Bookings": {
-    "snackbar": {
-      "deleted": "Varaus poistettu",
-      "cancelled": "Varaus peruttu"
-    }
-  },
   "admin": {
     "add_product": {
       "uploading": "Ladataan tuotetta...",
       "upload_failed": "Kuvien lataus epäonnistui. Yritä uudelleen.",
-      "add_tags_prompt": "Tuote luotu! Haluatko lisätä tunnisteita nyt?",
+      "add_tags_prompt": "",
       "success": "Tuote lisätty onnistuneesti!",
       "save_failed": "Tuotteen tallennus epäonnistui. Yritä uudelleen.",
       "title": "Lisää uusi tuote",
@@ -93,16 +57,51 @@
       "users_and_roles": "Käyttäjät ja roolit"
     }
   },
+  "adminBookings": {
+    "snackbar": {
+      "bookingApproved": "Varaus hyväksytty",
+      "bookingRejected": "Varaus hylätty"
+    },
+    "heading": "Varaukset",
+    "tabs": {
+      "all": "Kaikki",
+      "pending": "Odottaa hyväksyntää",
+      "approved": "Hyväksytyt",
+      "rejected": "Hylätyt"
+    },
+    "id": "Tunnus",
+    "created": "Luotu",
+    "bookingDates": "Varauspäivät",
+    "customer": "Asiakas",
+    "items": "Tuotteet",
+    "status": "Tila",
+    "awaiting": "Odottaa hyväksyntää",
+    "noResults": "Valitulle suodattimelle ei löytynyt varauksia.",
+    "approve": "Hyväksy",
+    "reject": "Hylkää"
+  },
+  "collapsibleDetail": {
+    "title": "Varauskohteet",
+    "item": "Tuote",
+    "start": "Alkupäivä",
+    "end": "Loppupäivä",
+    "qty": "Määrä"
+  },
+  "Bookings": {
+    "snackbar": {
+      "deleted": "Varaus poistettu",
+      "cancelled": "Varaus peruttu"
+    }
+  },
   "nav": {
     "home": "Etusivu",
     "items": "Tuotteet",
     "contact": "Ota yhteyttä",
     "bookings": "Varaukset",
-    "manageUsers": "Hallinnoi käyttäjiä",
-    "manageBookings": "Hallitse varauksia",
     "dashboard": "Hallintapaneeli",
-    "logOut": "Kirjaudu ulos",
-    "logIn": "Kirjaudu sisään"
+    "manageBookings": "Hallitse varauksia",
+    "manageUsers": "Hallinnoi käyttäjiä",
+    "logOut": "Kirjaudu ulos"
   },
   "header": {
     "logoMain": "ILLUSIA",
@@ -110,17 +109,44 @@
   },
   "person": {
     "myBookings": "Minun varaukset",
-    "dashboard": "Hallintapaneeli",
     "myAccount": "Oma tili",
-    "logOut": "Kirjaudu ulos",
-    "logIn": "Kirjaudu sisään",
+    "dashboard": "Hallintapaneeli",
     "manageUsers": "Hallinnoi käyttäjiä",
-    "manageBookings": "Hallitse varauksia"
+    "manageBookings": "Hallitse varauksia",
+    "logOut": "Kirjaudu ulos",
+    "logIn": "Kirjaudu sisään"
   },
   "items": {
     "search": "Etsi tuotteita",
+    "date_picker_disabled_info": "Et voi vaihtaa päivämäärää, kun ostoskorissasi on tuotteita valituilla päivillä. Tyhjennä ostoskori tai muuta päivämäärää ostoskorin sisällä.",
     "browse": "Selaa tuotteita",
     "manage": "Hallinnoi tuotteita"
+  },
+  "account": {
+    "email": {
+      "mfaPrompt": "",
+      "status": {
+        "sending": "",
+        "linkSent": ""
+      },
+      "newLabel": "",
+      "update": ""
+    },
+    "phone": {
+      "status": {
+        "sending": "",
+        "smsSent": "",
+        "verifying": "",
+        "confirmed": ""
+      },
+      "numberLabel": "",
+      "sendCode": "",
+      "codeLabel": "",
+      "verifySave": ""
+    }
+  },
+  "common": {
+    "sending": ""
   },
   "userBookings": {
     "snackbar": {
