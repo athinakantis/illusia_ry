@@ -1,11 +1,5 @@
-/** Push or replace a booking row inside an array in-place */
-const upsertBookingArray = (arr: Booking[], row: Booking) => {
-  const idx = arr.findIndex(b => b.booking_id === row.booking_id);
-  if (idx === -1) arr.push(row);
-  else arr[idx] = row;
-};
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Booking, BookingsState, BookingWithItems } from '../types/types';
+import { Booking, BookingsState } from '../types/types';
 import { RootState } from '../store/store';
 import { bookingsApi } from '../api/bookings';
 import axios from 'axios';
