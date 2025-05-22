@@ -16,7 +16,7 @@ const PersonMenu = () => {
   // ─── profile menu state ──────────────────────────────────────────────
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { signOut, role, user } = useAuth();
-  const isUser = role === 'User';
+  const isUser = role === 'User' || role === 'Unapproved';
   const isAdmin = role === 'Admin' || role === 'Head Admin';
   const { i18n } = useTranslation();
   const menuOpen = Boolean(anchorEl);
@@ -94,7 +94,7 @@ const PersonMenu = () => {
           },
         }}
       >
-        {isUser || isAdmin && (
+        {(isUser || isAdmin) && (
           <>
             <MenuItem component={Link} to="/bookings" onClick={handleMenuClose}>
               <CalendarTodayIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
