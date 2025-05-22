@@ -4,7 +4,7 @@ import LoginPage from '../pages/LoginPage';
 import ItemsPage from '../pages/Items';
 import Root from '../components/Root';
 import Home from '../pages/Home';
-import SingleItem from '../components/Admin/AdminBookings/ItemView/ItemView';
+import SingleItem from '../components/Admin/ItemView/ItemView';
 import AdminAddProduct from '../components/Admin/AdminAddProduct';
 import Cart from '../pages/Cart';
 import Contacts from '../pages/Contacts';
@@ -15,6 +15,8 @@ import AdminBookings from '../components/Admin/AdminBookings/AdminBookings';
 import Account from '../components/Account';
 import SingleBooking from '../components/Booking';
 import ManageUsers from '../components/Admin/ManageUsers';
+import SystemLogsPage from '../pages/SystemLogs';
+// import TestPage from '../../Test/Test';
 
 export const router = createBrowserRouter([
   {
@@ -79,9 +81,18 @@ export const router = createBrowserRouter([
         element: <ManageUsers />
       },
       {
+        path: "/admin/logs",
+        element: <SystemLogsPage />
+      },
+      {
         path: "/account",
         element: <Account />
       },
+      // Allows me to get tokens for backend testing
+      // {
+      //   path: "/token",
+      //   element: <TestPage />
+      // }
 
     ]
   },

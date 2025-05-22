@@ -26,5 +26,21 @@
   "button.test": "",
   "{link": {
     "defaultValue}": "{link.defaultValue}"
-  }
+  },
+  "snackbar": {
+    "bookingDefault": "Booking successfully created",
+    "bookingDeleted": "Your booking was deleted!",
+    "bookingCancelled": "Booking cancelled"
+  },
+  "userBookings": {
+    "test": "Success"
+  },
+  "UserBookings": {
+    "snackbar": {
+      "bookingDeleted": "Your booking was deleted!",
+      "bookingCancelled": "Booking cancelled"
+    }
+  },
+  "Your booking was deleted": "Your booking was deleted",
+  "Your booking was cancelled": "Your booking was cancelled"
 }
