@@ -29,7 +29,7 @@ import { useAuth } from '../../../hooks/useAuth';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import broken_img from '../../../../assets/broken_img.png'
+import broken_img from '../../../assets/broken_img.png'
 import ManageTags from '../AddItem/ManageTags/ManageTags';
 import { NextArrow, PrevArrow } from './Arrows';
 
@@ -370,11 +370,11 @@ const SingleItem = () => {
                     </Button>
                     <ManageTags
                       itemId={itemId || ''}
-                      />
+                    />
                   </>
                 )}
               </div>
-              
+
             </Stack>
           </Box>
         </Box>
