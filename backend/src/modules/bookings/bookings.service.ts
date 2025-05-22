@@ -48,7 +48,7 @@ export class BookingService {
 
     const { data: reservationData, error: reservationError } = await supabase
       .from('item_reservations')
-      .select(`quantity, start_date, end_date, item:item_id (*)`)
+      .select(`id, quantity, start_date, end_date, item:item_id (*)`)
       .eq('booking_id', id);
 
     if (reservationError)
@@ -58,6 +58,7 @@ export class BookingService {
 
     const formattedRes = reservationData.map((r) => ({
       ...r.item,
+      id: r.id,
       quantity: r.quantity,
       start_date: r.start_date,
       end_date: r.end_date,
@@ -134,6 +135,7 @@ export class BookingService {
     req: CustomRequest,
     payload: {
       items: {
+        // id: string;
         item_id: string;
         start_date: string;
         end_date: string;
@@ -373,6 +375,7 @@ export class BookingService {
         `*, booking:booking_id (status, user_id,
     user:user_id (display_name, email))`,
       )
+      .in('status', ['approved', 'pending'])
       .order('start_date')
       .limit(+amount);
 

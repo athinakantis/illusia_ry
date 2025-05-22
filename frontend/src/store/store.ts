@@ -4,6 +4,8 @@ import cartReducer from '../slices/cartSlice';
 import bookingsReducer from '../slices/bookingsSlice'
 import reservationsReducer from '../slices/reservationsSlice'
 import usersReducer from '../slices/usersSlice';
+import tagReducer from '../slices/tagSlice';
+import notificationReducer from '../slices/notificationSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +14,8 @@ export const store = configureStore({
     bookings: bookingsReducer,
     reservations: reservationsReducer,
     users: usersReducer,
+    notifications: notificationReducer,
+    tags: tagReducer
   },
 });
 

@@ -1,9 +1,108 @@
 {
+  "adminBookings": {
+    "snackbar": {
+      "bookingApproved": "Varaus hyväksytty",
+      "bookingRejected": "Varaus hylätty"
+    },
+    "heading": "Varaukset",
+    "tabs": {
+      "all": "Kaikki",
+      "pending": "Odottaa hyväksyntää",
+      "approved": "Hyväksytyt",
+      "rejected": "Hylätyt"
+    },
+    "id": "Tunnus",
+    "created": "Luotu",
+    "bookingDates": "Varauspäivät",
+    "customer": "Asiakas",
+    "items": "Tuotteet",
+    "status": "Tila",
+    "awaiting": "Odottaa hyväksyntää",
+    "noResults": "Valitulle suodattimelle ei löytynyt varauksia.",
+    "approve": "Hyväksy",
+    "reject": "Hylkää"
+  },
+  "collapsibleDetail": {
+    "title": "Varauskohteet",
+    "item": "Tuote",
+    "start": "Alkupäivä",
+    "end": "Loppupäivä",
+    "qty": "Määrä"
+  },
+  "Bookings": {
+    "snackbar": {
+      "deleted": "Varaus poistettu",
+      "cancelled": "Varaus peruttu"
+    }
+  },
+  "admin": {
+    "add_product": {
+      "uploading": "Ladataan tuotetta...",
+      "upload_failed": "Kuvien lataus epäonnistui. Yritä uudelleen.",
+      "add_tags_prompt": "Tuote luotu! Haluatko lisätä tunnisteita nyt?",
+      "success": "Tuote lisätty onnistuneesti!",
+      "save_failed": "Tuotteen tallennus epäonnistui. Yritä uudelleen.",
+      "title": "Lisää uusi tuote",
+      "item_name": "Tuotteen nimi",
+      "description": "Kuvaus",
+      "location": "Sijainti",
+      "quantity": "Määrä",
+      "category": "Kategoria",
+      "selected_images": "Valitut kuvat:",
+      "upload_files": "Lataa kuvat",
+      "adding": "Lisätään tuotetta...",
+      "add": "Lisää tuote",
+      "manage_tags": {
+        "title": ""
+      },
+      "manage_tag_body": {
+        "confirmDelete": "",
+        "newTag": "",
+        "add": "",
+        "attachHint": "",
+        "checkBoxesTip": ""
+      }
+    },
+    "dashboard": {
+      "title": "Hallintapaneeli",
+      "stats": {
+        "total_users": "Käyttäjät yhteensä",
+        "total_bookings": "Varaukset yhteensä",
+        "total_items": ""
+      },
+      "quick_actions": "Pikatoiminnot",
+      "add_item": "Lisää tuote",
+      "view_bookings": "Näytä varaukset",
+      "manage_users": "Hallitse käyttäjiä",
+      "upcoming_bookings": "Tulevat varaukset",
+      "duration": {
+        "days": "päivää"
+      },
+      "columns": {
+        "name": "Nimi",
+        "status": "Tila",
+        "duration": "Kesto",
+        "date_range": "Aikaväli",
+        "actions": "Toiminnot",
+        "last_sign_in": "Viimeisin kirjautuminen",
+        "confirmed": "Vahvistettu",
+        "role": "Rooli"
+      },
+      "show_booking": "Näytä varaus",
+      "recent_activity": "Viimeisin toiminta",
+      "users_and_roles": "Käyttäjät ja roolit"
+    }
+  },
   "nav": {
     "home": "Etusivu",
     "items": "Tuotteet",
     "contact": "Ota yhteyttä",
-    "bookings": "Varaukset"
+    "bookings": "Varaukset",
+    "manageUsers": "Hallinnoi käyttäjiä",
+    "manageBookings": "Hallitse varauksia",
+    "dashboard": "Hallintapaneeli",
+    "logOut": "Kirjaudu ulos",
+    "logIn": "Kirjaudu sisään"
   },
   "header": {
     "logoMain": "ILLUSIA",
@@ -13,7 +112,34 @@
     "myBookings": "Minun varaukset",
     "dashboard": "Hallintapaneeli",
     "myAccount": "Oma tili",
-    "logOut": "Kirjaudu ulos"
+    "logOut": "Kirjaudu ulos",
+    "logIn": "Kirjaudu sisään",
+    "manageUsers": "Hallinnoi käyttäjiä",
+    "manageBookings": "Hallitse varauksia"
+  },
+  "items": {
+    "search": "Etsi tuotteita",
+    "browse": "Selaa tuotteita",
+    "manage": "Hallinnoi tuotteita"
+  },
+  "userBookings": {
+    "snackbar": {
+      "bookingDeleted": "Varaus poistettu",
+      "bookingCancelled": "Varaus peruttu"
+    },
+    "heading": "Varauksesi",
+    "noBookings": "Ei varauksia vielä.",
+    "bookingId": "Varausnumero",
+    "created": "Luotu",
+    "cancelTooltip": "Peruuta varaus",
+    "deleteTooltip": "Poista varaus",
+    "item": "Tuote",
+    "startDate": "Alkupäivä",
+    "endDate": "Loppupäivä",
+    "quantity": "Määrä",
+    "confirmCancel": "Haluatko varmasti peruuttaa varauksesi?",
+    "confirmYes": "Kyllä, olen varma",
+    "confirmNo": "Ei kiitos"
   },
   "cart": {
     "yourCart": "Ostoskorisi",
@@ -33,22 +159,16 @@
   "home": {
     "heroTitle": "Erikoiskauppa LARP-rekvisiitalle, tarvikkeille ja lavasteille",
     "heroDescription": "Tarvitsetpa sitten pienempää rekvisiittaa tai isompia lavasteita, meiltä löydät kaiken tarvittavan tarinasi eloon herättämiseksi.",
-    "categoriesTitle": "Tutustu kategoriavalikoimaamme",
-    "categoriesDescription": "Meiltä löytyy monipuolisesti tarvikkeita taisteluliiveistä avararuusalusten konsoleihin, askartelutarpeisiin, vaahtosammuttimiin - ja kaikkeen siltä väliltä.",
-    "categories": {
-      "clothing": "Vaatteet",
-      "board_games": "Lautapelit",
-      "props": "Lavasteet",
-      "accessories": "Asusteet"
-    },
     "cta": {
       "browse_items": "Selaa tuotteita"
-    }
+    },
+    "categoriesTitle": "Tutustu kategoriavalikoimaamme",
+    "categoriesDescription": "Meiltä löytyy monipuolisesti tarvikkeita taisteluliiveistä avararuusalusten konsoleihin, askartelutarpeisiin, vaahtosammuttimiin - ja kaikkeen siltä väliltä."
   },
   "faq": {
     "faqTitle": "Usein kysytyt kysymykset",
-    "askQuestion": "Esitä kysymys",
     "faqDescription": "Ennen kuin otat yhteyttä tarkista usein kysytyt kysymykset.",
+    "askQuestion": "Esitä kysymys",
     "question1": "Milloin varaukseni hyväksytään?",
     "answer1": "Käymme varaukset läpi mahdollisimman pian. Varaukset hyväksytään yleensä 2–3 päivän kuluessa. Jos olet odottanut yli 5 päivää, lähetä meille sähköpostia.",
     "question2": "Kuinka pitkäksi aikaa voin varata tuotteita?",

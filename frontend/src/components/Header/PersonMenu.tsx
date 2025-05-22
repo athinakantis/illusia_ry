@@ -1,6 +1,6 @@
 import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -8,12 +8,15 @@ import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useTranslation, Trans } from 'react-i18next';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import LoginIcon from '@mui/icons-material/Login';
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
+import GroupIcon from '@mui/icons-material/Group';
 
 const PersonMenu = () => {
   // ─── profile menu state ──────────────────────────────────────────────
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { signOut, role } = useAuth();
-  const isUser = role === 'User';
+  const { signOut, role, user } = useAuth();
+  const isUser = role === 'User' || role === 'Unapproved';
   const isAdmin = role === 'Admin' || role === 'Head Admin';
   const { i18n } = useTranslation();
   const menuOpen = Boolean(anchorEl);
@@ -21,6 +24,12 @@ const PersonMenu = () => {
     setAnchorEl(e.currentTarget);
   };
   const handleMenuClose = () => setAnchorEl(null);
+  const navigate = useNavigate()
+
+  const navigateSignIn = () => {
+    navigate('/login')
+    handleMenuClose()
+  }
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
@@ -74,42 +83,65 @@ const PersonMenu = () => {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         sx={{
           '& .MuiMenuItem-root': {
-            py: '10px',
+            py: '10px', gap: '7px',
             borderBottom: '1px solid #e2e2e2',
           },
           '& .MuiList-root': { pt: 0 },
           '& .MuiPaper-root': {
             boxShadow: 'none',
             border: '1px solid #e2e2e2',
-            width: 300,
+            width: 200,
           },
         }}
       >
-        {isUser || isAdmin && (
-          <MenuItem component={Link} to="/bookings" onClick={handleMenuClose}>
-            <CalendarTodayIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
-            <Trans i18nKey="person.myBookings">My bookings</Trans>
-          </MenuItem>
+        {(isUser || isAdmin) && (
+          <>
+            <MenuItem component={Link} to="/bookings" onClick={handleMenuClose}>
+              <CalendarTodayIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
+              <Trans i18nKey="person.myBookings">My bookings</Trans>
+            </MenuItem>
+            <MenuItem
+              sx={{ height: '100%' }}
+              component={Link}
+              to="/account"
+              onClick={handleMenuClose}
+            >
+              <AccountCircleIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
+              <Trans i18nKey="person.myAccount">My account</Trans>
+            </MenuItem>
+          </>
         )}
         {isAdmin && (
-          <MenuItem component={Link} to="/admin/dashboard" onClick={handleMenuClose}>
-            <DashboardIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
-            <Trans i18nKey="person.dashboard">Dashboard</Trans>
-          </MenuItem>
+          <>
+            <MenuItem component={Link} to="/admin/dashboard" onClick={handleMenuClose}>
+              <DashboardIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
+              <Trans i18nKey="person.dashboard">Dashboard</Trans>
+            </MenuItem>
+            <MenuItem onClick={() => navigate('/admin/users')}>
+              <GroupIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
+              <Trans i18nKey="person.manageUsers">Manage Users</Trans>
+            </MenuItem>
+            <MenuItem onClick={() => navigate('/admin/bookings')}>
+              <EditCalendarIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
+              <Trans i18nKey="person.manageBookings">Manage bookings</Trans>
+            </MenuItem>
+          </>
         )}
-        <MenuItem
-          sx={{ height: '100%' }}
-          component={Link}
-          to="/account"
-          onClick={handleMenuClose}
-        >
-          <AccountCircleIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
-          <Trans i18nKey="person.myAccount">My account</Trans>
+        <MenuItem disableRipple sx={{ pl: 2, pr: 2 }} onClick={user ? signOut : navigateSignIn}>
+          {user ?
+            <>
+              <LogoutRoundedIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
+              <Trans i18nKey="person.logOut">Log out</Trans>
+            </>
+            :
+            <>
+              <LoginIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
+              <Trans i18nKey="person.logIn">Log in</Trans>
+
+            </>
+          }
         </MenuItem>
-        <MenuItem disableRipple sx={{ pl: 2, pr: 2 }} onClick={signOut}>
-          <LogoutRoundedIcon sx={{ mr: 1.5, color: 'inherit' }} fontSize="small" />
-          <Trans i18nKey="person.logOut">Log out</Trans>
-        </MenuItem>
+
         {/* language buttons */}
         <Box sx={{ px: 1, pt: 1 }}>
           <Button

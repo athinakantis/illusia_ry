@@ -39,6 +39,13 @@ declare module '@mui/material/styles' {
     verylightgrey: string;
     grey03: string;
   }
+  // Added type the new text colors we had. This way we can use them without type errors.
+  // Also autocompletes them in the IDE
+  interface TypeText {
+    main: string;
+    light: string;
+    secondary: string;
+  }
 
   interface PaletteOptions {
     neutral?: PaletteOptions['primary'];
@@ -58,5 +65,6 @@ declare module '@mui/material/Button' {
   interface ButtonPropsVariantOverrides {
     rounded: true;
     outlined_rounded: true;
+    text_contained: true;
   }
 }

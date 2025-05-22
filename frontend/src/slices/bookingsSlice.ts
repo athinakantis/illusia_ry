@@ -2,10 +2,10 @@
 const upsertBookingArray = (arr: Booking[], row: Booking) => {
   const idx = arr.findIndex(b => b.booking_id === row.booking_id);
   if (idx === -1) arr.push(row);
-  else            arr[idx] = row;
+  else arr[idx] = row;
 };
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Booking, BookingsState } from '../types/types';
+import { Booking, BookingsState, BookingWithItems } from '../types/types';
 import { RootState } from '../store/store';
 import { bookingsApi } from '../api/bookings';
 import axios from 'axios';
@@ -30,7 +30,6 @@ export const fetchBooking = createAsyncThunk(
   'bookings/fetchBooking',
   async (id: string) => {
     const response = await bookingsApi.getBooking(id);
-    console.log('Booking Fetched', response);
     return response.data;
   },
 );
@@ -70,11 +69,12 @@ export const fetchUserBookings = createAsyncThunk<
   { rejectValue: string }
 >('bookings/fetchUserBookings', async (userId, { rejectWithValue }) => {
   try {
-    const { data, error, message } = await bookingsApi.getUserBookings(userId);
-    if (error) return rejectWithValue(message);
-    return data;
+    const response = await bookingsApi.getUserBookings(userId);
+    if (response.error) {
+      return rejectWithValue(response.message);
+    }
+    return Array.isArray(response.data) ? response.data : [];
   } catch (error: unknown) {
-    // now error is unknown, so we narrow it:
     if (axios.isAxiosError<{ message: string }>(error)) {
       return rejectWithValue(error.response?.data?.message ?? 'Network error');
     }
@@ -89,7 +89,7 @@ export const fetchUserBookings = createAsyncThunk<
  */
 export const updateBookingStatus = createAsyncThunk<
   Booking,
-  { id: string; status: 'approved' | 'rejected' | 'cancelled'},
+  { id: string; status: 'approved' | 'rejected' | 'cancelled' },
   { rejectValue: string }
 >(
   'bookings/updateBookingStatus',
@@ -186,19 +186,19 @@ export const bookingsSlice = createSlice({
     builder.addCase(updateBookingStatus.fulfilled, (state, action) => {
       const updatedBooking = action.payload;
       // Update the booking in the state
-      upsertBookingArray(state.bookings, updatedBooking);
-      upsertBookingArray(state.userBookings, updatedBooking);
-      /* ---------- keep single‑booking view in sync ---------- */
-      if (
-        state.booking &&                         // we have a booking open
-        state.booking.booking.booking_id === updatedBooking.booking_id
-      ) {
-        // state.booking expects BookingWithItems { booking, items }
-        // so we reuse the existing items array and patch the booking row only.
-        state.booking = {
-          ...state.booking,
-          booking: updatedBooking,
-        };
+      const index = state.bookings.findIndex(
+        (booking) => booking.booking_id === updatedBooking.booking_id,
+      );
+      if (index !== -1) {
+        state.bookings[index] = updatedBooking;
+      }
+
+      // Update the user bookings
+      const idxUser = state.userBookings.findIndex(
+        (b) => b.booking_id === updatedBooking.booking_id,
+      );
+      if (idxUser !== -1) {
+        state.userBookings[idxUser] = updatedBooking;
       }
 
       state.loading = false;
@@ -246,11 +246,21 @@ export const selectBookingsCount = (state: RootState) =>
 export const selectBookingsByUserId = (userId: string) => (state: RootState) =>
   state.bookings.bookings.filter((booking) => booking.user_id === userId);
 
-export const selectBookingDates = (booking_id: string) => (state: RootState) => {
-  const bookingWihId = state.bookings.userBookings.find((booking) => booking.booking_id === booking_id);
+/**
+ * Selector to retrieve a single booking by its booking_id
+ */
+export const selectBookingById = (
+  state: RootState,
+  bookingId: string
+) => state.bookings.bookings.find(
+  (booking) => booking.booking_id === bookingId
+);
 
-  if (bookingWihId?.reservations)
-    return { start_date: bookingWihId?.reservations[0].start_date, end_date: bookingWihId?.reservations[0].end_date }
+export const selectBookingDates = (booking_id: string) => (state: RootState) => {
+  const bookingWithId = state.bookings.userBookings.find((booking) => booking.booking_id === booking_id);
+
+  if (bookingWithId)
+    return { start_date: bookingWithId?.reservations?.[0].start_date, end_date: bookingWithId?.reservations?.[0].end_date }
   else return;
 }
 

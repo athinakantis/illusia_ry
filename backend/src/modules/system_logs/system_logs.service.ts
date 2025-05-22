@@ -106,6 +106,7 @@ export class SystemLogsService {
 
     return {
       data,
+      message: 'success',
       meta: {
         total: count ?? 0,
         page,

@@ -222,6 +222,16 @@ export const createAppTheme = () =>
                   '&:hover': { backgroundColor: 'rgba(68, 25, 91, 0.04)' },
                 },
               },
+              {
+                props: { variant: 'text_contained' },
+                style: {
+                  fontFamily: 'Lato, sans-serif',
+                  backgroundColor: '#44195B',
+                  color: '#FFF',
+                  fontWeight: 400,
+                  textTransform: 'capitalize',
+                },
+              },
             ],
           },
         },
@@ -249,32 +259,34 @@ export const createAppTheme = () =>
             fontFamily: 'Oxygen, sans-serif',
             color: '#282828',
             padding: 0,
-          }
-        }
+          },
+        },
       },
       MuiDialog: {
         styleOverrides: {
           root: {
             '& .MuiBackdrop-root': {
               backgroundColor: 'rgba(0,0,0,0.1)',
-              boxShadow: 'none', filter: 'none',
-              borderRadius: '3px', 
+              boxShadow: 'none',
+              filter: 'none',
+              borderRadius: '3px',
             },
             '& .MuiPaper-root': {
-              boxShadow: 'none', filter: 'none', padding: '2rem',
-              gap: '2rem', maxWidth: 440,
-            }
-
-          }
-        }
+              boxShadow: 'none',
+              filter: 'none',
+              padding: '2rem',
+              gap: '2rem',
+            },
+          },
+        },
       },
       MuiDialogActions: {
         styleOverrides: {
           root: {
             padding: 0,
             justifyContent: 'start',
-          }
-        }
-      }
+          },
+        },
+      },
     },
   });

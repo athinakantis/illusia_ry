@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
-import { formatDate } from '../../../../utility/formatDate';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { formatDate } from '../../../utility/formatDate';
 import {
   deleteItem,
   fetchAllCategories,
@@ -9,7 +9,7 @@ import {
   selectAllCategories,
   selectItemById,
   updateItem,
-} from '../../../../slices/itemsSlice';
+} from '../../../slices/itemsSlice';
 import {
   Box,
   Button,
@@ -24,13 +24,13 @@ import {
 import { ImPencil2 } from 'react-icons/im';
 import { CiTrash } from 'react-icons/ci';
 import { ArrowBack } from '@mui/icons-material';
-import Spinner from '../../../Spinner';
-import { useAuth } from '../../../../hooks/useAuth';
+import Spinner from '../../Spinner';
+import { useAuth } from '../../../hooks/useAuth';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import broken_img from '../../../../assets/broken_img.png'
-
+import ManageTags from '../AddItem/ManageTags/ManageTags';
 import { NextArrow, PrevArrow } from './Arrows';
 
 const SingleItem = () => {
@@ -368,9 +368,13 @@ const SingleItem = () => {
                     >
                       Delete
                     </Button>
+                    <ManageTags
+                      itemId={itemId || ''}
+                      />
                   </>
                 )}
               </div>
+              
             </Stack>
           </Box>
         </Box>
