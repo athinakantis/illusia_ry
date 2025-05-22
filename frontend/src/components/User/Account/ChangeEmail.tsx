@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '../../../config/supabase'; // adjust path if needed
 import { Box, Button, Stack, TextField, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 interface ChangeEmailProps {
   initialEmail?: string | null;
@@ -11,6 +12,7 @@ export default function ChangeEmail({
   initialEmail,
   onDone,
 }: ChangeEmailProps) {
+  const { t } = useTranslation();
   const [email, setEmail] = useState(initialEmail ?? '');
   const [status, setStatus] = useState<string>();
   const [loading, setLoading] = useState(false);
@@ -32,7 +34,7 @@ export default function ChangeEmail({
     });
     if (!challenge) return 'Challenge could not be initiated, please try again.';
     const code = prompt(
-      'Enter your 6-digit authenticator code to confirm email change:',
+      t('account.email.mfaPrompt', { defaultValue: 'Enter your 6-digit authenticator code to confirm email change:' }),
     );
     if (!code) return 'Email change cancelled.';
     const { error } = await supabase.auth.mfa.verify({
@@ -51,7 +53,7 @@ export default function ChangeEmail({
     }
 
     setLoading(true);
-    setStatus('Sending confirmation email…');
+    setStatus(t('account.email.status.sending', { defaultValue: 'Sending confirmation email…' }));
     // Call Supabase to update the email
     const { error } = await supabase.auth.updateUser({ email },
       { emailRedirectTo: `${window.location.origin}/auth/callback` } 
@@ -62,7 +64,7 @@ export default function ChangeEmail({
       setStatus(error.message);
     } else {
       setStatus(
-        'Confirmation link sent to your new email. Please check your inbox.',
+        t('account.email.status.linkSent', { defaultValue: 'Confirmation link sent to your new email. Please check your inbox.' }),
       );
       onDone?.();
     }
@@ -72,7 +74,7 @@ export default function ChangeEmail({
     <Box sx={{ width: '100%', mt: 2 }}>
       <Stack spacing={2}>
         <TextField
-          label="New email address"
+          label={t('account.email.newLabel', { defaultValue: 'New email address' })}
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -83,7 +85,7 @@ export default function ChangeEmail({
           onClick={handleSendChange}
           disabled={!email || loading}
         >
-          {loading ? 'Sending…' : 'Update email'}
+          {loading ? t('common.sending', { defaultValue: 'Sending…' }) : t('account.email.update', { defaultValue: 'Update email' })}
         </Button>
         {status && (
           <Typography variant="caption" color="text.secondary">

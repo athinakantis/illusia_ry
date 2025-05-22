@@ -7,6 +7,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Add or change the signed‑in user’s phone number.
@@ -21,6 +22,7 @@ const AddPhone = ({
   initialPhone?: string | null;
   onDone?: () => void;
 }) => {
+  const { t } = useTranslation();
   const [phone, setPhone] = useState(initialPhone ?? '');
   const [code,  setCode]  = useState('');
   const [step, setStep] = useState<'enterPhone' | 'enterCode'>('enterPhone');
@@ -40,7 +42,7 @@ const AddPhone = ({
     const { data: challenge } =
       await supabase.auth.mfa.challenge({ factorId: totp.id });
     if (!challenge || !challenge.id) return 'Failed to create challenge.';
-    const code = prompt('Enter 6-digit code from your Authenticator app');
+    const code = prompt(t('account.email.mfaPrompt', { defaultValue: 'Enter your 6-digit authenticator code to confirm email change:' }));
     if (!code) return 'Cancelled.';
 
     const { error } = await supabase.auth.mfa.verify({
@@ -54,29 +56,29 @@ const AddPhone = ({
   };
   /** Step 1 – send / change phone, trigger SMS */
   const handleSendOtp = async () => {
-    setStatus('Sending code…');
+    setStatus(t('account.phone.status.sending', { defaultValue: 'Sending code…' }));
     const ok = await ensureAal2();
     if (ok !== true) {
       setStatus(ok);
       return;
     }
-    setStatus('Sending code…');
+    setStatus(t('account.phone.status.sending', { defaultValue: 'Sending code…' }));
     const { error } = await supabase.auth.updateUser({ phone });
     if (error) return setStatus(error.message);
-    setStatus('SMS sent! Enter the 6-digit code.');
+    setStatus(t('account.phone.status.smsSent', { defaultValue: 'SMS sent! Enter the 6-digit code.' }));
     setStep('enterCode');
   };
 
   /** Step 2 – verify 6‑digit pin */
   const handleVerifyOtp = async () => {
-    setStatus('Verifying…');
+    setStatus(t('account.phone.status.verifying', { defaultValue: 'Verifying…' }));
     const { error } = await supabase.auth.verifyOtp({
       phone,
       token: code,
       type: 'phone_change',           // “sms” is for sign‑in; phone_change confirms updates
     });
     if (error) return setStatus(error.message);
-    setStatus('Phone number confirmed ✅');
+    setStatus(t('account.phone.status.confirmed', { defaultValue: 'Phone number confirmed ✅' }));
     onDone?.();                       // callback to parent (e.g. reload profile)
   };
 
@@ -85,13 +87,13 @@ const AddPhone = ({
       {step === 'enterPhone' && (
         <Stack spacing={2}>
           <TextField
-            label="Phone number (E.164 e.g. +358401234567)"
+            label={t('account.phone.numberLabel', { defaultValue: 'Phone number (E.164 e.g. +358401234567)' })}
             value={phone}
             onChange={e => setPhone(e.target.value)}
             fullWidth
           />
           <Button variant="contained" onClick={handleSendOtp} disabled={!phone}>
-            Send code
+            {t('account.phone.sendCode', { defaultValue: 'Send code' })}
           </Button>
         </Stack>
       )}
@@ -99,7 +101,7 @@ const AddPhone = ({
       {step === 'enterCode' && (
         <Stack spacing={2}>
           <TextField
-            label="6-digit code"
+            label={t('account.phone.codeLabel', { defaultValue: '6-digit code' })}
             value={code}
             onChange={e => setCode(e.target.value)}
             fullWidth
@@ -109,7 +111,7 @@ const AddPhone = ({
             onClick={handleVerifyOtp}
             disabled={code.length < 6}
           >
-            Verify & Save
+            {t('account.phone.verifySave', { defaultValue: 'Verify & Save' })}
           </Button>
         </Stack>
       )}

@@ -1,5 +1,25 @@
 {
   "nav": {
     "logIn": "Kirjaudu sisään"
+  },
+  "admin": {
+    "dashboard": {
+      "stats": {
+        "inventory_items": "Varastotuotteet"
+      },
+      "status": {
+        "pending": "Odottaa",
+        "approved": "Hyväksytty",
+        "rejected": "Hylätty",
+        "cancelled": "Peruutettu",
+        "completed": "Valmis"
+      }
+    }
+  },
+  "roles": {
+    "head_admin": "Pääkäyttäjä",
+    "admin": "Ylläpitäjä",
+    "user": "Käyttäjä",
+    "unapproved": "Hyväksymätön"
   }
 }
