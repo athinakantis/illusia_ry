@@ -1,5 +1,30 @@
 # Illusia Ry Storage Management App
 
+![Illusia_ry](https://crralkzqnflfzntlhccj.supabase.co/storage/v1/object/public/email-images//readme_banner.png)
+
+## Background
+
+We are a group of 4 Web-Development Students who were tasked with creating a Booking Management and Storage solution for <a href='https://www.illusiary.fi/' target='_blank'>Illusia Ry</a>. The project allows users to browse and book LARP-related items.
+
+## Features
+
+- **User features**
+
+  - Users can sign up using email or phone
+  - Ability to book items
+  - Option to filter items by **search** or **categories**
+  - Email notification upon signup
+  - Ability to change languages (Finnish and English)
+  - App notifications when a booking has been approved or rejected
+
+- **Admin Features**
+  - Ability to add, remove and update items
+  - Approve or reject users
+  - Approve or reject bookings
+  - View state of the app/statistics from the admin dashboard
+  - Possibility to view system logs/history of app
+  - App notifications regarding how many pending users/bookings there are
+
 ## Technologies
 
 - React
