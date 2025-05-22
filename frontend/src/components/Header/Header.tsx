@@ -285,8 +285,9 @@ const Header = () => {
             p: '6px 8px'
           }
         }}>
-          {!isMobile && <PersonMenu />}
+
           {user && <NotificationsMenu />}
+          {!isMobile && <PersonMenu />}
           <Link to='/cart' aria-label="Go to cart" style={{ position: 'relative' }}>
             <ShoppingBagIcon />
             {totalItems > 0 &&
