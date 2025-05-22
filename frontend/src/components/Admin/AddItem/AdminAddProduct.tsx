@@ -1,15 +1,15 @@
 import { useState, FormEvent, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store/hooks'; // Use your custom hooks
-import { FormData } from '../../types/types';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks'; // Use your custom hooks
+import { FormData } from '../../../types/types';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth'; // Import your auth hook
+import { useAuth } from '../../../hooks/useAuth'; // Import your auth hook
 import {
     createItem,
     selectAllCategories,
-} from '../../slices/itemsSlice';
-import { supabase } from '../../config/supabase';
+} from '../../../slices/itemsSlice';
+import { supabase } from '../../../config/supabase';
 import { v4 as uuidv4 } from 'uuid';
-import { TablesInsert } from '../../types/supabase.type';
+import { TablesInsert } from '../../../types/supabase.type';
 import MuiAlert, { AlertColor } from '@mui/material/Alert';
 import {
     Button,
@@ -29,6 +29,8 @@ import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useTranslation } from 'react-i18next';
+import ManageCategory from './ManageCategory/ManageCategory';
+import ManageTags from './ManageTags/ManageTags';
 
 type CreateItemPayload = Omit<
     TablesInsert<'items'>,
@@ -58,6 +60,8 @@ const AdminAddProduct = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>('info');
+    const [createdItemId, setCreatedItemId] = useState<string | null>(null);
+    const [openTagsAfterCreate, setOpenTagsAfterCreate] = useState(false);
     const VisuallyHiddenInput = styled('input')({
         clip: 'rect(0 0 0 0)',
         clipPath: 'inset(50%)',
@@ -187,7 +191,14 @@ const AdminAddProduct = () => {
         };
 
         try {
-            await dispatch(createItem(newItemData)).unwrap();
+            const savedItem = await dispatch(createItem(newItemData)).unwrap();
+            setCreatedItemId(savedItem.data.item_id);           // keep the id so we can attach tags
+            const wantTags = window.confirm(
+              t('admin.add_product.add_tags_prompt', {
+                defaultValue: 'Item created! Do you want to add tags now?'
+              })
+            );
+            if (wantTags) setOpenTagsAfterCreate(true);
             setIsLoading(false);
             showSnackbar(t('admin.add_product.success'), 'success');
             setFormData({
@@ -279,29 +290,6 @@ const AdminAddProduct = () => {
                     ))}
                 </Select>
             </FormControl>
-            {/* Image Upload Section */}
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Button
-                    component="label"
-                    role={'button'}
-                    variant="contained"
-                    color="secondary"
-                    tabIndex={-1}
-                    startIcon={<ImCloudUpload />}
-                    disabled={isLoading}
-                    sx={{ flexGrow: 1, height: 75 }}
-                >
-                    {t('admin.add_product.upload_files')}
-                    <VisuallyHiddenInput
-                        type="file"
-                        id="item_image"
-                        name="item_image"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        disabled={isLoading}
-                        multiple
-                    />
-                </Button>
 
                 {/* Preview Section */}
                 {selectedFiles.length > 0 && (
@@ -354,22 +342,55 @@ const AdminAddProduct = () => {
                         ))}
                     </Stack>
                 )}
+                {/*————————————————————— Buttons ————————————————————————*/}
 
+            <Stack spacing={2} direction={"row"} alignItems="center">
+                {/*————————————————————— Manage Categories ——————————————*/}
+            <ManageCategory />
+
+                <ManageTags
+                  itemId={createdItemId ?? undefined}
+                  autoOpen={openTagsAfterCreate}
+                  onClose={() => setOpenTagsAfterCreate(false)}
+                />
+                {/*————————————————————— Upload Files ———————————————————*/}
+                <Button
+                    component="label"
+                    role={'button'}
+                    variant="contained"
+                    color="secondary"
+                    tabIndex={-1}
+                    startIcon={<ImCloudUpload />}
+                    disabled={isLoading}
+                    sx={{ pl: 2 }}
+                >
+                    {t('admin.add_product.upload_files')}
+                    <VisuallyHiddenInput
+                        type="file"
+                        id="item_image"
+                        name="item_image"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        disabled={isLoading}
+                        multiple
+                    />
+                </Button>
+                {/*————————————————————— Submit Button ———————————————————*/}
                 <Button
                     type="submit"
                     variant="contained"
                     color="secondary"
                     disabled={isLoading}
-                    sx={{ flexGrow: 100, mt: 2 }}
                 >
                     {isLoading ? t('admin.add_product.adding') : t('admin.add_product.add')}
                 </Button>
-            </Box>
+                </Stack>
+            
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={4000}
                 onClose={() => setSnackbarOpen(false)}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
                 <MuiAlert
                     onClose={() => setSnackbarOpen(false)}

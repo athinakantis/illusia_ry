@@ -1,4 +1,62 @@
 {
+  "admin": {
+    "add_product": {
+      "uploading": "Uploading item...",
+      "upload_failed": "Failed to upload images. Please try again.",
+      "add_tags_prompt": "Item created! Do you want to add tags now?",
+      "success": "Item added successfully!",
+      "save_failed": "Failed to save item. Please try again.",
+      "title": "Add New Product",
+      "item_name": "Item Name",
+      "description": "Description",
+      "location": "Location",
+      "quantity": "Quantity",
+      "category": "Category",
+      "selected_images": "Selected Images:",
+      "upload_files": "Upload files",
+      "adding": "Adding Item...",
+      "add": "Add Item",
+      "manage_tags": {
+        "title": "Manage Tags"
+      },
+      "manage_tag_body": {
+        "confirmDelete": "Are you sure you want to delete this tag?",
+        "newTag": "New tag",
+        "add": "Add",
+        "attachHint": "Tip: Tick the check-boxes to attach or detach tags for this item.",
+        "checkBoxesTip": "Check boxes are only available in the Item editor."
+      }
+    },
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "stats": {
+        "total_users": "Total users",
+        "total_bookings": "Total bookings",
+        "total_items": "Total items"
+      },
+      "quick_actions": "Quick actions",
+      "add_item": "Add item",
+      "view_bookings": "View bookings",
+      "manage_users": "Manage users",
+      "upcoming_bookings": "Upcoming bookings",
+      "duration": {
+        "days": "Days"
+      },
+      "columns": {
+        "name": "Name",
+        "status": "Status",
+        "duration": "Duration",
+        "date_range": "Date Range",
+        "actions": "Actions",
+        "last_sign_in": "Last sign-in",
+        "confirmed": "Confirmed",
+        "role": "Role"
+      },
+      "show_booking": "Show booking",
+      "recent_activity": "Recent activity",
+      "users_and_roles": "Users & Roles"
+    }
+  },
   "adminBookings": {
     "snackbar": {
       "bookingApproved": "Booking approved",
@@ -51,6 +109,11 @@
     "myAccount": "My account",
     "logOut": "Log out"
   },
+  "items": {
+    "search": "Search our items",
+    "browse": "Browse Items",
+    "manage": "Manage Items"
+  },
   "userBookings": {
     "snackbar": {
       "bookingDeleted": "Your booking was deleted!",
@@ -88,92 +151,21 @@
   "home": {
     "heroTitle": "Your go-to specialty store for LARP props and accessories",
     "heroDescription": "Whether you need smaller props or larger set pieces, you’ll find everything you need to bring your story to life.",
-    "categoriesTitle": "View Our Range Of Categories",
-    "categoriesDescription": "We offer a wide range of supplies — from combat vests to spaceship consoles, crafting materials, fire extinguishers — and everything in between.",
-    "categories": {
-      "clothing": "Clothing",
-      "board_games": "Board Games",
-      "props": "Props",
-      "accessories": "Accessories"
-    },
     "cta": {
       "browse_items": "Browse Items"
-    }
+    },
+    "categoriesTitle": "View Our Range Of Categories",
+    "categoriesDescription": "We offer a wide range of supplies — from combat vests to spaceship consoles, crafting materials, fire extinguishers — and everything in between."
   },
   "faq": {
     "faqTitle": "Frequently Asked Questions",
-    "askQuestion": "Ask a question",
     "faqDescription": "Before reaching out to us, see if you can find what you're looking for in our FAQ",
+    "askQuestion": "Ask a question",
     "question1": "When will my booking be approved?",
     "answer1": "We look through bookings as soon as we can. Bookings are usually approved within the span of 2-3 days. If you've waited longer than 5 days, send us an email",
     "question2": "How long can I book items for?",
     "answer2": "One booking can be a maximum duration of two weeks",
     "question3": "Why do I have to be approved before booking items?",
     "answer3": "We see the approval of our users as a guarantee that the items which have been lent will be returned after a maximum of 2 weeks."
-  },
-  "admin": {
-    "dashboard": {
-      "title": "Admin Dashboard",
-      "stats": {
-        "total_users": "Total users",
-        "total_bookings": "Total bookings",
-        "inventory_items": "Inventory items"
-      },
-      "quick_actions": "Quick actions",
-      "add_item": "Add item",
-      "view_bookings": "View bookings",
-      "manage_users": "Manage users",
-      "upcoming_bookings": "Upcoming bookings",
-      "recent_activity": "Recent activity",
-      "users_and_roles": "Users & Roles",
-      "show_booking": "Show booking",
-      "columns": {
-        "name": "Name",
-        "status": "Status",
-        "duration": "Duration",
-        "date_range": "Date Range",
-        "actions": "Actions",
-        "last_sign_in": "Last sign-in",
-        "confirmed": "Confirmed",
-        "role": "Role"
-      },
-      "status": {
-        "pending": "Pending",
-        "approved": "Approved",
-        "rejected": "Rejected",
-        "cancelled": "Cancelled",
-        "completed": "Completed"
-      },
-      "duration": {
-        "days": "Days"
-      }
-    },
-    "add_product": {
-      "title": "Add New Product",
-      "item_name": "Item Name",
-      "description": "Description",
-      "location": "Location",
-      "quantity": "Quantity",
-      "category": "Category",
-      "upload_files": "Upload files",
-      "selected_images": "Selected Images:",
-      "add": "Add Item",
-      "adding": "Adding Item...",
-      "uploading": "Uploading item...",
-      "upload_failed": "Failed to upload images. Please try again.",
-      "success": "Item added successfully!",
-      "save_failed": "Failed to save item. Please try again."
-    }
-  },
-  "roles": {
-    "head_admin": "Head Admin",
-    "admin": "Admin",
-    "user": "User",
-    "unapproved": "Unapproved"
-  },
-  "items": {
-    "browse": "Browse Items",
-    "manage": "Manage Items",
-    "search": "Search our items"
   }
 }

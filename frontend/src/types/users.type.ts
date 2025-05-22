@@ -27,3 +27,8 @@ export interface userApiResponse {
   message: string;
   data: User[];
 }
+
+export interface singleUserApiResponse {
+  message: string;
+  data: User
+}

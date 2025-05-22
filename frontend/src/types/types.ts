@@ -10,13 +10,26 @@ export interface Item {
   quantity: number;
   created_at: string;
   visible?: boolean;
+  /**  UUIDs of the tags attached to this item */
+  tag_ids?: string[];
 }
 
+export type Tag = Pick<
+  Tables<'tags'>,
+  'tag_id' | 'tag_name' | 'description' | 'created_at'
+>;
+
+export type ItemTag = Pick<
+  Tables<'item_tags'>,
+  'item_id' | 'tag_id' | 'created_at'
+>;
 export interface ItemState {
   items: Item[];
   item: Item | null;
   error: null | string;
   loading: boolean;
+  tags: Tag[];
+  item_tags: ItemTag[];
   categories: {
     category_id: string;
     category_name: string;

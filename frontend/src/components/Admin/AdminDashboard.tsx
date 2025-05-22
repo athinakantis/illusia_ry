@@ -34,8 +34,8 @@ import { fi } from 'date-fns/locale';
 
 
 // ─── Re-usable stat card ────────────────────────────────────
-const StatCard: React.FC<{ label: string; value: number | string }> = ({
-  label,
+const StatCard: React.FC<{ text: string; value: number | string }> = ({
+  text,
   value,
 }) => (
   <Paper
@@ -54,9 +54,7 @@ const StatCard: React.FC<{ label: string; value: number | string }> = ({
       fontSize={'1.1rem'}
       gutterBottom
     >
-      <Trans i18nKey={`admin.dashboard.stats.${label.toLowerCase().replace(/\s+/g, '_')}`}>
-        {label}
-      </Trans>
+      {text}
     </Typography>
     <Typography variant="heading_secondary_bold" lineHeight={1} fontSize={56}>
       {value}
@@ -137,17 +135,7 @@ const AdminDashboard = () => {
   if (role !== 'Admin' && role !== 'Head Admin') {
     return <Navigate to="/" replace />;
   }
-  /* ────────── Memoized values ────────── */
-  // combine bookings + reservations + users
 
-  // inside your component:
-  // const overviews: BookingOverview[] = useMemo(
-  //   () => buildBookingOverviews(bookings, reservations, users, items),
-  //   [bookings, reservations, users, items],
-  // );
-  // console.log("Overviews" + overviews);
-  // console.log("upcomingBookings:", upcomingBookings);
-  // If we don't know the role yet, render nothing (or a loader)
   if (role === undefined) {
     return <Spinner />;
   }
@@ -181,13 +169,33 @@ const AdminDashboard = () => {
         {/* ───── Stats ───── */}
         <Grid container spacing={6}>
           <Grid size={{ xs: 12, md: 4 }}>
-            <StatCard label="Total users" value={users.length} />
+            <StatCard
+              text={
+                t('admin.dashboard.stats.total_users', {
+                  defaultValue: 'Total users',
+              })}
+              value={users.length}
+            />
           </Grid>
           <Grid size={{ xs: 12, md: 4 }}>
-            <StatCard label="Total bookings" value={bookings.length} />
+            <StatCard
+              text={
+                t('admin.dashboard.stats.total_bookings', {
+                  defaultValue: 'Total bookings',
+                })
+              }
+              value={bookings.length}
+            />
           </Grid>
           <Grid size={{ xs: 12, md: 4 }}>
-            <StatCard label="Inventory items" value={items.length} />
+            <StatCard
+              text={
+                t("admin.dashboard.stats.total_items", {
+                  defaultValue: 'Total items',
+                })
+              }
+              value={items.length}
+            />
           </Grid>
         </Grid>
       </Box>
