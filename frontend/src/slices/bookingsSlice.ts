@@ -30,7 +30,6 @@ export const fetchBooking = createAsyncThunk(
   'bookings/fetchBooking',
   async (id: string) => {
     const response = await bookingsApi.getBooking(id);
-    console.log('Booking Fetched', response);
     return response.data;
   },
 );
