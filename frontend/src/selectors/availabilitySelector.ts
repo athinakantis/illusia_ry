@@ -42,7 +42,8 @@ export const checkAvailabilityForItemOnDates = (
                 ? { severity: 'success', data: true }
                 : {
                     severity: 'warning',
-                    message: `Not enough of item available for selected dates. Only available ${overallItemQty - itemQtyInReservatios}`,
+                    // message: `Not enough of item available for selected dates. Only available ${overallItemQty - itemQtyInReservatios}`,
+                    message: `Not enough of item available for selected dates.`,
                 };
         },
 

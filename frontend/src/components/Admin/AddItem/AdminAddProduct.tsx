@@ -1,15 +1,15 @@
 import { useState, FormEvent, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store/hooks'; // Use your custom hooks
-import { FormData } from '../../types/types';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks'; // Use your custom hooks
+import { FormData } from '../../../types/types';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth'; // Import your auth hook
+import { useAuth } from '../../../hooks/useAuth'; // Import your auth hook
 import {
     createItem,
     selectAllCategories,
-} from '../../slices/itemsSlice';
-import { supabase } from '../../config/supabase';
+} from '../../../slices/itemsSlice';
+import { supabase } from '../../../config/supabase';
 import { v4 as uuidv4 } from 'uuid';
-import { TablesInsert } from '../../types/supabase.type';
+import { TablesInsert } from '../../../types/supabase';
 import MuiAlert, { AlertColor } from '@mui/material/Alert';
 import {
     Button,
@@ -28,6 +28,9 @@ import { Box, TextField, Typography } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useTranslation } from 'react-i18next';
+import ManageCategory from './ManageCategory/ManageCategory';
+import ManageTags from './ManageTags/ManageTags';
 
 type CreateItemPayload = Omit<
     TablesInsert<'items'>,
@@ -57,6 +60,8 @@ const AdminAddProduct = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>('info');
+    const [createdItemId, setCreatedItemId] = useState<string | null>(null);
+    const [openTagsAfterCreate, setOpenTagsAfterCreate] = useState(false);
     const VisuallyHiddenInput = styled('input')({
         clip: 'rect(0 0 0 0)',
         clipPath: 'inset(50%)',
@@ -68,6 +73,7 @@ const AdminAddProduct = () => {
         whiteSpace: 'nowrap',
         width: 1,
     });
+    const { t } = useTranslation();
 
     // If user is not admin, navigate elsewhere (/items for now)
     useEffect(() => {
@@ -133,7 +139,7 @@ const AdminAddProduct = () => {
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setIsLoading(true);
-        showSnackbar('Uploading item...', 'info');
+        showSnackbar(t('admin.add_product.uploading'), 'info');
 
         const imageUrls: string[] = [];
 
@@ -174,7 +180,7 @@ const AdminAddProduct = () => {
                 }
             } catch (error) {
                 console.error('Error uploading files:', error);
-                showSnackbar('Failed to upload images. Please try again.', 'error');
+                showSnackbar(t('admin.add_product.upload_failed'), 'error');
                 return;
             }
         }
@@ -185,9 +191,16 @@ const AdminAddProduct = () => {
         };
 
         try {
-            await dispatch(createItem(newItemData)).unwrap();
+            const savedItem = await dispatch(createItem(newItemData)).unwrap();
+            setCreatedItemId(savedItem.data.item_id);           // keep the id so we can attach tags
+            const wantTags = window.confirm(
+                t('admin.add_product.add_tags_prompt', {
+                    defaultValue: 'Item created! Do you want to add tags now?'
+                })
+            );
+            if (wantTags) setOpenTagsAfterCreate(true);
             setIsLoading(false);
-            showSnackbar('Item added successfully!', 'success');
+            showSnackbar(t('admin.add_product.success', { defaultValue: 'Item created successfully!' }), 'success');
             setFormData({
                 item_name: '',
                 description: '',
@@ -199,7 +212,7 @@ const AdminAddProduct = () => {
         } catch (err) {
             console.error('Failed to save the item:', err);
             setIsLoading(false);
-            showSnackbar('Failed to save item. Please try again.', 'error');
+            showSnackbar(t('admin.add_product.save_failed'), 'error');
             return;
         }
     };
@@ -224,10 +237,10 @@ const AdminAddProduct = () => {
             }}
         >
             <Typography variant="h5" textAlign="center">
-                Add New Product
+                {t('admin.add_product.title')}
             </Typography>
             <TextField
-                label="Item Name"
+                label={t('admin.add_product.item_name')}
                 name="item_name"
                 value={formData.item_name}
                 onChange={handleInputChange}
@@ -235,7 +248,7 @@ const AdminAddProduct = () => {
                 disabled={isLoading}
             />
             <TextField
-                label="Description"
+                label={t('admin.add_product.description')}
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
@@ -244,7 +257,7 @@ const AdminAddProduct = () => {
                 disabled={isLoading}
             />
             <TextField
-                label="Location"
+                label={t('admin.add_product.location')}
                 name="location"
                 value={formData.location}
                 onChange={handleInputChange}
@@ -252,7 +265,7 @@ const AdminAddProduct = () => {
                 disabled={isLoading}
             />
             <TextField
-                label="Quantity"
+                label={t('admin.add_product.quantity')}
                 name="quantity"
                 type="number"
                 value={formData.quantity}
@@ -263,10 +276,10 @@ const AdminAddProduct = () => {
             />
             {/* Category Selection */}
             <FormControl>
-                <InputLabel>Category</InputLabel>
+                <InputLabel>{t('admin.add_product.category')}</InputLabel>
                 <Select
                     value={formData.category_id}
-                    label="Category"
+                    label={t('admin.add_product.category')}
                     name='category_id'
                     onChange={handleSelectChange}
                 >
@@ -277,97 +290,107 @@ const AdminAddProduct = () => {
                     ))}
                 </Select>
             </FormControl>
-            {/* Image Upload Section */}
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Button
-                    component="label"
-                    role={'button'}
-                    variant="contained"
-                    color="secondary"
-                    tabIndex={-1}
-                    startIcon={<ImCloudUpload />}
-                    disabled={isLoading}
-                    sx={{ flexGrow: 1, height: 75 }}
-                >
-                    Upload files
-                    <VisuallyHiddenInput
-                        type="file"
-                        id="item_image"
-                        name="item_image"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        disabled={isLoading}
-                        multiple
-                    />
-                </Button>
 
-                {/* Preview Section */}
-                {selectedFiles.length > 0 && (
-                    <Stack spacing={2}>
-                        <Typography variant="subtitle1">Selected Images:</Typography>
-                        {selectedFiles.map((file, index) => (
+            {/* Preview Section */}
+            {selectedFiles.length > 0 && (
+                <Stack spacing={2}>
+                    <Typography variant="subtitle1">{t('admin.add_product.selected_images')}</Typography>
+                    {selectedFiles.map((file, index) => (
+                        <Box
+                            key={index}
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1,
+                                p: 1,
+                                border: '1px solid',
+                                borderColor: 'divider',
+                                borderRadius: 1,
+                            }}
+                        >
                             <Box
-                                key={index}
+                                component="img"
+                                src={file.preview}
+                                alt={`Preview ${index + 1}`}
                                 sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 1,
-                                    p: 1,
-                                    border: '1px solid',
-                                    borderColor: 'divider',
+                                    width: 60,
+                                    height: 60,
+                                    objectFit: 'cover',
                                     borderRadius: 1,
                                 }}
-                            >
-                                <Box
-                                    component="img"
-                                    src={file.preview}
-                                    alt={`Preview ${index + 1}`}
-                                    sx={{
-                                        width: 60,
-                                        height: 60,
-                                        objectFit: 'cover',
-                                        borderRadius: 1,
-                                    }}
-                                />
-                                <Box sx={{ flexGrow: 1 }}>
-                                    <Typography variant="body2" noWrap>
-                                        {file.file.name}
-                                    </Typography>
-                                </Box>
-                                <IconButton
-                                    onClick={() => handleSetMainImage(index)}
-                                    color={file.isMain ? 'primary' : 'default'}
-                                    size="small"
-                                >
-                                    {file.isMain ? <StarIcon /> : <StarBorderIcon />}
-                                </IconButton>
-                                <IconButton
-                                    onClick={() => handleRemoveImage(index)}
-                                    color="error"
-                                    size="small"
-                                >
-                                    <DeleteIcon />
-                                </IconButton>
+                            />
+                            <Box sx={{ flexGrow: 1 }}>
+                                <Typography variant="body2" noWrap>
+                                    {file.file.name}
+                                </Typography>
                             </Box>
-                        ))}
-                    </Stack>
-                )}
+                            <IconButton
+                                onClick={() => handleSetMainImage(index)}
+                                color={file.isMain ? 'primary' : 'default'}
+                                size="small"
+                            >
+                                {file.isMain ? <StarIcon /> : <StarBorderIcon />}
+                            </IconButton>
+                            <IconButton
+                                onClick={() => handleRemoveImage(index)}
+                                color="error"
+                                size="small"
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                        </Box>
+                    ))}
+                </Stack>
+            )}
+            {/*————————————————————— Buttons ————————————————————————*/}
 
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="secondary"
+            <Stack spacing={2} direction={"row"} alignItems="center">
+                {/*————————————————————— Manage Categories ——————————————*/}
+                <ManageCategory />
+
+                <ManageTags
+                    itemId={createdItemId ?? undefined}
+                    autoOpen={openTagsAfterCreate}
+                    onClose={() => setOpenTagsAfterCreate(false)}
+                />
+
+            </Stack>
+            {/*————————————————————— Upload Files ———————————————————*/}
+            <Button
+                component="label"
+                role={'button'}
+                variant="contained"
+                color="secondary"
+                tabIndex={-1}
+                startIcon={<ImCloudUpload />}
+                disabled={isLoading}
+                sx={{ pl: 2, height: 80 }}
+            >
+                {t('admin.add_product.upload_files')}
+                <VisuallyHiddenInput
+                    type="file"
+                    id="item_image"
+                    name="item_image"
+                    accept="image/*"
+                    onChange={handleFileChange}
                     disabled={isLoading}
-                    sx={{ flexGrow: 100, mt: 2 }}
-                >
-                    {isLoading ? 'Adding Item...' : 'Add Item'}
-                </Button>
-            </Box>
+                    multiple
+                />
+            </Button>
+            {/*————————————————————— Submit Button ———————————————————*/}
+            <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                disabled={isLoading}
+            >
+                {isLoading ? t('admin.add_product.adding') : t('admin.add_product.add')}
+            </Button>
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={4000}
                 onClose={() => setSnackbarOpen(false)}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
                 <MuiAlert
                     onClose={() => setSnackbarOpen(false)}

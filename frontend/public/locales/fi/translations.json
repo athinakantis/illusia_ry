@@ -1,9 +1,107 @@
 {
+  "admin": {
+    "add_product": {
+      "uploading": "Ladataan tuotetta...",
+      "upload_failed": "Kuvien lataus epäonnistui. Yritä uudelleen.",
+      "add_tags_prompt": "Tuote luotu! Haluatko lisätä tägejä nyt?",
+      "success": "Tuote lisätty onnistuneesti!",
+      "save_failed": "Tuotteen tallennus epäonnistui. Yritä uudelleen.",
+      "title": "Lisää uusi tuote",
+      "item_name": "Tuotteen nimi",
+      "description": "Kuvaus",
+      "location": "Sijainti",
+      "quantity": "Määrä",
+      "category": "Kategoria",
+      "selected_images": "Valitut kuvat:",
+      "upload_files": "Lataa kuvat",
+      "adding": "Lisätään tuotetta...",
+      "add": "Lisää tuote",
+      "manage_tags": {
+        "title": "Hallinnoi tägejä"
+      },
+      "manage_tag_body": {
+        "confirmDelete": "Haluatko varmasti poistaa tämän tägin?",
+        "newTag": "Uusi tägi",
+        "add": "Lisää",
+        "attachHint": "Vihje: Rastita valintaruudut liittääksesi tai irrottaaksesi tägejä tältä tuotteelta.",
+        "checkBoxesTip": "Valintaruudut ovat käytettävissä vain tuotemuokkaimessa."
+      }
+    },
+    "dashboard": {
+      "title": "Hallintapaneeli",
+      "stats": {
+        "total_users": "Käyttäjät yhteensä",
+        "total_bookings": "Varaukset yhteensä",
+        "total_items": "Tuotteet yhteensä"
+      },
+      "quick_actions": "Pikatoiminnot",
+      "add_item": "Lisää tuote",
+      "view_bookings": "Näytä varaukset",
+      "manage_users": "Hallitse käyttäjiä",
+      "upcoming_bookings": "Tulevat varaukset",
+      "duration": {
+        "days": "päivää"
+      },
+      "columns": {
+        "name": "Nimi",
+        "status": "Tila",
+        "duration": "Kesto",
+        "date_range": "Aikaväli",
+        "actions": "Toiminnot",
+        "last_sign_in": "Viimeisin kirjautuminen",
+        "confirmed": "Vahvistettu",
+        "role": "Rooli"
+      },
+      "show_booking": "Näytä varaus",
+      "recent_activity": "Viimeisin toiminta",
+      "users_and_roles": "Käyttäjät ja roolit"
+    }
+  },
+  "adminBookings": {
+    "snackbar": {
+      "bookingApproved": "Varaus hyväksytty",
+      "bookingRejected": "Varaus hylätty"
+    },
+    "heading": "Varaukset",
+    "tabs": {
+      "all": "Kaikki",
+      "pending": "Odottaa hyväksyntää",
+      "approved": "Hyväksytyt",
+      "rejected": "Hylätyt"
+    },
+    "id": "Tunnus",
+    "created": "Luotu",
+    "bookingDates": "Varauspäivät",
+    "customer": "Asiakas",
+    "items": "Tuotteet",
+    "status": "Tila",
+    "awaiting": "Odottaa hyväksyntää",
+    "noResults": "Valitulle suodattimelle ei löytynyt varauksia.",
+    "approve": "Hyväksy",
+    "reject": "Hylkää"
+  },
+  "collapsibleDetail": {
+    "title": "Varauskohteet",
+    "item": "Tuote",
+    "start": "Alkupäivä",
+    "end": "Loppupäivä",
+    "qty": "Määrä"
+  },
+  "Bookings": {
+    "snackbar": {
+      "deleted": "Varaus poistettu",
+      "cancelled": "Varaus peruttu"
+    }
+  },
   "nav": {
     "home": "Etusivu",
     "items": "Tuotteet",
     "contact": "Ota yhteyttä",
-    "bookings": "Varaukset"
+    "bookings": "Varaukset",
+    "dashboard": "Hallintapaneeli",
+    "manageBookings": "Hallitse varauksia",
+    "manageUsers": "Hallinnoi käyttäjiä",
+    "logOut": "Kirjaudu ulos"
   },
   "header": {
     "logoMain": "ILLUSIA",
@@ -11,9 +109,118 @@
   },
   "person": {
     "myBookings": "Minun varaukset",
-    "dashboard": "Hallintapaneeli",
     "myAccount": "Oma tili",
-    "logOut": "Kirjaudu ulos"
+    "dashboard": "Hallintapaneeli",
+    "manageUsers": "Hallinnoi käyttäjiä",
+    "manageBookings": "Hallitse varauksia",
+    "logOut": "Kirjaudu ulos",
+    "logIn": "Kirjaudu sisään"
+  },
+  "items": {
+    "search": "Etsi tuotteita",
+    "date_picker_disabled_info": "Et voi vaihtaa päivämäärää, kun ostoskorissasi on tuotteita valituilla päivillä. Tyhjennä ostoskori tai muuta päivämäärää ostoskorin sisällä.",
+    "browse": "Selaa tuotteita",
+    "manage": "Hallinnoi tuotteita"
+  },
+  "account": {
+    "nameUpdated": "Nimesi on päivitetty muotoon {{name}}.",
+    "errorUpdatingName": "Nimen päivitys epäonnistui",
+    "notLoggedIn": "Et ole kirjautunut sisään tai sinulla ei vielä ole tiliä.",
+    "logIn": "kirjaudu sisään",
+    "signUp": "rekisteröidy",
+    "accessAccount": "päästäksesi tilillesi.",
+    "tabs": {
+      "profile": "Profiili",
+      "security": "Turvallisuus"
+    },
+    "changeEmail": "Vaihda sähköposti",
+    "changePhone": "Vaihda puhelinnumero",
+    "addPhone": "Lisää puhelinnumero",
+    "createdOn": "Tili luotu",
+    "deleteAccount": "Poista tili",
+    "email": {
+      "mfaPrompt": "Syötä 6-numeroinen autentikaattorisovelluksen koodi vahvistaaksesi sähköpostin vaihdon:",
+      "status": {
+        "sending": "Lähetetään vahvistussähköpostia…",
+        "linkSent": "Vahvistuslinkki lähetetty uuteen sähköpostiosoitteeseesi. Tarkista postisi."
+      },
+      "newLabel": "Uusi sähköpostiosoite",
+      "update": "Päivitä sähköposti"
+    },
+    "phone": {
+      "status": {
+        "sending": "Lähetetään koodi…",
+        "smsSent": "SMS lähetetty! Syötä 6-numeroinen koodi.",
+        "verifying": "Vahvistetaan…",
+        "confirmed": "Puhelinnumero vahvistettu ✅"
+      },
+      "numberLabel": "Puhelinnumero (E.164 esim. +358401234567)",
+      "sendCode": "Lähetä koodi",
+      "codeLabel": "6-numeroinen koodi",
+      "verifySave": "Vahvista ja tallenna"
+    }
+  },
+  "common": {
+    "or": "tai",
+    "save": "Tallenna",
+    "sending": "Lähetetään…",
+    "cancel": "Peruuta"
+  },
+  "deleteAccount": {
+    "error": {
+      "noToken": "Todennustunnuksen hakeminen epäonnistui.",
+      "deleteFailed": "Tilin poistaminen epäonnistui."
+    },
+    "title": "Poista tili?",
+    "warning": "Tilin poistaminen poistaa pysyvästi <strong>kaikki</strong> käyttäjääsi liittyvät tiedot, mukaan lukien profiilit, asetukset ja datan. Tätä toimintoa <em>ei</em> voi perua.",
+    "deleting": "Poistetaan…",
+    "confirm": "Poista tili"
+  },
+  "security": {
+    "status": {
+      "unenrollFailed": "Poistaminen epäonnistui",
+      "canceled": "MFA-asennus peruttu.",
+      "generating": "Luodaan salaisuutta…",
+      "scanQr": "Skannaa tämä QR-koodi autentikaattorisovelluksella ja syötä 6-numeroinen koodi",
+      "verifying": "Vahvistetaan…",
+      "enabled": "MFA otettu käyttöön 🎉",
+      "challengeError": "Haastevirhe",
+      "verificationFailed": "Vahvistus epäonnistui",
+      "removed": "MFA-tunniste poistettu"
+    },
+    "prompt": {
+      "code": "Syötä 6-numeroinen koodi autentikaattorisovelluksestasi"
+    },
+    "heading": "Turvallisuusasetukset",
+    "enableTOTP": "Ota TOTP-MFA käyttöön",
+    "codeLabel": "6-numeroinen koodi",
+    "verifyActivate": "Vahvista ja aktivoi",
+    "cancelSetup": "Peruuta asennus",
+    "enabled": "Autentikaattorisovelluksen MFA on käytössä.",
+    "disableTOTP": "Poista TOTP-MFA käytöstä"
+  },
+  "avatar": {
+    "uploading": "Ladataan...",
+    "change": "Vaihda avatar"
+  },
+  "userBookings": {
+    "snackbar": {
+      "bookingDeleted": "Varaus poistettu",
+      "bookingCancelled": "Varaus peruttu"
+    },
+    "heading": "Varauksesi",
+    "noBookings": "Ei varauksia vielä.",
+    "bookingId": "Varausnumero",
+    "created": "Luotu",
+    "cancelTooltip": "Peruuta varaus",
+    "deleteTooltip": "Poista varaus",
+    "item": "Tuote",
+    "startDate": "Alkupäivä",
+    "endDate": "Loppupäivä",
+    "quantity": "Määrä",
+    "confirmCancel": "Haluatko varmasti peruuttaa varauksesi?",
+    "confirmYes": "Kyllä, olen varma",
+    "confirmNo": "Ei kiitos"
   },
   "cart": {
     "yourCart": "Ostoskorisi",
@@ -31,15 +238,26 @@
     "empty": "Ostoskori on tyhjä! <1>Selaa tuotteita</1>"
   },
   "home": {
-    "heroTitle": "Live action -roolipelien rekvisiittakoti",
-    "heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ahdistelussa ei ole nyt mitään hienostelua. Nyt artikkelin kirjoittaja on nero, joka on tyyny. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nyt ahdistetussa feugiatissa ei ole fringillaa.",
+    "heroTitle": "Erikoiskauppa LARP-rekvisiitalle, tarvikkeille ja lavasteille",
+    "heroDescription": "Tarvitsetpa sitten pienempää rekvisiittaa tai isompia lavasteita, meiltä löydät kaiken tarvittavan tarinasi eloon herättämiseksi.",
+    "cta": {
+      "browse_items": "Selaa tuotteita"
+    },
     "categoriesTitle": "Tutustu kategoriavalikoimaamme",
-    "categoriesDescription": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.",
-    "askQuestion": "Kysy kysymys"
+    "categoriesDescription": "Meiltä löytyy monipuolisesti tarvikkeita taisteluliiveistä avararuusalusten konsoleihin, askartelutarpeisiin, vaahtosammuttimiin - ja kaikkeen siltä väliltä.",
+    "categories": {
+      "board_games": "Lautapelit",
+      "clothing": "Vaatteet",
+      "accessories": "Tarvikkeet",
+      "props": "Rekvisiitta"
+    }
   },
   "faq": {
+    "faqTitle": "Usein kysytyt kysymykset",
+    "faqDescription": "Ennen kuin otat yhteyttä tarkista usein kysytyt kysymykset.",
+    "askQuestion": "Esitä kysymys",
     "question1": "Milloin varaukseni hyväksytään?",
-    "answer1": "Käymme varaukset läpi mahdollisimman pian. Varaukset hyväksytään yleensä 2–3 päivän kuluessa. Jos olet odottanut yli 5 päivää, lähetä meille sähköpostia.",
+    "answer1": "Käymme varaukset läpi mahdollisimman pian. Varaukset hyväksytään yleensä 2-3 päivän kuluessa. Jos olet odottanut yli 5 päivää, lähetä meille sähköpostia.",
     "question2": "Kuinka pitkäksi aikaa voin varata tuotteita?",
     "answer2": "Yhden varauksen kesto voi olla enintään kaksi viikkoa",
     "question3": "Miksi minun on saatava hyväksyntä ennen kuin voin varata tuotteita?",

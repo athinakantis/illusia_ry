@@ -26,5 +26,54 @@
   "button.test": "",
   "{link": {
     "defaultValue}": "{link.defaultValue}"
+  },
+  "snackbar": {
+    "bookingDefault": "Booking successfully created",
+    "bookingDeleted": "Your booking was deleted!",
+    "bookingCancelled": "Booking cancelled"
+  },
+  "userBookings": {
+    "test": "Success"
+  },
+  "UserBookings": {
+    "snackbar": {
+      "bookingDeleted": "Your booking was deleted!",
+      "bookingCancelled": "Booking cancelled"
+    }
+  },
+  "Your booking was deleted": "Your booking was deleted",
+  "Your booking was cancelled": "Your booking was cancelled",
+  "nav": {
+    "logIn": "Log in"
+  },
+  "admin": {
+    "dashboard": {
+      "stats": {
+        "inventory_items": "Inventory items"
+      },
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled",
+        "completed": "Completed"
+      }
+    }
+  },
+  "roles": {
+    "head_admin": "Head Admin",
+    "admin": "Admin",
+    "user": "User",
+    "unapproved": "Unapproved"
+  },
+  "clothing": "Clothing",
+  "board games": "Board Games",
+  "props": "Props",
+  "accessories": "Accessories",
+  "Clothing": "Clothing",
+  "\"home": {
+    "categories": {
+      "accessories\"": "Accessories"
+    }
   }
 }

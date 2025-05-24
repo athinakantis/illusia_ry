@@ -16,6 +16,7 @@ import {
   Typography,
   TextField,
   Chip,
+  Alert,
 } from '@mui/material';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { addItemToCart, selectDateRange } from '../slices/cartSlice';
@@ -47,6 +48,8 @@ import {
 import { Item } from '../types/types';
 import { showCustomSnackbar } from './CustomSnackbar';
 import Spinner from './Spinner';
+import broken_img from '../assets/broken_img.png';
+import { useTranslation } from 'react-i18next';
 
 function Items() {
   const items = useAppSelector(selectVisibleItems);
@@ -63,6 +66,7 @@ function Items() {
   const now = today(getLocalTimeZone());
   const [range, setRange] = useState<RangeValue<DateValue> | null>(null);
   const selectedDateRange = useAppSelector(selectDateRange);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (reservations.length < 1) {
@@ -84,9 +88,7 @@ function Items() {
 
   const addToCart = (item: Item, quantity: number = 1) => {
     // need to fetch the bookings and reservations first in order for this to work properly
-
     if (range?.start === undefined) {
-
       showCustomSnackbar('Select dates before adding to cart', 'warning');
       return;
     }
@@ -122,7 +124,7 @@ function Items() {
   const handleBrokenImg = (
     e: React.SyntheticEvent<HTMLImageElement, Event>,
   ) => {
-    (e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+    (e.target as HTMLImageElement).src = broken_img;
   };
 
   const toggleCategory = (category: string) => {
@@ -202,6 +204,9 @@ function Items() {
     }
   };
 
+  /* Remove 'Uncategorised' from cat options */
+  const filteredCategories = categories.filter(c => c.category_name !== 'Uncategorised')
+
   return (
     <Box
       sx={{
@@ -224,18 +229,38 @@ function Items() {
         {/* Search */}
         <TextField
           id="filled-search"
-          label="Search our items"
+          label={t('items.search')}
           type="search"
           variant="outlined"
           sx={{
-            width: { xs: '100%', md: '90%' }, mt: 1,
+            width: '100%', mt: 1,
           }}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+        {/* Info box for disabled date picker */}
+        {selectedDateRange.start_date != null && (
+          <Alert severity="info" sx={{ mb: 2 }}>
+            {t('items.date_picker_disabled_info')}
+          </Alert>
+        )}
+        <Provider theme={defaultTheme} colorScheme="light">
+          <DateRangePicker
+            labelPosition="side"
+            labelAlign="end"
+            width="100%"
+            aria-label="Select dates"
+            value={range}
+            minValue={now}
+            onChange={handleDateChange}
+            isRequired
+            maxVisibleMonths={1}
+            isDisabled={selectedDateRange.start_date != null}
+          />
+        </Provider>
         {/* Categories */}
         <Box sx={{ pr: 2, gap: 1, display: 'flex', flexWrap: 'wrap' }}>
-          {categories.map((category) => (
+          {filteredCategories.map((category) => (
             <Chip
               variant={
                 categoryParams.includes(
@@ -266,20 +291,7 @@ function Items() {
             />
           ))}
         </Box>
-        <Provider theme={defaultTheme} colorScheme="light" maxWidth={270}>
-          <DateRangePicker
-            labelPosition="side"
-            labelAlign="end"
-            width={270}
-            aria-label="Select dates"
-            value={range}
-            minValue={now}
-            onChange={handleDateChange}
-            isRequired
-            maxVisibleMonths={1}
-            isDisabled={selectedDateRange.start_date != null}
-          />
-        </Provider>
+
       </Stack>
 
       {/* Items Display */}
@@ -323,7 +335,7 @@ function Items() {
                         textDecoration: 'none',
                         flex: 1,
                         flexBasis: 230,
-                        maxWidth: 300
+                        maxWidth: { xs: '100%', md: 300 }
                       }}
                     >
                       <Box sx={{
@@ -335,7 +347,7 @@ function Items() {
                       }}>
                         <CardMedia
                           component="img"
-                          image={Array.isArray(item.image_path) && item.image_path.length > 0 ? item.image_path[0] : '/src/assets/broken_img.png'}
+                          image={Array.isArray(item.image_path) && item.image_path.length > 0 ? item.image_path[0] : broken_img}
                           onError={handleBrokenImg}
                           sx={{
                             height: '100%',
@@ -352,13 +364,17 @@ function Items() {
                           justifyContent: 'space-between',
                         }}
                       >
-                        <Box
-                          sx={{ width: '80%', alignItems: 'center', display: 'flex' }}
+                        <Stack
+                          sx={{ width: '80%', lineHeight: '100%' }}
                         >
-                          <Typography variant="body1" sx={{ width: '70%' }}>
+                          <Typography variant="body1">
                             {item.item_name}
                           </Typography>
-                        </Box>
+                          <Typography variant="body3" sx={{ fontStyle: 'italic' }}>
+                            Available {(range) ? item.quantity - (itemsMaxBookedQty[item.item_id] || 0) : item.quantity} pcs
+                          </Typography>
+                        </Stack>
+
 
                         <CardActions
                           sx={{ padding: 0, justifySelf: 'end', width: 'fit-content' }}
@@ -375,6 +391,7 @@ function Items() {
                             <AddCircleOutlineOutlinedIcon />
                           </Button>
                         </CardActions>
+
                       </CardContent>
                     </Card>
                   ))}

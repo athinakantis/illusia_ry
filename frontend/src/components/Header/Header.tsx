@@ -10,67 +10,178 @@ import {
   ListItemText,
   useMediaQuery,
   useTheme,
+  Divider,
+  Button,
+  Stack,
 } from '@mui/material';
-import Logout from '../Auth/LoginOutBtn';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
+import { useEffect, useState, SyntheticEvent } from 'react';
 import PersonMenu from './PersonMenu';
 import { Item } from '../../types/types';
 import { selectCart } from '../../slices/cartSlice';
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import NotificationsMenu from './NotificationMenu';
+import { useAuth } from '../../hooks/useAuth';
+import { fetchAdminNotifications, fetchUserNotifications, selectUserNotifications } from '../../slices/notificationSlice';
 import { Trans, useTranslation } from 'react-i18next';
 
 const Header = () => {
   const theme = useTheme();
+  const navigate = useNavigate()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cart } = useAppSelector(selectCart)
+  const { role, user, signOut } = useAuth()
+  const userNotifications = useAppSelector(selectUserNotifications)
+  const dispatch = useAppDispatch()
+  const isAdmin = role === 'Admin' || role === 'Head Admin'
+
   // Calculate total quantity of all cart items
   const totalItems = cart.reduce((total: number, item: Item) => total + (item.quantity || 0), 0)
 
-  const handleDrawerToggle = () => {
+  const handleDrawerToggle = (e: SyntheticEvent) => {
+    e.preventDefault()
     setMobileOpen(!mobileOpen);
   };
 
+  const navigateToPage = (page: string) => {
+    navigate(page)
+    setMobileOpen(!mobileOpen)
+  }
+
+
+
+  // Fetch user notifications
+  useEffect(() => {
+    if (user && userNotifications.length < 1) dispatch(fetchUserNotifications(user.id))
+    if (role && ['Admin', 'Head Admin'].includes(role)) dispatch(fetchAdminNotifications())
+  }, [role])
 
   const drawer = (
-    <List>
-      <ListItem
-        component={Link}
-        to="/"
-        onClick={handleDrawerToggle}
-        sx={{ textDecoration: 'none', color: 'inherit' }}
-      >
-        <ListItemText primary={<Trans i18nKey="nav.home">Home</Trans>} />
-      </ListItem>
-    <ListItem
-        component={Link}
-        to="/items"
-        onClick={handleDrawerToggle}
-        sx={{ textDecoration: 'none', color: 'inherit' }}
-      >
-        <ListItemText primary={<Trans i18nKey="nav.items">Items</Trans>} />
-      </ListItem>
-      <ListItem
-        component={Link}
-        to="/contact"
-        onClick={handleDrawerToggle}
-        sx={{ textDecoration: 'none', color: 'inherit' }}
-      >
-        <ListItemText primary={<Trans i18nKey="nav.contact">Contact</Trans>} />
-      </ListItem>
-      <ListItem
-        component={Link}
-        to="/bookings"
-        onClick={handleDrawerToggle}
-        sx={{ textDecoration: 'none', color: 'inherit' }}
-      >
-        <ListItemText primary={<Trans i18nKey="nav.bookings">Bookings</Trans>} />
-      </ListItem>
-    </List>
+    <Stack sx={{
+      justifyContent: 'space-between', height: '100%',
+      '& .MuiListItem-root': { height: 45 },
+      '& .MuiListItemText-root': { transition: 'all 200ms', padding: '7px 16px', borderRadius: 3, m: 0 },
+      '& .MuiListItemText-root:hover': { bgcolor: '#f5f5f5' }
+    }}>
+
+      <List>
+        <ListItem
+          onClick={() => navigateToPage('/')}
+          sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+        >
+          <ListItemText primary={<Trans i18nKey="nav.home">Home</Trans>} />
+        </ListItem>
+        <ListItem
+          onClick={() => navigateToPage('/items')}
+          sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+        >
+          <ListItemText primary={<Trans i18nKey="nav.items">Items</Trans>} />
+        </ListItem>
+        <ListItem
+          onClick={() => navigateToPage('/contact')}
+          sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+        >
+          <ListItemText primary={<Trans i18nKey="nav.contact">Contact</Trans>} />
+        </ListItem>
+        {user && (
+          <ListItem
+            onClick={() => navigateToPage('/bookings')}
+            sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+          >
+            <ListItemText primary={<Trans i18nKey="nav.bookings">My bookings</Trans>} />
+          </ListItem>
+        )}
+
+        {isAdmin && (
+          <>
+            <Divider variant="middle" component="li" sx={{ my: 2 }} />
+
+            <ListItem
+              onClick={() => navigateToPage('/admin/dashboard')}
+              sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+            >
+              <ListItemText primary={<Trans i18nKey="nav.dashboard">Dashboard</Trans>} />
+            </ListItem>
+
+            <ListItem
+              onClick={() => navigateToPage('/admin/bookings')}
+              sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+            >
+              <ListItemText primary={<Trans i18nKey="nav.manageBookings">Manage bookings</Trans>} />
+            </ListItem>
+
+            <ListItem
+              onClick={() => navigateToPage('/admin/users')}
+              sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+
+            >
+              <ListItemText primary={<Trans i18nKey="nav.manageUsers">Manage Users</Trans>} />
+            </ListItem>
+          </>
+        )}
+
+      </List>
+      <Box>
+        <ListItem>
+          <Button
+            variant="text"
+            size="small"
+            color="primary"
+            sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
+            onClick={() => { i18n.changeLanguage('en'); setMobileOpen(!mobileOpen); }}
+          >
+            En
+          </Button>
+          <Button
+            variant="text"
+            size="small"
+            color="primary"
+            sx={{ padding: '4px 10px', minWidth: 'fit-content' }}
+            onClick={() => { i18n.changeLanguage('fi'); setMobileOpen(!mobileOpen); }}
+          >
+            Fin
+          </Button>
+        </ListItem>
+        {user ?
+          <ListItem
+            sx={{ textDecoration: 'none', mb: 2, color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+          >
+            <Button
+              variant="text_contained"
+              size="small"
+              color="primary"
+              sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
+              onClick={() => {
+                signOut()
+                handleDrawerToggle
+              }}
+            >
+              <Trans i18nKey="nav.logOut">Log out</Trans>
+            </Button>
+          </ListItem>
+          :
+          <ListItem
+            onClick={() => navigateToPage('login')}
+            sx={{ textDecoration: 'none', mb: 2, color: 'inherit', '&:hover': { cursor: 'pointer' } }}
+          >
+            <Button
+              variant="text_contained"
+              size="small"
+              color="primary"
+              sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
+              onClick={() => { i18n.changeLanguage('en'); setMobileOpen(!mobileOpen); }}
+            >
+              <Trans i18nKey="nav.logOut">Log out</Trans>
+            </Button>
+          </ListItem>
+        }
+      </Box>
+    </Stack >
+
   );
 
   return (
@@ -126,6 +237,7 @@ const Header = () => {
               color: "primary.light",
             }
           }}>
+
             <Typography key="nav.home" variant='link'>
               <Link to="/" style={{ textDecoration: 'none' }}>
                 <Trans i18nKey="nav.home">Home</Trans>
@@ -143,7 +255,7 @@ const Header = () => {
             </Typography>
             <Typography key="nav.bookings" variant='link'>
               <Link to="/bookings" style={{ textDecoration: 'none' }}>
-                <Trans i18nKey="nav.bookings">Bookings</Trans>
+                <Trans i18nKey="nav.bookings">My bookings</Trans>
               </Link>
             </Typography>
           </Box>
@@ -174,7 +286,8 @@ const Header = () => {
           }
         }}>
 
-          <PersonMenu />
+          {user && <NotificationsMenu />}
+          {!isMobile && <PersonMenu />}
           <Link to='/cart' aria-label="Go to cart" style={{ position: 'relative' }}>
             <ShoppingBagIcon />
             {totalItems > 0 &&
@@ -198,7 +311,6 @@ const Header = () => {
               }} />
             }
           </Link>
-          <Logout />
         </Box>
       </Toolbar>
 

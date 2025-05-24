@@ -38,6 +38,9 @@ import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalize
 import { RangeValue } from '@react-types/shared';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 import { ItemWithQuantity } from '../types/types';
+import broken_img from '../assets/broken_img.png'
+import { fetchFutureReservations } from '../slices/reservationsSlice';
+
 
 function Cart() {
 	const dispatch = useAppDispatch();
@@ -169,7 +172,9 @@ function Cart() {
 		if (editingCart) {
 			setLocalCart(localCart.map(item => {
 				if (item.item_id == item_id) {
-					item.quantity -= quantity;
+					if (item.quantity - quantity >= 0) {
+						item.quantity -= quantity;
+					}
 				}
 				return item;
 			}))
@@ -231,7 +236,7 @@ function Cart() {
 	const handleBrokenImg = (
 		e: React.SyntheticEvent<HTMLImageElement, Event>,
 	) => {
-		(e.target as HTMLImageElement).src = '/src/assets/broken_img.png';
+		(e.target as HTMLImageElement).src = broken_img;
 	};
 
 	const handleAddBooking = async () => {
@@ -247,6 +252,8 @@ function Cart() {
 			showCustomSnackbar('Your booking has been created!', 'success');
 			dispatch(emptyCart());
 			dispatch(fetchUserBookings(user.id));
+			dispatch(fetchFutureReservations());
+			// update future reservations
 
 			// Navigate to new booking
 			navigate(`/bookings/${resultAction.payload.booking_id}`)
@@ -299,7 +306,7 @@ function Cart() {
 													<CardMedia
 														component="img"
 														image={
-															item.image_path[0] || '/src/assets/broken_img.png'
+															item.image_path[0] || broken_img
 														}
 														onError={handleBrokenImg}
 														style={{ width: 78, borderRadius: 14 }}

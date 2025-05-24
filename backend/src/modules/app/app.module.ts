@@ -22,6 +22,10 @@ import { SystemLogsModule } from '../system_logs/system_logs.module';
 import { SystemLogsController } from '../system_logs/system_logs.controller';
 import { ItemModule } from '../item/item.module';
 import { GuestModule } from '../guest/guest.module';
+import { NotificationsModule } from '../notifications/notifications.module';
+import { NotificationsController } from '../notifications/notifications.controller';
+import { AccountModule } from '../account/account.module';
+import { AccountController } from '../account/account.controller';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -36,7 +40,9 @@ import { GuestModule } from '../guest/guest.module';
     MailerModule,
     ItemModule,
     SystemLogsModule,    
-    GuestModule
+    GuestModule,
+    AccountModule,
+    NotificationsModule
     
     // Import other modules here if needed
   ],
@@ -53,6 +59,7 @@ export class AppModule implements NestModule {
     consumer.apply(AuthMiddleware).forRoutes(
       ItemController,
       ViewsController,
+      NotificationsController,
       // MailerController,
       BookingController,
       ItemReservationsController,
@@ -60,6 +67,7 @@ export class AppModule implements NestModule {
       TagController,
       CategoryController,
       SystemLogsController,
+      AccountController
       // Add other controllers that need authentication here
       );
   }

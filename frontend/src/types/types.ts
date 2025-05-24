@@ -1,4 +1,4 @@
-import { Tables } from './supabase.type';
+import { Tables } from './supabase';
 
 export interface Item {
   item_id: string;
@@ -10,23 +10,41 @@ export interface Item {
   quantity: number;
   created_at: string;
   visible?: boolean;
+  /**  UUIDs of the tags attached to this item */
+  tag_ids?: string[];
 }
 
+export type Tag = Pick<
+  Tables<'tags'>,
+  'tag_id' | 'tag_name' | 'description' | 'created_at'
+>;
+
+export type ItemTag = Pick<
+  Tables<'item_tags'>,
+  'item_id' | 'tag_id' | 'created_at'
+>;
 export interface ItemState {
   items: Item[];
   item: Item | null;
   error: null | string;
   loading: boolean;
+  tags: Tag[];
+  item_tags: ItemTag[];
   categories: {
     category_id: string;
     category_name: string;
-    image_path: string[];
+    image_path: string;
   }[];
 }
-export interface ApiResponse<T> {
+/**
+ * Generic wrapper returned by our backend.
+ * `meta` is optional and its shape varies by endpoint.
+ */
+export interface ApiResponse<T, M = unknown> {
   data: T;
-  error?: string | Error;
   message: string;
+  meta?: M;
+  error?: string | Error; // some endpoints include this instead of 4xx
 }
 
 export interface FormData {
@@ -113,7 +131,7 @@ export type BookingWithItems = {
   booking: Tables<'bookings'>;
   items: Array<
     Partial<Tables<'items'>> &
-      Pick<Reservation, 'quantity' | 'start_date' | 'end_date'>
+    Pick<Reservation, 'id' | 'quantity' | 'start_date' | 'end_date'>
   >;
 };
 
@@ -127,4 +145,56 @@ export type UpcomingBooking = Tables<'item_reservations'> & {
   booking: Tables<'bookings'> & {
     user: Tables<'users'>;
   };
+};
+
+export type NotificationsType =
+  | BookingNotifications
+  | UserManagementNotifications;
+
+export type BookingNotifications =
+  | 'NEW BOOKING'
+  | 'BOOKING_REJECTED'
+  | 'BOOKING_APPROVED';
+export type UserManagementNotifications = 'NEW_USER';
+
+export interface NotificationState {
+  userNotifications: Array<Tables<'notifications'>>;
+  adminNotifications: AdminNotification[];
+  loading: boolean;
+  error: null | string;
+}
+
+// NOTIFICATIONS
+// Metadata types
+export type BookingMetaData = {
+  booking_id: string;
+};
+export type BookingApprovedMetadata = {
+  booking_id: number;
+};
+
+export type BookingRejectedMetadata = {
+  booking_id: number;
+  reason?: string;
+};
+
+export type Notification =
+  | {
+      type: 'BOOKING_APPROVED';
+      metadata: BookingApprovedMetadata;
+    }
+  | {
+      type: 'BOOKING_REJECTED';
+      metadata: BookingRejectedMetadata;
+    }
+  | {
+      type: string;
+      metadata: JSON; // fallback for unknown types
+    };
+
+export type AdminNotification = {
+  id: 'pending_bookings_notification' | 'pending_users_notification';
+  message: string;
+  is_read: boolean;
+  link: string;
 };

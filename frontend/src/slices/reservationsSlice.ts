@@ -29,6 +29,14 @@ export const fetchFutureReservations = createAsyncThunk(
     }
 );
 
+export const updateReservation = createAsyncThunk(
+    'reservations/updateReservations',
+    async ({ bookingId, reservationId, updatedReservation }: { bookingId: string, reservationId: string, updatedReservation: object }) => {
+        const response = await reservationsApi.updateReservation(bookingId, reservationId, updatedReservation);
+        return response;
+    }
+)
+
 export const reservationsSlice = createSlice({
     name: 'reservations',
     initialState,
@@ -71,6 +79,7 @@ export const selectQtyForItemInReservationsByIdInDateRange = (id: string, start_
     const itemReservations: Reservation[] = state.reservations.reservations.filter((item) => item.item_id === id);
 
     const maxAvailableQtyInRange = getMaxBookedQtyForItem(getBookedQtyByDateAndItemForReservationsInRange(new Date(start_date), new Date(end_date), itemReservations)[id]);
+
 
     // should we just build a map of all the reservations straight from the beginning? Shhould make the things much simpler
     return maxAvailableQtyInRange;

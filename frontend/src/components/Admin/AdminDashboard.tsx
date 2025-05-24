@@ -27,11 +27,15 @@ import { UpcomingBooking } from '../../types/types';
 import { StyledDataGrid } from '../CustomComponents/StyledDataGrid';
 import { useAuth } from '../../hooks/useAuth';
 import Spinner from '../Spinner';
-// import { GridColDef } from '@mui/x-data-grid';
+
+// - Translations
+import { Trans, useTranslation } from 'react-i18next';
+import { fi } from 'date-fns/locale';
+
 
 // ─── Re-usable stat card ────────────────────────────────────
-const StatCard: React.FC<{ label: string; value: number | string }> = ({
-  label,
+const StatCard: React.FC<{ text: string; value: number | string }> = ({
+  text,
   value,
 }) => (
   <Paper
@@ -50,7 +54,7 @@ const StatCard: React.FC<{ label: string; value: number | string }> = ({
       fontSize={'1.1rem'}
       gutterBottom
     >
-      {label}
+      {text}
     </Typography>
     <Typography variant="heading_secondary_bold" lineHeight={1} fontSize={56}>
       {value}
@@ -58,12 +62,30 @@ const StatCard: React.FC<{ label: string; value: number | string }> = ({
   </Paper>
 );
 
+
+
+
 // ── Main component ────────────────────────────────────────
 
 const AdminDashboard = () => {
   const { role } = useAuth();
-
-  const dispatch = useAppDispatch();
+  const { t, i18n } = useTranslation(); const dispatch = useAppDispatch();
+  // Map raw status codes (e.g. "APP", "PEN", "REJ") to clean keys used in translation files
+  const getStatusLabel = (rawStatus: string) => {
+    const map: Record<string, string> = {
+      approved: 'approved',
+      app: 'approved',
+      rejected: 'rejected',
+      rej: 'rejected',
+      pending: 'pending',
+      pen: 'pending',
+    };
+    const key = map[rawStatus.toLowerCase()] ?? rawStatus.toLowerCase();
+    // Fallback text is a nicely‑cased version of the key (e.g. "Approved")
+    return t(`admin.dashboard.status.${key}`, {
+      defaultValue: key.charAt(0).toUpperCase() + key.slice(1),
+    });
+  };
 
   const [authActivities, setAuthActivities] = React.useState<
     {
@@ -81,7 +103,6 @@ const AdminDashboard = () => {
     (state) => state.reservations.reservations,
   );
   const [upcomingBookings, setUpcomingBookings] = useState<UpcomingBooking[]>([]);
-
 
   // ─── Side-Effects ────────────────────────────────────────────
   useEffect(() => {
@@ -113,25 +134,31 @@ const AdminDashboard = () => {
     })();
   }, []);
 
-  /* ————————————————— Conditional Renders ————————————————————————*/
-    // If we don’t know the role yet, render nothing (or a loader)
-    if (role === undefined) {
-      return <Spinner />;
-    }
-    // If not an Admin or Head Admin, redirect immediately
-    if (role !== 'Admin' && role !== 'Head Admin') {
-      return <Navigate to="/" replace />;
-    }
-  /* ────────── Memoized values ────────── */
-  // combine bookings + reservations + users
+  // Helper function to format dates based on current language
+  const formatDate = (dateString: string) => {
+    const date = parseISO(dateString);
+    return format(date, 'PPpp', {
+      locale: i18n.language === 'fi' ? fi : undefined
+    });
+  };
 
-  // inside your component:
-  // const overviews: BookingOverview[] = useMemo(
-  //   () => buildBookingOverviews(bookings, reservations, users, items),
-  //   [bookings, reservations, users, items],
-  // );
-  // console.log("Overviews" + overviews);
-  // console.log("upcomingBookings:", upcomingBookings);
+  /* ————————————————— Conditional Renders ————————————————————————*/
+  // If we don’t know the role yet, render nothing (or a loader)
+  if (role === null) {
+    return <Spinner />;
+  }
+  // If not an Admin or Head Admin, redirect immediately
+  if (role !== 'Admin' && role !== 'Head Admin') {
+    return <Navigate to="/" replace />;
+  }
+
+  if (role === undefined) {
+    return <Spinner />;
+  }
+  // If not an Admin or Head Admin, redirect immediately
+  if (role !== 'Admin' && role !== 'Head Admin') {
+    return <Navigate to="/" replace />;
+  }
 
   /* ────────── Render ────────── */
   return (
@@ -152,19 +179,39 @@ const AdminDashboard = () => {
           component="h1"
           gutterBottom
         >
-          Admin Dashboard
+          <Trans i18nKey="admin.dashboard.title">Admin Dashboard</Trans>
         </Typography>
 
         {/* ───── Stats ───── */}
         <Grid container spacing={6}>
           <Grid size={{ xs: 12, md: 4 }}>
-            <StatCard label="Total users" value={users.length} />
+            <StatCard
+              text={
+                t('admin.dashboard.stats.total_users', {
+                  defaultValue: 'Total users',
+                })}
+              value={users.length}
+            />
           </Grid>
           <Grid size={{ xs: 12, md: 4 }}>
-            <StatCard label="Total bookings" value={bookings.length} />
+            <StatCard
+              text={
+                t('admin.dashboard.stats.total_bookings', {
+                  defaultValue: 'Total bookings',
+                })
+              }
+              value={bookings.length}
+            />
           </Grid>
           <Grid size={{ xs: 12, md: 4 }}>
-            <StatCard label="Inventory items" value={items.length} />
+            <StatCard
+              text={
+                t("admin.dashboard.stats.total_items", {
+                  defaultValue: 'Total items',
+                })
+              }
+              value={items.length}
+            />
           </Grid>
         </Grid>
       </Box>
@@ -177,19 +224,18 @@ const AdminDashboard = () => {
           fontSize={20}
           gutterBottom
         >
-          Quick Actions
+          <Trans i18nKey="admin.dashboard.quick_actions">Quick actions</Trans>
         </Typography>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
           <Button variant="rounded"
+            component={Link}
+            to='/items/new'
             sx={{
               height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
               pl: 4, pr: 4, textTransform: 'capitalize'
             }}>
-            Add Item
+            <Trans i18nKey="admin.dashboard.add_item">Add item</Trans>
           </Button>
-
-
-
 
           <Button
             component={Link}
@@ -200,7 +246,7 @@ const AdminDashboard = () => {
               height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
               pl: 4, pr: 4, textTransform: 'capitalize'
             }}>
-            Approve bookings
+            <Trans i18nKey="admin.dashboard.view_bookings">View bookings</Trans>
           </Button>
           <Button
             component={Link} to="/admin/users" variant="rounded" color="grey"
@@ -208,7 +254,15 @@ const AdminDashboard = () => {
               height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
               pl: 4, pr: 4, textTransform: 'capitalize'
             }}>
-            Manage users
+            <Trans i18nKey="admin.dashboard.manage_users">Manage users</Trans>
+          </Button>
+          <Button
+            component={Link} to="/admin/logs" variant="rounded" color="grey"
+            sx={{
+              height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
+              pl: 4, pr: 4, textTransform: 'capitalize'
+            }}>
+            View logs
           </Button>
         </Stack>
       </Box>
@@ -221,33 +275,30 @@ const AdminDashboard = () => {
           fontSize={20}
           gutterBottom
         >
-          Upcoming bookings
+          <Trans i18nKey="admin.dashboard.upcoming_bookings">Upcoming bookings</Trans>
         </Typography>
         <StyledDataGrid
           style={{ width: '100%' }}
           hideFooter
           disableColumnResize
-          // slots={{ toolbar: null }}
-          // getRowHeight={() => 'auto'}
-          rowHeight={50}
-          // autoHeight
+          rowHeight={60}
           disableRowSelectionOnClick
           rows={upcomingBookings.map((booking) => ({
             id: booking.booking_id, // Used internally by DataGrid
             name: booking.booking.user.display_name,
-            status: booking.booking.status,
-            duration: `${computeDuration(booking.start_date, booking.end_date)} Days`,
+            status: getStatusLabel(booking.booking.status),
+            duration: `${computeDuration(booking.start_date, booking.end_date)} ${t('admin.dashboard.duration.days')}`,
             dateRange: `${booking.start_date} - ${booking.end_date}`,
             view: `/bookings/${booking.booking_id}`,
           }))}
           columns={[
-            { field: 'name', headerName: 'Name', flex: 1, headerClassName: 'super-app-theme--header' },
-            { field: 'status', headerName: 'Status', flex: 1, headerClassName: 'super-app-theme--header' },
-            { field: 'duration', headerName: 'Duration', flex: 1, headerClassName: 'super-app-theme--header' },
-            { field: 'dateRange', headerName: 'Date Range', flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'name', headerName: t('admin.dashboard.columns.name', { defaultValue: 'Name' }), flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'status', headerName: t('admin.dashboard.columns.status', { defaultValue: 'Status' }), flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'duration', headerName: t('admin.dashboard.columns.duration', { defaultValue: 'Duration' }), flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'dateRange', headerName: t('admin.dashboard.columns.date_range', { defaultValue: 'Date range' }), flex: 1, headerClassName: 'super-app-theme--header' },
             {
               field: 'view',
-              headerName: 'Actions',
+              headerName: t('admin.dashboard.columns.actions'),
               flex: 1,
               renderCell: (params) => (
                 <MuiLink
@@ -261,7 +312,7 @@ const AdminDashboard = () => {
                     }
                   }}
                 >
-                  Show booking
+                  <Trans i18nKey="admin.dashboard.show_booking">Show booking</Trans>
                 </MuiLink>
               ),
               headerClassName: 'super-app-theme--header',
@@ -281,15 +332,12 @@ const AdminDashboard = () => {
             fontSize={20}
             gutterBottom
           >
-            Recent activity
+            <Trans i18nKey="admin.dashboard.recent_activity">Recent activity</Trans>
           </Typography>
           {/* User, Last sign-in, Confirmed */}
           <StyledDataGrid
             hideFooter
             disableColumnResize
-            autoHeight
-            // slots={{ toolbar: null }}
-            // getRowHeight={() => 'auto'}
             rows={authActivities
               .filter(act =>
                 act.display_name &&
@@ -300,39 +348,22 @@ const AdminDashboard = () => {
                 id: act.display_name + act.last_sign_in_at,
                 name: act.display_name,
                 lastSignIn: act.last_sign_in_at
-                  ? format(parseISO(act.last_sign_in_at), 'PPpp')
+                  ? formatDate(act.last_sign_in_at)
                   : '—',
                 confirmed: act.confirmed_at
-                  ? format(parseISO(act.confirmed_at), 'PPpp')
+                  ? formatDate(act.confirmed_at)
                   : '—',
               }))}
             columns={[
-              { field: 'name', headerName: 'User', flex: 1, headerClassName: 'super-app-theme--header' },
+              { field: 'name', headerName: t('admin.dashboard.columns.name'), flex: 1, headerClassName: 'super-app-theme--header' },
               {
-                field: 'lastSignIn', headerName: 'Last sign-in', flex: 1, headerClassName: 'super-app-theme--header',
+                field: 'lastSignIn', headerName: t('admin.dashboard.columns.last_sign_in'), flex: 1, headerClassName: 'super-app-theme--header',
                 renderCell: (params) => (
-                  <div style={{
-                    whiteSpace: 'normal',
-                    lineHeight: '20px',
-                    padding: '8px 0'
-                  }}>
-                    {params.value}
-                  </div>
-                )
-              },
-              {
-                field: 'confirmed', headerName: 'Confirmed', flex: 1, headerClassName: 'super-app-theme--header',
-                renderCell: (params) => (
-                  <div style={{
-                    whiteSpace: 'normal',
-                    lineHeight: '20px',
-                    padding: '8px 0'
-                  }}>
-                    {params.value}
-                  </div>
+                  <div style={{ whiteSpace: 'normal', lineHeight: '20px', padding: '8px 0' }}>{params.value}</div>
                 )
               },
             ]}
+            autoHeight
           />
         </Grid>
 
@@ -344,25 +375,28 @@ const AdminDashboard = () => {
             fontSize={20}
             gutterBottom
           >
-            Users &amp; Roles
+            <Trans i18nKey="admin.dashboard.users_and_roles">Users &amp; Roles</Trans>
           </Typography>
           <StyledDataGrid
             hideFooter
             disableColumnResize
-            autoHeight
-            // style={{ display: 'flex', flexDirection: 'column' }}
             rows={users
               .filter(u => u.user_id)
               .slice(0, 3)
               .map((u) => ({
                 id: u.user_id,
                 name: u.display_name ?? u.email,
-                role: u.role_title ?? '—',
+                role: u.role_title
+                  ? t(`admin.dashboard.roles.${u.role_title.toLowerCase().replace(/\s+/g, '_')}`, {
+                    defaultValue: u.role_title
+                  })
+                  : '—',
               }))}
             columns={[
-              { field: 'name', headerName: 'User', flex: 1, headerClassName: 'super-app-theme--header' },
-              { field: 'role', headerName: 'Role', flex: 1, headerClassName: 'super-app-theme--header' },
+              { field: 'name', headerName: t('admin.dashboard.columns.name'), flex: 1, headerClassName: 'super-app-theme--header' },
+              { field: 'role', headerName: t('admin.dashboard.columns.role'), flex: 1, headerClassName: 'super-app-theme--header' },
             ]}
+            autoHeight
           />
         </Grid>
       </Grid>

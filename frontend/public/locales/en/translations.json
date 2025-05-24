@@ -1,9 +1,117 @@
 {
+  "admin": {
+    "add_product": {
+      "uploading": "Uploading…",
+      "upload_failed": "Upload failed",
+      "add_tags_prompt": "Item created! Do you want to add tags now?",
+      "success": "Item created successfully!",
+      "save_failed": "Failed to save item",
+      "title": "Add new product",
+      "item_name": "Item name",
+      "description": "Description",
+      "location": "Location",
+      "quantity": "Quantity",
+      "category": "Category",
+      "selected_images": "Selected images",
+      "upload_files": "Upload files",
+      "adding": "Adding…",
+      "add": "Add product",
+      "manage_tags": {
+        "title": "Manage Tags"
+      },
+      "manage_tag_body": {
+        "confirmDelete": "Are you sure you want to delete this tag?",
+        "newTag": "New tag",
+        "add": "Add",
+        "attachHint": "Tip: Tick the check-boxes to attach or detach tags for this item.",
+        "checkBoxesTip": "Check boxes are only available in the Item editor."
+      }
+    },
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "stats": {
+        "total_users": "Total users",
+        "total_bookings": "Total bookings",
+        "total_items": "Total items"
+      },
+      "quick_actions": "Quick actions",
+      "add_item": "Add item",
+      "view_bookings": "View bookings",
+      "manage_users": "Manage users",
+      "upcoming_bookings": "Upcoming bookings",
+      "duration": {
+        "days": "days"
+      },
+      "columns": {
+        "name": "Name",
+        "status": "Status",
+        "duration": "Duration",
+        "date_range": "Date range",
+        "actions": "Actions",
+        "last_sign_in": "Last sign in",
+        "confirmed": "Confirmed",
+        "role": "Role"
+      },
+      "show_booking": "Show booking",
+      "recent_activity": "Recent activity",
+      "users_and_roles": "Users & Roles",
+      "roles": {
+        "head_admin": "Head Admin",
+        "user": "User",
+        "admin": "Admin",
+        "unapproved": "Unapproved"
+      },
+      "status": {
+        "cancelled": "cancelled",
+        "approved": "approved"
+      }
+    }
+  },
+  "adminBookings": {
+    "snackbar": {
+      "bookingApproved": "Booking approved",
+      "bookingRejected": "Booking rejected"
+    },
+    "heading": "Bookings",
+    "tabs": {
+      "all": "All",
+      "pending": "Pending approval",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "id": "ID",
+    "created": "Created",
+    "bookingDates": "Booking Dates",
+    "customer": "Customer",
+    "items": "Items",
+    "status": "Status",
+    "awaiting": "Awaiting Approval",
+    "noResults": "No bookings found for selected filter.",
+    "approve": "Approve",
+    "reject": "Reject"
+  },
+  "collapsibleDetail": {
+    "title": "Reservation items",
+    "item": "Item",
+    "start": "Start Date",
+    "end": "End Date",
+    "qty": "Quantity"
+  },
+  "Bookings": {
+    "snackbar": {
+      "deleted": "Your booking was deleted",
+      "cancelled": "Your booking was cancelled"
+    }
+  },
   "nav": {
     "home": "Home",
     "items": "Items",
     "contact": "Contact",
-    "bookings": "Bookings"
+    "bookings": "My bookings",
+    "dashboard": "Dashboard",
+    "manageBookings": "Manage bookings",
+    "manageUsers": "Manage Users",
+    "logOut": "Log out"
   },
   "header": {
     "logoMain": "ILLUSIA",
@@ -11,9 +119,118 @@
   },
   "person": {
     "myBookings": "My bookings",
-    "dashboard": "Dashboard",
     "myAccount": "My account",
-    "logOut": "Log out"
+    "dashboard": "Dashboard",
+    "manageUsers": "Manage Users",
+    "manageBookings": "Manage bookings",
+    "logOut": "Log out",
+    "logIn": "Log in"
+  },
+  "items": {
+    "search": "Search items",
+    "date_picker_disabled_info": "You cannot change the date when your cart has items for the selected days. Empty the cart or change the date within the cart.",
+    "browse": "Browse items",
+    "manage": "Manage items"
+  },
+  "account": {
+    "nameUpdated": "Your name has been updated to {{name}}.",
+    "errorUpdatingName": "Error updating name",
+    "notLoggedIn": "You are either not logged in or you don't have an account yet.",
+    "logIn": "log in",
+    "signUp": "sign up",
+    "accessAccount": "to access your account.",
+    "tabs": {
+      "profile": "Profile",
+      "security": "Security"
+    },
+    "changeEmail": "Change email",
+    "changePhone": "Change phone",
+    "addPhone": "Add phone number",
+    "createdOn": "Account created on",
+    "deleteAccount": "Delete Account",
+    "email": {
+      "mfaPrompt": "Enter your 6-digit authenticator code to confirm email change:",
+      "status": {
+        "sending": "Sending confirmation email…",
+        "linkSent": "Confirmation link sent to your new email. Please check your inbox."
+      },
+      "newLabel": "New email address",
+      "update": "Update email"
+    },
+    "phone": {
+      "status": {
+        "sending": "Sending code…",
+        "smsSent": "SMS sent! Enter the 6-digit code.",
+        "verifying": "Verifying…",
+        "confirmed": "Phone number confirmed ✅"
+      },
+      "numberLabel": "Phone number (E.164 e.g. +358401234567)",
+      "sendCode": "Send code",
+      "codeLabel": "6-digit code",
+      "verifySave": "Verify & Save"
+    }
+  },
+  "common": {
+    "or": "or",
+    "save": "Save",
+    "sending": "Sending…",
+    "cancel": "Cancel"
+  },
+  "deleteAccount": {
+    "error": {
+      "noToken": "Failed to retrieve authentication token.",
+      "deleteFailed": "Account deletion failed."
+    },
+    "title": "Delete Account?",
+    "warning": "Deleting your account will permanently remove <strong>all</strong> information related to your user, including profiles, settings, and data. This action <em>cannot</em> be undone.",
+    "deleting": "Deleting…",
+    "confirm": "Delete Account"
+  },
+  "security": {
+    "status": {
+      "unenrollFailed": "Unenroll failed",
+      "canceled": "MFA setup canceled.",
+      "generating": "Generating secret…",
+      "scanQr": "Scan this QR in your authenticator app, then enter the 6-digit code",
+      "verifying": "Verifying…",
+      "enabled": "MFA enabled 🎉",
+      "challengeError": "Challenge error",
+      "verificationFailed": "Verification failed",
+      "removed": "MFA factor removed"
+    },
+    "prompt": {
+      "code": "Enter the 6-digit code from your authenticator app"
+    },
+    "heading": "Security settings",
+    "enableTOTP": "Enable TOTP MFA",
+    "codeLabel": "6-digit code",
+    "verifyActivate": "Verify & Activate",
+    "cancelSetup": "Cancel setup",
+    "enabled": "Authenticator-app MFA is enabled.",
+    "disableTOTP": "Disable TOTP MFA"
+  },
+  "avatar": {
+    "uploading": "Uploading...",
+    "change": "Change avatar"
+  },
+  "userBookings": {
+    "snackbar": {
+      "bookingDeleted": "Your booking was deleted!",
+      "bookingCancelled": "Booking cancelled"
+    },
+    "heading": "Your Bookings",
+    "noBookings": "No bookings yet.",
+    "bookingId": "Booking ID",
+    "created": "Created at",
+    "cancelTooltip": "Cancel booking",
+    "deleteTooltip": "Delete booking",
+    "item": "Item",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "quantity": "Quantity",
+    "confirmCancel": "Are you sure you want to cancel your booking?",
+    "confirmYes": "Yes, I'm sure",
+    "confirmNo": "No thanks"
   },
   "cart": {
     "yourCart": "Your Cart",
@@ -33,11 +250,22 @@
   "home": {
     "heroTitle": "Home for live-action role-playing games props",
     "heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat",
+    "cta": {
+      "browse_items": "Browse Items"
+    },
     "categoriesTitle": "View Our Range Of Categories",
     "categoriesDescription": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam.",
-    "askQuestion": "Ask a question"
+    "categories": {
+      "board_games": "Board Games",
+      "clothing": "Clothing",
+      "accessories": "Accessories",
+      "props": "Props"
+    }
   },
   "faq": {
+    "faqTitle": "Frequently Asked Questions",
+    "faqDescription": "Before reaching out to us, see if you can find what you're looking for in our FAQ",
+    "askQuestion": "Ask a question",
     "question1": "When will my booking be approved?",
     "answer1": "We look through bookings as soon as we can. Bookings are usually approved within the span of 2-3 days. If you've waited longer than 5 days, send us an email",
     "question2": "How long can I book items for?",
