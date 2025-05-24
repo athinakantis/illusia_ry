@@ -449,20 +449,22 @@ function SingleBooking() {
               }
               {!editingBooking && (
                 <Stack sx={{ flexDirection: 'row', gap: '10px', justifyContent: 'end' }}>
-                  <Button
-                    size="small"
-                    variant="outlined_rounded"
-                    sx={{
-                      mt: 2,
-                      display: 'block',
-                      height: 'fit-content',
-                      width: 'fit-content',
-                      padding: '6px 40px',
-                    }}
-                    onClick={handleStartEditingBooking}
-                  >
-                    Edit Booking
-                  </Button>
+                  {isAdmin &&
+                    <Button
+                      size="small"
+                      variant="outlined_rounded"
+                      sx={{
+                        mt: 2,
+                        display: 'block',
+                        height: 'fit-content',
+                        width: 'fit-content',
+                        padding: '6px 40px',
+                      }}
+                      onClick={handleStartEditingBooking}
+                    >
+                      Edit Booking
+                    </Button>
+                  }
                   <Button
                     onClick={() => setWantsToCancel(true)}
                     size="small"
