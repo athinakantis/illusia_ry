@@ -30,9 +30,10 @@ import {
   deleteBooking,
   fetchUserBookings,
   selectUserBookings,
+  updateBookingStatus,
 } from '../../slices/bookingsSlice';
 import { useTranslatedSnackbar } from '../CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
-import { useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import Spinner from '../Spinner';
 import { Link } from 'react-router-dom';
 
@@ -49,16 +50,17 @@ const UserBookings = () => {
       dispatch(deleteBooking(booking.booking_id));
       showSnackbar({
         message: t('userBookings.snackbar.bookingDeleted', {
-        defaultValue: 'Your booking was deleted!',
+          defaultValue: 'Your booking was deleted!',
         }),
         variant: 'info',
       });
     } else {
       dispatch(updateBookingStatus({ id: booking.booking_id, status: 'cancelled' }))
-      showSnackbar({message: t('userBookings.snackbar.bookingCancelled', {
-          defaultValue: 'Booking cancelled',  
+      showSnackbar({
+        message: t('userBookings.snackbar.bookingCancelled', {
+          defaultValue: 'Booking cancelled',
         }),
-        variant: 'info',               
+        variant: 'info',
       });
     }
 
@@ -161,11 +163,11 @@ const UserBookings = () => {
                   >
                     <Stack sx={{ gap: '2px' }}>
                       <Typography variant="subheading" fontWeight={600}>
-                      {t('userBookings.bookingId', { defaultValue: 'Booking ID' })}:
+                        {t('userBookings.bookingId', { defaultValue: 'Booking ID' })}:
                         {booking.booking_id.slice(0, 8).toUpperCase()}
                       </Typography>
                       <Typography variant="body3" fontWeight={500} fontSize={14}>
-                      {t('userBookings.created', { defaultValue: 'Created at' })} {new Date(booking.created_at).toLocaleString()}
+                        {t('userBookings.created', { defaultValue: 'Created at' })} {new Date(booking.created_at).toLocaleString()}
                       </Typography>
                     </Stack>
 
