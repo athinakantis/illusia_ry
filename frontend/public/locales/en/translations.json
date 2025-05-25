@@ -248,8 +248,8 @@
     "empty": "Your cart is currently empty! <1>Browse Items</1>"
   },
   "home": {
-    "heroTitle": "Home for live-action role-playing games props",
-    "heroDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat. Nunc auctor consectetur elit, quis pulvina. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla nunc in molestie feugiat",
+    "heroTitle": "Your go-to specialty store for LARP props and accessories",
+    "heroDescription": "Whether you need smaller props or larger set pieces, you'll find everything you need to bring your story to life.",
     "cta": {
       "browse_items": "Browse Items"
     },

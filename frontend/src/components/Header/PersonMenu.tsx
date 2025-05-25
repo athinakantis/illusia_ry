@@ -157,10 +157,19 @@ const PersonMenu = () => {
             variant="text"
             size="small"
             color="primary"
-            sx={{ padding: '4px 10px', minWidth: 'fit-content' }}
+            sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
             onClick={() => { i18n.changeLanguage('fi'); handleMenuClose(); }}
           >
-            Fin
+            Fi
+          </Button>
+          <Button
+            variant="text"
+            size="small"
+            color="primary"
+            sx={{ padding: '4px 10px', minWidth: 'fit-content' }}
+            onClick={() => { i18n.changeLanguage('se'); handleMenuClose(); }}
+          >
+            Se
           </Button>
         </Box>
       </Menu>

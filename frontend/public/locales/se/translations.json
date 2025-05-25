@@ -1,0 +1,276 @@
+{
+  "admin": {
+    "add_product": {
+      "uploading": "Laddar upp…",
+      "upload_failed": "Uppladdning misslyckades",
+      "add_tags_prompt": "Artikel skapad! Vill du lägga till taggar?",
+      "success": "Artikel skapad!",
+      "save_failed": "Uppdatering misslyckades",
+      "title": "Ny artikel",
+      "item_name": "Varunamn",
+      "description": "Beskrivning",
+      "location": "Plats",
+      "quantity": "Kvantitet",
+      "category": "Kategori",
+      "selected_images": "Valda bilder",
+      "upload_files": "Ladda upp bilder",
+      "adding": "Skapar…",
+      "add": "Spara artikel",
+      "manage_tags": {
+        "title": "Hantera taggar"
+      },
+      "manage_tag_body": {
+        "confirmDelete": "Vill du ta bort taggen?",
+        "newTag": "Ny tagg",
+        "add": "Skapa tagg",
+        "attachHint": "Tips: Använd checkboxarna för att lägga till och ta bort en tagg",
+        "checkBoxesTip": "Checkboxes are only available in the Item editor."
+      }
+    },
+    "dashboard": {
+      "title": "Instrumentpanelen",
+      "stats": {
+        "total_users": "Användare",
+        "total_bookings": "Bokningar",
+        "total_items": "Artiklar"
+      },
+      "quick_actions": "Quick actions",
+      "add_item": "Ny artikel",
+      "view_bookings": "Överse bokningar",
+      "manage_users": "Överse användare",
+      "upcoming_bookings": "Kommande bokningar",
+      "duration": {
+        "days": "dagar"
+      },
+      "columns": {
+        "name": "Namn",
+        "status": "Status",
+        "duration": "Längd",
+        "date_range": "Datum",
+        "actions": "Actions",
+        "last_sign_in": "Senast inloggad",
+        "confirmed": "Bekräftad",
+        "role": "Roll"
+      },
+      "show_booking": "Visa bokning",
+      "recent_activity": "Senast aktivitet",
+      "users_and_roles": "Användare och roller",
+      "roles": {
+        "head_admin": "Huvudadmin",
+        "user": "Användare",
+        "admin": "Admin",
+        "unapproved": "Gäst"
+      },
+      "status": {
+        "cancelled": "avbokad",
+        "approved": "bekräftad"
+      }
+    }
+  },
+  "adminBookings": {
+    "snackbar": {
+      "bookingApproved": "Bokning bekräftad",
+      "bookingRejected": "Bokning avvisad"
+    },
+    "heading": "Bokningar",
+    "tabs": {
+      "all": "Alla",
+      "pending": "Obekräftade",
+      "approved": "Bekfäftade",
+      "rejected": "Avvisade"
+    },
+    "id": "ID",
+    "created": "Skapad",
+    "bookingDates": "Datum",
+    "customer": "Kund",
+    "items": "Artiklar",
+    "status": "Status",
+    "awaiting": "Väntar bekräftelse",
+    "noResults": "Ingen bokning hittad för valda filter",
+    "approve": "Bekräfta",
+    "reject": "Avvisa"
+  },
+  "collapsibleDetail": {
+    "title": "Bokade artiklar",
+    "item": "Artikel",
+    "start": "Startdatum",
+    "end": "Slutdatum",
+    "qty": "Kvantitet"
+  },
+  "Bookings": {
+    "snackbar": {
+      "deleted": "Bokning raderad",
+      "cancelled": "Bokning avbokad"
+    }
+  },
+  "nav": {
+    "home": "Hem",
+    "items": "Artiklar",
+    "contact": "Kontakt",
+    "bookings": "Mina bokningar",
+    "dashboard": "Instumentpanelen",
+    "manageBookings": "Överse bokningar",
+    "manageUsers": "Överse användare",
+    "logOut": "Logga ut"
+  },
+  "header": {
+    "logoMain": "ILLUSIA",
+    "logoSecondary": "STORE"
+  },
+  "person": {
+    "myBookings": "Mina bokningar",
+    "myAccount": "Mitt konto",
+    "dashboard": "Instrumentpanelen",
+    "manageUsers": "Överse användare",
+    "manageBookings": "Överse bokningar",
+    "logOut": "Logga ut",
+    "logIn": "Logga in"
+  },
+  "items": {
+    "search": "Sök",
+    "date_picker_disabled_info": "Datum kan enbart väljas om kundvagnen är tom. Töm kundvagnen eller ändra datum i kundvagnen.",
+    "browse": "Bläddra",
+    "manage": "Överse artiklar"
+  },
+  "account": {
+    "nameUpdated": "Ditt namn har ändrats till {{name}}.",
+    "errorUpdatingName": "Kunde inte uppdatera namn",
+    "notLoggedIn": "Ej inloggad",
+    "logIn": "logga in",
+    "signUp": "registrera",
+    "accessAccount": "för åtkomst av konto.",
+    "tabs": {
+      "profile": "Profil",
+      "security": "Säkerhet"
+    },
+    "changeEmail": "Ändra email",
+    "changePhone": "Ändra telefonnummer",
+    "addPhone": "Lägg till telefon",
+    "createdOn": "Konto skapat",
+    "deleteAccount": "Radera konto",
+    "email": {
+      "mfaPrompt": "Skriv in den 6-siffriga koden från din autentiserare:",
+      "status": {
+        "sending": "Skickar konfirmations…",
+        "linkSent": "Ett bekräftelse-email har skickats till din e-post."
+      },
+      "newLabel": "Ny email",
+      "update": "Uppdatera email"
+    },
+    "phone": {
+      "status": {
+        "sending": "Skickar kod…",
+        "smsSent": "SMS skickat! Skriv in din 6-siffriga kod:",
+        "verifying": "Bekräftar…",
+        "confirmed": "Nummer bekräftat! ✅"
+      },
+      "numberLabel": "Telefonnummer (Inklusive landskod, t.ex: +358401234567)",
+      "sendCode": "Skicka kod",
+      "codeLabel": "6-siffrig kod",
+      "verifySave": "Spara"
+    }
+  },
+  "common": {
+    "or": "eller",
+    "save": "Spara",
+    "sending": "Skickar…",
+    "cancel": "Avbryt"
+  },
+  "deleteAccount": {
+    "error": {
+      "noToken": "Failed to retrieve authentication token.",
+      "deleteFailed": "Kunde ej radera konto"
+    },
+    "title": "Delete Account?",
+    "warning": "Deleting your account will permanently remove <strong>all</strong> information related to your user, including profiles, settings, and data. This action <em>cannot</em> be undone.",
+    "deleting": "Raderar konto…",
+    "confirm": "Radera konto"
+  },
+  "security": {
+    "status": {
+      "unenrollFailed": "Borttagning misslyckades",
+      "canceled": "Avbryter",
+      "generating": "Genererar…",
+      "scanQr": "Scan this QR in your authenticator app, then enter the 6-digit code",
+      "verifying": "Bekräftar…",
+      "enabled": "MFA aktiverad 🎉",
+      "challengeError": "Autentikationsfel",
+      "verificationFailed": "Verifiering misslyckades",
+      "removed": "Enhet borttagen"
+    },
+    "prompt": {
+      "code": "Slå in den 6-siffriga koden från din autentiserare"
+    },
+    "heading": "Security settings",
+    "enableTOTP": "Aktivera",
+    "codeLabel": "6-siffrig kod",
+    "verifyActivate": "Verifiera och aktivera",
+    "cancelSetup": "Avbryt",
+    "enabled": "Authenticator-app MFA is enabled.",
+    "disableTOTP": "Avaktivera MFA"
+  },
+  "avatar": {
+    "uploading": "Laddar upp…",
+    "change": "Ändra profilbild"
+  },
+  "userBookings": {
+    "snackbar": {
+      "bookingDeleted": "Bokning avbokad",
+      "bookingCancelled": "Bokning avbokad"
+    },
+    "heading": "Dina bokningar",
+    "noBookings": "Inga bokningar ännu",
+    "bookingId": "ID",
+    "created": "Skapad",
+    "cancelTooltip": "Avboka",
+    "deleteTooltip": "Avboka",
+    "item": "Artikel",
+    "startDate": "Startdatum",
+    "endDate": "Slutdatum",
+    "quantity": "Kvantitet",
+    "confirmCancel": "Är du säker på att du vill avboka?",
+    "confirmYes": "Ja, jag är säker",
+    "confirmNo": "Nej"
+  },
+  "cart": {
+    "yourCart": "Din kundvagn",
+    "items": "Artiklar",
+    "quantity": "St",
+    "action": "Handling",
+    "remove": "Ta bort",
+    "bookingSummary": "Din bokning",
+    "dates": "Datum",
+    "changeDates": "Ändra datum",
+    "confirmDates": "Bekräfta datum",
+    "cancel": "Avbryt",
+    "totalItems": "Artiklar",
+    "bookItems": "Boka",
+    "empty": "Din kundvagn är tom! <1>Bläddra bland varor</1>"
+  },
+  "home": {
+    "heroTitle": "Rekvisita för levande rollspel – samlat på ett ställe",
+    "heroDescription": "Behöver du mindre prylar eller stora miljöer? Vi har allt du behöver för att levandegöra din historia.",
+    "cta": {
+      "browse_items": "Artiklar"
+    },
+    "categoriesTitle": "Utforska våra kategorier",
+    "categoriesDescription": "Behöver du mindre prylar eller stora miljöer? Vi har allt du behöver för att levandegöra din historia.",
+    "categories": {
+      "board_games": "Brädspel",
+      "clothing": "Kläder",
+      "accessories": "Accessoarer",
+      "props": "Props"
+    }
+  },
+  "faq": {
+    "faqTitle": "Vanliga frågor",
+    "faqDescription": "Innan du hör av dig till oss, se om du hittar ditt svar i våran FAQ",
+    "askQuestion": "Kontakt",
+    "question1": "När bekräftas min bokning?",
+    "answer1": "Vi godkänner vanligtvis bokningar inom 2-3 dagar. Om det har gått mer än 5 dagar, hör av dig till oss.",
+    "question2": "Hur lång tid kan man boka eran rekvisita?",
+    "answer2": "En bokning kan vara upp till 2 veckor.",
+    "question3": "Varför måste mitt konto godkännas innan jag kan boka rekvisita?",
+    "answer3": "För att säkerställa att vi återfå våra artiklar är vi noggranna med vem som tar del av våran plattform."
+  }
+}
