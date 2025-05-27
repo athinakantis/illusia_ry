@@ -256,7 +256,7 @@ function Cart() {
 			// update future reservations
 
 			// Navigate to new booking
-			navigate(`/bookings/${resultAction.payload.booking_id}`)
+			navigate(`/bookings/${resultAction.payload.booking.booking_id}`)
 		}
 	};
 
