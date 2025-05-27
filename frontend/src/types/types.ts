@@ -198,4 +198,5 @@ export type AdminNotification = {
   message: string;
   is_read: boolean;
   link: string;
+  amount?: number;
 };
