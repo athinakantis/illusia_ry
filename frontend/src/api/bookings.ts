@@ -1,4 +1,5 @@
-import { ApiResponse, Booking, BookingWithItems, UpcomingBooking } from '../types/types';
+import { Tables } from '../types/supabase';
+import { ApiResponse, Booking, BookingWithItems, Reservation, UpcomingBooking } from '../types/types';
 import { api } from './axios';
 
 export const bookingsApi = {
@@ -12,7 +13,7 @@ export const bookingsApi = {
         return api.get(`/bookings/${id}`)
     },
 
-    createBooking: async (newBooking: object): Promise<{ booking_id: string; status: string }> => {
+    createBooking: async (newBooking: object): Promise<{ booking: Tables<'bookings'>, reservations: Reservation[]}> => {
         return api.post('bookings/rpc', newBooking)
     },
 
