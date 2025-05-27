@@ -245,7 +245,9 @@
     "cancel": "Cancel",
     "totalItems": "Total items",
     "bookItems": "Book items",
-    "empty": "Your cart is currently empty! <1>Browse Items</1>"
+    "empty": "Your cart is currently empty! <1>Browse Items</1>",
+    "bookItemsApprovalInfo": "Your account is awaiting approval. Once approved, you may create a booking!",
+    "bookItemsLogInInfo": "Log in to book items"
   },
   "home": {
     "heroTitle": "Home for live-action role-playing games props",
