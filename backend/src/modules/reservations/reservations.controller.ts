@@ -9,27 +9,27 @@ export class ItemReservationsController {
 
   // GET /reservations
   @Get()
-  async getAllReservations(@Req() req: CustomRequest) {
-    return this.itemReservationService.getAllReservations(req);
+  async getAllReservations() {
+    return this.itemReservationService.getAllReservations();
   }
 
   // GET /reservations/item/:itemId
   @Get('item/:itemId')
-  async getByItem(@Req() req: CustomRequest, @Param('itemId') itemId: string) {
-    return this.itemReservationService.getReservationsForItem(req, itemId);
+  async getByItem(@Param('itemId') itemId: string) {
+    return this.itemReservationService.getReservationsForItem(itemId);
   }
 
   // GET /reservations/booking/:bookingId
   @Get('booking/:bookingId')
-  async getByBooking(@Req() req: CustomRequest, @Param('bookingId') bookingId: string) {
-    return this.itemReservationService.getReservationsByBooking(req, bookingId);
+  async getByBooking( @Param('bookingId') bookingId: string) {
+    return this.itemReservationService.getReservationsByBooking( bookingId);
   }
 
   // GET /reservations/date-range?from=2025-04-14&to=2025-04-14
   // Example : http://localhost:5001/reservations/date-range?from=2025-04-16&to=2025-04-16
   @Get('date-range')
-  async getByDateRange(@Req() req: CustomRequest, @Query('from') from: string, @Query('to') to: string) {
-    return this.itemReservationService.getReservationsInDateRange(req, from, to);
+  async getByDateRange( @Query('from') from: string, @Query('to') to: string) {
+    return this.itemReservationService.getReservationsInDateRange( from, to);
   }
 
   // GET /reservations/item/:itemId/date-range?from=YYYY-MM-DD&to=YYYY-MM-DD
@@ -37,27 +37,26 @@ export class ItemReservationsController {
 
   @Get('item/:itemId/date-range')
   async getByItemAndDateRange(
-    @Req() req: CustomRequest,
     @Param('itemId') itemId: string,
     @Query('from') from: string,
     @Query('to') to: string
   ) {
-    return this.itemReservationService.getReservationsForItemInDateRange(req, itemId, from, to);
+    return this.itemReservationService.getReservationsForItemInDateRange( itemId, from, to);
   }
 
   // GET /reservations/start-date/:startDate
   // Only finds a reservation that starts EXACTLY on that date.
   @Get('start-date/:startDate')
-  async getByStartDate(@Req() req: CustomRequest, @Param('startDate') startDate: string) {
-    return this.itemReservationService.getReservationsByStartDate(req, startDate);
+  async getByStartDate(@Param('startDate') startDate: string) {
+    return this.itemReservationService.getReservationsByStartDate(startDate);
   }
 
   // GET /reservations/end-date/:endDate
   // Only finds a reservation that ends EXACTLY on that date.
   // Example : http://localhost:5001/reservations/end-date/2025-04-23
   @Get('end-date/:endDate')
-  async getByEndDate(@Req() req: CustomRequest, @Param('endDate') endDate: string) {
-    return this.itemReservationService.getReservationsByEndDate(req, endDate);
+  async getByEndDate(@Param('endDate') endDate: string) {
+    return this.itemReservationService.getReservationsByEndDate(endDate);
   }
 
   // POST /reservations
