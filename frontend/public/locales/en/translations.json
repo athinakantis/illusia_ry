@@ -38,6 +38,7 @@
       "add_item": "Add item",
       "view_bookings": "View bookings",
       "manage_users": "Manage users",
+      "viewLogs": "View logs",
       "upcoming_bookings": "Upcoming bookings",
       "duration": {
         "days": "days"
@@ -63,7 +64,9 @@
       },
       "status": {
         "cancelled": "cancelled",
-        "approved": "approved"
+        "approved": "approved",
+        "pending": "pending",
+        "rejected": "rejected"
       }
     }
   },
@@ -238,7 +241,13 @@
     "quantity": "Quantity",
     "confirmCancel": "Are you sure you want to cancel your booking?",
     "confirmYes": "Yes, I'm sure",
-    "confirmNo": "No thanks"
+    "confirmNo": "No thanks",
+    "status": {
+      "cancelled": "cancelled",
+      "approved": "approved",
+      "pending": "pending",
+      "rejected": "rejected"
+    }
   },
   "cart": {
     "yourCart": "Your Cart",

@@ -34,10 +34,11 @@
         "total_bookings": "Bokningar",
         "total_items": "Artiklar"
       },
-      "quick_actions": "Quick actions",
+      "quick_actions": "Genvägar",
       "add_item": "Ny artikel",
       "view_bookings": "Överse bokningar",
       "manage_users": "Överse användare",
+      "viewLogs": "Visa loggar",
       "upcoming_bookings": "Kommande bokningar",
       "duration": {
         "days": "dagar"
@@ -47,7 +48,7 @@
         "status": "Status",
         "duration": "Längd",
         "date_range": "Datum",
-        "actions": "Actions",
+        "actions": "Handling",
         "last_sign_in": "Senast inloggad",
         "confirmed": "Bekräftad",
         "role": "Roll"
@@ -63,7 +64,9 @@
       },
       "status": {
         "cancelled": "avbokad",
-        "approved": "bekräftad"
+        "approved": "bekräftad",
+        "pending": "obekräftad",
+        "rejected": "avvisad"
       }
     }
   },
@@ -238,7 +241,13 @@
     "quantity": "Kvantitet",
     "confirmCancel": "Är du säker på att du vill avboka?",
     "confirmYes": "Ja, jag är säker",
-    "confirmNo": "Nej"
+    "confirmNo": "Nej",
+    "status": {
+      "cancelled": "avbokad",
+      "approved": "bekräftad",
+      "pending": "väntar svar",
+      "rejected": "avvisad"
+    }
   },
   "cart": {
     "yourCart": "Din kundvagn",

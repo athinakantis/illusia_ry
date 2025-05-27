@@ -38,6 +38,7 @@
       "add_item": "Lisää tuote",
       "view_bookings": "Näytä varaukset",
       "manage_users": "Hallitse käyttäjiä",
+      "viewLogs": "Näytä lokit",
       "upcoming_bookings": "Tulevat varaukset",
       "duration": {
         "days": "päivää"
@@ -54,7 +55,13 @@
       },
       "show_booking": "Näytä varaus",
       "recent_activity": "Viimeisin toiminta",
-      "users_and_roles": "Käyttäjät ja roolit"
+      "users_and_roles": "Käyttäjät ja roolit",
+      "status": {
+        "cancelled": "peruttu",
+        "approved": "hyväksytty",
+        "pending": "odottaa",
+        "rejected": "hylätty"
+      }
     }
   },
   "adminBookings": {
@@ -228,7 +235,13 @@
     "quantity": "Määrä",
     "confirmCancel": "Haluatko varmasti peruuttaa varauksesi?",
     "confirmYes": "Kyllä, olen varma",
-    "confirmNo": "Ei kiitos"
+    "confirmNo": "Ei kiitos",
+    "status": {
+      "cancelled": "peruttu",
+      "approved": "hyväksytty",
+      "pending": "odottaa",
+      "rejected": "hylätty"
+    }
   },
   "cart": {
     "yourCart": "Ostoskorisi",

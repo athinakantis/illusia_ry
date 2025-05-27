@@ -182,7 +182,7 @@ const UserBookings = () => {
                             }
                             : {}),
                         }}
-                        label={booking.status}
+                        label={t(`userBookings.status.${booking.status}`)}
                         color={
                           booking.status === 'approved'
                             ? 'success'
