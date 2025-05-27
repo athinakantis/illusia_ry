@@ -283,6 +283,14 @@ export class BookingService {
       throw new BadRequestException('Status value is required');
     }
 
+        // If booking is cancelled, mark items as available
+    if (status === 'cancelled') {
+      await supabase
+        .from('item_reservations')
+        .update({ is_active: false })
+        .eq('booking_id', bookingId);
+    }
+
     const { data, error } = await supabase
       .from('bookings')
       .update({ status })
