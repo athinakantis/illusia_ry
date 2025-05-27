@@ -6,7 +6,6 @@ import { ItemController } from '../item/item.controller';
 import { AuthMiddleware } from '../../middlewares/auth.middleware';
 import { ViewsController } from '../views/views.controller';
 import { BookingController } from '../bookings/bookings.controller';
-import { ItemReservationsController } from '../reservations/reservations.controller';
 import { AdminController } from '../admin/admin.controller';
 import { TagController } from '../tags/tags.controller';
 import { CategoriesModule } from '../categories/categories.module';
@@ -62,7 +61,6 @@ export class AppModule implements NestModule {
       NotificationsController,
       // MailerController,
       BookingController,
-      ItemReservationsController,
       AdminController,
       TagController,
       CategoryController,
