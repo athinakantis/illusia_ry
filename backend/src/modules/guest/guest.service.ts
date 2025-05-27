@@ -19,7 +19,11 @@ export class GuestService {
     this._supabase = createClient<Database>(url, key); // Added the Database type
 
   }
-
+  
+  getPublicClient(): SupabaseClient {
+    return this._supabase;
+  }
+  
   async getPublicItems(): Promise<ApiResponse<Tables<'items'>[]>> {
     try {
       const { data, error } = await this._supabase

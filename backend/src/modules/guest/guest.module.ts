@@ -7,6 +7,6 @@ import { GuestService } from './guest.service';
   imports: [SupabaseModule],
   controllers: [GuestController],
   providers:    [GuestService],
-  exports:      [],   // only export the service if other modules need it
+  exports:      [GuestService],   // only export the service if other modules need it
 })
 export class GuestModule {}
