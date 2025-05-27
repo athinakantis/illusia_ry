@@ -160,7 +160,7 @@ const NotificationsMenu = () => {
                 sx={{ justifyContent: 'space-between', gap: '1rem' }}
               >
                 {t(`notifications.${n.type}`)}
-                <Tooltip title="Mark as read">
+                <Tooltip title={t(`notifications.markRead`, { defaultValue: 'Mark as read' })}>
                   <Button
                     sx={{ minWidth: 'fit-content', p: '3px' }}
                     onClick={(e) => {
@@ -187,7 +187,7 @@ const NotificationsMenu = () => {
                 sx={{ justifyContent: 'space-between', gap: '1rem' }}
               >
                 {t(`notifications.${n.id}`, { amount: Number(n.amount) })}
-                <Tooltip title={t("notifications.markRead")}>
+                <Tooltip title={t("notifications.markRead", { defaultValue: 'Mark as read' })}>
                   <Button
                     sx={{ minWidth: 'fit-content', p: '3px' }}
                     onClick={(e) => {
