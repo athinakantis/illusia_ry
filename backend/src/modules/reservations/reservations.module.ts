@@ -1,4 +1,3 @@
-import { SupabaseModule } from '../supabase/supabae.module';
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ItemReservationsController } from './reservations.controller';
 import { ItemReservationService } from './reservations.service';
@@ -6,7 +5,7 @@ import { GuestModule } from '../guest/guest.module';
 import { AuthMiddleware } from 'src/middlewares/auth.middleware';
 
 @Module({
-  imports: [SupabaseModule,GuestModule],
+  imports: [GuestModule],
   controllers: [ItemReservationsController],
   providers:    [ItemReservationService],
   exports:      [],   // only export the service if other modules need it
