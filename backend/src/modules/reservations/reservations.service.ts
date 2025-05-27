@@ -97,6 +97,7 @@ export class ItemReservationService {
     const { data, error } = await supabase
       .from('item_reservations')
       .select('*')
+      .eq('is_active', true)
       .lte('start_date', to) // start before or on "to"
       .gte('end_date', from) // end after or on "from"
       .order('start_date', { ascending: true });
