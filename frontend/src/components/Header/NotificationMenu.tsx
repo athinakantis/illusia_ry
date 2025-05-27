@@ -23,6 +23,7 @@ import { Tables } from '../../types/supabase';
 import { BookingMetaData } from '../../types/types';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { useAuth } from '../../hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 
 const NotificationsMenu = () => {
   // ─── menu state ──────────────────────────────────────────────
@@ -36,6 +37,8 @@ const NotificationsMenu = () => {
   const adminNotifications = useAppSelector(selectAdminNotifications);
   const dispatch = useAppDispatch();
   const { user } = useAuth();
+  const { t } = useTranslation();
+
 
   // Unread notifications
   const unreadUserNotifications = userNotifications.filter(
@@ -156,7 +159,7 @@ const NotificationsMenu = () => {
                 href={`/bookings/${renderNotificationLink(n)}`}
                 sx={{ justifyContent: 'space-between', gap: '1rem' }}
               >
-                {n.title}
+                {t(`notifications.${n.type}`)}
                 <Tooltip title="Mark as read">
                   <Button
                     sx={{ minWidth: 'fit-content', p: '3px' }}
@@ -183,8 +186,8 @@ const NotificationsMenu = () => {
                 href={n.link}
                 sx={{ justifyContent: 'space-between', gap: '1rem' }}
               >
-                {n.message}
-                <Tooltip title="Mark as read">
+                {t(`notifications.${n.id}`, { amount: Number(n.amount) })}
+                <Tooltip title={t("notifications.markRead")}>
                   <Button
                     sx={{ minWidth: 'fit-content', p: '3px' }}
                     onClick={(e) => {
@@ -209,7 +212,7 @@ const NotificationsMenu = () => {
               justifyContent: 'center',
             }}
           >
-            <Typography>You have no new notifications!</Typography>
+            <Typography>{t("notifications.noNew", { defaultValue: "You have no new notifications!" })}</Typography>
           </MenuItem>
         )}
       </Menu>

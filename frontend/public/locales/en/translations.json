@@ -126,6 +126,14 @@
     "logOut": "Log out",
     "logIn": "Log in"
   },
+  "notifications": {
+    "noNew": "You have no new notifications!",
+    "markRead": "Mark as read",
+    "pending_user_notifications": "There are pending {{amount}} users",
+    "pending_bookings_notification": "There are pending {{amount}} bookings",
+    "BOOKING_APPROVED": "Your booking was approved!",
+    "BOOKING_REJECTED": "Your booking was rejected"
+  },
   "items": {
     "search": "Search items",
     "date_picker_disabled_info": "You cannot change the date when your cart has items for the selected days. Empty the cart or change the date within the cart.",

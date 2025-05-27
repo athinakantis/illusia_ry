@@ -116,6 +116,14 @@
     "logOut": "Kirjaudu ulos",
     "logIn": "Kirjaudu sisään"
   },
+  "notifications": {
+    "noNew": "Sinulla ei ole uusia ilmoituksia!",
+    "markRead": "Merkitse luetuksi",
+    "pending_user_notifications": "{{amount}} käyttäjää odottaa vahvistusta",
+    "pending_bookings_notifications": "{{amount}} varausta odottaa vahvistusta",
+    "BOOKING_APPROVED": "Varaus on hyväksytty!",
+    "BOOKING_REJECTED": "Varaus hylättiin"
+  },
   "items": {
     "search": "Etsi tuotteita",
     "date_picker_disabled_info": "Et voi vaihtaa päivämäärää, kun ostoskorissasi on tuotteita valituilla päivillä. Tyhjennä ostoskori tai muuta päivämäärää ostoskorin sisällä.",

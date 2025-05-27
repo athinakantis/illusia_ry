@@ -126,9 +126,17 @@
     "logOut": "Logga ut",
     "logIn": "Logga in"
   },
+  "notifications": {
+    "noNew": "Du har inga nya notifikationer!",
+    "markRead": "Markera som läst",
+    "pending_user_notifications": "Det finns {{amount}} användare som väntar på bekräftelse",
+    "pending_bookings_notifications": "Det finns {{amount}} bokningar som väntar på bekräftelse",
+    "BOOKING_APPROVED": "Din bokning har godkänts!",
+    "BOOKING_REJECTED": "Din bokningar var avvisad"
+  },
   "items": {
     "search": "Sök",
-    "date_picker_disabled_info": "Datum kan enbart väljas om kundvagnen är tom. Töm kundvagnen eller ändra datum i kundvagnen.",
+    "date_picker_disabled_info": "Datum kan bara ändras om kundvagnen är tom. Töm kundvagnen eller ändra datum i kundvagnen.",
     "browse": "Bläddra",
     "manage": "Överse artiklar"
   },
@@ -164,7 +172,7 @@
         "verifying": "Bekräftar…",
         "confirmed": "Nummer bekräftat! ✅"
       },
-      "numberLabel": "Telefonnummer (Inklusive landskod, t.ex: +358401234567)",
+      "numberLabel": "Telefonnummer (Inklusive landskod, t.ex: +468401234567)",
       "sendCode": "Skicka kod",
       "codeLabel": "6-siffrig kod",
       "verifySave": "Spara"
@@ -201,8 +209,8 @@
     "prompt": {
       "code": "Slå in den 6-siffriga koden från din autentiserare"
     },
-    "heading": "Security settings",
-    "enableTOTP": "Aktivera",
+    "heading": "Inställningar",
+    "enableTOTP": "Aktivera MFA",
     "codeLabel": "6-siffrig kod",
     "verifyActivate": "Verifiera och aktivera",
     "cancelSetup": "Avbryt",
@@ -245,13 +253,15 @@
     "cancel": "Avbryt",
     "totalItems": "Artiklar",
     "bookItems": "Boka",
-    "empty": "Din kundvagn är tom! <1>Bläddra bland varor</1>"
+    "empty": "Din kundvagn är tom! <1>Bläddra bland varor</1>",
+    "bookItemsApprovalInfo": "Din konto väntar bekräftelse. När en admin har bekräftat ditt konto kan du skapa din bokning!",
+    "bookItemsLogInInfo": "Logga in för att boka artiklar"
   },
   "home": {
     "heroTitle": "Rekvisita för levande rollspel – samlat på ett ställe",
     "heroDescription": "Behöver du mindre prylar eller stora miljöer? Vi har allt du behöver för att levandegöra din historia.",
     "cta": {
-      "browse_items": "Artiklar"
+      "browse_items": "Visa artiklar"
     },
     "categoriesTitle": "Utforska våra kategorier",
     "categoriesDescription": "Behöver du mindre prylar eller stora miljöer? Vi har allt du behöver för att levandegöra din historia.",
@@ -271,6 +281,6 @@
     "question2": "Hur lång tid kan man boka eran rekvisita?",
     "answer2": "En bokning kan vara upp till 2 veckor.",
     "question3": "Varför måste mitt konto godkännas innan jag kan boka rekvisita?",
-    "answer3": "För att säkerställa att vi återfå våra artiklar är vi noggranna med vem som tar del av våran plattform."
+    "answer3": "För att säkerställa att vi återfår våra artiklar är vi noggranna med vem som tar del av våran plattform. Ditt konto bör vara godkänt inom 3 dagar, hör av dig om du väntat längre än så."
   }
 }
