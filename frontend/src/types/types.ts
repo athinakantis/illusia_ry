@@ -61,7 +61,7 @@ export interface Booking {
   booking_id: string;
   user_id: string;
   status: string;
-  created_at: string;
+  created_at: string | null;
   reservations?: Array<{
     reservation_id: string;
     item_id: string;
@@ -88,6 +88,7 @@ export interface Reservation {
   start_date: string;
   end_date: string;
   quantity: number;
+  is_active: boolean;
 }
 
 export interface ReservationsState {

@@ -45,7 +45,7 @@ import { fetchFutureReservations } from '../slices/reservationsSlice';
 function Cart() {
 	const dispatch = useAppDispatch();
 	const { cart } = useAppSelector(selectCart);
-	const { user } = useAuth();
+	const { user, role } = useAuth();
 	const selectedDateRange = useAppSelector(selectDateRange);
 	const [editingCart, setEditingCart] = useState(false);
 	const [localCartRange, setLocalCartRange] = useState<RangeValue<DateValue> | null>(null);
@@ -256,7 +256,7 @@ function Cart() {
 			// update future reservations
 
 			// Navigate to new booking
-			navigate(`/bookings/${resultAction.payload.booking_id}`)
+			navigate(`/bookings/${resultAction.payload.booking.booking_id}`)
 		}
 	};
 
@@ -500,7 +500,11 @@ function Cart() {
 						</Stack>
 						{!user && <Stack sx={{ border: '1px solid #E2E2E2', flexDirection: 'row', padding: '20px 24px', gap: '10px' }}>
 							<InfoOutlineIcon />
-							<Typography variant='body1'>Log in to book items</Typography>
+							<Typography variant='body1'>{t('cart.bookItemsLogInInfo', { defaultValue: 'Log in to book items' })}</Typography>
+						</Stack>}
+						{role === 'Unapproved' && <Stack sx={{ border: '1px solid #E2E2E2', flexDirection: 'row', padding: '20px 24px', gap: '10px' }}>
+							<InfoOutlineIcon />
+							<Typography variant='body1'>{t('cart.bookItemsApprovalInfo', { defaultValue: 'Your account is awaiting approval. Once approved, you may create a booking!' })}</Typography>
 						</Stack>}
 						<Button
 							sx={{
@@ -511,7 +515,7 @@ function Cart() {
 							variant="rounded"
 							size="small"
 							onClick={handleAddBooking}
-							disabled={editingCart}
+							disabled={(editingCart || role === 'Unapproved')}
 						>
 							{t('cart.bookItems', { defaultValue: 'Book items' })}
 						</Button>

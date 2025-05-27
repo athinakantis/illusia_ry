@@ -235,7 +235,9 @@
     "cancel": "Peruuta",
     "totalItems": "Tuotteita yhteensä",
     "bookItems": "Varaa tuotteet",
-    "empty": "Ostoskori on tyhjä! <1>Selaa tuotteita</1>"
+    "empty": "Ostoskori on tyhjä! <1>Selaa tuotteita</1>",
+    "bookItemsApprovalInfo": "Tilisi odottaa hyväksyntää. Kun se on hyväksytty, voit tehdä varauksen!",
+    "bookItemsLogInInfo": "Kirjaudu sisään varataksesi kohteita"
   },
   "home": {
     "heroTitle": "Erikoiskauppa LARP-rekvisiitalle, tarvikkeille ja lavasteille",
