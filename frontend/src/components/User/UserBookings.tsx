@@ -87,13 +87,13 @@ const UserBookings = () => {
   const canModify = (b: BookingWithRes) => {
     // earliest start date across all reservations
     const earliestStart = Math.min(
-      ...b.reservations.map(r => new Date(r.start_date).getTime())
+      ...b?.reservations?.map(r => new Date(r.start_date).getTime())
     );
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    if (b.status === 'pending') return true;                       // deletable
-    if (b.status === 'approved' && earliestStart > today.getTime())
+    if (b?.status === 'pending') return true;                       // deletable
+    if (b?.status === 'approved' && earliestStart > today.getTime())
       return true;                                                 // cancellable
     return false;
   };
