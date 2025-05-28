@@ -5,6 +5,7 @@ import { Typography, LinearProgress, Box, IconButton, Divider, Stack } from '@mu
 import { Theme } from '@mui/material/styles';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import getColor from './getColor';
+import './snackbar.css'
 
 /**
  * Options accepted by showSnackbar helper.
