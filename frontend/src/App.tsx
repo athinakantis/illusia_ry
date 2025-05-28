@@ -7,15 +7,16 @@ import { SnackbarProvider } from 'notistack';
 
 
 function App() {
-  
+
   return (
     <Box>
 
       <Provider store={store}>
         <SnackbarProvider
           maxSnack={3}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           autoHideDuration={3000}
+          classes={{ containerRoot: 'snackbar-container-customized' }}
         >
           <RouterProvider router={router} >
           </RouterProvider>
