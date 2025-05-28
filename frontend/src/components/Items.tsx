@@ -50,6 +50,7 @@ import { showCustomSnackbar } from './CustomSnackbar';
 import Spinner from './Spinner';
 import broken_img from '../assets/broken_img.png';
 import { useTranslation } from 'react-i18next';
+import { useTranslatedSnackbar } from './CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
 
 function Items() {
   const items = useAppSelector(selectVisibleItems);
@@ -58,6 +59,7 @@ function Items() {
   const dispatch = useAppDispatch();
   const [offset, setOffset] = useState(0);
   const navigate = useNavigate();
+  const { showSnackbar } = useTranslatedSnackbar()
 
 
   const [searchParams] = useSearchParams();
@@ -89,20 +91,19 @@ function Items() {
   const addToCart = (item: Item, quantity: number = 1) => {
     // need to fetch the bookings and reservations first in order for this to work properly
     if (range?.start === undefined) {
-      showCustomSnackbar('Select dates before adding to cart', 'warning');
+      showSnackbar({ message: t('items.snackbar.selectDates'), variant: 'warning' });
       return;
     }
-    // checks if there is any range selected
 
+    // checks if there is any range selected
     const checkAdditionToCart = checkAvailabilityForItemOnDates(
       item.item_id,
       quantity,
       range.start.toString(),
       range.end.toString(),
     )(store.getState());
+
     // checks if item can be added to cart
-
-
     if (checkAdditionToCart.severity === 'success') {
       dispatch(
         addItemToCart({
@@ -113,9 +114,8 @@ function Items() {
         }),
       );
 
-      showCustomSnackbar('Item added to cart', 'success');
+      showSnackbar({ message: t('items.snackbar.itemAdded'), variant: 'info', divider: true, secondaryMessage: item.item_name, src: item.image_path[0] });
 
-      // adds the item in case it is available
     } else {
       showCustomSnackbar(checkAdditionToCart.message, checkAdditionToCart.severity);
     }
