@@ -1,0 +1,41 @@
+name: Build and Verify
+
+on:
+  push:
+    branches: [ "main", "DEV" ]
+  pull_request:
+    branches: [ "main", "DEV" ]
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      # 1) Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 2) Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '19'
+
+      # 3) Install frontend dependencies
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm install
+
+      # 4) Build frontend
+      - name: Build Frontend
+        working-directory: frontend
+        run: npm run build
+
+      # 5) Install backend dependencies
+      - name: Install Backend Dependencies
+        working-directory: backend
+        run: npm install
+
+      # 6) Build backend
+      - name: Build Backend
+        working-directory: backend
+        run: npm run build
