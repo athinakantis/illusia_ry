@@ -50,29 +50,4 @@ export const checkAvailabilityForItemOnDates = (
         // add error that tracks if the item is already in cart, then error "all the item already in cart"
     );
 
-/*
-export const checkAvailabilityForAllItemsOnDates = (
-    start_date: string,
-    end_date: string,
-) =>
-    createSelector(
-        [
-            selectAllItems,
-            selectAllReservations,
-        ],
-        (items, reservations) => {
 
-            const itemsMaxBookedQty = getMaxBookedQtyForManyItems(getBookedQtyByDateAndItemForReservationsInRange(new Date(start_date), new Date(end_date), reservations))
-
-            const itemsAvailability = items.map(item => {
-                return { item_id: item.item_id, quantity: item.quantity - (itemsMaxBookedQty[item.item_id] || 0) }
-            });
-
-            return itemsMaxBookedQty;
-            // calculates the availability of the ites for filtering
-
-            // move this to just reservations slice
-        }
-    );
-
-*/
