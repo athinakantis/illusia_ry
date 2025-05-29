@@ -3,7 +3,7 @@ import { Item, ItemState } from '../types/types';
 import { CreateItemPayload, itemsApi } from '../api/items';
 import { RootState } from '../store/store';
 import { categoriesApi } from '../api/categories';
-import { addTagToItem, removeTagFromItem } from './tagSlice';
+import { addTagToItem, removeTagFromItem, ItemTagRelationWithTagName } from './tagSlice';
 import { tagsApi } from '../api/tags';
 
 interface Category {
@@ -124,17 +124,20 @@ export const itemsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    /* ─── fetch all items ────────────────────────────────────────────── */
     builder.addCase(fetchAllItems.pending, (state) => {
       state.loading = true
     })
     builder.addCase(fetchAllItems.fulfilled, (state, action) => {
       state.items = action.payload.data;
-      //state.loading = false
+      state.loading = false;
     })
     builder.addCase(fetchAllItems.rejected, (state) => {
       state.loading = false
       state.error = 'Could not fetch items'
     })
+
+    // ─── fetch all items for admin ────────────────────────────────
     builder.addCase(fetchAllItemsAdmin.pending, (state) => {
       state.loading = true;
     });
@@ -146,6 +149,8 @@ export const itemsSlice = createSlice({
       state.error = 'Could not fetch admin items';
       state.loading = false;
     });
+    
+    /* ─── fetch all categories ────────────────────────────────────────── */
     builder.addCase(fetchAllCategories.pending, (state) => {
       state.loading = true
     })
@@ -158,7 +163,7 @@ export const itemsSlice = createSlice({
       state.loading = false
     })
 
-    /* ---------- create category ---------- */
+    /*────────────────────────── create category ──────────────────────────*/
     builder.addCase(createCategory.pending, (state) => {
       state.loading = true;
     });
@@ -174,7 +179,7 @@ export const itemsSlice = createSlice({
       state.error = 'Could not create category';
     });
 
-    /* ---------- update category ---------- */
+    /*────────────────────────── update category ──────────────────────────*/
     builder.addCase(updateCategory.pending, (state) => {
       state.loading = true;
     });
@@ -193,7 +198,7 @@ export const itemsSlice = createSlice({
       state.error = 'Could not update category';
     });
 
-    /* ---------- delete category ---------- */
+    /*────────────────────────── delete category ──────────────────────────*/
     builder.addCase(deleteCategory.pending, (state) => {
       state.loading = true;
     });
@@ -226,6 +231,7 @@ export const itemsSlice = createSlice({
       state.loading = false;
       state.error = 'Could not delete category';
     });
+    /* ─── fetch item by ID ────────────────────────────────────────────── */
     builder.addCase(fetchItemById.pending, (state) => {
       state.loading = true
     })
@@ -238,15 +244,28 @@ export const itemsSlice = createSlice({
         state.items.push(fetchedItem);
       }
     })
+    builder.addCase(fetchItemById.rejected, (state) => {
+      state.loading = false
+      state.error = 'Could not fetch item'
+    })
+    /* ─── create item ────────────────────────────────────────────── */
     builder.addCase(createItem.fulfilled, (state, action) => {
       state.items.push(action.payload.data);
     })
+    builder.addCase(createItem.rejected, (state) => {
+      state.error = 'Could not create item';
+    })
+    /* ─── delete item ────────────────────────────────────────────── */
     builder.addCase(deleteItem.fulfilled, (state, action) => {
       const deletedId = action.payload?.data?.item_id;
       if (deletedId) {
         state.items = state.items.filter(item => item.item_id !== deletedId);
       }
     })
+    builder.addCase(deleteItem.rejected, (state) => {
+      state.error = 'Could not delete item';
+    })
+    /* ─── update item ────────────────────────────────────────────── */
     builder.addCase(updateItem.fulfilled, (state, action) => {
       const updatedItem = action.payload?.data;
       if (updatedItem) {
@@ -270,18 +289,25 @@ export const itemsSlice = createSlice({
 
     /* ---------- attach tag to item ---------- */
     builder.addCase(addTagToItem.fulfilled, (state, action) => {
-      const rel = action.payload; // { item_id, tag_id, created_at }
+      const rel = action.payload as ItemTagRelationWithTagName; // { item_id, tag_id, created_at, tag_name }
 
       // keep the junction list (avoid duplicates)
       if (!state.item_tags.some(r => r.item_id === rel.item_id && r.tag_id === rel.tag_id)) {
         state.item_tags.push(rel);
       }
 
-      // helper to push the tag into an item's tag_ids array
-      const pushTag = (it?: any) => {
+      // helper to push the tag into an item's tag_ids array and tags array
+      const pushTag = (it?: Item) => {
         if (!it) return;
+        
+        // Update tag_ids array (existing logic)
         if (!Array.isArray(it.tag_ids)) it.tag_ids = [];
         if (!it.tag_ids.includes(rel.tag_id)) it.tag_ids.push(rel.tag_id);
+        
+        // Update tags array (new logic for the tags string array from the view)
+        if (!Array.isArray(it.tags)) it.tags = [];
+        // Use a different approach to avoid the 'never' type issue
+        it.tags = (it.tags.includes(rel.tag_name) ? it.tags : [...it.tags, rel.tag_name]) as string[];
       };
 
       pushTag(state.items.find(i => i.item_id === rel.item_id));
@@ -290,22 +316,28 @@ export const itemsSlice = createSlice({
 
     /* ---------- detach tag from item ---------- */
     builder.addCase(removeTagFromItem.fulfilled, (state, action) => {
-      const rel = action.payload; // { item_id, tag_id, created_at }
+      const rel = action.payload as ItemTagRelationWithTagName; // { item_id, tag_id, created_at, tag_name }
 
       // drop from junction cache
       state.item_tags = state.item_tags.filter(
         r => !(r.item_id === rel.item_id && r.tag_id === rel.tag_id)
       );
 
-      const removeTag = (it?: any) => {
+      const removeTag = (it?: Item) => {
+        // Remove from tag_ids array (existing logic)
         if (it?.tag_ids) it.tag_ids = it.tag_ids.filter((id: string) => id !== rel.tag_id);
+        
+        // Remove from tags array (new logic for the tags string array from the view)
+        if (it?.tags && Array.isArray(it.tags)) {
+          it.tags = it.tags.filter((tagName: string) => tagName !== rel.tag_name) as string[];
+        }
       };
 
       removeTag(state.items.find(i => i.item_id === rel.item_id));
       if (state.item && state.item.item_id === rel.item_id) removeTag(state.item);
     });
 
-    /* ---------- fetch all item_tags ---------- */
+    /* ─── fetch all item–tag relations ────────────────────────────────── */
     builder.addCase(fetchAllItemTags.pending, (state) => {
       state.loading = true;
     });
@@ -320,11 +352,36 @@ export const itemsSlice = createSlice({
         byItem[r.item_id].push(r.tag_id);
       });
 
+      // Create a mapping of tag_id to tag_name for updating tags arrays
+      const tagIdToName: Record<string, string> = {};
+      state.tags.forEach(tag => {
+        tagIdToName[tag.tag_id] = tag.tag_name ?? '';
+      });
+
       state.items.forEach((it) => {
         it.tag_ids = byItem[it.item_id] ?? [];
+        
+        // Update tags array based on tag_ids and the mapping
+        if (it.tag_ids.length > 0) {
+          it.tags = it.tag_ids
+            .map(id => tagIdToName[id])
+            .filter(name => name !== undefined); // Filter out any undefined names
+        } else {
+          it.tags = [];
+        }
       });
+      
       if (state.item) {
         state.item.tag_ids = byItem[state.item.item_id] ?? [];
+        
+        // Update tags array for the selected item
+        if (state.item.tag_ids.length > 0) {
+          state.item.tags = state.item.tag_ids
+            .map(id => tagIdToName[id])
+            .filter(name => name !== undefined);
+        } else {
+          state.item.tags = [];
+        }
       }
     });
     builder.addCase(fetchAllItemTags.rejected, (state) => {

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { GridExpandMoreIcon } from '@mui/x-data-grid';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import { Trans, useTranslation } from 'react-i18next';
+import { getAccessToken } from '../utility/getToken';
 
 // Define Category type for helpers
 type Category = {
@@ -41,6 +42,7 @@ function Home() {
   return (
     <Box id='home'>
       {/* Hero banner */}
+      <Button onClick={getAccessToken} >getToken</Button>
       <Box component='section' id='hero-container'
         sx={{
           backgroundImage: 'url(/hero.png)', height: 779, backgroundRepeat: 'no-repeat', width: '100%',

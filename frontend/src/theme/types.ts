@@ -1,5 +1,3 @@
-import { ChipProps } from '@mui/material';
-
 // Custom Typography Variant Types
 declare module '@mui/material/styles' {
   interface TypographyVariants {
