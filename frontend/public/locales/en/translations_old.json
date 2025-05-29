@@ -33,7 +33,13 @@
     "bookingCancelled": "Booking cancelled"
   },
   "userBookings": {
-    "test": "Success"
+    "test": "Success",
+    "status": {
+      "cancelled": "cancelled",
+      "approved": "approved",
+      "pending": "pending",
+      "rejected": "rejected"
+    }
   },
   "UserBookings": {
     "snackbar": {
@@ -52,11 +58,20 @@
         "inventory_items": "Inventory items"
       },
       "status": {
-        "pending": "Pending",
-        "approved": "Approved",
-        "rejected": "Rejected",
-        "cancelled": "Cancelled",
+        "pending": "pending",
+        "approved": "approved",
+        "rejected": "rejected",
+        "cancelled": "cancelled",
         "completed": "Completed"
+      },
+      "columns": {
+        "confirmed": "Confirmed"
+      },
+      "roles": {
+        "head_admin": "Head Admin",
+        "user": "User",
+        "admin": "Admin",
+        "unapproved": "Unapproved"
       }
     }
   },
@@ -74,6 +89,30 @@
   "\"home": {
     "categories": {
       "accessories\"": "Accessories"
+    }
+  },
+  "notifications": {
+    "pending_user_notifications": "There are pending {{amount}} users",
+    "pending_bookings_notifications": "There are pending {{amount}} bookings",
+    "BOOKING_APPROVED": "Your booking was approved!",
+    "BOOKING_REJECTED": "Your booking was rejected"
+  },
+  "avatar": {
+    "uploading": "Uploading...",
+    "change": "Change avatar"
+  },
+  "cart": {
+    "snackbar": {
+      "itemQtyUnavailable": "Not enough of item available for selected dates.",
+      "maxQtyError": "Max quantity of the item for the dates is already in cart",
+      "maxQtyDateError": "Max quantity of the item for the dates is already in cart",
+      "qtyUnavailable": "Requested bigger quantity than available overall by {{amount}}"
+    }
+  },
+  "manageUsers": {
+    "snackbar": {
+      "roleUpdated": "{{name}}'s role changed to {{role}}",
+      "adminErrorMessage": ""
     }
   }
 }

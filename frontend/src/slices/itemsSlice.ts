@@ -130,7 +130,7 @@ export const itemsSlice = createSlice({
     })
     builder.addCase(fetchAllItems.fulfilled, (state, action) => {
       state.items = action.payload.data;
-      //state.loading = false
+      state.loading = false;
     })
     builder.addCase(fetchAllItems.rejected, (state) => {
       state.loading = false
@@ -306,7 +306,8 @@ export const itemsSlice = createSlice({
         
         // Update tags array (new logic for the tags string array from the view)
         if (!Array.isArray(it.tags)) it.tags = [];
-        if (!it.tags.includes(rel.tag_name)) it.tags.push(rel.tag_name);
+        // Use a different approach to avoid the 'never' type issue
+        it.tags = (it.tags.includes(rel.tag_name) ? it.tags : [...it.tags, rel.tag_name]) as string[];
       };
 
       pushTag(state.items.find(i => i.item_id === rel.item_id));
@@ -328,7 +329,7 @@ export const itemsSlice = createSlice({
         
         // Remove from tags array (new logic for the tags string array from the view)
         if (it?.tags && Array.isArray(it.tags)) {
-          it.tags = it.tags.filter((tagName: string) => tagName !== rel.tag_name);
+          it.tags = it.tags.filter((tagName: string) => tagName !== rel.tag_name) as string[];
         }
       };
 
