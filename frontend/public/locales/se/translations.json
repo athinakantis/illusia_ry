@@ -68,6 +68,31 @@
         "pending": "obekräftad",
         "rejected": "avvisad"
       }
+    },
+    "items": {
+      "tags_column_header": "Taggar",
+      "dataGrid": {
+        "deleteConfirm": "Är du säker på att du vill ta bort det här objektet?",
+        "columns": {
+          "id": "ID",
+          "name": "Namn",
+          "description": "Beskrivning",
+          "visibility": "Synlighet",
+          "location": "Plats",
+          "quantity": "Antal",
+          "category": "Kategori",
+          "createdAt": "Skapad",
+          "actions": "Åtgärder"
+        },
+        "visibility": {
+          "visible": "Synlig",
+          "hidden": "Dold"
+        },
+        "aria": {
+          "view": "visa",
+          "delete": "ta bort"
+        }
+      }
     }
   },
   "adminBookings": {
@@ -150,6 +175,21 @@
     "snackbar": {
       "itemAdded": "Varan tillagd!",
       "selectDates": "Vänligen välj datum innan du tillägger en vara"
+    },
+    "dataGrid": {
+      "columns": {
+        "name": "Namn",
+        "status": "Status",
+        "quantity": "Kvantitet",
+        "date_range": "Datum",
+        "actions": "Handling"
+      },
+      "status": {
+        "available": "Tillgänglig",
+        "unavailable": "Inte tillgänglig",
+        "booked": "Bokad",
+        "pending": "Väntar"
+      }
     }
   },
   "account": {
