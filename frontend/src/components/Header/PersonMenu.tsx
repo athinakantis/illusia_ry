@@ -85,12 +85,13 @@ const PersonMenu = () => {
           '& .MuiMenuItem-root': {
             py: '10px', gap: '7px',
             borderBottom: '1px solid #e2e2e2',
+            maxWidth: 250,
+            textWrap: 'wrap'
           },
           '& .MuiList-root': { pt: 0 },
           '& .MuiPaper-root': {
             boxShadow: 'none',
             border: '1px solid #e2e2e2',
-            width: 200,
           },
         }}
       >
