@@ -31,7 +31,7 @@ import { useAuth } from '../hooks/useAuth';
 import { Link, useNavigate } from 'react-router-dom';
 import { store } from '../store/store';
 import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
 import { RangeValue } from '@react-types/shared';
@@ -57,15 +57,7 @@ function Cart() {
 	const { t } = useTranslation();
 	const { showSnackbar } = useTranslatedSnackbar()
 
-	useEffect(() => {
-		updateRangeWithSelectedRange(); // These need to be changed around. Your calling on something that is not set yet.
-	}, [selectedDateRange]);
-
-	useEffect(() => {
-		updateLocalCartWithCart();
-	}, [cart])
-
-	const updateRangeWithSelectedRange = () => {
+	const updateRangeWithSelectedRange = useCallback(() => {
 		if (selectedDateRange.start_date && selectedDateRange.end_date) {
 			setLocalCartRange({
 				start: parseDate(selectedDateRange.start_date),
@@ -75,7 +67,15 @@ function Cart() {
 		} else {
 			setLocalCartRange(null);
 		}
-	}
+	}, [selectedDateRange])
+	useEffect(() => {
+		updateRangeWithSelectedRange(); // These need to be changed around. Your calling on something that is not set yet.
+	}, [updateRangeWithSelectedRange]);
+
+	useEffect(() => {
+		updateLocalCartWithCart();
+	}, [cart])
+
 
 	const updateLocalCartWithCart = () => {
 		setLocalCart(cart.map(item => ({ ...item })));
