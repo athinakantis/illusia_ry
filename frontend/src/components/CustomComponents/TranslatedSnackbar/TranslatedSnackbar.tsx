@@ -70,7 +70,7 @@ export const useTranslatedSnackbar = () => {
   const showSnackbar = ({
     message,
     variant = 'default',
-    autoHideDuration = 10000,
+    autoHideDuration = 4200,
     divider = false,
     src = '',
     secondaryMessage = '',
