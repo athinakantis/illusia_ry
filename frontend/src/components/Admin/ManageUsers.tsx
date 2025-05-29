@@ -19,10 +19,11 @@ import {
   updateUserRole,
   updateUserStatus,
 } from '../../slices/usersSlice';
-import { showCustomSnackbar } from '../CustomSnackbar';
 import { useAuth } from '../../hooks/useAuth';
 import { StyledDataGrid } from '../CustomComponents/StyledDataGrid';
 import { useSearchParams } from 'react-router-dom';
+import { useTranslatedSnackbar } from '../CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
+import { useTranslation } from 'react-i18next';
 
 const STATUS_OPTIONS = [
   'pending',
@@ -46,15 +47,18 @@ const ManageUsers: React.FC = () => {
   const users = useAppSelector(selectAllUsers);
   const loading = useAppSelector(selectUserLoading);
   const { role } = useAuth();
-  const theme = useTheme()
+  const theme = useTheme();
   const [searchParams] = useSearchParams();
   const [filter, setFilter] = useState<VALID_FILTER>('ALL');
+  const { t } = useTranslation();
+  const { showSnackbar } = useTranslatedSnackbar();
 
   // Fetch all users with role on component mount
   useEffect(() => {
     dispatch(fetchAllUsersWithRole());
     const param = searchParams.get('filter');
-    if (param && VALID_FILTERS.includes(param.toUpperCase())) setFilter(param.toUpperCase());
+    if (param && VALID_FILTERS.includes(param.toUpperCase()))
+      setFilter(param.toUpperCase());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // ---------------------  Handlers  --------------------------------------------------------------
@@ -77,19 +81,35 @@ const ManageUsers: React.FC = () => {
       // Find the user by ID to get their display name
       changedUser = users.find((u) => u.user_id === userId);
       const name = changedUser?.display_name ?? 'User';
-      showCustomSnackbar(`${name}'s role changed to ${role}`, 'success');
+      showSnackbar({
+        message: t('manageUsers', {
+          name: name,
+          role: t(`admin.dashboard.roles.${role}`),
+        }),
+        variant: 'info',
+      });
       // Refresh the grid data without reloading the page
     } catch (err: unknown) {
       // Handle error
       if (err instanceof Error) {
         console.error('Error updating user role:', err.message);
-        showCustomSnackbar(
-          `${changedUser?.display_name ?? 'User'}: ${err.message}`,
-          'error',
-        );
+        showSnackbar({
+          message: t('manageUsers.roleUpdateFailed', {
+            error: err.message,
+            target: changedUser?.display_name ?? 'User',
+            defaultValue: `${changedUser?.display_name ?? 'User'}: ${err.message
+              }`,
+          }),
+          variant: 'error',
+        });
       } else {
         console.error('Error updating user role:', err);
-        showCustomSnackbar(`Failed to update user role: ${err}`, 'error');
+        showSnackbar({
+          message: t('manageUsers.snackbar.roleUpdateFailed', {
+            defaultValue: `Failed to update user role: ${err}`,
+          }),
+          variant: 'error',
+        });
       }
     }
   };
@@ -105,22 +125,31 @@ const ManageUsers: React.FC = () => {
       // Find the user by ID to get their display name
       changedUser = users.find((u) => u.user_id === userId);
       const name = changedUser?.display_name ?? `User: ${userId}`;
-      showCustomSnackbar(
-        `${name}'s status changed to ${STATUS_LABELS[status]}`,
-        'success',
-      );
+      showSnackbar({
+        message: `${name}'s status changed to ${STATUS_LABELS[status]}`,
+        variant: 'info',
+      });
       // Refresh the grid data without reloading the page
     } catch (err: unknown) {
       // Handle error
       if (err instanceof Error) {
         console.error('Error updating user status:', err.message);
-        showCustomSnackbar(
-          `${changedUser?.display_name ?? `User ${userId}}`}: ${err.message}`,
-          'error',
-        );
+        showSnackbar({
+          message: t('manageUsers.snackbar.statusUpdateFailed', {
+            defaultValue: `${changedUser?.display_name ?? `User ${userId}}`}: ${err.message
+              }`,
+          }),
+          variant: 'error',
+        });
       } else {
         console.error('Error updating user status:', err);
-        showCustomSnackbar(`Failed to update user status: ${err}`, 'error');
+        showSnackbar({
+          message: t('manageUsers.snackbar.statusUpdateFailed', {
+            defaultValue: `Failed to update user status: ${err}`,
+            error: err,
+          }),
+          variant: 'error',
+        });
       }
     }
   };
@@ -139,8 +168,20 @@ const ManageUsers: React.FC = () => {
 
   // Define columns for DataGrid
   const columns: GridColDef[] = [
-    { field: 'display_name', headerName: 'Name', flex: 1, minWidth: 150, headerClassName: 'columnHeader' },
-    { field: 'email', headerName: 'Email', flex: 1, minWidth: 200, headerClassName: 'columnHeader' },
+    {
+      field: 'display_name',
+      headerName: 'Name',
+      flex: 1,
+      minWidth: 150,
+      headerClassName: 'columnHeader',
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+      flex: 1,
+      minWidth: 200,
+      headerClassName: 'columnHeader',
+    },
 
     {
       field: 'role_title',
@@ -300,8 +341,11 @@ const ManageUsers: React.FC = () => {
             rows={filtered}
             getRowId={(row) => row.user_id}
             columns={columns}
-            sx={{ '& .columnHeader, .MuiDataGrid-scrollbarFiller ': { bgcolor: theme.palette.background.verylightgrey } }}
-
+            sx={{
+              '& .columnHeader, .MuiDataGrid-scrollbarFiller ': {
+                bgcolor: theme.palette.background.verylightgrey,
+              },
+            }}
             initialState={{
               pagination: { paginationModel: { pageSize: 10, page: 0 } },
             }}

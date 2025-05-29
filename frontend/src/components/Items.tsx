@@ -46,7 +46,6 @@ import {
   today,
 } from '@internationalized/date';
 import { Item } from '../types/types';
-import { showCustomSnackbar } from './CustomSnackbar';
 import Spinner from './Spinner';
 import broken_img from '../assets/broken_img.png';
 import { useTranslation } from 'react-i18next';
@@ -113,11 +112,9 @@ function Items() {
           end_date: range.end.toString(),
         }),
       );
-
       showSnackbar({ message: t('items.snackbar.itemAdded'), variant: 'info', divider: true, secondaryMessage: item.item_name, src: item.image_path[0] });
-
     } else {
-      showCustomSnackbar(checkAdditionToCart.message, checkAdditionToCart.severity);
+      showSnackbar({ message: t(checkAdditionToCart.translationKey, { defaultValue: checkAdditionToCart.message }), variant: checkAdditionToCart.severity });
     }
   };
 
@@ -194,9 +191,7 @@ function Items() {
       const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
 
       if (diffInDays > 14) {
-
-        showCustomSnackbar('You can only book a maximum of 14 days', 'warning');
-
+        showSnackbar({ message: t('booking.snackbar.maxDays', { defaultValue: 'You can only book a maximum of 14 days' }), variant: 'warning' });
         return;
       }
 
@@ -205,7 +200,7 @@ function Items() {
   };
 
   /* Remove 'Uncategorised' from cat options */
-  const filteredCategories = categories.filter(c => c.category_name !== 'Uncategorised')
+  const filteredCategories = categories.filter(c => c.category_name !== 'Uncategorized')
 
   return (
     <Box

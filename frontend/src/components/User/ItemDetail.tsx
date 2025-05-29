@@ -18,13 +18,14 @@ import type { RangeValue } from '@react-types/shared';
 import { checkAvailabilityForItemOnDates } from '../../selectors/availabilitySelector';
 import { addItemToCart, selectDateRange } from '../../slices/cartSlice';
 import { store } from '../../store/store';
-import { showCustomSnackbar } from '../CustomSnackbar';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ArrowBack, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import broken_img from '../../assets/broken_img.png'
 import { selectQtyForItemInReservationsByIdInDateRange } from '../../slices/reservationsSlice';
+import { useTranslatedSnackbar } from '../CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
+import { useTranslation } from 'react-i18next';
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -86,6 +87,8 @@ const ItemDetail: React.FC = () => {
   const item = items.find((i) => i.item_id === itemId);
   const categories = useAppSelector(selectAllCategories);
   const selectedDateRange = useAppSelector(selectDateRange);
+  const { showSnackbar } = useTranslatedSnackbar()
+  const { t } = useTranslation()
 
   const itemMaxBookedQty = (range && itemId) ? selectQtyForItemInReservationsByIdInDateRange(
     itemId,
@@ -114,7 +117,7 @@ const ItemDetail: React.FC = () => {
 
       if (diffInDays > 14) {
 
-        showCustomSnackbar('You can only book a maximum of 14 days', 'warning');
+        showSnackbar({ message: t('booking.snackbar.maxDays', { defaultValue: 'You can only book a maximum of 14 days' }), variant: 'warning' });
         return;
       }
       setRange(newRange);
@@ -127,9 +130,7 @@ const ItemDetail: React.FC = () => {
 
   const handleCartAddition = () => {
     if (range?.start === undefined) {
-
-      showCustomSnackbar('Select dates before adding to cart', 'warning');
-
+      showSnackbar({ message: t('items.snackbar.selectDates'), variant: 'warning' });
       return;
     }
 
@@ -139,12 +140,10 @@ const ItemDetail: React.FC = () => {
       if (checkAdditionToCart.severity === 'success') {
         dispatch(addItemToCart({ item: selectItemById(itemId)(store.getState()), quantity: quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
 
-        showCustomSnackbar('Item added to cart', 'success');
+        showSnackbar({ message: t('cart.snackbar.itemAdded', { defaultValue: 'Item was added to cart!' }), variant: 'info' });
 
       } else {
-
-        showCustomSnackbar(checkAdditionToCart.message, checkAdditionToCart.severity);
-
+        showSnackbar({ message: t(checkAdditionToCart.translationKey, { defaultValue: checkAdditionToCart.message }), variant: checkAdditionToCart.severity });
       }
     }
   }
