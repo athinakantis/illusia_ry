@@ -1,3 +1,4 @@
+import { ChipProps } from '@mui/material';
 
 // Custom Typography Variant Types
 declare module '@mui/material/styles' {
@@ -66,5 +67,11 @@ declare module '@mui/material/Button' {
     rounded: true;
     outlined_rounded: true;
     text_contained: true;
+  }
+}
+
+declare module '@mui/material/Chip' {
+  interface ChipPropsVariantOverrides {
+    caps: true;
   }
 }

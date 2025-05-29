@@ -185,7 +185,7 @@ const UserBookings = () => {
                         label={t(`userBookings.status.${booking.status}`)}
                         color={
                           booking.status === 'approved'
-                            ? 'success'
+                            ? 'info'
                             : booking.status === 'pending'
                               ? 'warning'
                               : booking.status === 'rejected'
@@ -194,6 +194,7 @@ const UserBookings = () => {
                                   ? 'warning'
                                   : 'default'
                         }
+                        variant={'caps'}
                       />
                       {canModify(booking) && (
                         <Tooltip

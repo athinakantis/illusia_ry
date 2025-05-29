@@ -329,7 +329,44 @@ export const createAppTheme = () =>
               '& .MuiSvgIcon-root': {
                 fill: '#9537C7',
               },
-              backgroundColor: 'rgb(253, 250, 255)'
+              backgroundColor: 'rgb(253, 250, 255)',
+            },
+          },
+        ],
+      },
+      MuiChip: {
+        variants: [
+          {
+            props: { variant: 'caps' },
+            style: {
+              fontFamily: 'Lato, sans-serif',
+              fontSize: 12,
+              fontWeight: 800,
+              textTransform: 'uppercase',
+            },
+          },
+          {
+            props: { color: 'info' },
+            style: {
+              backgroundColor: theme.info.light,
+              border: `1px solid ${theme.info.main}`,
+              color: theme.info.dark,
+            },
+          },
+          {
+            props: { color: 'error' },
+            style: {
+              backgroundColor: theme.error.light,
+              border: `1px solid ${theme.error.main}`,
+              color: theme.error.dark,
+            },
+          },
+          {
+            props: { color: 'warning' },
+            style: {
+              backgroundColor: theme.warning.light,
+              border: `1px solid ${theme.warning.main}`,
+              color: theme.warning.dark,
             },
           },
         ],
