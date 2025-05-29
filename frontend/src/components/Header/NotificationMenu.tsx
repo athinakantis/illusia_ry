@@ -138,6 +138,7 @@ const NotificationsMenu = () => {
             py: 1.2,
             px: 2,
             borderBottom: '1px solid #e2e2e2',
+            maxWidth: 300, textWrap: 'wrap'
           },
           '& .MuiList-root': { p: 0, width: '100%', alignContent: 'center' },
           '& .MuiPaper-root': {
