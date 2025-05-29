@@ -110,8 +110,8 @@ export interface CartState {
 
 export type Result =
   | { severity: 'success'; data: boolean }
-  | { severity: 'error'; message: string }
-  | { severity: 'warning'; message: string };
+  | { severity: 'error'; message: string, translationKey: string }
+  | { severity: 'warning'; message: string, translationKey: string };
 
 export type BookingWithRes = {
   booking_id: string;
