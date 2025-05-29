@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectAllCategories,
@@ -17,6 +17,10 @@ import {
   TextField,
   Chip,
   Alert,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  Divider,
 } from '@mui/material';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { addItemToCart, selectDateRange } from '../slices/cartSlice';
@@ -62,6 +66,7 @@ function Items() {
 
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const reservations = useAppSelector(selectAllReservations);
   const now = today(getLocalTimeZone());
   const [range, setRange] = useState<RangeValue<DateValue> | null>(null);
@@ -154,37 +159,61 @@ function Items() {
     });
   };
 
-  const categoryParams = searchParams.get('category')?.split(',') || [];
+  const categoryParams = useMemo(() => searchParams.get('category')?.split(',') || [], [searchParams]);
 
-  const itemsMaxBookedQty = (range) ? checkAvailabilityForAllItemsOnDates(
-    range.start.toString(),
-    range.end.toString(),
-  )(store.getState())
-    :
-    {};
+  // Wrap itemsMaxBookedQty in useMemo to prevent recalculation on every render
+  const itemsMaxBookedQty = useMemo(() => {
+    return (range) ? checkAvailabilityForAllItemsOnDates(
+      range.start.toString(),
+      range.end.toString(),
+    )(store.getState())
+      :
+      {};
+  }, [range]);
   // checks the bookings of the items in date range
 
-  const filteredItems = items.filter((item) => {
-    const matchesCategory = categoryParams.length
-      ? (() => {
-        const category = categories.find(
-          (cat) => cat.category_id === item.category_id,
+  const filteredItems = useMemo(() => {
+    return items.filter((item) => {
+      // Category filtering (existing logic)
+      const matchesCategory = categoryParams.length
+        ? (() => {
+          const category = categories.find(
+            (cat) => cat.category_id === item.category_id,
+          );
+          if (!category) return false;
+          const formattedCategory = category.category_name.replace(/ /g, '-');
+          return categoryParams.includes(formattedCategory);
+        })()
+        : true;
+
+      // Location filtering (new logic)
+      const matchesLocation = selectedLocations.length === 0 || 
+        selectedLocations.some(location => 
+          item.location && item.location.toLowerCase().includes(location.toLowerCase())
         );
-        if (!category) return false;
-        const formattedCategory = category.category_name.replace(/ /g, '-');
-        return categoryParams.includes(formattedCategory);
-      })()
-      : true;
 
-    const matchesSearch = item.item_name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
+      // Enhanced search functionality (updated logic)
+      const normalizedQuery = searchQuery.toLowerCase();
+      const matchesSearch = normalizedQuery === '' ? true : (
+        // Search in item name
+        item.item_name.toLowerCase().includes(normalizedQuery) ||
+        // Search in description (if exists)
+        (item.description && item.description.toLowerCase().includes(normalizedQuery)) ||
+        // Search in location (if exists)
+        (item.location && item.location.toLowerCase().includes(normalizedQuery)) ||
+        // Search in tags (if exists and is an array)
+        (item.tags && Array.isArray(item.tags) && item.tags.some(tag => 
+          tag.toLowerCase().includes(normalizedQuery)
+        ))
+      );
 
-    const matchesQty = (range) ? (item.quantity - (itemsMaxBookedQty[item.item_id] || 0) > 0) : true;
-    // checks the map, if any of hte item is available
+      // Quantity filtering (existing logic)
+      const matchesQty = (range) ? (item.quantity - (itemsMaxBookedQty[item.item_id] || 0) > 0) : true;
+      // checks the map, if any of the item is available
 
-    return matchesCategory && matchesSearch && matchesQty;
-  });
+      return matchesCategory && matchesLocation && matchesSearch && matchesQty;
+    });
+  }, [items, categoryParams, selectedLocations, searchQuery, range, itemsMaxBookedQty, categories]);
 
   const handleDateChange = (newRange: RangeValue<DateValue> | null) => {
     if (newRange) {
@@ -259,37 +288,84 @@ function Items() {
           />
         </Provider>
         {/* Categories */}
-        <Box sx={{ pr: 2, gap: 1, display: 'flex', flexWrap: 'wrap' }}>
-          {filteredCategories.map((category) => (
-            <Chip
-              variant={
-                categoryParams.includes(
-                  category.category_name.replace(/ /g, '-'),
-                )
-                  ? 'filled'
-                  : 'outlined'
+        <Box>
+          <Typography variant="body2" fontWeight="bold" sx={{ mb: 1 }}>
+            {t('items.categories')}
+          </Typography>
+          <Box sx={{ pr: 2, gap: 1, display: 'flex', flexWrap: 'wrap' }}>
+            {filteredCategories.map((category) => (
+              <Chip
+                variant={
+                  categoryParams.includes(
+                    category.category_name.replace(/ /g, '-'),
+                  )
+                    ? 'filled'
+                    : 'outlined'
+                }
+                key={category.category_id}
+                label={category.category_name}
+                clickable
+                onClick={() => toggleCategory(category.category_name)}
+                onDelete={
+                  categoryParams.includes(
+                    category.category_name.replace(/ /g, '-'),
+                  )
+                    ? () => toggleCategory(category.category_name)
+                    : undefined
+                }
+                deleteIcon={<RemoveCircleIcon />}
+                sx={{
+                  height: 27,
+                  '&:hover': {
+                    backgroundColor: 'background.lightgrey',
+                    cursor: 'pointer',
+                  },
+                }}
+              />
+            ))}
+          </Box>
+        </Box>
+
+        {/* Location Filters */}
+        <Box>
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="body2" fontWeight="bold" sx={{ mb: 1 }}>
+            {t('items.filter_by_location')}
+          </Typography>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox 
+                  checked={selectedLocations.includes('helsinki')}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedLocations(prev => [...prev, 'helsinki']);
+                    } else {
+                      setSelectedLocations(prev => prev.filter(loc => loc !== 'helsinki'));
+                    }
+                  }}
+                  size="small"
+                />
               }
-              key={category.category_id}
-              label={category.category_name}
-              clickable
-              onClick={() => toggleCategory(category.category_name)}
-              onDelete={
-                categoryParams.includes(
-                  category.category_name.replace(/ /g, '-'),
-                )
-                  ? () => toggleCategory(category.category_name)
-                  : undefined
-              }
-              deleteIcon={<RemoveCircleIcon />}
-              sx={{
-                height: 27,
-                '&:hover': {
-                  backgroundColor: 'background.lightgrey',
-                  cursor: 'pointer',
-                },
-              }}
+              label="Helsinki"
             />
-          ))}
+            <FormControlLabel
+              control={
+                <Checkbox 
+                  checked={selectedLocations.includes('akaa')}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedLocations(prev => [...prev, 'akaa']);
+                    } else {
+                      setSelectedLocations(prev => prev.filter(loc => loc !== 'akaa'));
+                    }
+                  }}
+                  size="small"
+                />
+              }
+              label="Akaa"
+            />
+          </FormGroup>
         </Box>
 
       </Stack>

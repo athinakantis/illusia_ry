@@ -11,7 +11,9 @@ export interface Item {
   created_at: string;
   visible?: boolean;
   /**  UUIDs of the tags attached to this item */
-  tag_ids?: string[];
+  tag_ids?: string[]; // Will be removed in the future
+  tags?: string[] | [] ; // Will be removed in the future
+  category_name?: string; // Added for convenience, not in the database
 }
 
 export type Tag = Pick<

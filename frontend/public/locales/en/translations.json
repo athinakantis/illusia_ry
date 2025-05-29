@@ -1,5 +1,30 @@
 {
   "admin": {
+    "items": {
+      "tags_column_header": "Tags",
+      "dataGrid": {
+        "deleteConfirm": "Are you sure you want to delete this item?",
+        "columns": {
+          "id": "ID",
+          "name": "Name",
+          "description": "Description",
+          "visibility": "Visibility",
+          "location": "Location",
+          "quantity": "Qty",
+          "category": "Category",
+          "createdAt": "Created At",
+          "actions": "Actions"
+        },
+        "visibility": {
+          "visible": "Visible",
+          "hidden": "Hidden"
+        },
+        "aria": {
+          "view": "view",
+          "delete": "delete"
+        }
+      }
+    },
     "add_product": {
       "uploading": "Uploading…",
       "upload_failed": "Upload failed",
@@ -130,7 +155,9 @@
     "search": "Search items",
     "date_picker_disabled_info": "You cannot change the date when your cart has items for the selected days. Empty the cart or change the date within the cart.",
     "browse": "Browse items",
-    "manage": "Manage items"
+    "manage": "Manage items",
+    "categories": "Categories",
+    "filter_by_location": "Filter by Location"
   },
   "account": {
     "nameUpdated": "Your name has been updated to {{name}}.",
