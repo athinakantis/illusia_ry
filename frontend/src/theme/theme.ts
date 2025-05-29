@@ -312,15 +312,27 @@ export const createAppTheme = () =>
       MuiSnackbarContent: {
         styleOverrides: {
           root: {
-            '& .MuiSnackbarContent-message': {width: '100%'},
-          }
-        }
+            '& .MuiSnackbarContent-message': { width: '100%' },
+          },
+        },
       },
       MuiSnackbar: {
         styleOverrides: {
-          root: {
-          }
-        }
+          root: {},
+        },
+      },
+      MuiAlert: {
+        variants: [
+          {
+            props: { severity: 'info' },
+            style: {
+              '& .MuiSvgIcon-root': {
+                fill: '#9537C7',
+              },
+              backgroundColor: 'rgb(253, 250, 255)'
+            },
+          },
+        ],
       },
     },
   });
