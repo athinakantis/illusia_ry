@@ -106,6 +106,11 @@
       "cancelled": "Bokning avbokad"
     }
   },
+  "booking": {
+    "snackbar": {
+      "maxDays": "En bokning får inte överskrida 14 dagar"
+    }
+  },
   "nav": {
     "home": "Hem",
     "items": "Artiklar",
@@ -141,7 +146,11 @@
     "search": "Sök",
     "date_picker_disabled_info": "Datum kan bara ändras om kundvagnen är tom. Töm kundvagnen eller ändra datum i kundvagnen.",
     "browse": "Bläddra",
-    "manage": "Överse artiklar"
+    "manage": "Överse artiklar",
+    "snackbar": {
+      "itemAdded": "Varan tillagd!",
+      "selectDates": "Vänligen välj datum innan du tillägger en vara"
+    }
   },
   "account": {
     "nameUpdated": "Ditt namn har ändrats till {{name}}.",
@@ -264,7 +273,18 @@
     "bookItems": "Boka",
     "empty": "Din kundvagn är tom! <1>Bläddra bland varor</1>",
     "bookItemsApprovalInfo": "Din konto väntar bekräftelse. När en admin har bekräftat ditt konto kan du skapa din bokning!",
-    "bookItemsLogInInfo": "Logga in för att boka artiklar"
+    "bookItemsLogInInfo": "Logga in för att boka artiklar",
+    "snackbar": {
+      "register": "Enbart registrerade användare kan boka artiklar",
+      "createBookingError": "Nånting gick fel, om problemet kvarstår, kontakta oss",
+      "bookingCreated": "Bokningen lyckades!",
+      "cartUpdated": "Din kundvagn har uppdaterats!",
+      "itemQtyUnavailable": "Det finns inte tillräckligt av denna varan på lagret för de efterfrågade datumen",
+      "maxQtyError": "Den totala kvantiteten för varan finns redan i din kundvagn",
+      "maxQtyDateError": "Den totala kvantiteten för varan för de valda datumen finns redan i din kundvagn",
+      "qtyUnavailable": "Du efterfrågade större kvantitet är tillgängligt",
+      "itemAdded": "Varan tillagd!"
+    }
   },
   "home": {
     "heroTitle": "Rekvisita för levande rollspel – samlat på ett ställe",
@@ -291,5 +311,13 @@
     "answer2": "En bokning kan vara upp till 2 veckor.",
     "question3": "Varför måste mitt konto godkännas innan jag kan boka rekvisita?",
     "answer3": "För att säkerställa att vi återfår våra artiklar är vi noggranna med vem som tar del av våran plattform. Ditt konto bör vara godkänt inom 3 dagar, hör av dig om du väntat längre än så."
+  },
+  "manageUsers": {
+    "snackbar": {
+      "roleUpdated": "{{name}}s roll har uppdaterats till {{role}}",
+      "roleUpdateFailed": "Kunde ej uppdatera användarens roll: {{error}}",
+      "statusUpdateFailed": "Kunde ej uppdatera användarens status: {{error}}",
+      "adminErrorMessage": ""
+    }
   }
 }

@@ -100,6 +100,11 @@
       "cancelled": "Varaus peruttu"
     }
   },
+  "booking": {
+    "snackbar": {
+      "maxDays": "Voit varata enintään 14 päivää"
+    }
+  },
   "nav": {
     "home": "Etusivu",
     "items": "Tuotteet",
@@ -135,7 +140,11 @@
     "search": "Etsi tuotteita",
     "date_picker_disabled_info": "Et voi vaihtaa päivämäärää, kun ostoskorissasi on tuotteita valituilla päivillä. Tyhjennä ostoskori tai muuta päivämäärää ostoskorin sisällä.",
     "browse": "Selaa tuotteita",
-    "manage": "Hallinnoi tuotteita"
+    "manage": "Hallinnoi tuotteita",
+    "snackbar": {
+      "itemAdded": "Tuote lisättiin ostoskoriin!",
+      "selectDates": "Valitse päivämäärät ennen kuin lisäät ostoskoriin"
+    }
   },
   "account": {
     "nameUpdated": "Nimesi on päivitetty muotoon {{name}}.",
@@ -258,7 +267,18 @@
     "bookItems": "Varaa tuotteet",
     "empty": "Ostoskori on tyhjä! <1>Selaa tuotteita</1>",
     "bookItemsApprovalInfo": "Tilisi odottaa hyväksyntää. Kun se on hyväksytty, voit tehdä varauksen!",
-    "bookItemsLogInInfo": "Kirjaudu sisään varataksesi kohteita"
+    "bookItemsLogInInfo": "Kirjaudu sisään varataksesi kohteita",
+    "snackbar": {
+      "register": "Vain rekisteröityneet käyttäjät voivat tehdä varauksen",
+      "createBookingError": "Varauksen luomisessa tapahtui virhe. Jos ongelma jatkuu, ota meihin yhteyttä",
+      "bookingCreated": "Varaus on luotu!",
+      "cartUpdated": "Ostoskorisi on päivitetty!",
+      "itemQtyUnavailable": "Tuotetta ei ole tarpeeksi saatavilla valituille päiville.",
+      "maxQtyError": "Tuotteen enimmäismäärä valituille päiville on jo ostoskorissa",
+      "maxQtyDateError": "Tuotteen enimmäismäärä valituille päiville on jo ostoskorissa",
+      "qtyUnavailable": "Pyydetty määrä ylittää saatavilla olevan määrän {{amount}} kappaleella",
+      "itemAdded": "Tuote lisättiin ostoskoriin!"
+    }
   },
   "home": {
     "heroTitle": "Erikoiskauppa LARP-rekvisiitalle, tarvikkeille ja lavasteille",
@@ -285,5 +305,13 @@
     "answer2": "Yhden varauksen kesto voi olla enintään kaksi viikkoa",
     "question3": "Miksi minun on saatava hyväksyntä ennen kuin voin varata tuotteita?",
     "answer3": "Käyttäjiemme hyväksyntä takaa meille, että lainatut esineet palautetaan viimeistään kahden viikon kuluessa."
+  },
+  "manageUsers": {
+    "snackbar": {
+      "roleUpdated": "{{name}}in rooli muutettu rooliksi {{role}}",
+      "roleUpdateFailed": "Käyttäjän roolin päivittäminen epäonnistui: {{error}}",
+      "statusUpdateFailed": "Käyttäjän tilan päivittäminen epäonnistui: {{error}}",
+      "adminErrorMessage": ""
+    }
   }
 }

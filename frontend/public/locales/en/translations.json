@@ -106,6 +106,11 @@
       "cancelled": "Your booking was cancelled"
     }
   },
+  "booking": {
+    "snackbar": {
+      "maxDays": "You can only book a maximum of 14 days"
+    }
+  },
   "nav": {
     "home": "Home",
     "items": "Items",
@@ -133,7 +138,7 @@
     "noNew": "You have no new notifications!",
     "markRead": "Mark as read",
     "pending_user_notifications": "There are pending {{amount}} users",
-    "pending_bookings_notification": "There are pending {{amount}} bookings",
+    "pending_bookings_notifications": "There are pending {{amount}} bookings",
     "BOOKING_APPROVED": "Your booking was approved!",
     "BOOKING_REJECTED": "Your booking was rejected"
   },
@@ -141,7 +146,11 @@
     "search": "Search items",
     "date_picker_disabled_info": "You cannot change the date when your cart has items for the selected days. Empty the cart or change the date within the cart.",
     "browse": "Browse items",
-    "manage": "Manage items"
+    "manage": "Manage items",
+    "snackbar": {
+      "itemAdded": "Tuote lisättiin ostoskoriin!",
+      "selectDates": "Valitse päivämäärät ennen kuin lisäät ostoskoriin"
+    }
   },
   "account": {
     "nameUpdated": "Your name has been updated to {{name}}.",
@@ -264,7 +273,18 @@
     "bookItems": "Book items",
     "empty": "Your cart is currently empty! <1>Browse Items</1>",
     "bookItemsApprovalInfo": "Your account is awaiting approval. Once approved, you may create a booking!",
-    "bookItemsLogInInfo": "Log in to book items"
+    "bookItemsLogInInfo": "Log in to book items",
+    "snackbar": {
+      "register": "Only registered users can make a booking",
+      "createBookingError": "Something went wrong when creating your booking. If the problem persists, contact us",
+      "bookingCreated": "Your booking has been created!",
+      "cartUpdated": "Your cart was updated!",
+      "itemQtyUnavailable": "Not enough of item available for selected dates.",
+      "maxQtyError": "Max quantity of the item for the dates is already in cart",
+      "maxQtyDateError": "Max quantity of the item for the dates is already in cart",
+      "qtyUnavailable": "Requested bigger quantity than available overall by {{amount}}",
+      "itemAdded": "Item was added to cart!"
+    }
   },
   "home": {
     "heroTitle": "Your go-to specialty store for LARP props and accessories",
@@ -291,5 +311,13 @@
     "answer2": "One booking can be a maximum duration of two weeks",
     "question3": "Why do I have to be approved before booking items?",
     "answer3": "We see the approval of our users as a guarantee that the items which have been lent will be returned after a maximum of 2 weeks."
+  },
+  "manageUsers": {
+    "snackbar": {
+      "roleUpdated": "{{name}}'s role changed to {{role}}",
+      "roleUpdateFailed": "Failed to update user role: {{error}}",
+      "statusUpdateFailed": "Failed to update user status: {{error}}",
+      "adminErrorMessage": ""
+    }
   }
 }
