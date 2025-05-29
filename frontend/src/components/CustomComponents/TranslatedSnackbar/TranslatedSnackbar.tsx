@@ -196,6 +196,7 @@ const TranslatedSnackbarContent = React.forwardRef<
         position: 'relative',
         bgcolor: getColor(theme, variant, 'light'),
         minWidth: 288,
+        maxWidth: 400,
         p: '14px 18px',
         border: `1px solid ${getColor(theme, variant, 'main')}`,
         '& .MuiSnackbarContent-message': { p: 0 },
