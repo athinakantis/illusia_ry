@@ -30,6 +30,27 @@ export const theme = {
     light: '#C1FDF9',
     dark: '#27847E',
   },
+  warning: {
+    main: '#FFC6A7',
+    light: '#FFF7F1',
+    dark: '#D8936E',
+    progressBg: '#E9DED6',
+    contrastText: '#2c2c2c',
+  },
+  error: {
+    main: '#E78F8F',
+    light: '#FFF1F1',
+    dark: '#BC6A6A',
+    progressBg: '#E9D6D6',
+    contrastText: '#2c2c2c',
+  },
+  info: {
+    main: '#E9C0FF',
+    light: '#FAF1FF',
+    dark: '#9537C7',
+    progressBg: '#E9C0FF',
+    contrastText: '#2c2c2c',
+  },
 };
 
 declare module '@mui/material/styles' {
@@ -287,6 +308,68 @@ export const createAppTheme = () =>
             justifyContent: 'start',
           },
         },
+      },
+      MuiSnackbarContent: {
+        styleOverrides: {
+          root: {
+            '& .MuiSnackbarContent-message': { width: '100%' },
+          },
+        },
+      },
+      MuiSnackbar: {
+        styleOverrides: {
+          root: {},
+        },
+      },
+      MuiAlert: {
+        variants: [
+          {
+            props: { severity: 'info' },
+            style: {
+              '& .MuiSvgIcon-root': {
+                fill: '#9537C7',
+              },
+              backgroundColor: 'rgb(253, 250, 255)',
+            },
+          },
+        ],
+      },
+      MuiChip: {
+        variants: [
+          {
+            props: { variant: 'caps' },
+            style: {
+              fontFamily: 'Lato, sans-serif',
+              fontSize: 12,
+              fontWeight: 800,
+              textTransform: 'uppercase',
+            },
+          },
+          {
+            props: { color: 'info' },
+            style: {
+              backgroundColor: theme.info.light,
+              border: `1px solid ${theme.info.main}`,
+              color: theme.info.dark,
+            },
+          },
+          {
+            props: { color: 'error' },
+            style: {
+              backgroundColor: theme.error.light,
+              border: `1px solid ${theme.error.main}`,
+              color: theme.error.dark,
+            },
+          },
+          {
+            props: { color: 'warning' },
+            style: {
+              backgroundColor: theme.warning.light,
+              border: `1px solid ${theme.warning.main}`,
+              color: theme.warning.dark,
+            },
+          },
+        ],
       },
     },
   });

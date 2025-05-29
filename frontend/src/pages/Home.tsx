@@ -163,7 +163,7 @@ function Home() {
                 <img src={getImageSrc(displayCategories?.[2])} alt="" />
                 <Typography variant='body3' color='text.main'>
                   {t("home.categories.props", { defaultValue: "Props" })}
-                  "               </Typography>
+                </Typography>
               </Link>
             </Box>
           </Stack>

@@ -85,12 +85,13 @@ const PersonMenu = () => {
           '& .MuiMenuItem-root': {
             py: '10px', gap: '7px',
             borderBottom: '1px solid #e2e2e2',
+            maxWidth: 250,
+            textWrap: 'wrap'
           },
           '& .MuiList-root': { pt: 0 },
           '& .MuiPaper-root': {
             boxShadow: 'none',
             border: '1px solid #e2e2e2',
-            width: 200,
           },
         }}
       >
@@ -157,10 +158,19 @@ const PersonMenu = () => {
             variant="text"
             size="small"
             color="primary"
-            sx={{ padding: '4px 10px', minWidth: 'fit-content' }}
+            sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
             onClick={() => { i18n.changeLanguage('fi'); handleMenuClose(); }}
           >
-            Fin
+            Fi
+          </Button>
+          <Button
+            variant="text"
+            size="small"
+            color="primary"
+            sx={{ padding: '4px 10px', minWidth: 'fit-content' }}
+            onClick={() => { i18n.changeLanguage('se'); handleMenuClose(); }}
+          >
+            Se
           </Button>
         </Box>
       </Menu>

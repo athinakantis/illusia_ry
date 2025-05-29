@@ -46,23 +46,23 @@ export const reservationsSlice = createSlice({
             state.loading = true
         })
         builder.addCase(fetchAllReservations.fulfilled, (state, action) => {
-            state.loading = false
             state.reservations = action.payload.data;
+            state.loading = false
         })
         builder.addCase(fetchAllReservations.rejected, (state) => {
-            state.loading = false
             state.error = 'Could not fetch items'
+            state.loading = false
         })
         builder.addCase(fetchFutureReservations.pending, (state) => {
             state.loading = true
         })
         builder.addCase(fetchFutureReservations.fulfilled, (state, action) => {
-            state.loading = false
             state.reservations = action.payload.data;
+            state.loading = false
         })
         builder.addCase(fetchFutureReservations.rejected, (state) => {
-            state.loading = false
             state.error = 'Could not fetch items'
+            state.loading = false
         })
     }
 })
@@ -80,8 +80,6 @@ export const selectQtyForItemInReservationsByIdInDateRange = (id: string, start_
 
     const maxAvailableQtyInRange = getMaxBookedQtyForItem(getBookedQtyByDateAndItemForReservationsInRange(new Date(start_date), new Date(end_date), itemReservations)[id]);
 
-
-    // should we just build a map of all the reservations straight from the beginning? Shhould make the things much simpler
     return maxAvailableQtyInRange;
 }
 
@@ -90,7 +88,8 @@ export const checkAvailabilityForAllItemsOnDates = (
     end_date: string,
 ) => (state: RootState) => {
 
-    const itemsMaxBookedQty = getMaxBookedQtyForManyItems(getBookedQtyByDateAndItemForReservationsInRange(new Date(start_date), new Date(end_date), state.reservations.reservations))
+    const activeReservations = state.reservations.reservations.filter(res => res.is_active === true)
+    const itemsMaxBookedQty = getMaxBookedQtyForManyItems(getBookedQtyByDateAndItemForReservationsInRange(new Date(start_date), new Date(end_date), activeReservations))
 
     return itemsMaxBookedQty;
     // calculates the max booked qty over the dates of the items for filtering

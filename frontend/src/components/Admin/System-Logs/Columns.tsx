@@ -133,6 +133,7 @@ export const systemLogColumns: GridColDef<SystemLog>[] = [
             item_id: string;
             quantity: number;
             start_date: string;
+            is_active: boolean;
           };
           return <ReservationLabelCell value={value} metadata={reservationMetadata} />;
         }

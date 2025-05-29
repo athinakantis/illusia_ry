@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import { IconButton, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { showCustomSnackbar } from '../../CustomSnackbar';
 import { accountApi } from '../../../api/account';
 import { useAuth } from '../../../hooks/useAuth';
 import { useState, useEffect } from 'react';
@@ -23,13 +22,15 @@ import { Link } from 'react-router-dom';
 import UploadAvatar from './UploadAvatar';
 import { usersApi } from '../../../api/users';
 import { useTranslation } from 'react-i18next';
+import { useTranslatedSnackbar } from '../../CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
 
 const Account = () => {
-   // ──────────────────────────────   Variables  ───────────────────────────────────────────
-   const theme = useTheme()
-   const pallete = theme.palette
-   const { user } = useAuth();
-   const { t } = useTranslation();
+  // ──────────────────────────────   Variables  ───────────────────────────────────────────
+  const theme = useTheme()
+  const pallete = theme.palette
+  const { user } = useAuth();
+  const { t } = useTranslation();
+  const { showSnackbar } = useTranslatedSnackbar()
 
   // Local state for name and input
   const [name, setName] = useState('');
@@ -44,7 +45,7 @@ const Account = () => {
 
   const hasPhoneNumber = phoneNumber !== '';
 
-  
+
   // ──────────────────────────────   State  ─────────────────────────────────────────
   const [tab, setTab] = useState(0); // 0 = Profile, 1 = Security
   const [showPhoneEditor, setShowPhoneEditor] = useState(false);
@@ -62,29 +63,31 @@ const Account = () => {
       setNameInput(initial);
     })();
   }, [user]);
-  
- // ──────────────────────────────   Handlers  ───────────────────────────────────────────
+
+  // ──────────────────────────────   Handlers  ───────────────────────────────────────────
   const handleNameChange = async () => {
     try {
       await accountApi.updateName(nameInput);
       setName(nameInput);
-      showCustomSnackbar(
-        t('account.nameUpdated', {
-          defaultValue: 'Your name has been updated to {{name}}.',
-          name: nameInput,
-        }),
-        'success'
-      );
+      showSnackbar({
+        message:
+          t('account.nameUpdated', {
+            defaultValue: 'Your name has been updated to {{name}}.',
+            name: nameInput,
+          }),
+        variant: 'info'
+      });
       setEditingName(false);
     } catch (error) {
       console.error('Error updating name:', error);
-      showCustomSnackbar(
-        t('account.errorUpdatingName', { defaultValue: 'Error updating name' }),
-        'error'
-      );
+      showSnackbar({
+        message:
+          t('account.errorUpdatingName', { defaultValue: 'Error updating name' }),
+        variant: 'error'
+      });
     }
   };
- 
+
   // ──────────────────────────────   Conditial Renders  ─────────────────────────────────────
   // Check if user is logged in
   if (!user) {
@@ -175,15 +178,15 @@ const Account = () => {
             gap: 1,
           }}
         >
-            {/*                          Profile Tab                        */}
+          {/*                          Profile Tab                        */}
           {tab === 0 && (
             <>
               {/*                      Avatar Component                      */}
-            <Box sx={{ margin: '0 auto', mt: 2 }}>
-              <UploadAvatar  />
+              <Box sx={{ margin: '0 auto', mt: 2 }}>
+                <UploadAvatar />
               </Box>
               {/*                       Editing Name                          */}
-              
+
               {editingName ? (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <TextField
@@ -226,17 +229,17 @@ const Account = () => {
                 {t('account.changeEmail', { defaultValue: 'Change email' })}
               </Button>
               {showEmailEditor && (
-            //                     Change Email Component
+                //                     Change Email Component
                 <ChangeEmail
                   initialEmail={user?.email}
                   onDone={() => {
                     setShowEmailEditor(false);
-                   
+
                   }}
                 />
               )}
 
-    
+
               {/*                     Phone Section                        */}
               {hasPhoneNumber ? (
                 <>
@@ -264,9 +267,9 @@ const Account = () => {
               )}
 
               {showPhoneEditor && (
-              
+
                 <AddPhone
-                
+
                   initialPhone={
                     hasPhoneNumber ? phoneNumber : undefined
                   }

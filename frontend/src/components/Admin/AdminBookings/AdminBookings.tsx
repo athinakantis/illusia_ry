@@ -96,7 +96,7 @@ const AdminBookings = () => {
     handleMenuClose();
     showSnackbar({
       message: t('adminBookings.snackbar.bookingApproved', { defaultValue: 'Booking approved' }),
-      variant: 'success',
+      variant: 'info',
     });
   };
   /*——————————————Reject Booking —————————————————————*/

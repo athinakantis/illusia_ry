@@ -63,7 +63,7 @@ export interface Booking {
   booking_id: string;
   user_id: string;
   status: string;
-  created_at: string;
+  created_at: string | null;
   reservations?: Array<{
     reservation_id: string;
     item_id: string;
@@ -90,6 +90,7 @@ export interface Reservation {
   start_date: string;
   end_date: string;
   quantity: number;
+  is_active: boolean;
 }
 
 export interface ReservationsState {
@@ -111,8 +112,8 @@ export interface CartState {
 
 export type Result =
   | { severity: 'success'; data: boolean }
-  | { severity: 'error'; message: string }
-  | { severity: 'warning'; message: string };
+  | { severity: 'error'; message: string, translationKey: string }
+  | { severity: 'warning'; message: string, translationKey: string };
 
 export type BookingWithRes = {
   booking_id: string;
@@ -199,4 +200,5 @@ export type AdminNotification = {
   message: string;
   is_read: boolean;
   link: string;
+  amount?: number;
 };

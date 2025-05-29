@@ -145,6 +145,15 @@ const Header = () => {
           >
             Fin
           </Button>
+          <Button
+            variant="text"
+            size="small"
+            color="primary"
+            sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
+            onClick={() => { i18n.changeLanguage('se'); setMobileOpen(!mobileOpen); }}
+          >
+            Se
+          </Button>
         </ListItem>
         {user ?
           <ListItem

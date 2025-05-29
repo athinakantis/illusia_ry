@@ -2,20 +2,23 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Tables } from 'src/types/supabase';
 import { ApiResponse } from 'src/types/response';
 import { CustomRequest } from 'src/types/request.type';
+import { GuestService } from 'src/modules/guest/guest.service'; 
 
 @Injectable()
 export class ItemReservationService {
-
+  constructor(
+    private readonly guestService: GuestService, // new injection
+  ) {}
 
   /**
    * @returns ApiResponse containing an array of item reservations
    * @throws Error if there is an issue with the Supabase query
    * @description This method retrieves all item reservations from the database.
    */
-  async getAllReservations(req: CustomRequest): Promise<
+  async getAllReservations(): Promise<
     ApiResponse<Tables<'item_reservations'>[]>
   > {
-    const supabase = req['supabase'];
+    const supabase = this.guestService.getPublicClient(); // or just access its supabase property
 
     const { data, error } = await supabase
       .from('item_reservations')
@@ -40,8 +43,8 @@ export class ItemReservationService {
    * @throws Error if there is an issue with the Supabase query
    * @description This method retrieves all reservations associated with a specific item(item_id).
    */
-  async getReservationsForItem(req: CustomRequest, itemId: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
-    const supabase = req['supabase'];
+  async getReservationsForItem(itemId: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
+    const supabase = this.guestService.getPublicClient();
 
     const { data, error } = await supabase
       .from('item_reservations')
@@ -67,8 +70,8 @@ export class ItemReservationService {
    * @throws Error if there is an issue with the Supabase query
    * @description This method retrieves all reservations associated with a specific booking(booking_id).
    */
-  async getReservationsByBooking(req: CustomRequest, bookingId: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
-    const supabase = req['supabase'];
+  async getReservationsByBooking(bookingId: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
+    const supabase = this.guestService.getPublicClient();
 
     const { data, error } = await supabase
       .from('item_reservations')
@@ -92,11 +95,12 @@ export class ItemReservationService {
    * @param to   End date of the range
    * @returns    ApiResponse containing an array of item reservations within the specified date range
    */
-  async getReservationsInDateRange(req: CustomRequest, from: string, to: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
-    const supabase = req['supabase'];
+  async getReservationsInDateRange( from: string, to: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
+    const supabase = this.guestService.getPublicClient();
     const { data, error } = await supabase
       .from('item_reservations')
       .select('*')
+      .eq('is_active', true)
       .lte('start_date', to) // start before or on "to"
       .gte('end_date', from) // end after or on "from"
       .order('start_date', { ascending: true });
@@ -118,8 +122,8 @@ export class ItemReservationService {
    * @param to     End date of the range
    * @returns
    */
-  async getReservationsForItemInDateRange(req: CustomRequest, itemId: string, from: string, to: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
-    const supabase = req['supabase'];
+  async getReservationsForItemInDateRange( itemId: string, from: string, to: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
+    const supabase = this.guestService.getPublicClient();
 
     const { data, error } = await supabase
       .from('item_reservations')
@@ -139,8 +143,8 @@ export class ItemReservationService {
     };
   }
 
-  async getReservationsByStartDate(req: CustomRequest, startDate: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
-    const supabase = req['supabase'];
+  async getReservationsByStartDate(startDate: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
+    const supabase = this.guestService.getPublicClient();
 
     const { data, error } = await supabase
       .from('item_reservations')
@@ -157,8 +161,8 @@ export class ItemReservationService {
     };
   }
 
-  async getReservationsByEndDate(req: CustomRequest, endDate: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
-    const supabase = req['supabase'];
+  async getReservationsByEndDate(endDate: string): Promise<ApiResponse<Tables<'item_reservations'>[]>> {
+    const supabase = this.guestService.getPublicClient();
 
     const { data, error } = await supabase
       .from('item_reservations')
@@ -185,7 +189,7 @@ export class ItemReservationService {
     end_date: string;
     quantity: number;
   }): Promise<ApiResponse<Tables<'item_reservations'>>> {
-    const supabase = req['supabase'];
+    const supabase = req["supabase"]
 
     const { data, error } = await supabase
       .from('item_reservations')

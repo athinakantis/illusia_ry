@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Booking, BookingsState } from '../types/types';
+import { Booking, BookingsState, Reservation } from '../types/types';
 import { RootState } from '../store/store';
 import { bookingsApi } from '../api/bookings';
 import axios from 'axios';
+import { Tables } from '../types/supabase';
 
 const initialState: BookingsState = {
   bookings: [],
@@ -107,7 +108,7 @@ export const updateBookingStatus = createAsyncThunk<
 );
 
 export const addBooking = createAsyncThunk<
-  { booking_id: string; status: string },
+  { booking: Tables<'bookings'>, reservations: Reservation[] },
   object,
   { rejectValue: string }
 >('bookings/rpc', async (newBooking, { rejectWithValue }) => {
@@ -165,8 +166,12 @@ export const bookingsSlice = createSlice({
       state.loading = false;
     });
 
-    builder.addCase(addBooking.fulfilled, (state) => {
+    builder.addCase(addBooking.fulfilled, (state, action) => {
       localStorage.removeItem('savedCart');
+
+      // Add new booking to state
+      state.bookings.push(action.payload.booking)
+      state.userBookings.push(action.payload.booking)
       state.loading = false;
     });
     builder.addCase(addBooking.rejected, (state, action) => {

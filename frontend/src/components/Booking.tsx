@@ -33,7 +33,7 @@ import { BookingWithItems } from '../types/types';
 import broken_img from '../assets/broken_img.png'
 import { useTranslation } from 'react-i18next';
 import { RangeValue } from '@react-types/shared';
-import { DateValue, parseDate } from '@internationalized/date';
+import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
 import { Reservation } from '../types/types';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
@@ -42,7 +42,6 @@ import { store } from '../store/store';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 import { updateReservation } from '../slices/reservationsSlice';
 import { useAuth } from '../hooks/useAuth';
-import { showCustomSnackbar } from './CustomSnackbar';
 import { Tables } from '../types/supabase';
 
 function SingleBooking() {
@@ -64,6 +63,7 @@ function SingleBooking() {
   const [incorrectTempBooking, setIncorrectTempBooking] = useState(false);
   const { role } = useAuth();
   const isAdmin = role === 'Admin' || role === 'Head Admin';
+  const now = today(getLocalTimeZone());
 
 
 
@@ -112,13 +112,9 @@ function SingleBooking() {
   };
   const handleStartEditingBooking = () => {
     setEditingBooking(true);
-
   }
 
   const handleSaveEditingBooking = () => {
-
-    console.log("starting the update");
-    console.log(booking_selector);
     if (tempBookingRange)
       tempBookingItems.map(item => {
         item.id && dispatch(updateReservation({
@@ -166,7 +162,6 @@ function SingleBooking() {
       });
 
       setIncorrectTempBooking(Object.keys(qtyCheckErrors).length !== 0);
-
     }
   }
 
@@ -178,7 +173,7 @@ function SingleBooking() {
       const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
 
       if (diffInDays > 14) {
-        showCustomSnackbar('You can only book a maximum of 14 days', 'warning');
+        showSnackbar({ message: t('booking.snackbar.maxDays', { defaultValue: "You can only book a maximum of 14 days" }), variant: 'warning' });
         return;
       }
       setTempBookingRange(newRange);
@@ -227,14 +222,14 @@ function SingleBooking() {
           }))
           // if the cart is being edited, then only added to local cart
         }
-        showCustomSnackbar('Item added to cart', 'success');
+        showSnackbar({ message: t('items.snackbar.itemAdded', { defaultValue: 'Item added to cart!' }), variant: 'info' });
         // adds the item in case it is available
 
       } else {
-        showCustomSnackbar(
-          checkAdditionToCart.message,
-          checkAdditionToCart.severity,
-        );
+        showSnackbar({
+          message: t(checkAdditionToCart.translationKey, { defaultValue: checkAdditionToCart.message }),
+          variant: checkAdditionToCart.severity,
+        });
       }
     }
   };
@@ -295,6 +290,7 @@ function SingleBooking() {
                 labelPosition="side"
                 labelAlign="end"
                 width={270}
+                minValue={now}
                 aria-label="Select dates"
                 value={tempBookingRange}
                 onChange={handleDateChange}

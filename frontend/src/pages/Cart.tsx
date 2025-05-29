@@ -29,10 +29,9 @@ import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
 import { addBooking, fetchUserBookings } from '../slices/bookingsSlice';
 import { useAuth } from '../hooks/useAuth';
 import { Link, useNavigate } from 'react-router-dom';
-import { showCustomSnackbar } from '../components/CustomSnackbar';
 import { store } from '../store/store';
 import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
 import { RangeValue } from '@react-types/shared';
@@ -40,12 +39,13 @@ import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
 import { ItemWithQuantity } from '../types/types';
 import broken_img from '../assets/broken_img.png'
 import { fetchFutureReservations } from '../slices/reservationsSlice';
+import { useTranslatedSnackbar } from '../components/CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
 
 
 function Cart() {
 	const dispatch = useAppDispatch();
 	const { cart } = useAppSelector(selectCart);
-	const { user } = useAuth();
+	const { user, role } = useAuth();
 	const selectedDateRange = useAppSelector(selectDateRange);
 	const [editingCart, setEditingCart] = useState(false);
 	const [localCartRange, setLocalCartRange] = useState<RangeValue<DateValue> | null>(null);
@@ -55,16 +55,9 @@ function Cart() {
 	const [localCart, setLocalCart] = useState<ItemWithQuantity[]>([]);
 	const navigate = useNavigate()
 	const { t } = useTranslation();
+	const { showSnackbar } = useTranslatedSnackbar()
 
-	useEffect(() => {
-		updateRangeWithSelectedRange(); // These need to be changed around. Your calling on something that is not set yet.
-	}, [selectedDateRange]);
-
-	useEffect(() => {
-		updateLocalCartWithCart();
-	}, [cart])
-
-	const updateRangeWithSelectedRange = () => {
+	const updateRangeWithSelectedRange = useCallback(() => {
 		if (selectedDateRange.start_date && selectedDateRange.end_date) {
 			setLocalCartRange({
 				start: parseDate(selectedDateRange.start_date),
@@ -74,7 +67,15 @@ function Cart() {
 		} else {
 			setLocalCartRange(null);
 		}
-	}
+	}, [selectedDateRange])
+	useEffect(() => {
+		updateRangeWithSelectedRange(); // These need to be changed around. Your calling on something that is not set yet.
+	}, [updateRangeWithSelectedRange]);
+
+	useEffect(() => {
+		updateLocalCartWithCart();
+	}, [cart])
+
 
 	const updateLocalCartWithCart = () => {
 		setLocalCart(cart.map(item => ({ ...item })));
@@ -114,13 +115,11 @@ function Cart() {
 
 	const handleCompleteDateEdit = () => {
 		if (incorrectCart) {
-			showCustomSnackbar('Update the cart so no mistakes', 'warning');
+			showSnackbar({ message: 'Update the cart so no mistakes', variant: 'warning' });
 		} else {
 			if (localCartRange) {
-
 				dispatch(setCartItems({ newStartDate: localCartRange.start.toString(), newEndDate: localCartRange.end.toString(), cart: localCart.filter(item => item.quantity > 0) }));
-				// confirms all the changes in local cart to redux cart
-				showCustomSnackbar('Cart is updated', 'success');
+				showSnackbar({ message: t('cart.snackbar.cartUpdated', { defaultValue: 'Your cart was updated!' }), variant: 'info' });
 				setEditingCart(false);
 			}
 		}
@@ -160,7 +159,7 @@ function Cart() {
 			const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
 
 			if (diffInDays > 14) {
-				showCustomSnackbar('You can only book a maximum of 14 days', 'warning');
+				showSnackbar({ message: t('booking.snackbar.maxDays', { defaultValue: 'You can only book a maximum of 14 days' }), variant: 'warning' });
 				return;
 			}
 			setLocalCartRange(newRange);
@@ -221,14 +220,14 @@ function Cart() {
 						}),
 					);
 				}
-				showCustomSnackbar('Item added to cart', 'success');
+				showSnackbar({ message: t('cart.snackbar.itemAdded', { defaultValue: 'Item was added to cart!' }), variant: 'info' });
 				// adds the item in case it is available
 
 			} else {
-				showCustomSnackbar(
-					checkAdditionToCart.message,
-					checkAdditionToCart.severity,
-				);
+				showSnackbar({
+					message: checkAdditionToCart.message,
+					variant: checkAdditionToCart.severity,
+				});
 			}
 		}
 	};
@@ -243,20 +242,20 @@ function Cart() {
 		const newBookingData: object = createBookingFromCart();
 		const resultAction = await dispatch(addBooking(newBookingData));
 		if (!user) {
-			showCustomSnackbar('Only registered users can make a booking', 'error');
+			showSnackbar({ message: t('cart.snackbar.register', { defaultValue: "Only registered users can make a booking" }), variant: 'error' });
 			return;
 		}
 		if (addBooking.rejected.match(resultAction)) {
-			showCustomSnackbar(resultAction.payload ?? 'unknown error', 'error');
+			showSnackbar({ message: t('cart.snackbar.createBookingError', { defaultValue: 'Something went wrong when creating your booking. If the problem persists, contact us' }), variant: 'error' });
 		} else {
-			showCustomSnackbar('Your booking has been created!', 'success');
+			showSnackbar({ message: t('cart.snackbar.bookingCreated', { defaultValue: 'Your booking has been created!' }), variant: 'info' });
 			dispatch(emptyCart());
 			dispatch(fetchUserBookings(user.id));
 			dispatch(fetchFutureReservations());
 			// update future reservations
 
 			// Navigate to new booking
-			navigate(`/bookings/${resultAction.payload.booking_id}`)
+			navigate(`/bookings/${resultAction.payload.booking.booking_id}`)
 		}
 	};
 
@@ -500,7 +499,11 @@ function Cart() {
 						</Stack>
 						{!user && <Stack sx={{ border: '1px solid #E2E2E2', flexDirection: 'row', padding: '20px 24px', gap: '10px' }}>
 							<InfoOutlineIcon />
-							<Typography variant='body1'>Log in to book items</Typography>
+							<Typography variant='body1'>{t('cart.bookItemsLogInInfo', { defaultValue: 'Log in to book items' })}</Typography>
+						</Stack>}
+						{role === 'Unapproved' && <Stack sx={{ border: '1px solid #E2E2E2', flexDirection: 'row', padding: '20px 24px', gap: '10px' }}>
+							<InfoOutlineIcon />
+							<Typography variant='body1'>{t('cart.bookItemsApprovalInfo', { defaultValue: 'Your account is awaiting approval. Once approved, you may create a booking!' })}</Typography>
 						</Stack>}
 						<Button
 							sx={{
@@ -511,7 +514,7 @@ function Cart() {
 							variant="rounded"
 							size="small"
 							onClick={handleAddBooking}
-							disabled={editingCart}
+							disabled={(editingCart || role === 'Unapproved')}
 						>
 							{t('cart.bookItems', { defaultValue: 'Book items' })}
 						</Button>

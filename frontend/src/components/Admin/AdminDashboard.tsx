@@ -262,7 +262,7 @@ const AdminDashboard = () => {
               height: '50%', fontSize: 'clamp(15px, 1vw, 16px)',
               pl: 4, pr: 4, textTransform: 'capitalize'
             }}>
-            View logs
+            {t('admin.dashboard.viewLogs', { defaultValue: 'View logs' })}
           </Button>
         </Stack>
       </Box>
