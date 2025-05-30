@@ -313,11 +313,36 @@
     "answer3": "We see the approval of our users as a guarantee that the items which have been lent will be returned after a maximum of 2 weeks."
   },
   "manageUsers": {
+    "roles": {
+      "headAdmin": "Head Admin",
+      "admin": "Admin",
+      "unapproved": "Unapproved",
+      "user": "User",
+      "banned": "Banned"
+    },
     "snackbar": {
       "roleUpdated": "{{name}}'s role changed to {{role}}",
       "roleUpdateFailed": "Failed to update user role: {{error}}",
       "statusUpdateFailed": "Failed to update user status: {{error}}",
       "adminErrorMessage": ""
+    },
+    "columnHeaders": {
+      "name": "Name",
+      "email": "Email",
+      "roleTitle": "User Role",
+      "action": "Action"
+    },
+    "actions": {
+      "promote": "Promote",
+      "demote": "Demote",
+      "ban": "Ban",
+      "unban": "Unban",
+      "reject": "Reject",
+      "approve": "Approve"
+    },
+    "tooltips": {
+      "makeAdmin": "Make user an administrator",
+      "makeUser": "Demote Admin to User"
     }
   }
 }

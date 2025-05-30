@@ -61,6 +61,13 @@
         "approved": "hyväksytty",
         "pending": "odottaa",
         "rejected": "hylätty"
+      },
+      "roles": {
+        "head_admin": "Pääylläpitäjä",
+        "admin": "Ylläpitäjä",
+        "user": "Käyttäjä",
+        "unapproved": "Hyväksymätön",
+        "banned": "Estetty käyttäjä"
       }
     }
   },
@@ -307,11 +314,36 @@
     "answer3": "Käyttäjiemme hyväksyntä takaa meille, että lainatut esineet palautetaan viimeistään kahden viikon kuluessa."
   },
   "manageUsers": {
+    "roles": {
+      "head_admin": "Pääylläpitäjä",
+      "admin": "Ylläpitäjä",
+      "user": "Käyttäjä",
+      "unapproved": "Hyväksymätön",
+      "banned": "Estetty käyttäjä"
+    },
     "snackbar": {
       "roleUpdated": "{{name}}in rooli muutettu rooliksi {{role}}",
       "roleUpdateFailed": "Käyttäjän roolin päivittäminen epäonnistui: {{error}}",
       "statusUpdateFailed": "Käyttäjän tilan päivittäminen epäonnistui: {{error}}",
       "adminErrorMessage": ""
+    },
+    "columnHeaders": {
+      "name": "Nimi",
+      "email": "Sähköposti",
+      "roleTitle": "Käyttäjän rooli",
+      "action": "Toiminto"
+    },
+    "actions": {
+      "promote": "Korota",
+      "demote": "Alenna",
+      "ban": "Estä",
+      "unban": "Poista esto",
+      "reject": "Hylkää",
+      "approve": "Hyväksy"
+    },
+    "tooltips": {
+      "makeAdmin": "Tee käyttäjästä ylläpitäjä",
+      "makeUser": "Alenna ylläpitäjä käyttäjäksi"
     }
   }
 }

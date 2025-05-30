@@ -313,11 +313,36 @@
     "answer3": "För att säkerställa att vi återfår våra artiklar är vi noggranna med vem som tar del av våran plattform. Ditt konto bör vara godkänt inom 3 dagar, hör av dig om du väntat längre än så."
   },
   "manageUsers": {
+    "roles": {
+      "headAdmin": "Huvudadmin",
+      "user": "Användare",
+      "admin": "Admin",
+      "unapproved": "Gäst",
+      "banned": "Bannad"
+    },
     "snackbar": {
       "roleUpdated": "{{name}}s roll har uppdaterats till {{role}}",
       "roleUpdateFailed": "Kunde ej uppdatera användarens roll: {{error}}",
       "statusUpdateFailed": "Kunde ej uppdatera användarens status: {{error}}",
       "adminErrorMessage": ""
+    },
+    "columnHeaders": {
+      "name": "Namn",
+      "email": "Email",
+      "roleTitle": "Användarroll",
+      "action": "Handling"
+    },
+    "actions": {
+      "promote": "Befodra",
+      "demote": "Degradera",
+      "ban": "Banna",
+      "unban": "Ta bort ban",
+      "reject": "Avvisa",
+      "approve": "Godkänn"
+    },
+    "tooltips": {
+      "makeAdmin": "Gör användaren till en administratör",
+      "makeUser": "Gör administratör till användare"
     }
   }
 }
