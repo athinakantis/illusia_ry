@@ -339,9 +339,9 @@ function Items() {
           </Box>
         </Box>
 
+        <Divider sx={{ my: 2 }} />
         {/* Location Filters */}
         <Box>
-          <Divider sx={{ my: 2 }} />
           <Typography variant="body2" fontWeight="bold" sx={{ mb: 1 }}>
             {t('items.filter_by_location')}
           </Typography>

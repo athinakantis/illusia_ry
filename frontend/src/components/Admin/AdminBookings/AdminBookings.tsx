@@ -258,7 +258,7 @@ const AdminBookings = () => {
               </TableCell>
               {/*——————————————————————— Status ————————————————————————————*/}
               <TableCell>
-                {t('adminBookings.status', { defaultValue: 'Status' })}
+                {t('adminBookings.status.status', { defaultValue: 'Status' })}
               </TableCell>
             </TableRow>
           </TableHead>
@@ -335,7 +335,7 @@ const AdminBookings = () => {
                           })}
                         </Button>
                       ) : (
-                        b.status
+                        t(`adminBookings.status.${b.status}`, { defaultValue: b.status })
                       )}
                     </TableCell>
                   </TableRow>
