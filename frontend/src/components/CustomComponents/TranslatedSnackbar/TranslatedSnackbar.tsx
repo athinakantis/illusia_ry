@@ -46,8 +46,6 @@ export const useTranslatedSnackbar = () => {
 
   /**
    * Show a snackbar.
-   * @type  {VariantType} variant
-   * @type {TranslatedSnackbarOptions} options
    * @param options ```ts
    * { message, variant?, autoHideDuration? }
    * variant: 'default' | 'error' | 'info' | 'success' | 'warning'

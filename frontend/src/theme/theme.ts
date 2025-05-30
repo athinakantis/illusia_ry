@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material';
+import { createTheme, darken } from '@mui/material';
 
 export const theme = {
   primary: {
@@ -197,65 +197,86 @@ export const createAppTheme = () =>
         defaultProps: {
           disableRipple: true,
         },
-        styleOverrides: {
-          root: {
-            variants: [
-              {
-                props: { variant: 'rounded' },
-                style: {
-                  height: 59,
-                  borderRadius: '64px',
-                  backgroundColor: '#282828',
-                  fontFamily: 'Exo, sans-serif',
-                  fontWeight: 600,
-                  fontSize: 'clamp(14px, 2vw, 20px)',
-                  color: '#FFF',
-                  width: 'fit-content',
-                  padding: '16px 24px',
-                  '&:hover': { backgroundColor: '#464646' },
-                },
-              },
-              {
-                props: { variant: 'rounded', size: 'small' },
-                style: {
-                  textTransform: 'capitalize',
-                  height: 54,
-                  width: '100%',
-                },
-              },
-              {
-                props: { variant: 'contained', color: 'grey' },
-                style: {
-                  backgroundColor: '#282828',
-                  color: 'white',
-                  '&:hover': { backgroundColor: '#3f3f3f' },
-                },
-              },
-              {
-                props: { variant: 'outlined_rounded' },
-                style: {
-                  border: '1px solid #E2E2E2',
-                  borderRadius: '100px',
-                  fontFamily: 'Lato, sans-serif',
-                  height: '40px',
-                  textTransform: 'capitalize',
-                  fontSize: 16,
-                  '&:hover': { backgroundColor: 'rgba(68, 25, 91, 0.04)' },
-                },
-              },
-              {
-                props: { variant: 'text_contained' },
-                style: {
-                  fontFamily: 'Lato, sans-serif',
-                  backgroundColor: '#44195B',
-                  color: '#FFF',
-                  fontWeight: 400,
-                  textTransform: 'capitalize',
-                },
-              },
-            ],
+        variants: [
+          {
+            props: { variant: 'rounded' },
+            style: {
+              height: 59,
+              borderRadius: '64px',
+              backgroundColor: '#282828',
+              fontFamily: 'Exo, sans-serif',
+              fontWeight: 600,
+              fontSize: 'clamp(14px, 2vw, 20px)',
+              color: '#FFF',
+              width: 'fit-content',
+              padding: '16px 24px',
+              '&:hover': { backgroundColor: '#464646' },
+            },
           },
-        },
+          {
+            props: { variant: 'rounded', size: 'small' },
+            style: {
+              textTransform: 'capitalize',
+              height: 54,
+              width: '100%',
+            },
+          },
+          {
+            props: { variant: 'contained', color: 'grey' },
+            style: {
+              backgroundColor: '#282828',
+              color: 'white',
+              '&:hover': { backgroundColor: '#3f3f3f' },
+            },
+          },
+          {
+            props: { variant: 'outlined_rounded' },
+            style: {
+              border: '1px solid #E2E2E2',
+              borderRadius: '100px',
+              fontFamily: 'Lato, sans-serif',
+              height: '40px',
+              textTransform: 'capitalize',
+              fontSize: 16,
+              '&:hover': { backgroundColor: 'rgba(68, 25, 91, 0.04)' },
+            },
+          },
+          {
+            props: { variant: 'text_contained' },
+            style: {
+              fontFamily: 'Exo, sans-serif',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              backgroundColor: theme.info.light,
+              color: theme.info.dark,
+              border: `1px solid ${theme.info.main}`,
+              borderRadius: 5,
+              padding: '5px 10px',
+              lineHeight: '100%',
+              height: 28,
+              fontSize: 13,
+              '&:hover': { backgroundColor: darken(theme.info.light, 0.05) },
+            },
+          },
+          {
+            props: { variant: 'text_contained', color: 'error' },
+            style: {
+              backgroundColor: theme.error.light,
+              color: theme.error.dark,
+              border: `1px solid ${theme.error.main}`,
+              '&:hover': { backgroundColor: darken(theme.error.light, 0.05) },
+            },
+          },
+          {
+            props: { variant: 'text_contained', color: 'warning' },
+            style: {
+              backgroundColor: theme.warning.light,
+              color: theme.warning.dark,
+              border: `1px solid ${theme.warning.main}`,
+              '&:hover': { backgroundColor: darken(theme.warning.light, 0.05) },
+            },
+          },
+        ],
       },
       MuiTabs: {
         styleOverrides: {
