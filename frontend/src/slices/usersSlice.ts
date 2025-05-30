@@ -60,7 +60,7 @@ export const updateUserStatus = createAsyncThunk<User, {userId: string; status: 
   },
 );
 
-export const updateUserRole = createAsyncThunk<User, {userId: string; role: 'Admin' | 'User' | 'Head Admin'}>(
+export const updateUserRole = createAsyncThunk<User, {userId: string; role: 'Admin' | 'User' | 'Head Admin' | 'Banned'}>(
   'users/updateUserRole',
   async ({ userId, role }) => {
     const response = await usersApi.updateUserRole(userId, role);

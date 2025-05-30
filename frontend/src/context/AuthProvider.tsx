@@ -3,7 +3,7 @@ import { AuthContext, AuthContextType } from "./AuthContext";
 import { supabase } from "../config/supabase";
 import { usersApi } from "../api/users";
 
-export type Role = 'Unapproved' | 'User' | 'Admin' | 'Head Admin'
+export type Role = 'Unapproved' | 'User' | 'Admin' | 'Head Admin' | 'Banned'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<AuthContextType["session"]>(null);
