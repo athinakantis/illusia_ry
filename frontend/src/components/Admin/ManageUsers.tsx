@@ -25,6 +25,7 @@ import { useTranslatedSnackbar } from '../CustomComponents/TranslatedSnackbar/Tr
 import { useTranslation } from 'react-i18next';
 import { toCamelCase } from '../../utility/formatCamelCase';
 import Spinner from '../Spinner';
+import { useAdminRedirect } from '../../hooks/useadminRedirect';
 
 const VALID_FILTERS = ['ALL', 'PENDING', 'ACTIVE', 'BANNED'];
 type VALID_FILTER = (typeof VALID_FILTERS)[number];
@@ -42,6 +43,9 @@ const ManageUsers: React.FC = () => {
 
   const isAdmin = (role === 'Admin' || role === 'Head Admin')
   const isHeadAdmin = role === 'Head Admin'
+
+  // Redirect if not admin
+  useAdminRedirect(['Admin', 'Head Admin'], '/')
 
   // Fetch all users with role on component mount
   useEffect(() => {
@@ -203,22 +207,21 @@ const ManageUsers: React.FC = () => {
                 </Button>
               )}
               {isHeadAdmin && params.row.role_title === 'Admin' && (
-                <>
-                  <Tooltip title={t('manageUsers.tooltips.makeAdmin', { defaultValue: 'Make user an administrator' })} placement='top'>
-                    <Button variant="text_contained" color="info"
-                      onClick={() => handleRoleChange(params.row.user_id, 'Admin')}
-                    >
-                      {t('manageUsers.actions.promote', { defaultValue: 'Promote' })}
-                    </Button>
-                  </Tooltip>
-                  <Tooltip title={t('manageUsers.tooltips.makeUser', { defaultValue: 'Demote Admin to User' })} placement='top'>
-                    <Button variant="text_contained" color="error"
-                      onClick={() => handleRoleChange(params.row.user_id, 'User')}>
-                      {t('manageUsers.actions.demote', { defaultValue: 'Demote' })}
-                    </Button>
-                  </Tooltip>
-                </>
+                <Tooltip title={t('manageUsers.tooltips.makeUser', { defaultValue: 'Demote Admin to User' })} placement='top'>
+                  <Button variant="text_contained" color="error"
+                    onClick={() => handleRoleChange(params.row.user_id, 'User')}>
+                    {t('manageUsers.actions.demote', { defaultValue: 'Demote' })}
+                  </Button>
+                </Tooltip>
               )}
+              {isHeadAdmin && params.row.role_title === 'User' &&
+                <Tooltip title={t('manageUsers.tooltips.makeAdmin', { defaultValue: 'Make user an administrator' })} placement='top'>
+                  <Button variant="text_contained" color="info"
+                    onClick={() => handleRoleChange(params.row.user_id, 'Admin')}
+                  >
+                    {t('manageUsers.actions.promote', { defaultValue: 'Promote' })}
+                  </Button>
+                </Tooltip>}
               {isAdmin && params.row.role_title === 'Unapproved' && (
                 <>
                   <Button variant="text_contained" color="info"
@@ -231,6 +234,11 @@ const ManageUsers: React.FC = () => {
                   </Button>
                 </>
               )}
+              {params.row.role_title === 'Banned' &&
+                <Button variant='text_contained' color='info'
+                  onClick={() => handleRoleChange(params.row.user_id, 'User')}>
+                  {t('manageUsers.actions.unban', { defaultValue: 'Unban' })}
+                </Button>}
             </Stack>
           );
         }
@@ -241,7 +249,7 @@ const ManageUsers: React.FC = () => {
   return (
     <Container className="container" sx={{ mt: 6, mx: 'auto' }} maxWidth="lg">
       <Typography variant="heading_secondary_bold" gutterBottom>
-        Manage Users
+        {t('manageUsers.manageUsers', { defaultValue: 'Manage Users' })}
       </Typography>
 
       {/* Filter tabs */}
@@ -252,10 +260,10 @@ const ManageUsers: React.FC = () => {
         indicatorColor="primary"
         sx={{ mb: 2 }}
       >
-        <Tab value="ALL" label="All" />
-        <Tab value="PENDING" label="Pending Approvals" />
-        <Tab value="ACTIVE" label="Active" />
-        <Tab value="BANNED" label="Banned" />
+        <Tab value="ALL" label={t('manageUsers.tabs.all', { defaultValue: 'All' })} />
+        <Tab value="PENDING" label={t('manageUsers.tabs.pending', { defaultValue: 'Pending Approval' })} />
+        <Tab value="ACTIVE" label={t('manageUsers.tabs.active', { defaultValue: 'Active' })} />
+        <Tab value="BANNED" label={t('manageUsers.tabs.banned', { defaultValue: 'Banned' })} />
       </Tabs>
 
       {/* Data grid */}
