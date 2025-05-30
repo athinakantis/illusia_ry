@@ -99,11 +99,17 @@
     "bookingDates": "Booking Dates",
     "customer": "Customer",
     "items": "Items",
-    "status": "Status",
     "awaiting": "Awaiting Approval",
     "noResults": "No bookings found for selected filter.",
     "approve": "Approve",
-    "reject": "Reject"
+    "reject": "Reject",
+    "status": {
+      "status": "Status",
+      "approved": "Approved",
+      "cancelled": "Cancelled",
+      "rejected": "Rejected",
+      "pending": "Pending"
+    }
   },
   "collapsibleDetail": {
     "title": "Reservation items",

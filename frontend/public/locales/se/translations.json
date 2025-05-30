@@ -112,11 +112,17 @@
     "bookingDates": "Datum",
     "customer": "Kund",
     "items": "Artiklar",
-    "status": "Status",
     "awaiting": "Väntar bekräftelse",
     "noResults": "Ingen bokning hittad för valda filter",
     "approve": "Bekräfta",
-    "reject": "Avvisa"
+    "reject": "Avvisa",
+    "status": {
+      "status": "Status",
+      "approved": "Godkänd",
+      "cancelled": "Avbokad",
+      "rejected": "Avvisad",
+      "pending": "Väntar bekräftelse"
+    }
   },
   "collapsibleDetail": {
     "title": "Bokade artiklar",

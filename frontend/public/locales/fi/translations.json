@@ -112,11 +112,17 @@
     "bookingDates": "Varauspäivät",
     "customer": "Asiakas",
     "items": "Tuotteet",
-    "status": "Tila",
     "awaiting": "Odottaa hyväksyntää",
     "noResults": "Valitulle suodattimelle ei löytynyt varauksia.",
     "approve": "Hyväksy",
-    "reject": "Hylkää"
+    "reject": "Hylkää",
+    "status": {
+      "status": "Tila",
+      "approved": "Hyväksytty",
+      "cancelled": "Peruttu",
+      "rejected": "Hylätty",
+      "pending": "Odottaa käsittelyä"
+    }
   },
   "collapsibleDetail": {
     "title": "Varauskohteet",
