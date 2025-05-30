@@ -13,16 +13,21 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectAllCategories, selectItemById } from '../../slices/itemsSlice';
 import { Link, useParams } from 'react-router-dom';
 import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
-import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
+import {
+  DateValue,
+  getLocalTimeZone,
+  parseDate,
+  today,
+} from '@internationalized/date';
 import type { RangeValue } from '@react-types/shared';
 import { checkAvailabilityForItemOnDates } from '../../selectors/availabilitySelector';
 import { addItemToCart, selectDateRange } from '../../slices/cartSlice';
 import { store } from '../../store/store';
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import { ArrowBack, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
-import broken_img from '../../assets/broken_img.png'
+import broken_img from '../../assets/broken_img.png';
 import { selectQtyForItemInReservationsByIdInDateRange } from '../../slices/reservationsSlice';
 import { useTranslatedSnackbar } from '../CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
 import { useTranslation } from 'react-i18next';
@@ -77,7 +82,6 @@ const PrevArrow = (props: ArrowProps) => {
 };
 
 const ItemDetail: React.FC = () => {
-
   const [quantity, setQuantity] = useState(1);
   const now = today(getLocalTimeZone());
   const [range, setRange] = useState<RangeValue<DateValue> | null>(null);
@@ -87,66 +91,98 @@ const ItemDetail: React.FC = () => {
   const item = items.find((i) => i.item_id === itemId);
   const categories = useAppSelector(selectAllCategories);
   const selectedDateRange = useAppSelector(selectDateRange);
-  const { showSnackbar } = useTranslatedSnackbar()
-  const { t } = useTranslation()
+  const { showSnackbar } = useTranslatedSnackbar();
+  const { t } = useTranslation();
 
-  const itemMaxBookedQty = (range && itemId) ? selectQtyForItemInReservationsByIdInDateRange(
-    itemId,
-    range.start.toString(),
-    range.end.toString(),
-  )(store.getState())
-    :
-    {};
+  const itemMaxBookedQty =
+    range && itemId
+      ? selectQtyForItemInReservationsByIdInDateRange(
+        itemId,
+        range.start.toString(),
+        range.end.toString(),
+      )(store.getState())
+      : {};
   // checks the bookings of the items in date range
 
   useEffect(() => {
     if (selectedDateRange.start_date && selectedDateRange.end_date) {
-      setRange({ start: parseDate(selectedDateRange.start_date), end: parseDate(selectedDateRange.end_date) });
+      setRange({
+        start: parseDate(selectedDateRange.start_date),
+        end: parseDate(selectedDateRange.end_date),
+      });
     }
   }, [selectedDateRange]);
 
-
   const handleDateChange = (newRange: RangeValue<DateValue> | null) => {
-
     if (newRange) {
-
       const startDate = new Date(newRange.start.toString());
       const endDate = new Date(newRange.end.toString());
       const diffInMs = endDate.getTime() - startDate.getTime();
       const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
 
       if (diffInDays > 14) {
-
-        showSnackbar({ message: t('booking.snackbar.maxDays', { defaultValue: 'You can only book a maximum of 14 days' }), variant: 'warning' });
+        showSnackbar({
+          message: t('booking.snackbar.maxDays', {
+            defaultValue: 'You can only book a maximum of 14 days',
+          }),
+          variant: 'warning',
+        });
         return;
       }
       setRange(newRange);
     }
-  }
+  };
 
-  const handleBrokenImg = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+  const handleBrokenImg = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>,
+  ) => {
     (e.target as HTMLImageElement).src = broken_img;
-  }
+  };
 
   const handleCartAddition = () => {
     if (range?.start === undefined) {
-      showSnackbar({ message: t('items.snackbar.selectDates'), variant: 'warning' });
+      showSnackbar({
+        message: t('items.snackbar.selectDates'),
+        variant: 'warning',
+      });
       return;
     }
 
     if (itemId && range) {
-      const checkAdditionToCart = checkAvailabilityForItemOnDates(itemId, quantity, range.start.toString(), range.end.toString())(store.getState());
+      const checkAdditionToCart = checkAvailabilityForItemOnDates(
+        itemId,
+        quantity,
+        range.start.toString(),
+        range.end.toString(),
+      )(store.getState());
 
       if (checkAdditionToCart.severity === 'success') {
-        dispatch(addItemToCart({ item: selectItemById(itemId)(store.getState()), quantity: quantity, start_date: range.start.toString(), end_date: range.end.toString() }));
+        dispatch(
+          addItemToCart({
+            item: selectItemById(itemId)(store.getState()),
+            quantity: quantity,
+            start_date: range.start.toString(),
+            end_date: range.end.toString(),
+          }),
+        );
 
-        showSnackbar({ message: t('cart.snackbar.itemAdded', { defaultValue: 'Item was added to cart!' }), variant: 'info' });
-
+        showSnackbar({
+          message: t('cart.snackbar.itemAdded', {
+            defaultValue: 'Item was added to cart!',
+          }),
+          variant: 'info',
+        });
       } else {
-        showSnackbar({ message: t(checkAdditionToCart.translationKey, { defaultValue: checkAdditionToCart.message }), variant: checkAdditionToCart.severity });
+        showSnackbar({
+          message: t(checkAdditionToCart.translationKey, {
+            defaultValue: checkAdditionToCart.message,
+            amount: checkAdditionToCart?.metadata?.amount
+          }),
+          variant: checkAdditionToCart.severity,
+        });
       }
     }
-  }
+  };
 
   const itemCategory = categories.find(
     (cat) => cat.category_id === item?.category_id,
@@ -183,7 +219,11 @@ const ItemDetail: React.FC = () => {
       <Grid container spacing={4} justifyContent={'center'}>
         {/* Left Column: Image */}
         <Grid size={{ xs: 12, sm: 6 }}>
-          {item && Array.isArray(item.image_path) && item.image_path.some(imgUrl => typeof imgUrl === 'string' && imgUrl.trim() !== '') ? (
+          {item &&
+            Array.isArray(item.image_path) &&
+            item.image_path.some(
+              (imgUrl) => typeof imgUrl === 'string' && imgUrl.trim() !== '',
+            ) ? (
             <Slider
               dots
               infinite={item.image_path.length > 1}
@@ -195,7 +235,10 @@ const ItemDetail: React.FC = () => {
               prevArrow={<PrevArrow />}
             >
               {item.image_path
-                .filter((imgUrl): imgUrl is string => typeof imgUrl === 'string' && imgUrl.trim() !== '')
+                .filter(
+                  (imgUrl): imgUrl is string =>
+                    typeof imgUrl === 'string' && imgUrl.trim() !== '',
+                )
                 .map((imgUrl, idx) => (
                   <Box key={idx}>
                     <Box
@@ -212,7 +255,6 @@ const ItemDetail: React.FC = () => {
                       onError={handleBrokenImg}
                       src={imgUrl}
                       alt={`${item.item_name} image ${idx + 1}`}
-
                     />
                   </Box>
                 ))}
@@ -239,11 +281,23 @@ const ItemDetail: React.FC = () => {
         {/* Right Column: Details */}
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Stack spacing={2}>
-            <Typography variant="h1" color='#3D3D3D' sx={{ fontWeight: 700, fontSize: 36, fontFamily: 'Lato, sans-serif' }}>
+            <Typography
+              variant="h1"
+              color="#3D3D3D"
+              sx={{
+                fontWeight: 700,
+                fontSize: 36,
+                fontFamily: 'Lato, sans-serif',
+              }}
+            >
               {item?.item_name || 'Item name'}
             </Typography>
             <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-              Available {(range && item && typeof (itemMaxBookedQty) === "number") ? item?.quantity - (itemMaxBookedQty || 0) : item?.quantity} pcs
+              Available{' '}
+              {range && item && typeof itemMaxBookedQty === 'number'
+                ? item?.quantity - (itemMaxBookedQty || 0)
+                : item?.quantity}{' '}
+              pcs
             </Typography>
             <Typography variant="subtitle1" color="text.secondary" gutterBottom>
               {itemCategory?.category_name || 'Category'}
@@ -255,11 +309,7 @@ const ItemDetail: React.FC = () => {
             <Typography variant="subheading" component="div" sx={{ mt: 2 }}>
               Select dates
             </Typography>
-            <Provider
-              theme={defaultTheme}
-              colorScheme="light"
-              maxWidth={290}
-            >
+            <Provider theme={defaultTheme} colorScheme="light" maxWidth={290}>
               {/* Set the max width of the provider to the max width of the component to avoid nasty UI */}
               <DateRangePicker
                 labelPosition="side"
@@ -271,7 +321,7 @@ const ItemDetail: React.FC = () => {
                 onChange={handleDateChange}
                 isRequired
                 maxVisibleMonths={1}
-                isDisabled={(selectedDateRange.start_date != null)}
+                isDisabled={selectedDateRange.start_date != null}
               />
             </Provider>
 
@@ -308,12 +358,16 @@ const ItemDetail: React.FC = () => {
                   <AddIcon fontSize="small" />
                 </IconButton>
               </Box>
-              <Button variant="rounded"
+              <Button
+                variant="rounded"
                 onClick={handleCartAddition}
                 sx={{
-                  height: '100%', fontSize: 'clamp(15px, 1.3vw, 20px)',
-                  width: '190px', textTransform: 'capitalize'
-                }}>
+                  height: '100%',
+                  fontSize: 'clamp(15px, 1.3vw, 20px)',
+                  width: '190px',
+                  textTransform: 'capitalize',
+                }}
+              >
                 Add to Cart
               </Button>
             </Stack>

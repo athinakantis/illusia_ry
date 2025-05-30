@@ -29,9 +29,7 @@ import {
 } from 'react-router-dom';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { store } from '../store/store';
-import {
-  checkAvailabilityForItemOnDates,
-} from '../selectors/availabilitySelector';
+import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
 import {
   checkAvailabilityForAllItemsOnDates,
   fetchFutureReservations,
@@ -58,8 +56,7 @@ function Items() {
   const dispatch = useAppDispatch();
   const [offset, setOffset] = useState(0);
   const navigate = useNavigate();
-  const { showSnackbar } = useTranslatedSnackbar()
-
+  const { showSnackbar } = useTranslatedSnackbar();
 
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
@@ -86,11 +83,13 @@ function Items() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   const addToCart = (item: Item, quantity: number = 1) => {
     // need to fetch the bookings and reservations first in order for this to work properly
     if (range?.start === undefined) {
-      showSnackbar({ message: t('items.snackbar.selectDates'), variant: 'warning' });
+      showSnackbar({
+        message: t('items.snackbar.selectDates'),
+        variant: 'warning',
+      });
       return;
     }
 
@@ -112,9 +111,21 @@ function Items() {
           end_date: range.end.toString(),
         }),
       );
-      showSnackbar({ message: t('items.snackbar.itemAdded'), variant: 'info', divider: true, secondaryMessage: item.item_name, src: item.image_path[0] });
+      showSnackbar({
+        message: t('items.snackbar.itemAdded'),
+        variant: 'info',
+        divider: true,
+        secondaryMessage: item.item_name,
+        src: item.image_path[0],
+      });
     } else {
-      showSnackbar({ message: t(checkAdditionToCart.translationKey, { defaultValue: checkAdditionToCart.message }), variant: checkAdditionToCart.severity });
+      showSnackbar({
+        message: t(checkAdditionToCart.translationKey, {
+          defaultValue: checkAdditionToCart.message,
+          amount: checkAdditionToCart?.metadata?.amount
+        }),
+        variant: checkAdditionToCart.severity,
+      });
     }
   };
 
@@ -153,12 +164,12 @@ function Items() {
 
   const categoryParams = searchParams.get('category')?.split(',') || [];
 
-  const itemsMaxBookedQty = (range) ? checkAvailabilityForAllItemsOnDates(
-    range.start.toString(),
-    range.end.toString(),
-  )(store.getState())
-    :
-    {};
+  const itemsMaxBookedQty = range
+    ? checkAvailabilityForAllItemsOnDates(
+      range.start.toString(),
+      range.end.toString(),
+    )(store.getState())
+    : {};
   // checks the bookings of the items in date range
 
   const filteredItems = items.filter((item) => {
@@ -177,7 +188,9 @@ function Items() {
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
 
-    const matchesQty = (range) ? (item.quantity - (itemsMaxBookedQty[item.item_id] || 0) > 0) : true;
+    const matchesQty = range
+      ? item.quantity - (itemsMaxBookedQty[item.item_id] || 0) > 0
+      : true;
     // checks the map, if any of hte item is available
 
     return matchesCategory && matchesSearch && matchesQty;
@@ -191,7 +204,12 @@ function Items() {
       const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
 
       if (diffInDays > 14) {
-        showSnackbar({ message: t('booking.snackbar.maxDays', { defaultValue: 'You can only book a maximum of 14 days' }), variant: 'warning' });
+        showSnackbar({
+          message: t('booking.snackbar.maxDays', {
+            defaultValue: 'You can only book a maximum of 14 days',
+          }),
+          variant: 'warning',
+        });
         return;
       }
 
@@ -200,7 +218,9 @@ function Items() {
   };
 
   /* Remove 'Uncategorised' from cat options */
-  const filteredCategories = categories.filter(c => c.category_name !== 'Uncategorized')
+  const filteredCategories = categories.filter(
+    (c) => c.category_name !== 'Uncategorized',
+  );
 
   return (
     <Box
@@ -210,7 +230,6 @@ function Items() {
         pb: '8rem',
         gap: '32px',
         flexDirection: { xs: 'column', md: 'row' },
-
       }}
     >
       {/* Side panel */}
@@ -228,7 +247,8 @@ function Items() {
           type="search"
           variant="outlined"
           sx={{
-            width: '100%', mt: 1,
+            width: '100%',
+            mt: 1,
           }}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -286,7 +306,6 @@ function Items() {
             />
           ))}
         </Box>
-
       </Stack>
 
       {/* Items Display */}
@@ -301,14 +320,13 @@ function Items() {
           },
         }}
       >
-
-        {itemsLoading ?
+        {itemsLoading ? (
           <Box sx={{ margin: '0 auto' }}>
             <Spinner />
           </Box>
-          :
+        ) : (
           <>
-            {filteredItems.length > 0 ?
+            {filteredItems.length > 0 ? (
               <>
                 <Stack
                   direction={'row'}
@@ -330,24 +348,31 @@ function Items() {
                         textDecoration: 'none',
                         flex: 1,
                         flexBasis: 230,
-                        maxWidth: { xs: '100%', md: 300 }
+                        maxWidth: { xs: '100%', md: 300 },
                       }}
                     >
-                      <Box sx={{
-                        height: 300,
-                        borderRadius: '14px',
-                        bgcolor: 'background.lightgrey',
-                        overflow: 'hidden',
-                        '&:hover img': { scale: 1.03 }
-                      }}>
+                      <Box
+                        sx={{
+                          height: 300,
+                          borderRadius: '14px',
+                          bgcolor: 'background.lightgrey',
+                          overflow: 'hidden',
+                          '&:hover img': { scale: 1.03 },
+                        }}
+                      >
                         <CardMedia
                           component="img"
-                          image={Array.isArray(item.image_path) && item.image_path.length > 0 ? item.image_path[0] : broken_img}
+                          image={
+                            Array.isArray(item.image_path) &&
+                              item.image_path.length > 0
+                              ? item.image_path[0]
+                              : broken_img
+                          }
                           onError={handleBrokenImg}
                           sx={{
                             height: '100%',
                             transition: 'scale 200ms',
-                            backgroundColor: 'background.verylightgrey'
+                            backgroundColor: 'background.verylightgrey',
                           }}
                         />
                       </Box>
@@ -359,20 +384,29 @@ function Items() {
                           justifyContent: 'space-between',
                         }}
                       >
-                        <Stack
-                          sx={{ width: '80%', lineHeight: '100%' }}
-                        >
+                        <Stack sx={{ width: '80%', lineHeight: '100%' }}>
                           <Typography variant="body1">
                             {item.item_name}
                           </Typography>
-                          <Typography variant="body3" sx={{ fontStyle: 'italic' }}>
-                            Available {(range) ? item.quantity - (itemsMaxBookedQty[item.item_id] || 0) : item.quantity} pcs
+                          <Typography
+                            variant="body3"
+                            sx={{ fontStyle: 'italic' }}
+                          >
+                            Available{' '}
+                            {range
+                              ? item.quantity -
+                              (itemsMaxBookedQty[item.item_id] || 0)
+                              : item.quantity}{' '}
+                            pcs
                           </Typography>
                         </Stack>
 
-
                         <CardActions
-                          sx={{ padding: 0, justifySelf: 'end', width: 'fit-content' }}
+                          sx={{
+                            padding: 0,
+                            justifySelf: 'end',
+                            width: 'fit-content',
+                          }}
                         >
                           <Button
                             sx={{ padding: '3px', minWidth: 'fit-content' }}
@@ -386,20 +420,32 @@ function Items() {
                             <AddCircleOutlineOutlinedIcon />
                           </Button>
                         </CardActions>
-
                       </CardContent>
                     </Card>
                   ))}
                 </Stack>
                 <Pagination items={filteredItems} setOffset={setOffset} />
-              </> :
-              <Box sx={{ height: 300, justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Typography variant='heading_secondary_bold' fontSize={24}>No items found!</Typography>
-                <Typography>Try updating categories to explore our collection</Typography>
+              </>
+            ) : (
+              <Box
+                sx={{
+                  height: 300,
+                  justifyContent: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}
+              >
+                <Typography variant="heading_secondary_bold" fontSize={24}>
+                  No items found!
+                </Typography>
+                <Typography>
+                  Try updating categories to explore our collection
+                </Typography>
               </Box>
-            }
+            )}
           </>
-        }
+        )}
       </Box>
     </Box>
   );

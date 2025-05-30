@@ -1,5 +1,6 @@
 // utils/bookings.ts
 import { parseISO, differenceInDays } from 'date-fns';
+import { BookingStatus } from '../types/types';
 
 /*----------- Types ----------------*/
 export interface Reservation {
@@ -13,7 +14,7 @@ export interface Reservation {
 export interface Booking {
   booking_id: string;
   user_id: string;
-  status: string;
+  status: BookingStatus;
   created_at: string;
 }
 export interface User {
@@ -50,7 +51,7 @@ export interface BookingOverview {
   totalItems: number;
   duration: number;
   range: string;
-  status: string;
+  status: BookingStatus;
   createdAt: string;
 }
 export function buildBookingOverviews(

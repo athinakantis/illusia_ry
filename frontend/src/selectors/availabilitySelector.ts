@@ -58,6 +58,7 @@ export const checkAvailabilityForItemOnDates = (
             quantity - overallItemQty
           }`,
           translationKey: 'cart.snackbar.qtyUnavailable',
+          metadata: { amount: quantity - overallItemQty },
         };
 
       return quantity - availableQuantityOfItem <= 0

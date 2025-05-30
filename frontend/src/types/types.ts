@@ -56,11 +56,12 @@ export interface FormData {
   visible?: boolean;
   // Add other relevant fields from your 'items' table if needed
 }
+export type BookingStatus = 'pending' | 'approved' | 'rejected' | 'cancelled'
 
 export interface Booking {
   booking_id: string;
   user_id: string;
-  status: string;
+  status: BookingStatus;
   created_at: string | null;
   reservations?: Array<{
     reservation_id: string;
@@ -110,13 +111,17 @@ export interface CartState {
 
 export type Result =
   | { severity: 'success'; data: boolean }
-  | { severity: 'error'; message: string, translationKey: string }
-  | { severity: 'warning'; message: string, translationKey: string };
+  | { severity: 'error'; message: string, translationKey: string, metadata?: ItemAvailabilityResultMetaData }
+  | { severity: 'warning'; message: string, translationKey: string, metadata?: ItemAvailabilityResultMetaData };
+
+export type ItemAvailabilityResultMetaData = {
+  amount: number
+}
 
 export type BookingWithRes = {
   booking_id: string;
   user_id: string;
-  status: string;
+  status: BookingStatus;
   created_at: string;
   reservations: Array<{
     reservation_id: string;
