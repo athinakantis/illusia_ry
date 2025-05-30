@@ -61,7 +61,7 @@ export type BookingStatus = 'pending' | 'approved' | 'rejected' | 'cancelled'
 export interface Booking {
   booking_id: string;
   user_id: string;
-  status: BookingStatus;
+  status: string;
   created_at: string | null;
   reservations?: Array<{
     reservation_id: string;

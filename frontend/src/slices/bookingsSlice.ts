@@ -170,8 +170,8 @@ export const bookingsSlice = createSlice({
       localStorage.removeItem('savedCart');
 
       // Add new booking to state
-      state.bookings.push(action.payload.booking)
-      state.userBookings.push(action.payload.booking)
+      state.bookings = [...state.bookings, action.payload.booking]
+      state.userBookings = [...state.userBookings, action.payload.booking]
       state.loading = false;
     });
     builder.addCase(addBooking.rejected, (state, action) => {
