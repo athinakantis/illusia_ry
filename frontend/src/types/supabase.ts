@@ -7,31 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          operationName?: string
-          query?: string
-          variables?: Json
-          extensions?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       bookings: {
@@ -226,6 +201,13 @@ export type Database = {
             referencedRelation: "items_with_tags_and_categories"
             referencedColumns: ["item_id"]
           },
+          {
+            foreignKeyName: "invoice_items_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "new_items"
+            referencedColumns: ["item_id"]
+          },
         ]
       }
       invoice_settings: {
@@ -406,6 +388,13 @@ export type Database = {
             referencedRelation: "items_with_tags_and_categories"
             referencedColumns: ["item_id"]
           },
+          {
+            foreignKeyName: "item_reservations_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "new_items"
+            referencedColumns: ["item_id"]
+          },
         ]
       }
       item_tags: {
@@ -444,6 +433,13 @@ export type Database = {
             columns: ["item_id"]
             isOneToOne: false
             referencedRelation: "items_with_tags_and_categories"
+            referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "item_tags_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "new_items"
             referencedColumns: ["item_id"]
           },
           {
@@ -901,6 +897,30 @@ export type Database = {
         }
         Relationships: []
       }
+      new_items: {
+        Row: {
+          category_id: string | null
+          category_name: string | null
+          created_at: string | null
+          description: string | null
+          image_path: string[] | null
+          item_id: string | null
+          item_name: string | null
+          location: string | null
+          quantity: number | null
+          tags: string[] | null
+          visible: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_category"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["category_id"]
+          },
+        ]
+      }
       upcoming_bookings: {
         Row: {
           booking_id: string | null
@@ -946,6 +966,13 @@ export type Database = {
             columns: ["item_id"]
             isOneToOne: false
             referencedRelation: "items_with_tags_and_categories"
+            referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "item_reservations_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "new_items"
             referencedColumns: ["item_id"]
           },
         ]
@@ -1263,9 +1290,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {},
   },
