@@ -126,6 +126,7 @@
     "qty": "Määrä"
   },
   "manageUsers": {
+    "manageUsers": "Hallinnoi käyttäjiä",
     "roles": {
       "head_admin": "Pääylläpitäjä",
       "admin": "Ylläpitäjä",
@@ -156,6 +157,12 @@
     "tooltips": {
       "makeAdmin": "Tee käyttäjästä ylläpitäjä",
       "makeUser": "Alenna ylläpitäjä käyttäjäksi"
+    },
+    "tabs": {
+      "all": "Kaikki",
+      "pending": "Odottaa hyväksyntää",
+      "active": "Aktiiviset",
+      "banned": "Estetty käyttäjä"
     }
   },
   "Bookings": {

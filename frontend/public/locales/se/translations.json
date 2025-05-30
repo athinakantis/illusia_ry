@@ -353,6 +353,7 @@
     "answer3": "För att säkerställa att vi återfår våra artiklar är vi noggranna med vem som tar del av våran plattform. Ditt konto bör vara godkänt inom 3 dagar, hör av dig om du väntat längre än så."
   },
   "manageUsers": {
+    "manageUsers": "Användare",
     "roles": {
       "headAdmin": "Huvudadmin",
       "user": "Användare",
@@ -383,6 +384,12 @@
     "tooltips": {
       "makeAdmin": "Gör användaren till en administratör",
       "makeUser": "Gör administratör till användare"
+    },
+    "tabs": {
+      "all": "Alla",
+      "pending": "Väntar bekräftelse",
+      "active": "Aktiva",
+      "banned": "Bannade"
     }
   }
 }

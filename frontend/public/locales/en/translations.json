@@ -113,6 +113,7 @@
     "qty": "Quantity"
   },
   "manageUsers": {
+    "manageUsers": "Manage Users",
     "roles": {
       "headAdmin": "Head Admin",
       "admin": "Admin",
@@ -143,6 +144,12 @@
     "tooltips": {
       "makeAdmin": "Make user an administrator",
       "makeUser": "Demote Admin to User"
+    },
+    "tabs": {
+      "all": "All",
+      "pending": "Pending approval",
+      "active": "Active",
+      "banned": "Banned"
     }
   },
   "Bookings": {
@@ -184,7 +191,11 @@
   },
   "notifications": {
     "markRead": "Mark as read",
-    "noNew": "You have no new notifications!"
+    "noNew": "You have no new notifications!",
+    "pending_bookings_notifications": "There are {{amount}} pending bookings",
+    "pending_user_notifications": "There are {{amount}} pending users",
+    "BOOKING_REJECTED": "Your booking was rejected",
+    "BOOKING_APPROVED": "Your booking was approved!"
   },
   "person": {
     "myBookings": "My bookings",
