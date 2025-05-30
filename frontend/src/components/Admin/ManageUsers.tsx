@@ -197,6 +197,12 @@ const ManageUsers: React.FC = () => {
               sx={{ justifyContent: 'end', width: '100%' }}
             >
               {params.row.role_title === 'User' && (
+                <Button variant="text_contained" color="error"
+                  onClick={() => handleRoleChange(params.row.user_id, 'Banned')}>
+                  {t('manageUsers.actions.ban', { defaultValue: 'Ban' })}
+                </Button>
+              )}
+              {isHeadAdmin && params.row.role_title === 'Admin' && (
                 <>
                   <Tooltip title={t('manageUsers.tooltips.makeAdmin', { defaultValue: 'Make user an administrator' })} placement='top'>
                     <Button variant="text_contained" color="info"
@@ -205,19 +211,13 @@ const ManageUsers: React.FC = () => {
                       {t('manageUsers.actions.promote', { defaultValue: 'Promote' })}
                     </Button>
                   </Tooltip>
-                  <Button variant="text_contained" color="error"
-                    onClick={() => handleRoleChange(params.row.user_id, 'Banned')}>
-                    {t('manageUsers.actions.ban', { defaultValue: 'Ban' })}
-                  </Button>
+                  <Tooltip title={t('manageUsers.tooltips.makeUser', { defaultValue: 'Demote Admin to User' })} placement='top'>
+                    <Button variant="text_contained" color="info"
+                      onClick={() => handleRoleChange(params.row.user_id, 'User')}>
+                      {t('manageUsers.actions.demote', { defaultValue: 'Demote' })}
+                    </Button>
+                  </Tooltip>
                 </>
-              )}
-              {isHeadAdmin && params.row.role_title === 'Admin' && (
-                <Tooltip title={t('manageUsers.tooltips.makeUser', { defaultValue: 'Demote Admin to User' })} placement='top'>
-                  <Button variant="text_contained" color="info"
-                    onClick={() => handleRoleChange(params.row.user_id, 'User')}>
-                    {t('manageUsers.actions.demote', { defaultValue: 'Demote' })}
-                  </Button>
-                </Tooltip>
               )}
               {isAdmin && params.row.role_title === 'Unapproved' && (
                 <>
