@@ -27,7 +27,7 @@ export class GuestService {
   async getPublicItems(): Promise<ApiResponse<Tables<'items'>[]>> {
     try {
       const { data, error } = await this._supabase
-      .from('items')
+      .from('new_items')
       .select('*')
       .eq("visible", true)
 
@@ -113,7 +113,7 @@ export class GuestService {
   async getItemsAdmin(): Promise<ApiResponse<Tables<'items'>[]>> {
     try {
       const { data, error } = await this._supabase
-        .from('items')
+        .from('new_items')
         .select('*');
       if (error) throw error;
       return { message: 'All items retrieved', data: data || [] };

@@ -97,6 +97,7 @@ const ManageUsers: React.FC = () => {
         showSnackbar({
           message: t('manageUsers.snackbar.roleUpdateFailed', {
             defaultValue: `Failed to update user role: ${err}`,
+            error: err,
           }),
           variant: 'error',
         });

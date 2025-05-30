@@ -50,24 +50,36 @@
         "date_range": "Date range",
         "actions": "Actions",
         "last_sign_in": "Last sign in",
-        "confirmed": "Confirmed",
         "role": "Role"
       },
       "show_booking": "Show booking",
       "recent_activity": "Recent activity",
-      "users_and_roles": "Users & Roles",
-      "roles": {
-        "head_admin": "Head Admin",
-        "user": "User",
-        "admin": "Admin",
-        "unapproved": "Unapproved"
+      "users_and_roles": "Users & Roles"
+    },
+    "items": {
+      "dataGrid": {
+        "deleteConfirm": "Are you sure you want to delete this item?",
+        "columns": {
+          "id": "ID",
+          "name": "Name",
+          "description": "Description",
+          "visibility": "Visibility",
+          "location": "Location",
+          "quantity": "Qty",
+          "category": "Category",
+          "createdAt": "Created At",
+          "actions": "Actions"
+        },
+        "visibility": {
+          "visible": "Visible",
+          "hidden": "Hidden"
+        },
+        "aria": {
+          "view": "view",
+          "delete": "delete"
+        }
       },
-      "status": {
-        "cancelled": "cancelled",
-        "approved": "approved",
-        "pending": "pending",
-        "rejected": "rejected"
-      }
+      "tags_column_header": "Tags"
     }
   },
   "adminBookings": {
@@ -100,6 +112,39 @@
     "end": "End Date",
     "qty": "Quantity"
   },
+  "manageUsers": {
+    "roles": {
+      "headAdmin": "Head Admin",
+      "admin": "Admin",
+      "unapproved": "Unapproved",
+      "user": "User",
+      "banned": "Banned"
+    },
+    "snackbar": {
+      "roleUpdated": "{{name}}'s role changed to {{role}}",
+      "roleUpdateFailed": "Failed to update user role: {{error}}",
+      "statusUpdateFailed": "Failed to update user status: {{error}}",
+      "adminErrorMessage": ""
+    },
+    "columnHeaders": {
+      "name": "Name",
+      "email": "Email",
+      "roleTitle": "User Role",
+      "action": "Action"
+    },
+    "actions": {
+      "promote": "Promote",
+      "demote": "Demote",
+      "ban": "Ban",
+      "unban": "Unban",
+      "reject": "Reject",
+      "approve": "Approve"
+    },
+    "tooltips": {
+      "makeAdmin": "Make user an administrator",
+      "makeUser": "Demote Admin to User"
+    }
+  },
   "Bookings": {
     "snackbar": {
       "deleted": "Your booking was deleted",
@@ -110,6 +155,18 @@
     "snackbar": {
       "maxDays": "You can only book a maximum of 14 days"
     }
+  },
+  "items": {
+    "snackbar": {
+      "itemAdded": "Tuote lisättiin ostoskoriin!",
+      "selectDates": "Valitse päivämäärät ennen kuin lisäät ostoskoriin"
+    },
+    "search": "Search items",
+    "date_picker_disabled_info": "You cannot change the date when your cart has items for the selected days. Empty the cart or change the date within the cart.",
+    "categories": "Categories",
+    "filter_by_location": "Filter by Location",
+    "browse": "Browse items",
+    "manage": "Manage items"
   },
   "nav": {
     "home": "Home",
@@ -125,6 +182,10 @@
     "logoMain": "ILLUSIA",
     "logoSecondary": "STORE"
   },
+  "notifications": {
+    "markRead": "Mark as read",
+    "noNew": "You have no new notifications!"
+  },
   "person": {
     "myBookings": "My bookings",
     "myAccount": "My account",
@@ -133,24 +194,6 @@
     "manageBookings": "Manage bookings",
     "logOut": "Log out",
     "logIn": "Log in"
-  },
-  "notifications": {
-    "noNew": "You have no new notifications!",
-    "markRead": "Mark as read",
-    "pending_user_notifications": "There are pending {{amount}} users",
-    "pending_bookings_notifications": "There are pending {{amount}} bookings",
-    "BOOKING_APPROVED": "Your booking was approved!",
-    "BOOKING_REJECTED": "Your booking was rejected"
-  },
-  "items": {
-    "search": "Search items",
-    "date_picker_disabled_info": "You cannot change the date when your cart has items for the selected days. Empty the cart or change the date within the cart.",
-    "browse": "Browse items",
-    "manage": "Manage items",
-    "snackbar": {
-      "itemAdded": "Tuote lisättiin ostoskoriin!",
-      "selectDates": "Valitse päivämäärät ennen kuin lisäät ostoskoriin"
-    }
   },
   "account": {
     "nameUpdated": "Your name has been updated to {{name}}.",
@@ -229,9 +272,29 @@
     "enabled": "Authenticator-app MFA is enabled.",
     "disableTOTP": "Disable TOTP MFA"
   },
-  "avatar": {
-    "uploading": "Uploading...",
-    "change": "Change avatar"
+  "cart": {
+    "snackbar": {
+      "itemAdded": "Item was added to cart!",
+      "cartUpdated": "Your cart was updated!",
+      "register": "Only registered users can make a booking",
+      "createBookingError": "Something went wrong when creating your booking. If the problem persists, contact us",
+      "bookingCreated": "Your booking has been created!"
+    },
+    "yourCart": "Your Cart",
+    "items": "Items",
+    "quantity": "Qty",
+    "action": "Action",
+    "remove": "Remove",
+    "bookingSummary": "Booking Summary",
+    "dates": "Dates",
+    "changeDates": "Change the booking dates",
+    "confirmDates": "Confirm new dates",
+    "cancel": "Cancel",
+    "totalItems": "Total items",
+    "bookItemsLogInInfo": "Log in to book items",
+    "bookItemsApprovalInfo": "Your account is awaiting approval. Once approved, you may create a booking!",
+    "bookItems": "Book items",
+    "empty": "Your cart is currently empty! <1>Browse Items</1>"
   },
   "userBookings": {
     "snackbar": {
@@ -250,41 +313,7 @@
     "quantity": "Quantity",
     "confirmCancel": "Are you sure you want to cancel your booking?",
     "confirmYes": "Yes, I'm sure",
-    "confirmNo": "No thanks",
-    "status": {
-      "cancelled": "cancelled",
-      "approved": "approved",
-      "pending": "pending",
-      "rejected": "rejected"
-    }
-  },
-  "cart": {
-    "yourCart": "Your Cart",
-    "items": "Items",
-    "quantity": "Qty",
-    "action": "Action",
-    "remove": "Remove",
-    "bookingSummary": "Booking Summary",
-    "dates": "Dates",
-    "changeDates": "Change the booking dates",
-    "confirmDates": "Confirm new dates",
-    "cancel": "Cancel",
-    "totalItems": "Total items",
-    "bookItems": "Book items",
-    "empty": "Your cart is currently empty! <1>Browse Items</1>",
-    "bookItemsApprovalInfo": "Your account is awaiting approval. Once approved, you may create a booking!",
-    "bookItemsLogInInfo": "Log in to book items",
-    "snackbar": {
-      "register": "Only registered users can make a booking",
-      "createBookingError": "Something went wrong when creating your booking. If the problem persists, contact us",
-      "bookingCreated": "Your booking has been created!",
-      "cartUpdated": "Your cart was updated!",
-      "itemQtyUnavailable": "Not enough of item available for selected dates.",
-      "maxQtyError": "Max quantity of the item for the dates is already in cart",
-      "maxQtyDateError": "Max quantity of the item for the dates is already in cart",
-      "qtyUnavailable": "Requested bigger quantity than available overall by {{amount}}",
-      "itemAdded": "Item was added to cart!"
-    }
+    "confirmNo": "No thanks"
   },
   "home": {
     "heroTitle": "Your go-to specialty store for LARP props and accessories",
@@ -311,38 +340,5 @@
     "answer2": "One booking can be a maximum duration of two weeks",
     "question3": "Why do I have to be approved before booking items?",
     "answer3": "We see the approval of our users as a guarantee that the items which have been lent will be returned after a maximum of 2 weeks."
-  },
-  "manageUsers": {
-    "roles": {
-      "headAdmin": "Head Admin",
-      "admin": "Admin",
-      "unapproved": "Unapproved",
-      "user": "User",
-      "banned": "Banned"
-    },
-    "snackbar": {
-      "roleUpdated": "{{name}}'s role changed to {{role}}",
-      "roleUpdateFailed": "Failed to update user role: {{error}}",
-      "statusUpdateFailed": "Failed to update user status: {{error}}",
-      "adminErrorMessage": ""
-    },
-    "columnHeaders": {
-      "name": "Name",
-      "email": "Email",
-      "roleTitle": "User Role",
-      "action": "Action"
-    },
-    "actions": {
-      "promote": "Promote",
-      "demote": "Demote",
-      "ban": "Ban",
-      "unban": "Unban",
-      "reject": "Reject",
-      "approve": "Approve"
-    },
-    "tooltips": {
-      "makeAdmin": "Make user an administrator",
-      "makeUser": "Demote Admin to User"
-    }
   }
 }

@@ -8,11 +8,14 @@
         "inventory_items": "Varastotuotteet"
       },
       "status": {
-        "pending": "Odottaa",
-        "approved": "Hyväksytty",
-        "rejected": "Hylätty",
-        "cancelled": "Peruutettu",
+        "pending": "odottaa",
+        "approved": "hyväksytty",
+        "rejected": "hylätty",
+        "cancelled": "peruttu",
         "completed": "Valmis"
+      },
+      "columns": {
+        "confirmed": "Vahvistettu"
       }
     }
   },
@@ -30,6 +33,38 @@
   "\"home": {
     "categories": {
       "accessories\"": ""
+    }
+  },
+  "notifications": {
+    "pending_user_notifications": "{{amount}} käyttäjää odottaa vahvistusta",
+    "pending_bookings_notifications": "{{amount}} varausta odottaa vahvistusta",
+    "BOOKING_APPROVED": "Varaus on hyväksytty!",
+    "BOOKING_REJECTED": "Varaus hylättiin"
+  },
+  "avatar": {
+    "uploading": "Ladataan...",
+    "change": "Vaihda avatar"
+  },
+  "userBookings": {
+    "status": {
+      "cancelled": "peruttu",
+      "approved": "hyväksytty",
+      "pending": "odottaa",
+      "rejected": "hylätty"
+    }
+  },
+  "cart": {
+    "snackbar": {
+      "itemQtyUnavailable": "Tuotetta ei ole tarpeeksi saatavilla valituille päiville.",
+      "maxQtyError": "Tuotteen enimmäismäärä valituille päiville on jo ostoskorissa",
+      "maxQtyDateError": "Tuotteen enimmäismäärä valituille päiville on jo ostoskorissa",
+      "qtyUnavailable": "Pyydetty määrä ylittää saatavilla olevan määrän {{amount}} kappaleella"
+    }
+  },
+  "manageUsers": {
+    "snackbar": {
+      "roleUpdated": "{{name}}in rooli muutettu rooliksi {{role}}",
+      "adminErrorMessage": ""
     }
   }
 }

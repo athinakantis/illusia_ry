@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, IconButton, MenuItem, Select, Typography } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import { renderCellExpand } from './RenderCellExpand';
 import { Item } from '../../types/types';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useTranslation } from 'react-i18next';
 import { deleteItem, fetchAllItems } from '../../slices/itemsSlice';
 import { updateItemVisibility } from '../../slices/itemsSlice';
 import { formatDate } from '../../utility/formatDate';
@@ -23,8 +23,9 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const categories = useAppSelector(selectAllCategories);
+  const { t } = useTranslation();
   const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this item?')) {
+    if (confirm(t('admin.items.dataGrid.deleteConfirm'))) {
       dispatch(deleteItem(id)).then(() => dispatch(fetchAllItems()));
     }
   };
@@ -33,28 +34,41 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
     {
       field: 'item_id',
       headerClassName: 'super-app-theme--header',
-      headerAlign: 'left',
-      headerName: 'ID',
+      headerAlign: 'center',
+      align: 'center',
+      headerName: t('admin.items.dataGrid.columns.id'),
       width: 100,
       renderCell: (params) => (
-
         String(params.value).slice(0, 8)
       ),
     },
     {
       field: 'item_name',
       headerClassName: 'super-app-theme--header',
-      headerAlign: 'left',
-      headerName: 'Name',
+      headerAlign: 'center',
+      align: 'center',
+      headerName: t('admin.items.dataGrid.columns.name'),
       minWidth: 150,
-      renderCell: renderCellExpand,
+      renderCell: (params) => (
+        <Typography variant="body2"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            height: '100%',
+            textAlign: 'center',
+          }}>
+          {params.value}
+        </Typography>
+      ),
     },
     {
-
       field: 'description',
       headerClassName: 'super-app-theme--header',
-      headerName: 'Description',
-      headerAlign: 'left',
+      headerName: t('admin.items.dataGrid.columns.description'),
+      headerAlign: 'center',
+      align: 'center',
       minWidth: 240,
       flex: 1,
       renderCell: (params) => (
@@ -68,6 +82,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
             width: '100%',
             maxHeight: 80,
             overflow: 'auto',
+            textAlign: 'center',
           }}
         >
           {params.value}
@@ -77,15 +92,16 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
     {
       field: 'visible',
       headerClassName: 'super-app-theme--header',
-      headerName: 'Visibility',
-      headerAlign: 'left',
+      headerName: t('admin.items.dataGrid.columns.visibility'),
+      headerAlign: 'center',
+      align: 'center',
       width: 120,
       renderCell: (params) => (
         <Select
-          value={params.row.visible ? 'Visible' : 'Hidden'}
+          value={params.row.visible ? t('admin.items.dataGrid.visibility.visible') : t('admin.items.dataGrid.visibility.hidden')}
           size="small"
           onChange={(e) => {
-            const newVisible = e.target.value === 'Visible';
+            const newVisible = e.target.value === t('admin.items.dataGrid.visibility.visible');
             if (newVisible !== params.row.visible) {
               dispatch(
                 updateItemVisibility({ id: params.row.item_id, visible: newVisible })
@@ -94,49 +110,105 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
           }}
           sx={{ fontSize: '0.85rem' }}
         >
-          <MenuItem value="Visible">Visible</MenuItem>
-          <MenuItem value="Hidden">Hidden</MenuItem>
+          <MenuItem value={t('admin.items.dataGrid.visibility.visible')}>{t('admin.items.dataGrid.visibility.visible')}</MenuItem>
+          <MenuItem value={t('admin.items.dataGrid.visibility.hidden')}>{t('admin.items.dataGrid.visibility.hidden')}</MenuItem>
         </Select>
       ),
     },
     {
       field: 'location',
       headerClassName: 'super-app-theme--header',
-      headerName: 'Location',
-      headerAlign: 'left',
+      headerName: t('admin.items.dataGrid.columns.location'),
+      headerAlign: 'center',
+      align: 'center',
       minWidth: 120,
-      renderCell: renderCellExpand,
+      renderCell: (params) => (
+        <Typography variant="body2"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            height: '100%',
+            textAlign: 'center',
+          }}>
+          {params.value}
+        </Typography>
+      ),
     },
     {
       field: 'quantity',
       headerClassName: 'super-app-theme--header',
-      headerName: 'Qty',
-      headerAlign: 'left',
+      headerName: t('admin.items.dataGrid.columns.quantity'),
+      headerAlign: 'center',
+      align: 'center',
       type: 'number',
-      width: 50,
-      renderCell: renderCellExpand,
+      width: 70,
+      renderCell: (params) => (
+        <Typography variant="body2"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            height: '100%',
+            textAlign: 'center',
+          }}>
+          {params.value}
+        </Typography>
+      ),
     },
     {
       field: 'category_id',
       headerClassName: 'super-app-theme--header',
-      headerName: 'Category',
-      headerAlign: 'left',
+      headerName: t('admin.items.dataGrid.columns.category'),
+      headerAlign: 'center',
+      align: 'center',
       minWidth: 150,
       renderCell: (params) => (
         getCategoryName(categories, params.value)
       ),
     },
     {
+      field: 'tags',
+      headerClassName: 'super-app-theme--header',
+      headerName: t('admin.items.tags_column_header'),
+      headerAlign: 'center',
+      align: 'center',
+      minWidth: 120,
+      renderCell: (params) => {
+        const tags = params.row.tags;
+        if (Array.isArray(tags) && tags.length > 0) {
+          return (
+            <Typography variant="body2"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                height: '100%',
+                textAlign: 'center',
+              }}>
+              {tags.join(', ')}
+            </Typography>
+          );
+        }
+        return '';
+      },
+    },
+    {
       field: 'created_at',
       headerClassName: 'super-app-theme--header',
-      headerName: 'Created At',
-      headerAlign: 'left',
+      headerName: t('admin.items.dataGrid.columns.createdAt'),
+      headerAlign: 'center',
+      align: 'center',
       minWidth: timeStampLength,
       renderCell: (params) => (
         <Typography variant="body2"
           sx={{
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'center',
             width: '100%',
             height: '100%',
           }}>
@@ -147,7 +219,9 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
     {
       field: 'actions',
       headerClassName: 'super-app-theme--header',
-      headerName: 'Actions',
+      headerName: t('admin.items.dataGrid.columns.actions'),
+      headerAlign: 'center',
+      align: 'center',
       width: 110,
       sortable: false,
       filterable: false,
@@ -156,7 +230,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
           <IconButton
             component="a"
             onClick={() => navigate(`/items/manage/${params.row.item_id}`)}
-            aria-label="view"
+            aria-label={t('admin.items.dataGrid.aria.view')}
             color="primary"
             size="medium"
           >
@@ -164,7 +238,7 @@ export const ItemDataGrid: React.FC<ItemDataGridProps> = ({ data }) => {
           </IconButton>
           <IconButton
             onClick={() => handleDelete(params.row.item_id)}
-            aria-label="delete"
+            aria-label={t('admin.items.dataGrid.aria.delete')}
             color="error"
             size="medium"
           >

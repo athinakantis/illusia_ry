@@ -15,6 +15,9 @@ type Tag = ItemState['tags'][number];
 // keep them in this slice, so we just type the payload as `unknown`.
 type ItemTagRelation = ItemState['item_tags'][number];
 
+// Extended type to include tag_name for itemsSlice
+export type ItemTagRelationWithTagName = ItemTagRelation & { tag_name: string };
+
 /* ------------------------------------------------------------------ */
 /* Initial state                                                      */
 /* ------------------------------------------------------------------ */
@@ -104,16 +107,35 @@ export const deleteTag = createAsyncThunk<
 
 // 5. Attach to an item
 export const addTagToItem = createAsyncThunk<
-  ItemTagRelation,
+  ItemTagRelationWithTagName,
   { itemId: string; tagId: string },
-  { rejectValue: string }
->('tags/addTagToItem', async ({ itemId, tagId }, { rejectWithValue }) => {
+  { rejectValue: string; state: RootState }
+>('tags/addTagToItem', async ({ itemId, tagId }, { rejectWithValue, getState }) => {
   try {
     const res = await tagsApi.addTagToItem(itemId, tagId);
+    const relData = Array.isArray(res.data) ? res.data[0] : res.data;
 
-    const rel = Array.isArray(res.data) ? res.data[0] : res.data;
+    if (!relData || !relData.tag_id) {
+      return rejectWithValue('Failed to attach tag: Invalid response data from API.');
+    }
 
-    return rel as ItemTagRelation;
+    const state = getState();
+    const tag = state.tags.tags.find(t => t.tag_id === relData.tag_id);
+
+    if (!tag || !tag.tag_name) {
+      console.warn(`Tag name not found for tagId: ${relData.tag_id} during addTagToItem. Proceeding without tag_name.`);
+      // To strictly enforce tag_name, you could rejectWithValue here:
+      // return rejectWithValue(`Tag name not found for tagId: ${relData.tag_id}`);
+      // For now, we'll allow it to proceed, itemsSlice will need to handle potentially missing tag_name if this path is taken.
+      // However, the type ItemTagRelationWithTagName requires tag_name.
+      // Let's assume for now that the API and state are consistent enough that tag_name is found.
+      // If not, the line below would be problematic.
+      // A more robust solution might involve fetching the tag if not found, or having a default.
+      // For this implementation, we'll rely on it being present.
+      return rejectWithValue(`Tag name not found for tagId: ${relData.tag_id}. This should not happen.`);
+    }
+
+    return { ...relData, tag_name: tag.tag_name } as ItemTagRelationWithTagName;
   } catch (err) {
     const error = err as Error;
     return rejectWithValue(error.message ?? 'Failed to attach tag');
@@ -122,23 +144,41 @@ export const addTagToItem = createAsyncThunk<
 
 // 6. Detach from an item
 export const removeTagFromItem = createAsyncThunk<
-  ItemTagRelation,
+  ItemTagRelationWithTagName,
   { itemId: string; tagId: string },
-  { rejectValue: string }
->('tags/removeTagFromItem', async ({ itemId, tagId }, { rejectWithValue }) => {
+  { rejectValue: string; state: RootState }
+>('tags/removeTagFromItem', async ({ itemId, tagId }, { rejectWithValue, getState }) => {
   try {
     const res = await tagsApi.removeTagFromItem(itemId, tagId);
 
-    /**
-     * Supabase DELETE sometimes returns `data: []`.  When that happens
-     * we fabricate the minimal relation object so downstream reducers
-     * (itemsSlice) can still update their caches.
-     */
-    const rel =
-      Array.isArray(res.data) && res.data.length > 0
-        ? res.data[0]
-        : { item_id: itemId, tag_id: tagId };
-    return rel as ItemTagRelation;
+    let baseRel: Omit<ItemTagRelation, 'created_at'> & { created_at?: string };
+
+    if (Array.isArray(res.data) && res.data.length > 0 && res.data[0].tag_id) {
+      baseRel = res.data[0];
+    } else {
+      // Fabricate if API returns empty or insufficient data
+      baseRel = { item_id: itemId, tag_id: tagId };
+    }
+    
+    const state = getState();
+    const tag = state.tags.tags.find(t => t.tag_id === baseRel.tag_id);
+
+    if (!tag || !tag.tag_name) {
+      console.warn(`Tag name not found for tagId: ${baseRel.tag_id} during removeTagFromItem. Proceeding without tag_name for itemsSlice update.`);
+      // Similar to addTagToItem, strict handling would reject.
+      // For now, assuming consistency.
+      return rejectWithValue(`Tag name not found for tagId: ${baseRel.tag_id}. This should not happen.`);
+    }
+    
+    // Ensure created_at is present, even if undefined, to match ItemTagRelation
+    const finalRel = {
+      item_id: baseRel.item_id,
+      tag_id: baseRel.tag_id,
+      created_at: baseRel.created_at || new Date().toISOString(), // Fallback for created_at if missing
+      tag_name: tag.tag_name,
+    };
+
+    return finalRel as ItemTagRelationWithTagName;
   } catch (err) {
     const error = err as Error;
     return rejectWithValue(error.message ?? 'Failed to detach tag');

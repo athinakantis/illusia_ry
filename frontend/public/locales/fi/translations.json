@@ -50,7 +50,6 @@
         "date_range": "Aikaväli",
         "actions": "Toiminnot",
         "last_sign_in": "Viimeisin kirjautuminen",
-        "confirmed": "Vahvistettu",
         "role": "Rooli"
       },
       "show_booking": "Näytä varaus",
@@ -69,6 +68,31 @@
         "unapproved": "Hyväksymätön",
         "banned": "Estetty käyttäjä"
       }
+    },
+    "items": {
+      "dataGrid": {
+        "deleteConfirm": "Haluatko varmasti poistaa tämän tuotteen?",
+        "columns": {
+          "id": "ID",
+          "name": "Nimi",
+          "description": "Kuvaus",
+          "visibility": "Näkyvyys",
+          "location": "Sijainti",
+          "quantity": "Määrä",
+          "category": "Kategoria",
+          "createdAt": "Luotu",
+          "actions": "Toiminnot"
+        },
+        "visibility": {
+          "visible": "Näkyvissä",
+          "hidden": "Piilotettu"
+        },
+        "aria": {
+          "view": "näytä",
+          "delete": "poista"
+        }
+      },
+      "tags_column_header": "Tägit"
     }
   },
   "adminBookings": {
@@ -101,6 +125,39 @@
     "end": "Loppupäivä",
     "qty": "Määrä"
   },
+  "manageUsers": {
+    "roles": {
+      "head_admin": "Pääylläpitäjä",
+      "admin": "Ylläpitäjä",
+      "user": "Käyttäjä",
+      "unapproved": "Hyväksymätön",
+      "banned": "Estetty käyttäjä"
+    },
+    "snackbar": {
+      "roleUpdated": "{{name}}in rooli muutettu rooliksi {{role}}",
+      "roleUpdateFailed": "Käyttäjän roolin päivittäminen epäonnistui: {{error}}",
+      "statusUpdateFailed": "Käyttäjän tilan päivittäminen epäonnistui: {{error}}",
+      "adminErrorMessage": ""
+    },
+    "columnHeaders": {
+      "name": "Nimi",
+      "email": "Sähköposti",
+      "roleTitle": "Käyttäjän rooli",
+      "action": "Toiminto"
+    },
+    "actions": {
+      "promote": "Korota",
+      "demote": "Alenna",
+      "ban": "Estä",
+      "unban": "Poista esto",
+      "reject": "Hylkää",
+      "approve": "Hyväksy"
+    },
+    "tooltips": {
+      "makeAdmin": "Tee käyttäjästä ylläpitäjä",
+      "makeUser": "Alenna ylläpitäjä käyttäjäksi"
+    }
+  },
   "Bookings": {
     "snackbar": {
       "deleted": "Varaus poistettu",
@@ -111,6 +168,18 @@
     "snackbar": {
       "maxDays": "Voit varata enintään 14 päivää"
     }
+  },
+  "items": {
+    "snackbar": {
+      "itemAdded": "Tuote lisättiin ostoskoriin!",
+      "selectDates": "Valitse päivämäärät ennen kuin lisäät ostoskoriin"
+    },
+    "search": "Etsi tuotteita",
+    "date_picker_disabled_info": "Et voi vaihtaa päivämäärää, kun ostoskorissasi on tuotteita valituilla päivillä. Tyhjennä ostoskori tai muuta päivämäärää ostoskorin sisällä.",
+    "categories": "Kategoriat",
+    "filter_by_location": "Suodata sijainnin mukaan",
+    "browse": "Selaa tuotteita",
+    "manage": "Hallinnoi tuotteita"
   },
   "nav": {
     "home": "Etusivu",
@@ -126,6 +195,10 @@
     "logoMain": "ILLUSIA",
     "logoSecondary": "KAUPPA"
   },
+  "notifications": {
+    "markRead": "Merkitse luetuksi",
+    "noNew": "Sinulla ei ole uusia ilmoituksia!"
+  },
   "person": {
     "myBookings": "Minun varaukset",
     "myAccount": "Oma tili",
@@ -134,24 +207,6 @@
     "manageBookings": "Hallitse varauksia",
     "logOut": "Kirjaudu ulos",
     "logIn": "Kirjaudu sisään"
-  },
-  "notifications": {
-    "noNew": "Sinulla ei ole uusia ilmoituksia!",
-    "markRead": "Merkitse luetuksi",
-    "pending_user_notifications": "{{amount}} käyttäjää odottaa vahvistusta",
-    "pending_bookings_notifications": "{{amount}} varausta odottaa vahvistusta",
-    "BOOKING_APPROVED": "Varaus on hyväksytty!",
-    "BOOKING_REJECTED": "Varaus hylättiin"
-  },
-  "items": {
-    "search": "Etsi tuotteita",
-    "date_picker_disabled_info": "Et voi vaihtaa päivämäärää, kun ostoskorissasi on tuotteita valituilla päivillä. Tyhjennä ostoskori tai muuta päivämäärää ostoskorin sisällä.",
-    "browse": "Selaa tuotteita",
-    "manage": "Hallinnoi tuotteita",
-    "snackbar": {
-      "itemAdded": "Tuote lisättiin ostoskoriin!",
-      "selectDates": "Valitse päivämäärät ennen kuin lisäät ostoskoriin"
-    }
   },
   "account": {
     "nameUpdated": "Nimesi on päivitetty muotoon {{name}}.",
@@ -230,9 +285,29 @@
     "enabled": "Autentikaattorisovelluksen MFA on käytössä.",
     "disableTOTP": "Poista TOTP-MFA käytöstä"
   },
-  "avatar": {
-    "uploading": "Ladataan...",
-    "change": "Vaihda avatar"
+  "cart": {
+    "snackbar": {
+      "itemAdded": "Tuote lisättiin ostoskoriin!",
+      "cartUpdated": "Ostoskorisi on päivitetty!",
+      "register": "Vain rekisteröityneet käyttäjät voivat tehdä varauksen",
+      "createBookingError": "Varauksen luomisessa tapahtui virhe. Jos ongelma jatkuu, ota meihin yhteyttä",
+      "bookingCreated": "Varaus on luotu!"
+    },
+    "yourCart": "Ostoskorisi",
+    "items": "Tuotteet",
+    "quantity": "Määrä",
+    "action": "Toiminnot",
+    "remove": "Poista",
+    "bookingSummary": "Varausyhteenveto",
+    "dates": "Päivämäärät",
+    "changeDates": "Vaihda varauksen päivämäärät",
+    "confirmDates": "Vahvista uudet päivämäärät",
+    "cancel": "Peruuta",
+    "totalItems": "Tuotteita yhteensä",
+    "bookItemsLogInInfo": "Kirjaudu sisään varataksesi kohteita",
+    "bookItemsApprovalInfo": "Tilisi odottaa hyväksyntää. Kun se on hyväksytty, voit tehdä varauksen!",
+    "bookItems": "Varaa tuotteet",
+    "empty": "Ostoskori on tyhjä! <1>Selaa tuotteita</1>"
   },
   "userBookings": {
     "snackbar": {
@@ -251,41 +326,7 @@
     "quantity": "Määrä",
     "confirmCancel": "Haluatko varmasti peruuttaa varauksesi?",
     "confirmYes": "Kyllä, olen varma",
-    "confirmNo": "Ei kiitos",
-    "status": {
-      "cancelled": "peruttu",
-      "approved": "hyväksytty",
-      "pending": "odottaa",
-      "rejected": "hylätty"
-    }
-  },
-  "cart": {
-    "yourCart": "Ostoskorisi",
-    "items": "Tuotteet",
-    "quantity": "Määrä",
-    "action": "Toiminnot",
-    "remove": "Poista",
-    "bookingSummary": "Varausyhteenveto",
-    "dates": "Päivämäärät",
-    "changeDates": "Vaihda varauksen päivämäärät",
-    "confirmDates": "Vahvista uudet päivämäärät",
-    "cancel": "Peruuta",
-    "totalItems": "Tuotteita yhteensä",
-    "bookItems": "Varaa tuotteet",
-    "empty": "Ostoskori on tyhjä! <1>Selaa tuotteita</1>",
-    "bookItemsApprovalInfo": "Tilisi odottaa hyväksyntää. Kun se on hyväksytty, voit tehdä varauksen!",
-    "bookItemsLogInInfo": "Kirjaudu sisään varataksesi kohteita",
-    "snackbar": {
-      "register": "Vain rekisteröityneet käyttäjät voivat tehdä varauksen",
-      "createBookingError": "Varauksen luomisessa tapahtui virhe. Jos ongelma jatkuu, ota meihin yhteyttä",
-      "bookingCreated": "Varaus on luotu!",
-      "cartUpdated": "Ostoskorisi on päivitetty!",
-      "itemQtyUnavailable": "Tuotetta ei ole tarpeeksi saatavilla valituille päiville.",
-      "maxQtyError": "Tuotteen enimmäismäärä valituille päiville on jo ostoskorissa",
-      "maxQtyDateError": "Tuotteen enimmäismäärä valituille päiville on jo ostoskorissa",
-      "qtyUnavailable": "Pyydetty määrä ylittää saatavilla olevan määrän {{amount}} kappaleella",
-      "itemAdded": "Tuote lisättiin ostoskoriin!"
-    }
+    "confirmNo": "Ei kiitos"
   },
   "home": {
     "heroTitle": "Erikoiskauppa LARP-rekvisiitalle, tarvikkeille ja lavasteille",
@@ -312,38 +353,5 @@
     "answer2": "Yhden varauksen kesto voi olla enintään kaksi viikkoa",
     "question3": "Miksi minun on saatava hyväksyntä ennen kuin voin varata tuotteita?",
     "answer3": "Käyttäjiemme hyväksyntä takaa meille, että lainatut esineet palautetaan viimeistään kahden viikon kuluessa."
-  },
-  "manageUsers": {
-    "roles": {
-      "head_admin": "Pääylläpitäjä",
-      "admin": "Ylläpitäjä",
-      "user": "Käyttäjä",
-      "unapproved": "Hyväksymätön",
-      "banned": "Estetty käyttäjä"
-    },
-    "snackbar": {
-      "roleUpdated": "{{name}}in rooli muutettu rooliksi {{role}}",
-      "roleUpdateFailed": "Käyttäjän roolin päivittäminen epäonnistui: {{error}}",
-      "statusUpdateFailed": "Käyttäjän tilan päivittäminen epäonnistui: {{error}}",
-      "adminErrorMessage": ""
-    },
-    "columnHeaders": {
-      "name": "Nimi",
-      "email": "Sähköposti",
-      "roleTitle": "Käyttäjän rooli",
-      "action": "Toiminto"
-    },
-    "actions": {
-      "promote": "Korota",
-      "demote": "Alenna",
-      "ban": "Estä",
-      "unban": "Poista esto",
-      "reject": "Hylkää",
-      "approve": "Hyväksy"
-    },
-    "tooltips": {
-      "makeAdmin": "Tee käyttäjästä ylläpitäjä",
-      "makeUser": "Alenna ylläpitäjä käyttäjäksi"
-    }
   }
 }
