@@ -212,7 +212,7 @@ const ManageUsers: React.FC = () => {
                     </Button>
                   </Tooltip>
                   <Tooltip title={t('manageUsers.tooltips.makeUser', { defaultValue: 'Demote Admin to User' })} placement='top'>
-                    <Button variant="text_contained" color="info"
+                    <Button variant="text_contained" color="error"
                       onClick={() => handleRoleChange(params.row.user_id, 'User')}>
                       {t('manageUsers.actions.demote', { defaultValue: 'Demote' })}
                     </Button>
