@@ -4,11 +4,11 @@ import {
   Tab,
   Box,
   Typography,
-  Select,
-  MenuItem,
-  CircularProgress,
   Container,
   useTheme,
+  Stack,
+  Button,
+  Tooltip,
 } from '@mui/material';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -17,29 +17,16 @@ import {
   selectAllUsers,
   selectUserLoading,
   updateUserRole,
-  updateUserStatus,
 } from '../../slices/usersSlice';
 import { useAuth } from '../../hooks/useAuth';
 import { StyledDataGrid } from '../CustomComponents/StyledDataGrid';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslatedSnackbar } from '../CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
 import { useTranslation } from 'react-i18next';
+import { toCamelCase } from '../../utility/formatCamelCase';
+import Spinner from '../Spinner';
 
-const STATUS_OPTIONS = [
-  'pending',
-  'approved',
-  'rejected',
-  'deactivated',
-  'active',
-] as const;
-const STATUS_LABELS: Record<(typeof STATUS_OPTIONS)[number], string> = {
-  pending: 'Pending',
-  approved: 'Approved',
-  rejected: 'Rejected',
-  deactivated: 'Deactivated',
-  active: 'Active',
-};
-const VALID_FILTERS = ['ALL', 'PENDING', 'ACTIVE', 'DEACTIVED'];
+const VALID_FILTERS = ['ALL', 'PENDING', 'ACTIVE', 'BANNED'];
 type VALID_FILTER = (typeof VALID_FILTERS)[number];
 
 const ManageUsers: React.FC = () => {
@@ -53,6 +40,9 @@ const ManageUsers: React.FC = () => {
   const { t } = useTranslation();
   const { showSnackbar } = useTranslatedSnackbar();
 
+  const isAdmin = (role === 'Admin' || role === 'Head Admin')
+  const isHeadAdmin = role === 'Head Admin'
+
   // Fetch all users with role on component mount
   useEffect(() => {
     dispatch(fetchAllUsersWithRole());
@@ -65,7 +55,7 @@ const ManageUsers: React.FC = () => {
 
   const handleTabChange = (
     _: React.SyntheticEvent,
-    value: 'ALL' | 'PENDING' | 'ACTIVE' | 'DEACTIVATED',
+    value: 'ALL' | 'PENDING' | 'ACTIVE' | 'BANNED',
   ) => {
     setFilter(value);
   };
@@ -73,7 +63,7 @@ const ManageUsers: React.FC = () => {
   // Handle role change
   const handleRoleChange = async (
     userId: string,
-    role: 'User' | 'Admin' | 'Head Admin',
+    role: 'User' | 'Admin' | 'Banned',
   ) => {
     let changedUser = users.find((u) => u.user_id === userId);
     try {
@@ -114,55 +104,17 @@ const ManageUsers: React.FC = () => {
     }
   };
   // --------------------------------------------------------------------------------------------------------------
-  // Handle status change
-  const handleStatusChange = async (
-    userId: string,
-    status: 'approved' | 'rejected' | 'deactivated' | 'active',
-  ) => {
-    let changedUser = users.find((u) => u.user_id === userId);
-    try {
-      await dispatch(updateUserStatus({ userId, status })).unwrap();
-      // Find the user by ID to get their display name
-      changedUser = users.find((u) => u.user_id === userId);
-      const name = changedUser?.display_name ?? `User: ${userId}`;
-      showSnackbar({
-        message: `${name}'s status changed to ${STATUS_LABELS[status]}`,
-        variant: 'info',
-      });
-      // Refresh the grid data without reloading the page
-    } catch (err: unknown) {
-      // Handle error
-      if (err instanceof Error) {
-        console.error('Error updating user status:', err.message);
-        showSnackbar({
-          message: t('manageUsers.snackbar.statusUpdateFailed', {
-            defaultValue: `${changedUser?.display_name ?? `User ${userId}}`}: ${err.message
-              }`,
-          }),
-          variant: 'error',
-        });
-      } else {
-        console.error('Error updating user status:', err);
-        showSnackbar({
-          message: t('manageUsers.snackbar.statusUpdateFailed', {
-            defaultValue: `Failed to update user status: ${err}`,
-            error: err,
-          }),
-          variant: 'error',
-        });
-      }
-    }
-  };
+
   // Filter rows based on status tab
   // Here we can change what each tab shows
   const filtered = users.filter((u) => {
     if (filter === 'ALL') return true;
     // Lists pending users
-    if (filter === 'PENDING') return u.user_status === 'pending';
+    if (filter === 'PENDING') return u.role_title === 'Unapproved';
     // Lists all active users(we need to figure out our database structure)
     if (filter === 'ACTIVE')
-      return u.user_status === 'active' || u.user_status === 'approved';
-    if (filter === 'DEACTIVATED') return u.user_status === 'deactivated';
+      return u.role_title !== 'Unapproved' && u.role_title !== 'Banned';
+    if (filter === 'BANNED') return u.role_title === 'Banned';
     return true;
   });
 
@@ -170,135 +122,117 @@ const ManageUsers: React.FC = () => {
   const columns: GridColDef[] = [
     {
       field: 'display_name',
-      headerName: 'Name',
+      headerName: t('manageUsers.columnHeaders.name', { defaultValue: 'Name' }),
       flex: 1,
       minWidth: 150,
       headerClassName: 'columnHeader',
+      renderCell: (params: GridRenderCellParams) => {
+        return <Typography variant="body2">{params.value}</Typography>;
+      },
     },
     {
       field: 'email',
-      headerName: 'Email',
+      headerName: t('manageUsers.columnHeaders.email', { defaultValue: 'Email' }),
       flex: 1,
       minWidth: 200,
       headerClassName: 'columnHeader',
     },
-
     {
       field: 'role_title',
-      headerName: 'User role',
+      headerName: t('manageUsers.columnHeaders.roleTitle', { defaultValue: 'User Role' }),
       headerClassName: 'columnHeader',
       flex: 1,
-      minWidth: 180,
+      minWidth: 150,
       renderCell: (params: GridRenderCellParams) => {
-        const currentRole = (params.row.role_title ?? 'Unapproved') as
-          | 'Unapproved'
-          | 'User'
-          | 'Admin'
-          | 'Head Admin';
-
-        // Head Admin: full control
-        if (role === 'Head Admin') {
-          return (
-            <Select
-              value={currentRole}
-              size="small"
-              type="button"
-              fullWidth
-              onChange={(e) => {
-                handleRoleChange(
-                  params.row.user_id,
-                  e.target.value as 'User' | 'Admin' | 'Head Admin',
-                );
-              }}
-              renderValue={(val) => val}
-            >
-              {/* Show “Unapproved” disabled option */}
-              {currentRole === 'Unapproved' && (
-                <MenuItem value="Unapproved" disabled>
-                  Unapproved
-                </MenuItem>
-              )}
-              {['User', 'Admin', 'Head Admin'].map((opt) => (
-                <MenuItem key={opt} value={opt}>
-                  {opt}
-                </MenuItem>
-              ))}
-            </Select>
-          );
-        }
-
-        // Admin: show a Select that always displays currentRole,
-        // and only allows promoting Unapproved → User
-        if (role === 'Admin') {
-          // Build options: always include currentRole (disabled),
-          // and if Unapproved, include 'User' as actionable.
-          const options =
-            currentRole === 'Unapproved'
-              ? ['Unapproved', 'User']
-              : [currentRole];
-          return (
-            <Select
-              type="button"
-              value={currentRole}
-              size="small"
-              sx={{ width: 150 }}
-              disabled={currentRole !== 'Unapproved'}
-              onChange={(e) => {
-                handleRoleChange(
-                  params.row.user_id,
-                  e.target.value as 'User' | 'Admin' | 'Head Admin',
-                );
-              }}
-            >
-              {options.map((opt) => (
-                <MenuItem key={opt} value={opt} disabled={opt === currentRole}>
-                  {opt}
-                </MenuItem>
-              ))}
-            </Select>
-          );
-        }
+        return (
+          <Typography variant="body2">
+            {t(`manageUsers.roles.${toCamelCase(params.value)}`, {
+              defaultValue: params.value,
+            })}
+          </Typography>
+        );
       },
     },
-
     {
-      field: 'user_status',
-      headerName: 'Status',
+      field: 'action',
+      headerName: t('manageUsers.columnHeaders.action', { defaultValue: 'Action' }),
       headerClassName: 'columnHeader',
+      headerAlign: 'center',
       flex: 1,
-      minWidth: 160,
+      minWidth: 180,
+      align: 'right',
       renderCell: (params: GridRenderCellParams) => {
-        const status = params.row
-          .user_status as (typeof STATUS_OPTIONS)[number];
-        // Only Admins and Head Admins can change status
-        if (role === 'Admin' || role === 'Head Admin') {
+        if (filter === 'BANNED') {
           return (
-            <Select
-              type="button"
-              value={status}
-              size="small"
-              sx={{ width: 150 }}
-              onChange={(e) => {
-                handleStatusChange(
-                  params.row.user_id,
-                  e.target.value as
-                  | 'approved'
-                  | 'rejected'
-                  | 'deactivated'
-                  | 'active',
-                );
-              }}
-            >
-              {STATUS_OPTIONS.map((opt) => (
-                <MenuItem key={opt} value={opt}>
-                  {STATUS_LABELS[opt]}
-                </MenuItem>
-              ))}
-            </Select>
+            <Button variant='text_contained' color='info'
+              onClick={() => handleRoleChange(params.row.user_id, 'User')}>
+              {t('manageUsers.actions.unban', { defaultValue: 'Unban' })}
+            </Button>
+          )
+        }
+        if (
+          filter === 'PENDING' &&
+          isAdmin
+        ) {
+          return (
+            <Stack direction="row" gap="10px">
+              <Button variant="text_contained" color="info"
+                onClick={() => handleRoleChange(params.row.user_id, 'User')}>
+                {t('manageUsers.actions.approve', { defaultValue: 'Approve' })}
+
+              </Button>
+              <Button variant="text_contained" color="error"
+                onClick={() => handleRoleChange(params.row.user_id, 'Banned')}>
+                {t('manageUsers.actions.reject', { defaultValue: 'Reject' })}
+              </Button>
+            </Stack>
           );
         }
-        // other roles see text only
-        return <Typography>{STATUS_LABELS[status]}</Typography>;
+        if (filter === 'ALL' || filter === 'ACTIVE') {
+          return (
+            <Stack
+              direction="row"
+              gap="10px"
+              sx={{ justifyContent: 'end', width: '100%' }}
+            >
+              {params.row.role_title === 'User' && (
+                <>
+                  <Tooltip title={t('manageUsers.tooltips.makeAdmin', { defaultValue: 'Make user an administrator' })} placement='top'>
+                    <Button variant="text_contained" color="info"
+                      onClick={() => handleRoleChange(params.row.user_id, 'Admin')}
+                    >
+                      {t('manageUsers.actions.promote', { defaultValue: 'Promote' })}
+                    </Button>
+                  </Tooltip>
+                  <Button variant="text_contained" color="error"
+                    onClick={() => handleRoleChange(params.row.user_id, 'Banned')}>
+                    {t('manageUsers.actions.ban', { defaultValue: 'Ban' })}
+                  </Button>
+                </>
+              )}
+              {isHeadAdmin && params.row.role_title === 'Admin' && (
+                <Tooltip title={t('manageUsers.tooltips.makeUser', { defaultValue: 'Demote Admin to User' })} placement='top'>
+                  <Button variant="text_contained" color="info"
+                    onClick={() => handleRoleChange(params.row.user_id, 'User')}>
+                    {t('manageUsers.actions.demote', { defaultValue: 'Demote' })}
+                  </Button>
+                </Tooltip>
+              )}
+              {isAdmin && params.row.role_title === 'Unapproved' && (
+                <>
+                  <Button variant="text_contained" color="info"
+                    onClick={() => handleRoleChange(params.row.user_id, 'User')}>
+                    {t('manageUsers.actions.approve', { defaultValue: 'Approve' })}
+                  </Button>
+                  <Button variant="text_contained" color="error"
+                    onClick={() => handleRoleChange(params.row.user_id, 'Banned')}>
+                    {t('manageUsers.actions.reject', { defaultValue: 'Reject' })}
+                  </Button>
+                </>
+              )}
+            </Stack>
+          );
+        }
       },
     },
   ];
@@ -320,7 +254,7 @@ const ManageUsers: React.FC = () => {
         <Tab value="ALL" label="All" />
         <Tab value="PENDING" label="Pending Approvals" />
         <Tab value="ACTIVE" label="Active" />
-        <Tab value="DEACTIVATED" label="Deactivated" />
+        <Tab value="BANNED" label="Banned" />
       </Tabs>
 
       {/* Data grid */}
@@ -334,7 +268,7 @@ const ManageUsers: React.FC = () => {
               height: '100%',
             }}
           >
-            <CircularProgress />
+            <Spinner />
           </Box>
         ) : (
           <StyledDataGrid
