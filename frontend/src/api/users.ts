@@ -24,7 +24,7 @@ export const usersApi = {
     // Change a User's Role(Only for Head Admin) Better restrictions needed
     updateUserRole: (
         userId: string,
-        role: 'Admin' | 'User' | 'Head Admin'
+        role: 'Admin' | 'User' | 'Head Admin' | 'Banned'
     ): Promise<userApiResponse> => {
         return api.patch(`admin/users/role`, { userId, role });
     },
