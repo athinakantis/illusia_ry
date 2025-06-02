@@ -7,7 +7,6 @@ import Home from '../pages/Home';
 import SingleItem from '../components/Admin/ItemView/ItemView';
 import AdminAddProduct from '../components/Admin/AddItem/AdminAddProduct';
 import Cart from '../pages/Cart';
-import Contacts from '../pages/Contacts';
 import ItemDetail from '../components/User/ItemDetail';
 import UserBookings from '../components/User/UserBookings';
 import AdminDashboard from '../components/Admin/AdminDashboard';
@@ -38,7 +37,7 @@ export const router = createBrowserRouter([
           <>
             <AuthRedirect />
             <LoginPage />
-           
+
           </>
         )
       },
@@ -62,10 +61,6 @@ export const router = createBrowserRouter([
       {
         path: '/items/new',
         element: <AdminAddProduct />
-      },
-      {
-        path: '/contacts',
-        element: <Contacts />
       },
       {
         path: "/bookings",
