@@ -138,7 +138,7 @@ function Home() {
                 <Link to={`/items?category=${displayCategories?.[1]?.category_name.replace(/ /g, '-')}`}>
                   <img src={getImageSrc(displayCategories?.[1])} alt="" />
                   <Typography variant='body3' color='text.main'>
-                    {t("home.categories.clothing", { defaultValue: "Clothing" })}
+                    {t("home.categories.accessories", { defaultValue: "Accessories" })}
                   </Typography>
                 </Link>
               </Box>
@@ -146,7 +146,7 @@ function Home() {
                 <Link to={`/items?category=${displayCategories?.[3]?.category_name.replace(/ /g, '-')}`}>
                   <img src={getImageSrc(displayCategories?.[3])} alt="" />
                   <Typography variant='body3' color='text.main'>
-                    {t("home.categories.accessories", { defaultValue: "Accessories" })}
+                    {t("home.categories.clothing", { defaultValue: "Clothing" })}
                   </Typography>
                 </Link>
               </Box>

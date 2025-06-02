@@ -81,12 +81,6 @@ const Header = () => {
         >
           <ListItemText primary={<Trans i18nKey="nav.items">Items</Trans>} />
         </ListItem>
-        <ListItem
-          onClick={() => navigateToPage('/contact')}
-          sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { cursor: 'pointer' } }}
-        >
-          <ListItemText primary={<Trans i18nKey="nav.contact">Contact</Trans>} />
-        </ListItem>
         {user && (
           <ListItem
             onClick={() => navigateToPage('/bookings')}
@@ -255,11 +249,6 @@ const Header = () => {
             <Typography key="nav.items" variant='link'>
               <Link to="/items" style={{ textDecoration: 'none' }}>
                 <Trans i18nKey="nav.items">Items</Trans>
-              </Link>
-            </Typography>
-            <Typography key="nav.contact" variant='link'>
-              <Link to="/contact" style={{ textDecoration: 'none' }}>
-                <Trans i18nKey="nav.contact">Contact</Trans>
               </Link>
             </Typography>
             <Typography key="nav.bookings" variant='link'>
