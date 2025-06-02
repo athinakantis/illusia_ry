@@ -210,7 +210,11 @@
   },
   "notifications": {
     "markRead": "Merkitse luetuksi",
-    "noNew": "Sinulla ei ole uusia ilmoituksia!"
+    "noNew": "Sinulla ei ole uusia ilmoituksia!",
+    "pending_bookings_notifications": "Sinulla on {{amount}} odottavaa varausta",
+    "pending_user_notifications": "Sinulla on {{amount}} odottavaa käyttäjää",
+    "BOOKING_REJECTED": "Varaus hylättiin",
+    "BOOKING_APPROVED": "Varaus hyväksyttiin!"
   },
   "person": {
     "myBookings": "Minun varaukset",
@@ -339,7 +343,13 @@
     "quantity": "Määrä",
     "confirmCancel": "Haluatko varmasti peruuttaa varauksesi?",
     "confirmYes": "Kyllä, olen varma",
-    "confirmNo": "Ei kiitos"
+    "confirmNo": "Ei kiitos",
+    "status": {
+      "approved": "Hyväksytty",
+      "cancelled": "Peruttu",
+      "rejected": "Hylätty",
+      "pending": "Odottaa käsittelyä"
+    }
   },
   "home": {
     "heroTitle": "Erikoiskauppa LARP-rekvisiitalle, tarvikkeille ja lavasteille",
