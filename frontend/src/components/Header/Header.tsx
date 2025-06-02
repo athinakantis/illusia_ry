@@ -178,7 +178,7 @@ const Header = () => {
               sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
               onClick={() => { i18n.changeLanguage('en'); setMobileOpen(!mobileOpen); }}
             >
-              <Trans i18nKey="nav.logOut">Log out</Trans>
+              <Trans i18nKey="nav.logIn">Log in</Trans>
             </Button>
           </ListItem>
         }

@@ -189,7 +189,8 @@
     "dashboard": "Dashboard",
     "manageBookings": "Manage bookings",
     "manageUsers": "Manage Users",
-    "logOut": "Log out"
+    "logOut": "Log out",
+    "logIn": "Log in"
   },
   "header": {
     "logoMain": "ILLUSIA",

@@ -202,7 +202,8 @@
     "dashboard": "Hallintapaneeli",
     "manageBookings": "Hallitse varauksia",
     "manageUsers": "Hallinnoi käyttäjiä",
-    "logOut": "Kirjaudu ulos"
+    "logOut": "Kirjaudu ulos",
+    "logIn": "Kirjaudu sisään"
   },
   "header": {
     "logoMain": "ILLUSIA",
