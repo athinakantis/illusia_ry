@@ -68,7 +68,7 @@ const PersonMenu = () => {
       }}
     >
       <IconButton
-        aria-label="Open profile menu"
+        aria-label="Open navigation menu"
         onClick={handleMenuOpen}
         size="small"
         disableRipple
