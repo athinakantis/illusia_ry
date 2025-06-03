@@ -42,7 +42,7 @@ function Home() {
   return (
     <Box id='home'>
       {/* Hero banner */}
-      <Button onClick={getAccessToken} >getToken</Button>
+      
       <Box component='section' id='hero-container'
         sx={{
           backgroundImage: 'url(/hero.png)', height: 779, backgroundRepeat: 'no-repeat', width: '100%',
