@@ -166,7 +166,7 @@ const Header = () => {
               sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
               onClick={() => {
                 signOut()
-                handleDrawerToggle
+                setMobileOpen(false)
               }}
             >
               <Trans i18nKey="nav.logOut">Log out</Trans>
@@ -262,11 +262,13 @@ const Header = () => {
                 <Trans i18nKey="nav.contact">Contact</Trans>
               </Link>
             </Typography>
-            <Typography key="nav.bookings" variant='link'>
-              <Link to="/bookings" style={{ textDecoration: 'none' }}>
-                <Trans i18nKey="nav.bookings">My bookings</Trans>
-              </Link>
-            </Typography>
+            {user && (
+              <Typography key="nav.bookings" variant='link'>
+                <Link to="/bookings" style={{ textDecoration: 'none' }}>
+                  <Trans i18nKey="nav.bookings">My bookings</Trans>
+                </Link>
+              </Typography>
+            )}
           </Box>
         )}
 
