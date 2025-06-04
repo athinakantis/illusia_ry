@@ -41,6 +41,7 @@ function Home() {
   return (
     <Box id='home'>
       {/* Hero banner */}
+
       <Box component='section' id='hero-container'
         sx={{
           backgroundImage: 'url(/hero.png)', height: 779, backgroundRepeat: 'no-repeat', width: '100%',
