@@ -171,8 +171,8 @@
   },
   "items": {
     "snackbar": {
-      "itemAdded": "Tuote lisättiin ostoskoriin!",
-      "selectDates": "Valitse päivämäärät ennen kuin lisäät ostoskoriin"
+      "itemAdded": "Item was added to cart!",
+      "selectDates": "Please select dates before adding to cart"
     },
     "search": "Search items",
     "date_picker_disabled_info": "You cannot change the date when your cart has items for the selected days. Empty the cart or change the date within the cart.",
@@ -189,7 +189,8 @@
     "dashboard": "Dashboard",
     "manageBookings": "Manage bookings",
     "manageUsers": "Manage Users",
-    "logOut": "Log out"
+    "logOut": "Log out",
+    "logIn": "Log in"
   },
   "header": {
     "logoMain": "ILLUSIA",
@@ -330,7 +331,13 @@
     "quantity": "Quantity",
     "confirmCancel": "Are you sure you want to cancel your booking?",
     "confirmYes": "Yes, I'm sure",
-    "confirmNo": "No thanks"
+    "confirmNo": "No thanks",
+    "status": {
+      "approved": "approved",
+      "cancelled": "cancelled",
+      "rejected": "rejected",
+      "pending": "pending"
+    }
   },
   "home": {
     "heroTitle": "Your go-to specialty store for LARP props and accessories",
