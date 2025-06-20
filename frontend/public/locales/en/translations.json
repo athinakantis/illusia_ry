@@ -330,7 +330,14 @@
     "quantity": "Quantity",
     "confirmCancel": "Are you sure you want to cancel your booking?",
     "confirmYes": "Yes, I'm sure",
-    "confirmNo": "No thanks"
+    "confirmNo": "No thanks",
+    "status": {
+      "status": "Status",
+      "approved": "Approved",
+      "cancelled": "Cancelled",
+      "rejected": "Rejected",
+      "pending": "Pending"
+    }
   },
   "home": {
     "heroTitle": "Your go-to specialty store for LARP props and accessories",

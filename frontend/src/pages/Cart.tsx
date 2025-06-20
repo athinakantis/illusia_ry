@@ -1,8 +1,15 @@
+import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
+import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
+import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
+import RemoveIcon from '@mui/icons-material/Remove';
 import {
 	Box,
 	Button,
 	ButtonGroup,
 	CardMedia,
+	Link as MUILink,
 	Stack,
 	Table,
 	TableBody,
@@ -10,13 +17,17 @@ import {
 	TableContainer,
 	TableHead,
 	TableRow,
-	Typography,
-	Link as MUILink
+	Typography
 } from '@mui/material';
-import RemoveIcon from '@mui/icons-material/Remove';
-import CloseIcon from '@mui/icons-material/Close';
-import AddIcon from '@mui/icons-material/Add';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { RangeValue } from '@react-types/shared';
+import { useCallback, useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { Link, useNavigate } from 'react-router-dom';
+import broken_img from '../assets/broken_img.png';
+import { useTranslatedSnackbar } from '../components/CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
+import { useAuth } from '../hooks/useAuth';
+import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
+import { addBooking, fetchUserBookings } from '../slices/bookingsSlice';
 import {
 	addItemToCart,
 	emptyCart,
@@ -25,21 +36,10 @@ import {
 	selectDateRange,
 	setCartItems,
 } from '../slices/cartSlice';
-import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
-import { addBooking, fetchUserBookings } from '../slices/bookingsSlice';
-import { useAuth } from '../hooks/useAuth';
-import { Link, useNavigate } from 'react-router-dom';
-import { store } from '../store/store';
-import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
-import { useCallback, useEffect, useState } from 'react';
-import { useTranslation, Trans } from 'react-i18next';
-import { DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date';
-import { RangeValue } from '@react-types/shared';
-import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
-import { ItemWithQuantity } from '../types/types';
-import broken_img from '../assets/broken_img.png'
 import { fetchFutureReservations } from '../slices/reservationsSlice';
-import { useTranslatedSnackbar } from '../components/CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { store } from '../store/store';
+import { ItemWithQuantity } from '../types/types';
 
 
 function Cart() {
@@ -263,8 +263,10 @@ function Cart() {
 		<Box
 			sx={{
 				maxWidth: 1240,
-				m: '0 auto',
-				px: 2,
+				backgroundColor: 'background.default',
+				py: 4, px: 6,
+				borderRadius: '7px',
+				boxShadow: '0 4px 20px #00000020',
 			}}
 		>
 			<Typography variant="heading_secondary_bold">{t('cart.yourCart', { defaultValue: 'Your Cart' })}</Typography>

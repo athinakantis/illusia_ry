@@ -61,7 +61,6 @@ function Items() {
   const [offset, setOffset] = useState(0);
   const navigate = useNavigate();
   const { showSnackbar } = useTranslatedSnackbar();
-
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
@@ -257,6 +256,10 @@ function Items() {
         pb: '8rem',
         gap: '32px',
         flexDirection: { xs: 'column', md: 'row' },
+        backgroundColor: 'background.default',
+        p: 4,
+        borderRadius: '7px',
+        boxShadow: '0 4px 20px #00000020'
       }}
     >
       {/* Side panel */}
@@ -339,7 +342,6 @@ function Items() {
           </Box>
         </Box>
 
-        <Divider sx={{ my: 2 }} />
         {/* Location Filters */}
         <Box>
           <Typography variant="body2" fontWeight="bold" sx={{ mb: 1 }}>
@@ -382,6 +384,8 @@ function Items() {
         </Box>
       </Stack>
 
+      <Divider orientation='vertical' flexItem />
+
       {/* Items Display */}
       <Box
         sx={{
@@ -410,7 +414,7 @@ function Items() {
                   padding={'none'}
                   textAlign={'start'}
                 >
-                  {filteredItems.slice(offset, offset + 8).map((item) => (
+                  {filteredItems.slice(offset, offset + 10).map((item) => (
                     <Card
                       component={Link}
                       to={`/items/${item.item_id}`}
@@ -422,13 +426,12 @@ function Items() {
                         textDecoration: 'none',
                         flex: 1,
                         flexBasis: 230,
-                        maxWidth: { xs: '100%', md: 300 },
                       }}
                     >
                       <Box
                         sx={{
                           height: 300,
-                          borderRadius: '14px',
+                          borderRadius: '7px',
                           bgcolor: 'background.lightgrey',
                           overflow: 'hidden',
                           '&:hover img': { scale: 1.03 },
@@ -498,7 +501,7 @@ function Items() {
                     </Card>
                   ))}
                 </Stack>
-                <Pagination items={filteredItems} setOffset={setOffset} />
+                <Pagination items={filteredItems} setOffset={setOffset} pageItems={10} />
               </>
             ) : (
               <Box

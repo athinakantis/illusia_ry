@@ -145,14 +145,9 @@ const Account = () => {
     <Box
       sx={{
         display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: 'calc(100vh - 3rem - 64px)',
-        p: 3,
-        pb: 12,
       }}
     >
-      <Card sx={{ maxWidth: 500, width: '100%', p: 3 }}>
+      <Card sx={{ maxWidth: 500, width: '100%', p: 3, height: 'fit-content' }}>
 
         {/*                          Tabs                               */}
         <Tabs

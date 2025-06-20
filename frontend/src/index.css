@@ -1,0 +1,5 @@
+main {
+  &:not(:has(#home)) {
+    background-color: #dcdcdc;
+  }
+}

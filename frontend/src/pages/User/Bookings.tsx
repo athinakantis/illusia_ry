@@ -19,6 +19,7 @@ import {
   DialogActions,
   Button,
   Avatar,
+  Divider,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -32,10 +33,10 @@ import {
   selectUserBookings,
   updateBookingStatus,
 } from '../../slices/bookingsSlice';
-import { useTranslatedSnackbar } from '../CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
 import { useTranslation } from 'react-i18next';
-import Spinner from '../Spinner';
 import { Link } from 'react-router-dom';
+import { useTranslatedSnackbar } from '../../components/CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
+import Spinner from '../../components/Spinner';
 
 const UserBookings = () => {
   const { user } = useAuth();
@@ -129,8 +130,15 @@ const UserBookings = () => {
 
   /* ─────────────────── main render ─────────────────── */
   return (
-    <Container>
-      <Box sx={{ maxWidth: 900, mx: 'auto', mt: 4 }}>
+    <>
+      <Box sx={{
+        maxWidth: 900,
+        backgroundColor: 'background.default',
+        py: 4, px: 6,
+        borderRadius: '7px',
+        boxShadow: '0 4px 20px #00000020',
+        flex: 1
+      }}>
         <Typography
           variant="heading_secondary"
           component="h1"
@@ -139,6 +147,7 @@ const UserBookings = () => {
         >
           {t('userBookings.heading', { defaultValue: 'Your Bookings' })}
         </Typography>
+        <Divider sx={{ mb: 4 }} />
 
         {bookings.length === 0 ? (
           <Typography>
@@ -149,8 +158,6 @@ const UserBookings = () => {
             {sortedBookings.map((booking) => (
               <Link to={`/bookings/${booking.booking_id}`} key={booking.booking_id} style={{ textDecoration: 'none' }}>
                 <Box
-                  sx={{ p: 3, pb: 4 }}
-                  border={'1px solid #E2E2E2'}
                 >
                   {/* booking header */}
                   <Stack
@@ -232,18 +239,13 @@ const UserBookings = () => {
                       {/*——————————— Table Header —————————————*/}
                       <TableHead>
                         <TableRow>
-                          <TableCell sx={{ width: 56 }} />
                           {/*——————————— Item Name ————————————*/}
-                          <TableCell align="left" sx={{ pl: 0 }}>
+                          <TableCell sx={{ pl: 0 }}>
                             {t('userBookings.item', { defaultValue: 'Item' })}
                           </TableCell>
-                          {/*——————————— Start Date ———————————*/}
+                          {/*——————————— Dates ———————————*/}
                           <TableCell>
                             {t('userBookings.startDate', { defaultValue: 'Start Date' })}
-                          </TableCell>
-                          {/*——————————— End Date ——————————————*/}
-                          <TableCell>
-                            {t('userBookings.endDate', { defaultValue: 'End Date' })}
                           </TableCell>
                           {/*———————————— Quantity —————————————*/}
                           <TableCell align="center">
@@ -255,27 +257,22 @@ const UserBookings = () => {
                       <TableBody>
                         {booking.reservations.map((res) => (
                           <TableRow key={res.reservation_id}>
-                            {/*———————— Item Image —————————*/}
-                            <TableCell sx={{ width: 56 }}>
-                              <Avatar
-                                src={getItemImage(res.item_id)}
-                                alt={items.find((i) => i.item_id === res.item_id)?.item_name ?? res.item_id}
-                                variant="square"
-                                sx={{ width: 48, height: 48 }}
-                              />
-                            </TableCell>
-                            {/*————————— Item Name ——————————*/}
-                            <TableCell align="left" sx={{ pl: 0 }}>
-                              {items.find((i) => i.item_id === res.item_id)
-                                ?.item_name ?? res.item_id}
-                            </TableCell>
-                            {/*—————————— Start Date ——————————*/}
+                            {/*———————— Item Image & Name —————————*/}
                             <TableCell>
-                              {new Date(res.start_date).toLocaleDateString()}
+                              <Stack sx={{ flexDirection: 'row', gap: 1 }}>
+                                <Avatar
+                                  src={getItemImage(res.item_id)}
+                                  alt={items.find((i) => i.item_id === res.item_id)?.item_name ?? res.item_id}
+                                  variant="square"
+                                  sx={{ width: 48, height: 48 }}
+                                />
+                                {items.find((i) => i.item_id === res.item_id)
+                                  ?.item_name ?? res.item_id}
+                              </Stack>
                             </TableCell>
-                            {/*—————————— End Date —————————————*/}
+                            {/*—————————— Dates ——————————*/}
                             <TableCell>
-                              {new Date(res.end_date).toLocaleDateString()}
+                              {new Date(res.start_date).toLocaleDateString()}{' - '}{new Date(res.end_date).toLocaleDateString()}
                             </TableCell>
                             <TableCell align="center">{res.quantity}</TableCell>
                           </TableRow>
@@ -319,7 +316,7 @@ const UserBookings = () => {
           </DialogActions>
         </Dialog>
       }
-    </Container>
+    </>
   );
 };
 

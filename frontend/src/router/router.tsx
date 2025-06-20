@@ -1,23 +1,25 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { AuthRedirect } from '../components/Auth/AuthRedirect';
-import LoginPage from '../pages/LoginPage';
-import ItemsPage from '../pages/Items';
-import Root from '../components/Root';
-import Home from '../pages/Home';
-import SingleItem from '../components/Admin/ItemView/ItemView';
-import AdminAddProduct from '../components/Admin/AddItem/AdminAddProduct';
-import Cart from '../pages/Cart';
-import Contacts from '../pages/Contacts';
-import ItemDetail from '../components/User/ItemDetail';
-import UserBookings from '../components/User/UserBookings';
-import AdminDashboard from '../components/Admin/AdminDashboard';
-import AdminBookings from '../components/Admin/AdminBookings/AdminBookings';
-import Account from '../components/User/Account/Account';
-import SingleBooking from '../components/Booking';
-import ManageUsers from '../components/Admin/ManageUsers';
-import AuthCallbackHandler from '../components/CallbackHandler';
-import SystemLogsPage from '../pages/SystemLogs';
 import PhoneLogin from '../components/Auth/PhoneLogin';
+import SingleBooking from '../pages/User/Booking'
+import AuthCallbackHandler from '../components/CallbackHandler';
+import Root from '../components/Root';
+import Account from '../components/User/Account/Account';
+import ItemDetail from '../components/User/ItemDetail';
+import AdminAddProduct from '../pages/Admin/AdminAddProduct';
+import AdminBookings from '../pages/Admin/AdminBookings';
+import AdminDashboard from '../pages/Admin/AdminDashboard';
+import ManageItems from '../pages/Admin/Items';
+import ManageUsers from '../pages/Admin/ManageUsers';
+import Cart from '../pages/Cart';
+import Contacts from '../pages/Contact';
+import Home from '../pages/Home';
+import ItemsPage from '../pages/Items';
+import LoginPage from '../pages/LoginPage';
+import SingleItem from '../pages/Admin/ItemDetail';
+import SystemLogsPage from '../pages/Admin/SystemLogs';
+import UserBookings from '../pages/User/Bookings';
+
 
 export const router = createBrowserRouter([
   {
@@ -38,7 +40,6 @@ export const router = createBrowserRouter([
           <>
             <AuthRedirect />
             <LoginPage />
-           
           </>
         )
       },
@@ -46,7 +47,10 @@ export const router = createBrowserRouter([
         path: '/items',
         element: <ItemsPage />
       },
-
+      {
+        path: '/manage/items',
+        element: <ManageItems />
+      },
       {
         path: '/cart',
         element: <Cart />

@@ -1,4 +1,13 @@
-import { useEffect, useState } from 'react';
+import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
+import {
+  DateValue,
+  getLocalTimeZone,
+  parseDate,
+  today,
+} from '@internationalized/date';
+import { ArrowBack, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import {
   Box,
   Button,
@@ -7,31 +16,24 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { selectAllCategories, selectItemById } from '../../slices/itemsSlice';
-import { Link, useParams } from 'react-router-dom';
-import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
-import {
-  DateValue,
-  getLocalTimeZone,
-  parseDate,
-  today,
-} from '@internationalized/date';
 import type { RangeValue } from '@react-types/shared';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, useParams } from 'react-router-dom';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
+import broken_img from '../../assets/broken_img.png';
 import { checkAvailabilityForItemOnDates } from '../../selectors/availabilitySelector';
 import { addItemToCart, selectDateRange } from '../../slices/cartSlice';
-import { store } from '../../store/store';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import { ArrowBack, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
-import broken_img from '../../assets/broken_img.png';
+import { selectAllCategories, selectItemById } from '../../slices/itemsSlice';
 import { selectQtyForItemInReservationsByIdInDateRange } from '../../slices/reservationsSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { store } from '../../store/store';
 import { useTranslatedSnackbar } from '../CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
-import { useTranslation } from 'react-i18next';
-
+import './ItemDetail.css'
+import { useMobileSize } from '../../hooks/useMobileSize';
+import SideMenu from '../Header/SideMenu';
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
@@ -93,6 +95,7 @@ const ItemDetail: React.FC = () => {
   const selectedDateRange = useAppSelector(selectDateRange);
   const { showSnackbar } = useTranslatedSnackbar();
   const { t } = useTranslation();
+  const { isMobile } = useMobileSize()
 
   const itemMaxBookedQty =
     range && itemId
@@ -192,61 +195,64 @@ const ItemDetail: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 3, maxWidth: 1300, margin: 'auto' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start', px: 1, pb: 3 }}>
-        <Button
-          component={Link}
-          to="/items"
-          startIcon={<ArrowBack />}
-          variant="text"
-          sx={{
-            borderRadius: 10,
-            height: 40,
-            paddingLeft: 3,
-            paddingRight: 3,
-            color: 'text.main',
-            bgcolor: 'primary.black',
-            '&:hover': {
-              color: 'text.main',
-              bgcolor: 'primary.light',
+    <>
+      <Box sx={{
+        p: 3, maxWidth: 1300,
+        backgroundColor: 'background.default',
+        py: 4, px: 6,
+        borderRadius: '7px',
+        boxShadow: '0 4px 20px #00000020',
+      }}>
+        <Box sx={{
+          display: 'flex', justifyContent: 'flex-start', pb: 3,
+        }}>
+          <Button
+            component={Link}
+            to="/items"
+            startIcon={<ArrowBack />}
+            variant="text"
+            sx={{
               borderRadius: 10,
-            },
-          }}
-        >
-          Back
-        </Button>
-      </Box>
-      <Grid container spacing={4} justifyContent={'center'}>
-        {/* Left Column: Image */}
-        <Grid size={{ xs: 12, sm: 6 }}>
-          {item &&
-            Array.isArray(item.image_path) &&
-            item.image_path.some(
-              (imgUrl) => typeof imgUrl === 'string' && imgUrl.trim() !== '',
-            ) ? (
-            <Slider
-              dots
-              infinite={item.image_path.length > 1}
-              speed={500}
-              slidesToShow={1}
-              slidesToScroll={1}
-              arrows={item.image_path.length > 1}
-              nextArrow={<NextArrow />}
-              prevArrow={<PrevArrow />}
-            >
-              {item.image_path
-                .filter(
-                  (imgUrl): imgUrl is string =>
-                    typeof imgUrl === 'string' && imgUrl.trim() !== '',
-                )
-                .map((imgUrl, idx) => (
-                  <Box key={idx}>
+              height: 40,
+              paddingLeft: 3,
+              paddingRight: 3,
+              color: 'text.main',
+              bgcolor: 'primary.black',
+            }}
+          >
+            Back
+          </Button>
+        </Box>
+        <Grid container spacing={4} justifyContent={'center'}>
+          {/* Left Column: Image */}
+          <Grid size={{ xs: 12, sm: 6 }}>
+            {item &&
+              Array.isArray(item.image_path) &&
+              item.image_path.some(
+                (imgUrl) => typeof imgUrl === 'string' && imgUrl.trim() !== '',
+              ) ? (
+              <Slider
+                className='customizedSlider'
+                dots
+                infinite={item.image_path.length > 1}
+                speed={500}
+                slidesToShow={1}
+                slidesToScroll={1}
+                arrows={item.image_path.length > 1}
+                nextArrow={<NextArrow />}
+                prevArrow={<PrevArrow />}
+              >
+                {item.image_path
+                  .filter(
+                    (imgUrl): imgUrl is string =>
+                      typeof imgUrl === 'string' && imgUrl.trim() !== '',
+                  )
+                  .map((imgUrl, idx) => (
                     <Box
+                      key={idx}
                       component="img"
                       sx={{
                         width: '100%',
-                        maxWidth: 400,
-                        maxHeight: 400,
                         objectFit: 'cover',
                         borderRadius: 2,
                         bgcolor: 'background.verylightgrey',
@@ -256,125 +262,125 @@ const ItemDetail: React.FC = () => {
                       src={imgUrl}
                       alt={`${item.item_name} image ${idx + 1}`}
                     />
-                  </Box>
-                ))}
-            </Slider>
-          ) : (
-            <Box
-              component="img"
-              sx={{
-                width: '100%',
-                height: 'auto',
-                minHeight: 400,
-                maxHeight: 400,
-                objectFit: 'cover',
-                borderRadius: 2,
-                boxShadow: 0,
-                bgcolor: 'background.verylightgrey',
-              }}
-              src={broken_img}
-              alt={item?.item_name || 'Item'}
-            />
-          )}
-        </Grid>
-
-        {/* Right Column: Details */}
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <Stack spacing={2}>
-            <Typography
-              variant="h1"
-              color="#3D3D3D"
-              sx={{
-                fontWeight: 700,
-                fontSize: 36,
-                fontFamily: 'Lato, sans-serif',
-              }}
-            >
-              {item?.item_name || 'Item name'}
-            </Typography>
-            <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-              Available{' '}
-              {range && item && typeof itemMaxBookedQty === 'number'
-                ? item?.quantity - (itemMaxBookedQty || 0)
-                : item?.quantity}{' '}
-              pcs
-            </Typography>
-            <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-              {itemCategory?.category_name || 'Category'}
-            </Typography>
-            <Typography component={'p'} variant="body1" color="text.secondary">
-              {item?.description || 'Description not available.'}
-            </Typography>
-
-            <Typography variant="subheading" component="div" sx={{ mt: 2 }}>
-              Select dates
-            </Typography>
-            <Provider theme={defaultTheme} colorScheme="light" maxWidth={290}>
-              {/* Set the max width of the provider to the max width of the component to avoid nasty UI */}
-              <DateRangePicker
-                labelPosition="side"
-                labelAlign="end"
-                width={290}
-                aria-label="Select dates"
-                value={range}
-                minValue={now}
-                onChange={handleDateChange}
-                isRequired
-                maxVisibleMonths={1}
-                isDisabled={selectedDateRange.start_date != null}
-              />
-            </Provider>
-
-            <Stack
-              direction="row"
-              spacing={2}
-              alignItems="center"
-              sx={{ mt: 3, height: '40px' }}
-            >
+                  ))}
+              </Slider>
+            ) : (
               <Box
+                component="img"
                 sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  border: '1px solid',
-                  borderColor: 'divider',
-                  borderRadius: '50px', // Rounded corners
-                  padding: '4px 8px',
+                  width: '100%',
+                  height: 'auto',
+                  minHeight: 400,
+                  maxHeight: 400,
+                  objectFit: 'cover',
+                  borderRadius: 2,
+                  boxShadow: 0,
+                  bgcolor: 'background.verylightgrey',
+                }}
+                src={broken_img}
+                alt={item?.item_name || 'Item'}
+              />
+            )}
+          </Grid>
+
+          {/* Right Column: Details */}
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <Stack spacing={2}>
+              <Typography
+                variant="h1"
+                color="#3D3D3D"
+                sx={{
+                  fontWeight: 700,
+                  fontSize: 36,
+                  fontFamily: 'Lato, sans-serif',
                 }}
               >
-                <IconButton
-                  size="small"
-                  onClick={() => handleQuantityChange(-1)}
-                  disabled={quantity <= 1}
-                  aria-label="decrease quantity"
-                >
-                  <RemoveIcon fontSize="small" />
-                </IconButton>
-                <Typography sx={{ px: 2 }}>{quantity}</Typography>
-                <IconButton
-                  size="small"
-                  onClick={() => handleQuantityChange(1)}
-                  aria-label="increase quantity"
-                >
-                  <AddIcon fontSize="small" />
-                </IconButton>
-              </Box>
-              <Button
-                variant="rounded"
-                onClick={handleCartAddition}
-                sx={{
-                  height: '100%',
-                  fontSize: 'clamp(15px, 1.3vw, 20px)',
-                  width: '190px',
-                  textTransform: 'capitalize',
-                }}
+                {item?.item_name || 'Item name'}
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                Available{' '}
+                {range && item && typeof itemMaxBookedQty === 'number'
+                  ? item?.quantity - (itemMaxBookedQty || 0)
+                  : item?.quantity}{' '}
+                pcs
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                {itemCategory?.category_name || 'Category'}
+              </Typography>
+              <Typography component={'p'} variant="body1" color="text.secondary">
+                {item?.description || 'Description not available.'}
+              </Typography>
+
+              <Typography variant="subheading" component="div" sx={{ mt: 2 }}>
+                Select dates
+              </Typography>
+              <Provider theme={defaultTheme} colorScheme="light" maxWidth={290}>
+                {/* Set the max width of the provider to the max width of the component to avoid nasty UI */}
+                <DateRangePicker
+                  labelPosition="side"
+                  labelAlign="end"
+                  width={290}
+                  aria-label="Select dates"
+                  value={range}
+                  minValue={now}
+                  onChange={handleDateChange}
+                  isRequired
+                  maxVisibleMonths={1}
+                  isDisabled={selectedDateRange.start_date != null}
+                />
+              </Provider>
+
+              <Stack
+                direction="row"
+                spacing={2}
+                alignItems="center"
+                sx={{ mt: 3, height: '40px' }}
               >
-                Add to Cart
-              </Button>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    borderRadius: '50px', // Rounded corners
+                    padding: '4px 8px',
+                  }}
+                >
+                  <IconButton
+                    size="small"
+                    onClick={() => handleQuantityChange(-1)}
+                    disabled={quantity <= 1}
+                    aria-label="decrease quantity"
+                  >
+                    <RemoveIcon fontSize="small" />
+                  </IconButton>
+                  <Typography sx={{ px: 2 }}>{quantity}</Typography>
+                  <IconButton
+                    size="small"
+                    onClick={() => handleQuantityChange(1)}
+                    aria-label="increase quantity"
+                  >
+                    <AddIcon fontSize="small" />
+                  </IconButton>
+                </Box>
+                <Button
+                  variant="rounded"
+                  onClick={handleCartAddition}
+                  sx={{
+                    height: '100%',
+                    fontSize: 'clamp(15px, 1.3vw, 20px)',
+                    width: '190px',
+                    textTransform: 'capitalize',
+                  }}
+                >
+                  Add to Cart
+                </Button>
+              </Stack>
             </Stack>
-          </Stack>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </>
   );
 };
 

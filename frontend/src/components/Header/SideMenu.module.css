@@ -1,0 +1,48 @@
+.container {
+  background-color: #fff;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px #00000020;
+  border-radius: 7px;
+  position: relative;
+  width: 320px;
+  flex-shrink: 0;
+  height: 90vh;
+  max-height: 950px;
+}
+
+.username {
+  font-weight: 700 !important;
+  font-size: 20px !important;
+  font-family: 'Lato' !important;
+  text-decoration: none !important;
+}
+
+.divider {
+  margin: 1rem 0;
+}
+
+.stack {
+  gap: 8px;
+}
+
+li,
+button {
+  transition: background-color 200ms;
+  border-radius: 7px;
+  border: none;
+  background-color: initial;
+  font-family: inherit;
+  line-height: inherit;
+  font-size: inherit;
+
+  &:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+  }
+}
+
+.userInfoStack {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 0.5rem;
+}

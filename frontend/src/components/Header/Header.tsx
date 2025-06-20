@@ -8,17 +8,15 @@ import {
   List,
   ListItem,
   ListItemText,
-  useMediaQuery,
-  useTheme,
   Divider,
   Button,
-  Stack,
+  Stack
 } from '@mui/material';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Link, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useEffect, useState, SyntheticEvent } from 'react';
-import PersonMenu from './PersonMenu';
+// import PersonMenu from './PersonMenu';
 import { Item } from '../../types/types';
 import { selectCart } from '../../slices/cartSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -26,11 +24,11 @@ import NotificationsMenu from './NotificationMenu';
 import { useAuth } from '../../hooks/useAuth';
 import { fetchAdminNotifications, fetchUserNotifications, selectUserNotifications } from '../../slices/notificationSlice';
 import { Trans, useTranslation } from 'react-i18next';
+import { useMobileSize } from '../../hooks/useMobileSize';
 
 const Header = () => {
-  const theme = useTheme();
   const navigate = useNavigate()
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { isMobile } = useMobileSize()
   const { t, i18n } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cart } = useAppSelector(selectCart)
@@ -62,9 +60,11 @@ const Header = () => {
 
   const drawer = (
     <Stack sx={{
+      display: isMobile ? 'flex' : 'none',
       justifyContent: 'space-between', height: '100%',
+      '& .MuiList-root': { p: 2, display: 'flex', flexDirection: 'column', gap: '5px' },
       '& .MuiListItem-root': { height: 45 },
-      '& .MuiListItemText-root': { transition: 'all 200ms', padding: '7px 16px', borderRadius: 3, m: 0 },
+      '& .MuiListItemText-root': { transition: 'all 200ms', borderRadius: 3, m: 0 },
       '& .MuiListItemText-root:hover': { bgcolor: '#f5f5f5' }
     }}>
 
@@ -126,67 +126,66 @@ const Header = () => {
 
       </List>
       <Box>
-        <ListItem>
-          <Button
-            variant="text"
-            size="small"
-            color="primary"
-            sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
-            onClick={() => { i18n.changeLanguage('en'); setMobileOpen(!mobileOpen); }}
-          >
-            En
-          </Button>
-          <Button
-            variant="text"
-            size="small"
-            color="primary"
-            sx={{ padding: '4px 10px', minWidth: 'fit-content' }}
-            onClick={() => { i18n.changeLanguage('fi'); setMobileOpen(!mobileOpen); }}
-          >
-            Fin
-          </Button>
-          <Button
-            variant="text"
-            size="small"
-            color="primary"
-            sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
-            onClick={() => { i18n.changeLanguage('se'); setMobileOpen(!mobileOpen); }}
-          >
-            Se
-          </Button>
-        </ListItem>
-        {user ?
-          <ListItem
-            sx={{ textDecoration: 'none', mb: 2, color: 'inherit', '&:hover': { cursor: 'pointer' } }}
-          >
+        <Stack direction={'row'}
+          sx={{ '& .MuiListItem-root': { p: 0.5, flex: 0 }, ml: 2, gap: 1, '& button': { padding: '3px 10px' } }}>
+          <ListItem>
             <Button
-              variant="text_contained"
+              variant="text"
               size="small"
               color="primary"
-              sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
-              onClick={() => {
-                signOut()
-                handleDrawerToggle
-              }}
-            >
-              <Trans i18nKey="nav.logOut">Log out</Trans>
-            </Button>
-          </ListItem>
-          :
-          <ListItem
-            onClick={() => navigateToPage('login')}
-            sx={{ textDecoration: 'none', mb: 2, color: 'inherit', '&:hover': { cursor: 'pointer' } }}
-          >
-            <Button
-              variant="text_contained"
-              size="small"
-              color="primary"
-              sx={{ padding: '4px 10px', minWidth: 'fit-content', mr: 1 }}
+              sx={{ padding: '4px 10px', minWidth: 'fit-content' }}
               onClick={() => { i18n.changeLanguage('en'); setMobileOpen(!mobileOpen); }}
             >
-              <Trans i18nKey="nav.logOut">Log out</Trans>
+              En
             </Button>
           </ListItem>
+          <ListItem>
+            <Button
+              variant="text"
+              size="small"
+              color="primary"
+              sx={{ padding: '4px 10px', minWidth: 'fit-content' }}
+              onClick={() => { i18n.changeLanguage('fi'); setMobileOpen(!mobileOpen); }}
+            >
+              Fi
+            </Button>
+          </ListItem>
+          <ListItem>
+            <Button
+              variant="text"
+              size="small"
+              color="primary"
+              sx={{ padding: '4px 10px', minWidth: 'fit-content' }}
+              onClick={() => { i18n.changeLanguage('se'); setMobileOpen(!mobileOpen); }}
+            >
+              Se
+            </Button>
+          </ListItem>
+        </Stack>
+
+        {user ?
+          <Button
+            variant="text_contained"
+            size="small"
+            color="primary"
+            sx={{ padding: '4px 10px', minWidth: 'fit-content', m: 2 }}
+            onClick={() => {
+              signOut()
+              handleDrawerToggle
+            }}
+          >
+            <Trans i18nKey="nav.logOut">Log out</Trans>
+          </Button>
+          :
+          <Button
+            variant="text_contained"
+            size="small"
+            color="primary"
+            sx={{ padding: '4px 10px', minWidth: 'fit-content', m: 2 }}
+            onClick={() => { navigate('/login'); setMobileOpen(!mobileOpen) }}
+          >
+            <Trans i18nKey="nav.logOut">Log in</Trans>
+          </Button>
         }
       </Box>
     </Stack >
@@ -296,7 +295,7 @@ const Header = () => {
         }}>
 
           {user && <NotificationsMenu />}
-          {!isMobile && <PersonMenu />}
+          {/*!isMobile && <PersonMenu />*/}
           <Link to='/cart' aria-label="Go to cart" style={{ position: 'relative' }}>
             <ShoppingBagIcon />
             {totalItems > 0 &&
@@ -333,7 +332,7 @@ const Header = () => {
           keepMounted: true, // Better open performance on mobile.
         }}
         sx={{
-          display: { xs: 'block', md: 'none' },
+          display: { xs: 'block', lg: 'none' },
           '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
           /* Had to add something to fix the link colors, Booking was blue when added */
           '& a:active': { color: 'primary.light' },

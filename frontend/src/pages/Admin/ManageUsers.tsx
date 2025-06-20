@@ -19,13 +19,13 @@ import {
   updateUserRole,
 } from '../../slices/usersSlice';
 import { useAuth } from '../../hooks/useAuth';
-import { StyledDataGrid } from '../CustomComponents/StyledDataGrid';
 import { useSearchParams } from 'react-router-dom';
-import { useTranslatedSnackbar } from '../CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
 import { useTranslation } from 'react-i18next';
 import { toCamelCase } from '../../utility/formatCamelCase';
-import Spinner from '../Spinner';
 import { useAdminRedirect } from '../../hooks/useadminRedirect';
+import { StyledDataGrid } from '../../components/CustomComponents/StyledDataGrid';
+import { useTranslatedSnackbar } from '../../components/CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
+import Spinner from '../../components/Spinner';
 
 const VALID_FILTERS = ['ALL', 'PENDING', 'ACTIVE', 'BANNED'];
 type VALID_FILTER = (typeof VALID_FILTERS)[number];

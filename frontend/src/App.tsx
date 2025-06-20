@@ -4,13 +4,12 @@ import { router } from './router/router';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import { SnackbarProvider } from 'notistack';
-
+import './index.css'
 
 function App() {
 
   return (
     <Box>
-
       <Provider store={store}>
         <SnackbarProvider
           maxSnack={3}
@@ -22,7 +21,6 @@ function App() {
           </RouterProvider>
         </ SnackbarProvider>
       </Provider>
-
     </Box >
   );
 }

@@ -1,19 +1,22 @@
-import { Outlet } from 'react-router-dom';
-import Header from './Header/Header';
-import Footer from './Footer';
-import { Box } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchFutureReservations, selectAllReservations } from '../slices/reservationsSlice';
-import { fetchAllCategories, fetchAllItems, selectAllCategories, selectAllItems } from '../slices/itemsSlice';
-import { loadCartFromStorage, selectCart } from '../slices/cartSlice';
-import ScrollToTop from '../utility/ScrollToTop';
-import { fetchUserNotifications, selectUserNotifications } from '../slices/notificationSlice';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { fetchAllUsersWithRole, selectAllUsers } from '../slices/usersSlice';
 import { fetchAllBookings, selectAllBookings } from '../slices/bookingsSlice';
+import { loadCartFromStorage, selectCart } from '../slices/cartSlice';
+import { fetchAllCategories, fetchAllItems, selectAllCategories, selectAllItems } from '../slices/itemsSlice';
+import { fetchUserNotifications, selectUserNotifications } from '../slices/notificationSlice';
+import { fetchFutureReservations, selectAllReservations } from '../slices/reservationsSlice';
+import { fetchAllUsersWithRole, selectAllUsers } from '../slices/usersSlice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import ScrollToTop from '../utility/ScrollToTop';
+import Footer from './Footer';
+import Header from './Header/Header';
+import SideMenu from './Header/SideMenu';
 
 function Root() {
+  const { pathname } = useLocation()
+  const theme = useTheme();
   const reservations = useAppSelector(selectAllReservations);
   const items = useAppSelector(selectAllItems);
   const users = useAppSelector(selectAllUsers);
@@ -23,6 +26,7 @@ function Root() {
   const dispatch = useAppDispatch();
   const userNotifications = useAppSelector(selectUserNotifications)
   const { user } = useAuth()
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
 
   useEffect(() => {
@@ -83,16 +87,19 @@ function Root() {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh', // Ensure the layout takes the full viewport height
-        '& main:not(:has(>#home))': { paddingTop: '3rem' } // Padding for all pages except Home
+        '& main:not(:has(>#home))': { padding: '1rem' } // Padding for all pages except Home
       }}
     >
       <Header />
       <main
         style={{
           flexGrow: 1, // Allow the main content to grow and fill available space
-          paddingBottom: '3rem',
+          display: pathname === '/' ? 'block' : 'flex',
+          flexDirection: 'row',
+          gap: '2rem',
         }}
       >
+        {!isMobile && pathname !== '/' && <SideMenu />}
         {/* Component that scrolls to top of page when navigating */}
         <ScrollToTop />
         <Outlet />

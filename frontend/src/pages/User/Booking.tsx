@@ -1,8 +1,17 @@
+import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
+import {
+  DateValue,
+  getLocalTimeZone,
+  parseDate,
+  today,
+} from '@internationalized/date';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import {
   Box,
   Button,
-  Chip,
   ButtonGroup,
+  Chip,
   Dialog,
   DialogActions,
   DialogTitle,
@@ -16,39 +25,30 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { RangeValue } from '@react-types/shared';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { useTranslatedSnackbar } from '../../components/CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
+import SideMenu from '../../components/Header/SideMenu';
+import Spinner from '../../components/Spinner';
+import { useAuth } from '../../hooks/useAuth';
+import { useMobileSize } from '../../hooks/useMobileSize';
+import { checkAvailabilityForItemOnDates } from '../../selectors/availabilitySelector';
 import {
   deleteBooking,
   fetchBooking,
   selectBooking,
   selectBookingsLoading,
   updateBookingStatus,
-} from '../slices/bookingsSlice';
-import Spinner from './Spinner';
-
-import { useTranslatedSnackbar } from './CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
-import { BookingStatus, BookingWithItems } from '../types/types';
-import broken_img from '../assets/broken_img.png';
-import { useTranslation } from 'react-i18next';
-import { RangeValue } from '@react-types/shared';
-import {
-  DateValue,
-  getLocalTimeZone,
-  parseDate,
-  today,
-} from '@internationalized/date';
-import { Reservation } from '../types/types';
-import RemoveIcon from '@mui/icons-material/Remove';
-import AddIcon from '@mui/icons-material/Add';
-import { checkAvailabilityForItemOnDates } from '../selectors/availabilitySelector';
-import { store } from '../store/store';
-import { DateRangePicker, defaultTheme, Provider } from '@adobe/react-spectrum';
-import { updateReservation } from '../slices/reservationsSlice';
-import { useAuth } from '../hooks/useAuth';
-import { Tables } from '../types/supabase';
-import { mapChipStatus } from '../utility/mapChipStatus';
+} from '../../slices/bookingsSlice';
+import { updateReservation } from '../../slices/reservationsSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { store } from '../../store/store';
+import { Tables } from '../../types/supabase';
+import { BookingStatus, BookingWithItems, Reservation } from '../../types/types';
+import { mapChipStatus } from '../../utility/mapChipStatus';
+import broken_img from '../../assets/broken_img.png';
 
 function SingleBooking() {
   const navigate = useNavigate();
@@ -73,6 +73,7 @@ function SingleBooking() {
   const { role } = useAuth();
   const isAdmin = role === 'Admin' || role === 'Head Admin';
   const now = today(getLocalTimeZone());
+  const { isMobile } = useMobileSize();
 
   /* ─────────────────── handlers ─────────────────── */
   const handleCancel = (booking_id: string) => {
@@ -270,7 +271,7 @@ function SingleBooking() {
         showSnackbar({
           message: t(checkAdditionToCart.translationKey, {
             defaultValue: checkAdditionToCart.message,
-            amount: checkAdditionToCart?.metadata?.amount
+            amount: checkAdditionToCart?.metadata?.amount,
           }),
           variant: checkAdditionToCart.severity,
         });
@@ -315,161 +316,196 @@ function SingleBooking() {
   const { booking } = booking_selector;
 
   return (
-    <Box maxWidth={900} sx={{ m: 'auto', p: 2 }}>
-      <Stack
+    <>
+      <Box
+        maxWidth={900}
         sx={{
-          justifyContent: 'space-between',
-          flexDirection: 'row',
-          alignItems: 'center',
+          backgroundColor: 'background.default',
+          p: 4,
+          borderRadius: '7px',
+          boxShadow: '0 4px 20px #00000020',
+          flex: 1,
+          height: 'fit-content'
         }}
       >
-        <Stack>
-          <Typography variant="heading_secondary_bold">
-            Booking ID: {booking.booking_id.slice(0, 8).toUpperCase()}
-          </Typography>
-          {!editingBooking ? (
-            <Typography variant="body2">
-              {tempBookingRange &&
-                `${tempBookingRange.start.toString()} - ${tempBookingRange.end.toString()}`}
+        <Stack
+          sx={{
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <Stack>
+            <Typography variant="heading_secondary_bold">
+              Booking ID: {booking.booking_id.slice(0, 8).toUpperCase()}
             </Typography>
-          ) : (
-            <Provider theme={defaultTheme} colorScheme="light" maxWidth={270}>
-              <DateRangePicker
-                labelPosition="side"
-                labelAlign="end"
-                width={270}
-                minValue={now}
-                aria-label="Select dates"
-                value={tempBookingRange}
-                onChange={handleDateChange}
-                isRequired
-                maxVisibleMonths={1}
-              />
-            </Provider>
-          )}
+            {!editingBooking ? (
+              <Typography variant="body2">
+                {tempBookingRange &&
+                  `${tempBookingRange.start.toString()} - ${tempBookingRange.end.toString()}`}
+              </Typography>
+            ) : (
+              <Provider theme={defaultTheme} colorScheme="light" maxWidth={270}>
+                <DateRangePicker
+                  labelPosition="side"
+                  labelAlign="end"
+                  width={270}
+                  minValue={now}
+                  aria-label="Select dates"
+                  value={tempBookingRange}
+                  onChange={handleDateChange}
+                  isRequired
+                  maxVisibleMonths={1}
+                />
+              </Provider>
+            )}
+          </Stack>
+
+          <Chip
+            label={booking.status}
+            variant="caps"
+            color={mapChipStatus(booking.status as BookingStatus)}
+          />
         </Stack>
 
-        <Chip label={booking.status} variant='caps' color={mapChipStatus(booking.status as BookingStatus)} />
-      </Stack>
-
-      <Box>
-        <TableContainer sx={{ pt: 2 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Item</TableCell>
-                <TableCell align="center">Qty</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {tempBookingItems.map((item) => (
-                <TableRow sx={{ height: 130 }} key={item.item_id}>
-                  <TableCell>
-                    <Link
-                      href={`/items/${item.item_id}`}
-                      sx={{ textDecoration: 'none' }}
-                    >
-                      <Stack direction="row" gap={1}>
-                        <img
-                          onError={handleBrokenImg}
-                          style={{ maxWidth: 78, borderRadius: '14px' }}
-                          src={item.image_path?.[0] ?? broken_img}
-                        />
-                        <Stack>
-                          <Typography>{item.item_name}</Typography>
-                          {incorrectTempBooking && (
-                            <Typography color="error">
-                              {item.item_id && qtyCheckErrors[item.item_id]}
-                            </Typography>
-                          )}
-                        </Stack>
-                      </Stack>
-                    </Link>
-                  </TableCell>
-                  <TableCell align="center" sx={{ width: 200 }}>
-                    {!editingBooking ? (
-                      <Typography>{item.quantity}</Typography>
-                    ) : (
-                      <ButtonGroup
-                        sx={{ height: '40px' }}
-                        disableElevation
-                        variant="contained"
-                        aria-label="Disabled button group"
-                      >
-                        <Button
-                          onClick={() => {
-                            item.item_id && handleRemove(item.item_id);
-                          }}
-                          variant="outlined"
-                          sx={{
-                            borderRadius: '60px',
-                            borderTop: '1px solid #E2E2E2 !important',
-                            borderLeft: '1px solid #E2E2E2 !important',
-                            borderBottom: '1px solid #E2E2E2 !important',
-                            borderRight: '0px !important',
-                          }}
-                        >
-                          <RemoveIcon />
-                        </Button>
-                        <Box
-                          sx={{
-                            width: 20,
-                            textAlign: 'center',
-                            borderTop: '1px solid #E2E2E2',
-                            borderBottom: '1px solid #E2E2E2',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            px: 2,
-                          }}
-                        >
-                          <Typography
-                            variant="body1"
-                            sx={{ height: 'fit-content', lineHeight: 1 }}
-                          >
-                            {item.quantity}
-                          </Typography>
-                        </Box>
-                        <Button
-                          variant="outlined"
-                          onClick={() => {
-                            item.item_id && handleIncrease(item.item_id);
-                          }}
-                          sx={{
-                            borderRadius: '60px',
-                            borderTop: '1px solid #E2E2E2 !important',
-                            borderRight: '1px solid #E2E2E2 !important',
-                            borderBottom: '1px solid #E2E2E2 !important',
-                            borderLeft: '0px',
-                          }}
-                        >
-                          <AddIcon />
-                        </Button>
-                      </ButtonGroup>
-                    )}
-                  </TableCell>
+        <Box>
+          <TableContainer
+            sx={{
+              pt: 2,
+              '& tr:last-of-type td': { borderBottom: 0 },
+            }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Item</TableCell>
+                  <TableCell align="center">Qty</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        {
-          // Only allow dates that are after todays date to be cancelled
-          // And booking that haven't been cancelled or rejected
-          canModify(booking_selector) && (
-            <>
-              {isAdmin && (
-                <Stack
-                  display="flex"
-                  sx={{
-                    flexDirection: 'row',
-                    gap: '10px',
-                    justifyContent: 'end',
-                  }}
-                >
-                  {editingBooking && (
-                    <>
-                      {!incorrectTempBooking && (
+              </TableHead>
+              <TableBody>
+                {tempBookingItems.map((item) => (
+                  <TableRow sx={{ height: 130 }} key={item.item_id}>
+                    <TableCell>
+                      <Link
+                        href={`/items/${item.item_id}`}
+                        sx={{ textDecoration: 'none' }}
+                      >
+                        <Stack direction="row" gap={1}>
+                          <img
+                            onError={handleBrokenImg}
+                            style={{ maxWidth: 78, borderRadius: '14px' }}
+                            src={item.image_path?.[0] ?? broken_img}
+                          />
+                          <Stack>
+                            <Typography>{item.item_name}</Typography>
+                            {incorrectTempBooking && (
+                              <Typography color="error">
+                                {item.item_id && qtyCheckErrors[item.item_id]}
+                              </Typography>
+                            )}
+                          </Stack>
+                        </Stack>
+                      </Link>
+                    </TableCell>
+                    <TableCell align="center" sx={{ width: 200 }}>
+                      {!editingBooking ? (
+                        <Typography>{item.quantity}</Typography>
+                      ) : (
+                        <ButtonGroup
+                          sx={{ height: '40px' }}
+                          disableElevation
+                          variant="contained"
+                          aria-label="Disabled button group"
+                        >
+                          <Button
+                            onClick={() => {
+                              item.item_id && handleRemove(item.item_id);
+                            }}
+                            variant="outlined"
+                            sx={{
+                              borderRadius: '60px',
+                              borderTop: '1px solid #E2E2E2 !important',
+                              borderLeft: '1px solid #E2E2E2 !important',
+                              borderBottom: '1px solid #E2E2E2 !important',
+                              borderRight: '0px !important',
+                            }}
+                          >
+                            <RemoveIcon />
+                          </Button>
+                          <Box
+                            sx={{
+                              width: 20,
+                              textAlign: 'center',
+                              borderTop: '1px solid #E2E2E2',
+                              borderBottom: '1px solid #E2E2E2',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              px: 2,
+                            }}
+                          >
+                            <Typography
+                              variant="body1"
+                              sx={{ height: 'fit-content', lineHeight: 1 }}
+                            >
+                              {item.quantity}
+                            </Typography>
+                          </Box>
+                          <Button
+                            variant="outlined"
+                            onClick={() => {
+                              item.item_id && handleIncrease(item.item_id);
+                            }}
+                            sx={{
+                              borderRadius: '60px',
+                              borderTop: '1px solid #E2E2E2 !important',
+                              borderRight: '1px solid #E2E2E2 !important',
+                              borderBottom: '1px solid #E2E2E2 !important',
+                              borderLeft: '0px',
+                            }}
+                          >
+                            <AddIcon />
+                          </Button>
+                        </ButtonGroup>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {
+            // Only allow dates that are after todays date to be cancelled
+            // And booking that haven't been cancelled or rejected
+            canModify(booking_selector) && (
+              <>
+                {isAdmin && (
+                  <Stack
+                    display="flex"
+                    sx={{
+                      flexDirection: 'row',
+                      gap: '10px',
+                      justifyContent: 'end',
+                    }}
+                  >
+                    {editingBooking && (
+                      <>
+                        {!incorrectTempBooking && (
+                          <Button
+                            size="small"
+                            variant="outlined_rounded"
+                            sx={{
+                              mt: 2,
+                              display: 'block',
+                              height: 'fit-content',
+                              width: 'fit-content',
+                              padding: '6px 40px',
+                            }}
+                            onClick={handleSaveEditingBooking}
+                          >
+                            Save
+                          </Button>
+                        )}
                         <Button
                           size="small"
                           variant="outlined_rounded"
@@ -480,11 +516,23 @@ function SingleBooking() {
                             width: 'fit-content',
                             padding: '6px 40px',
                           }}
-                          onClick={handleSaveEditingBooking}
+                          onClick={handleCancelEditingBooking}
                         >
-                          Save
+                          Cancel
                         </Button>
-                      )}
+                      </>
+                    )}
+                  </Stack>
+                )}
+                {!editingBooking && (
+                  <Stack
+                    sx={{
+                      flexDirection: 'row',
+                      gap: '10px',
+                      justifyContent: 'end',
+                    }}
+                  >
+                    {isAdmin && (
                       <Button
                         size="small"
                         variant="outlined_rounded"
@@ -495,24 +543,13 @@ function SingleBooking() {
                           width: 'fit-content',
                           padding: '6px 40px',
                         }}
-                        onClick={handleCancelEditingBooking}
+                        onClick={handleStartEditingBooking}
                       >
-                        Cancel
+                        Edit Booking
                       </Button>
-                    </>
-                  )}
-                </Stack>
-              )}
-              {!editingBooking && (
-                <Stack
-                  sx={{
-                    flexDirection: 'row',
-                    gap: '10px',
-                    justifyContent: 'end',
-                  }}
-                >
-                  {isAdmin && (
+                    )}
                     <Button
+                      onClick={() => setWantsToCancel(true)}
                       size="small"
                       variant="outlined_rounded"
                       sx={{
@@ -522,62 +559,48 @@ function SingleBooking() {
                         width: 'fit-content',
                         padding: '6px 40px',
                       }}
-                      onClick={handleStartEditingBooking}
                     >
-                      Edit Booking
+                      Cancel Booking
                     </Button>
-                  )}
-                  <Button
-                    onClick={() => setWantsToCancel(true)}
-                    size="small"
-                    variant="outlined_rounded"
-                    sx={{
-                      mt: 2,
-                      display: 'block',
-                      height: 'fit-content',
-                      width: 'fit-content',
-                      padding: '6px 40px',
-                    }}
-                  >
-                    Cancel Booking
-                  </Button>
-                </Stack>
-              )}
-            </>
-          )
-        }
-        {wantsToCancel && (
-          <Dialog
-            maxWidth="md"
-            open={wantsToCancel ? true : false}
-            onClose={() => setWantsToCancel(false)}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">
-              Are you sure you want to{' '}
-              {booking.status === 'pending' ? 'delete' : 'cancel'} your booking?
-            </DialogTitle>
-            <DialogActions>
-              <Button
-                variant="outlined"
-                onClick={() => handleCancel(booking.booking_id)}
-              >
-                Yes, I'm sure
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                autoFocus
-                onClick={() => setWantsToCancel(false)}
-              >
-                No thanks
-              </Button>
-            </DialogActions>
-          </Dialog>
-        )}
+                  </Stack>
+                )}
+              </>
+            )
+          }
+          {wantsToCancel && (
+            <Dialog
+              maxWidth="md"
+              open={wantsToCancel ? true : false}
+              onClose={() => setWantsToCancel(false)}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                Are you sure you want to{' '}
+                {booking.status === 'pending' ? 'delete' : 'cancel'} your
+                booking?
+              </DialogTitle>
+              <DialogActions>
+                <Button
+                  variant="outlined"
+                  onClick={() => handleCancel(booking.booking_id)}
+                >
+                  Yes, I'm sure
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  autoFocus
+                  onClick={() => setWantsToCancel(false)}
+                >
+                  No thanks
+                </Button>
+              </DialogActions>
+            </Dialog>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 }
 

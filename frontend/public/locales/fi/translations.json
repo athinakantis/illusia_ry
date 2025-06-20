@@ -339,7 +339,14 @@
     "quantity": "Määrä",
     "confirmCancel": "Haluatko varmasti peruuttaa varauksesi?",
     "confirmYes": "Kyllä, olen varma",
-    "confirmNo": "Ei kiitos"
+    "confirmNo": "Ei kiitos",
+    "status": {
+      "status": "Status",
+      "cancelled": "peruttu",
+      "approved": "hyväksytty",
+      "pending": "odottaa",
+      "rejected": "hylätty"
+    }
   },
   "home": {
     "heroTitle": "Erikoiskauppa LARP-rekvisiitalle, tarvikkeille ja lavasteille",

@@ -1,4 +1,3 @@
-import { ItemDataGrid } from '../ItemGrid/ItemDataGrid';
 import { fetchAllItemsAdmin, selectAllItems } from '../../slices/itemsSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useAuth } from '../../hooks/useAuth';
@@ -6,8 +5,10 @@ import { Box, Button, Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ItemDataGrid } from '../../components/ItemGrid/ItemDataGrid';
+import SideMenu from '../../components/Header/SideMenu';
 
-function Items() {
+function ManageItems() {
   const { role } = useAuth();
   const items = useAppSelector(selectAllItems);
   const navigate = useNavigate()
@@ -54,4 +55,4 @@ function Items() {
   );
 }
 
-export default Items;
+export default ManageItems;

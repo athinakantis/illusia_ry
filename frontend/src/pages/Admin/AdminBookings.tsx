@@ -27,22 +27,22 @@ import {
   selectBookingsLoading,
   selectBookingsError,
   updateBookingStatus,
-} from "../../../slices/bookingsSlice";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import Spinner from "../../Spinner";
-import { fetchAllUsers, selectAllUsers } from "../../../slices/usersSlice";
+} from "../../slices/bookingsSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { fetchAllUsers, selectAllUsers } from "../../slices/usersSlice";
 import {
   fetchAllItems,
   selectAllItems,
-} from "../../../slices/itemsSlice";
+} from "../../slices/itemsSlice";
 import {
   fetchAllReservations,
   selectAllReservations,
-} from "../../../slices/reservationsSlice";
-import CollapsibleDetail from "./CollapsibleDetail";
-import { useTranslatedSnackbar } from '../../CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
+} from "../../slices/reservationsSlice";
 import { useSearchParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import Spinner from '../../components/Spinner';
+import CollapsibleDetail from '../../components/Admin/Bookings/CollapsibleDetail';
+import { useTranslatedSnackbar } from '../../components/CustomComponents/TranslatedSnackbar/TranslatedSnackbar';
 
 
 

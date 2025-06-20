@@ -1,0 +1,9 @@
+.customizedSlider {
+  height: 100%;
+
+  & .slick-track,
+  .slick-list,
+  img {
+    height: 100%;
+  }
+}

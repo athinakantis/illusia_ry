@@ -356,6 +356,11 @@ export const createAppTheme = () =>
         ],
       },
       MuiChip: {
+        styleOverrides: {
+          root: {
+            backgroundColor: '#FFF'
+          },
+        },
         variants: [
           {
             props: { variant: 'caps' },
